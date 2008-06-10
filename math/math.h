@@ -3,7 +3,7 @@
 
 #include <math.h>
 
-#define myinline
+#define myinline __forceinline
 
 namespace math
 {
@@ -206,8 +206,8 @@ namespace math
 		return (v2-v1)*x+v1;
 	}
 
-	template <int n> int logn(){return 1+logn<(n >> 1)>();}
-	template<> int logn<1>(){return 0;}
+	template <int n> myinline int logn(){return 1+logn<(n >> 1)>();}
+	template<> myinline int logn<1>(){return 0;}
 
 
 

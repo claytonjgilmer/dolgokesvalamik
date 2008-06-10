@@ -2,8 +2,8 @@
 #define _threadpool_h_
 
 #include "mutex.h"
-#include "containers/vector.h"
-#include "containers/queue.h"
+#include "..\containers\vector.h"
+#include "..\containers\queue.h"
 
 namespace threading
 {

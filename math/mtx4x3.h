@@ -2,6 +2,7 @@
 #define _mtx4x3_h_
 
 #include "mtx3x3.h"
+#define myinline __forceinline
 
 namespace math
 {
@@ -72,10 +73,10 @@ namespace math
 
 	myinline void mtx4x3::transform2(vec3& o_dst, const vec3& i_src) const
 	{
-		o_dst[0]=i_src[0]*_11+i_src[1]*_21+i_src[2]*_31+_41;
-		o_dst[1]=i_src[0]*_12+i_src[1]*_22+i_src[2]*_32+_42;
-		o_dst[2]=i_src[0]*_13+i_src[1]*_23+i_src[2]*_33+_43;
-//		o_dst=t+i_src.x*xaxis+i_src.y*yaxis+i_src.z*zaxis;
+//		o_dst[0]=i_src[0]*_11+i_src[1]*_21+i_src[2]*_31+_41;
+//		o_dst[1]=i_src[0]*_12+i_src[1]*_22+i_src[2]*_32+_42;
+//		o_dst[2]=i_src[0]*_13+i_src[1]*_23+i_src[2]*_33+_43;
+		o_dst=t+i_src.x*xaxis+i_src.y*yaxis+i_src.z*zaxis;
 
 //		o_dst.x=i_src.x*_11;
 //		o_dst.y=i_src.x*_12;

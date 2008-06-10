@@ -25,6 +25,7 @@ namespace threading
 #if mutextype==0
 		EnterCriticalSection(&m_cs);
 #else
+/*
 		while (true)
 		{
 			int n;
@@ -36,6 +37,7 @@ namespace threading
 
 			SwitchToThread();
 		}
+*/
 //			while (_InterlockedCompareExchange(&m_data,1,0));
 #endif
 	}
@@ -45,7 +47,7 @@ namespace threading
 #if mutextype==0
 		LeaveCriticalSection(&m_cs);
 #else
-		_InterlockedExchange(&m_data,0);
+		InterlockedExchange(&m_data,0);
 #endif
 	}
 
@@ -64,14 +66,12 @@ namespace threading
 
 	void mutex2::lock()
 	{
-		while (_InterlockedCompareExchange(&m_data,1,0));
+		while (InterlockedCompareExchange(&m_data,1,0));
 	}
 
 	void mutex2::unlock()
 	{
-		_InterlockedExchange(&m_data,0);
+		InterlockedExchange(&m_data,0);
 	}
-
-
 
 }//namespace threading

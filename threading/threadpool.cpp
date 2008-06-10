@@ -1,6 +1,7 @@
 #include "threadpool.h"
 #include <process.h>
 #include <stdio.h>
+#include <Windows.h>
 
 #ifdef WIN32
 #include <intrin.h>
@@ -84,8 +85,8 @@ namespace threading
 
 	void threadpool::flush()
 	{
-		while (m_tasknum)
-			SwitchToThread();
+//		while (m_tasknum)
+//			SwitchToThread();
 
 		PRINT("vege\n");
 		m_idletask.clear();

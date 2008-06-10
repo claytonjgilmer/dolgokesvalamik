@@ -3,7 +3,7 @@
 
 #include "math.h"
 
-#define myinline
+//#define myinline
 
 namespace math
 {
