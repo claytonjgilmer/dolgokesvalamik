@@ -9,6 +9,7 @@
 template<int n> int fact(){return n*fact<n-1>();}
 template<> int fact<1>(){return 1;}
 
+math::mtx4x3 gmtx(math::mtx4x3::identitymtx());
 
 void _cdecl main()
 {
@@ -46,7 +47,7 @@ void _cdecl main()
 	const int itnum=100000000;
 
 	{
-		math::mtx4x3 mtx; mtx.identity();
+		math::mtx4x3 mtx(gmtx);//; mtx.identity();
 		mtx.t.x=0.00001f;
 		math::vec3 vec; vec.set(5,2,3);
 		math::vec3 vec2;
@@ -66,7 +67,8 @@ void _cdecl main()
 	}
 
 	{
-		math::mtx4x3 mtx; mtx.identity();
+//		math::mtx4x3 mtx; mtx.identity();
+		math::mtx4x3 mtx(gmtx);
 		mtx.t.x=0.00001f;
 		math::vec3 vec; vec.set(5,2,3);
 		math::vec3 vec2;

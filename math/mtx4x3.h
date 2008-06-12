@@ -18,6 +18,7 @@ namespace math
 		const vec3& trans() const;
 
 		void identity();
+		static mtx4x3 identitymtx();
 
 		void transform(vec3& o_dst, const vec3& i_src) const;
 		void transform2(vec3& o_dst, const vec3& i_src) const;
@@ -62,6 +63,11 @@ namespace math
 	{
 		mtx3x3::identity();
 		_41=_42=_43=0.0f;
+	}
+
+	myinline mtx4x3 mtx4x3::identitymtx()
+	{
+		mtx4x3 ret; ret.identity(); return ret;
 	}
 
 	myinline void mtx4x3::transform(vec3& o_dst, const vec3& i_src) const

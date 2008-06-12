@@ -4,7 +4,7 @@
 #include <Windows.h>
 
 #ifdef WIN32
-#include <intrin.h>
+//#include <intrin.h>
 #endif
 
 #define  PRINT

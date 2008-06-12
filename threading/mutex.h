@@ -8,7 +8,7 @@
 #endif
 
 #ifdef WIN32
-#include <intrin.h>
+//#include <intrin.h>
 #endif
 
 #define mutextype 1
