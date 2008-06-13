@@ -3,7 +3,7 @@
 
 namespace threading
 {
-	typedef void (*threadfunc)(void*);
+	typedef unsigned WINAPI (*threadfunc)(void*);
 	
 	class thread
 	{

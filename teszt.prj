@@ -48,3 +48,4 @@ Compiler=Configs\Visual Studio 2005\Visual C++ compiler\Win32 Application
 6=threading\task.cpp
 7=threading\thread.h
 8=threading\thread.cpp
+9=threading\taskmanager.cpp
