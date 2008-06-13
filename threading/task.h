@@ -1,6 +1,9 @@
 #ifndef _task_h_
 #define _task_h_
 
+#include <string>
+#include "containers/vector.h"
+
 namespace threading
 {
 	class task

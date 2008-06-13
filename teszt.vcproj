@@ -38,6 +38,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories=".\"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -58,9 +59,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="winmm.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
-				SubSystem="2"
+				SubSystem="1"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -294,6 +296,14 @@
 			</File>
 			<File
 				RelativePath=".\physics\physicssystem.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\threading\task.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\threading\thread.cpp"
 				>
 			</File>
 			<File

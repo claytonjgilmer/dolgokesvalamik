@@ -6,13 +6,34 @@
 #include <MMSystem.h>
 #include "physics/physicssystem.h"
 
+#include "threading/thread.h"
+
 template<int n> int fact(){return n*fact<n-1>();}
 template<> int fact<1>(){return 1;}
 
 math::mtx4x3 gmtx(math::mtx4x3::identitymtx());
 
+unsigned WINAPI threadrun(void* i_param)
+{
+	threading::thread* t=(threading::thread*)i_param;
+
+	for (int n=0; n<100; ++n)
+	{
+		printf_s("thread%d: %d\n",t->getid(),n);
+	}
+
+	return 0;
+}
+
 void _cdecl main()
 {
+	threading::thread th1("1"),th2("2");
+
+	th1.start(&threadrun);
+	th2.start(&threadrun);
+	th1.join();
+	th2.join();
+	return;
 	int a=fact<5>();
 
 	printf_s("%d!=%d\n",5,a);

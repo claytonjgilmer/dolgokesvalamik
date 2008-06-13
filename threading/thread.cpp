@@ -1,4 +1,4 @@
-#include <string>
+#include <process.h>
 #include "thread.h"
 
 namespace threading
@@ -8,7 +8,7 @@ namespace threading
 	typedef struct //tagTHREADNAME_INFO
 	{
 		unsigned m_type; // Must be 0x1000.
-		char* m_name; // Pointer to name (in user addr space).
+		const char* m_name; // Pointer to name (in user addr space).
 		unsigned m_threadid; // Thread ID (-1=caller thread).
 		unsigned m_flags; // Reserved for future use, must be zero.
 	} threadname_info;
@@ -37,9 +37,20 @@ namespace threading
 	{
 	}
 	
-	void start(threadfunc i_func)
+	void thread::start(threadfunc i_func)
 	{
 				m_handle=(HANDLE)_beginthreadex( NULL, 0, i_func, this, 0, &m_id);
 				setthreadname(m_id,m_name);
 	}
+
+	void thread::join() const
+	{
+		WaitForSingleObject(m_handle,INFINITE);
+	}
+
+	unsigned thread::getid() const
+	{
+		return m_id;
+	}
+
 }
