@@ -3,10 +3,12 @@
 #include "containers/listallocator.h"
 #include <stdio.h>
 #include <windows.h>
+#include <iostream>
 #include <MMSystem.h>
 #include "physics/physicssystem.h"
 
 #include "threading/thread.h"
+#include "threading/taskmanager.h"
 
 template<int n> int fact(){return n*fact<n-1>();}
 template<> int fact<1>(){return 1;}
@@ -27,12 +29,129 @@ unsigned WINAPI threadrun(void* i_param)
 
 void _cdecl main()
 {
+/*
 	threading::thread th1("1"),th2("2");
 
-	th1.start(&threadrun);
-	th2.start(&threadrun);
+	th1.start(&threadrun,&th1);
+	th2.start(&threadrun,&th2);
 	th1.join();
 	th2.join();
+*/
+
+	threading::taskmanager tm(3);
+#if 0
+	class spectask:public threading::task
+	{
+	public:
+		virtual void run()
+		{
+			printf_s("%d: ez aztan a valami!\n", get_id());
+		}
+	};
+
+	unsigned depi=-1;
+	ctr::fixedvector<unsigned,10> dv;
+
+	for (int n=0; n<50;++n)
+	{
+		spectask * tk1=new(tm.get_allocator()) spectask;
+		depi=tm.spawn_task(tk1,-1,dv);
+		dv.clear();
+		dv.push_back(depi);
+	}
+#endif
+	const int bufsize=100999000;
+	static int buf[bufsize];
+
+	for (int n=0; n<bufsize;++n)
+	{
+		buf[n]=1;
+	}
+
+	static int sum=0;
+
+	{
+		LARGE_INTEGER starttime;
+		::QueryPerformanceCounter(&starttime);
+		sum=0;
+
+		int s=0;
+
+		for (int n=0; n<bufsize;++n)
+		{
+			s+=(int)math::sqrt(buf[n]*buf[n]*buf[n]);
+		}
+
+		sum=s;
+
+		LARGE_INTEGER endtime;
+		::QueryPerformanceCounter(&endtime);
+
+		LARGE_INTEGER freq; ::QueryPerformanceFrequency(&freq);
+
+		printf_s("serialtime: %f\n",(endtime.QuadPart-starttime.QuadPart)/(double)freq.QuadPart);
+	}
+
+	sum=0;
+
+	class procclass
+	{
+	public:
+		procclass(int& i_sum):sum(i_sum){}
+		void operator()(int* i_buf, unsigned i_num) const
+		{
+			int l=0;
+			for (unsigned n=0; n<i_num; ++n)
+			{
+//				l+=i_buf[n];
+				l+=(int)math::sqrt(i_buf[n]*i_buf[n]*i_buf[n]);
+			}
+
+			sum+=l;
+		}
+
+		int& sum;
+	};
+
+	LARGE_INTEGER starttime;
+	::QueryPerformanceCounter(&starttime);
+	long long time=starttime.QuadPart;
+	unsigned id=tm.process_buffer(buf,bufsize,10,procclass(sum));
+
+	class printsum:public threading::task
+	{
+	public:
+		void run()
+		{
+			LARGE_INTEGER starttime;
+			::QueryPerformanceCounter(&starttime);
+			LARGE_INTEGER freq; ::QueryPerformanceFrequency(&freq);
+
+			double sec=(starttime.QuadPart-time)/(double)freq.QuadPart;
+
+			printf_s("sum:%d\n",sum);
+			printf_s("time:%f\n",sec);
+		}
+
+		int& sum;
+		long long time;
+
+		printsum(int& i_sum, long long i_time):sum(i_sum), time(i_time){}
+	};
+
+	tm.spawn_task(new (tm.get_allocator()) printsum(sum,time),-1,id);
+
+
+
+
+
+
+
+
+
+	int x;
+
+	std::cin >> x;
 	return;
 	int a=fact<5>();
 

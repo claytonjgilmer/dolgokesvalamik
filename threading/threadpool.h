@@ -1,3 +1,4 @@
+#if 0
 #ifndef _threadpool_h_
 #define _threadpool_h_
 
@@ -111,3 +112,4 @@ ha a dependencynumja nem 0, akkor a semaphore megno eggyel
 } //namespace threading
 
 #endif//_dynthreadpool_h_
+#endif

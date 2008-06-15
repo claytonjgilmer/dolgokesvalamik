@@ -37,9 +37,9 @@ namespace threading
 	{
 	}
 	
-	void thread::start(threadfunc i_func)
+	void thread::start(threadfunc i_func, void* i_data)
 	{
-				m_handle=(HANDLE)_beginthreadex( NULL, 0, i_func, this, 0, &m_id);
+				m_handle=(HANDLE)_beginthreadex( NULL, 0, i_func, i_data, 0, &m_id);
 				setthreadname(m_id,m_name);
 	}
 

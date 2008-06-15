@@ -116,12 +116,12 @@ namespace math
 		return i_radian*(pi()/180.0f);
 	}
 
-	template<class t> myinline t min(t i_value1, t i_value2)
+	template<typename T> myinline T Min(const T& i_value1, const T& i_value2)
 	{
 		return i_value1<i_value2 ? i_value1 : i_value2;
 	}
 
-	template<class t> myinline t max(t i_value1, t i_value2)
+	template<class t> myinline t Max(t i_value1, t i_value2)
 	{
 		return i_value1>i_value2 ? i_value1 : i_value2;
 	}

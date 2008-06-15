@@ -38,7 +38,7 @@ namespace threading
 			SwitchToThread();
 		}
 */
-//			while (_InterlockedCompareExchange(&m_data,1,0));
+			while (InterlockedCompareExchange(&m_data,1,0));
 #endif
 	}
 

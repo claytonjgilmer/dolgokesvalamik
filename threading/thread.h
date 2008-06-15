@@ -11,7 +11,7 @@ namespace threading
 	{
 	public:
 		thread(const std::string& i_name="");
-		void start(threadfunc i_func);
+		void start(threadfunc i_func, void* i_data);
 		unsigned getid() const;
 		void join() const;
 	private:

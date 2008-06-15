@@ -6,28 +6,27 @@
 
 namespace threading
 {
+	class taskmanager;
 	class task
 	{
+		friend class taskmanager;
 		public:
 			task();
 			virtual void run() =0;
-			int getID() const;
+			int get_id() const;
+
 		private:
 			int m_taskID;
 #ifdef _DEBUG
 			std::string m_name;
 #endif
 	};
-	
-	class taskdesc
+
+	class empty_task:public task
 	{
-		task* m_task;
-		int m_parentID;
-		ctr::vector<int> m_dependency;
-			
-		taskdesc();
+	public:
+		virtual void run(){}
 	};
 	
-
 };
 #endif//_task_h_

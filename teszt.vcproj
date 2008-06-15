@@ -251,6 +251,22 @@
 				>
 			</File>
 			<File
+				RelativePath=".\threading\task.h"
+				>
+			</File>
+			<File
+				RelativePath=".\threading\taskallocator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\threading\taskmanager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\threading\thread.h"
+				>
+			</File>
+			<File
 				RelativePath=".\threading\threadpool.h"
 				>
 			</File>
@@ -300,6 +316,10 @@
 			</File>
 			<File
 				RelativePath=".\threading\task.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\threading\taskmanager.cpp"
 				>
 			</File>
 			<File

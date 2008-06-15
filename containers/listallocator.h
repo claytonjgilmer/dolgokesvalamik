@@ -160,14 +160,14 @@ namespace ctr
 	MYINLINE void listallocator<basetype,blocksize>::deallocate(basetype* i_data)
 	{
 		i_data->~basetype();
-		elem* elem=(elem*)i_data;
+		elem* actelem=(elem*)i_data;
 
-		elem->m_next->m_prev=elem->m_prev;
-		elem->m_prev->m_next=elem->m_next;
+		actelem->m_next->m_prev=actelem->m_prev;
+		actelem->m_prev->m_next=actelem->m_next;
 
-		elem->m_next=m_free;
+		actelem->m_next=m_free;
 
-		m_free=elem;
+		m_free=actelem;
 		m_size--;
 	}
 

@@ -6,15 +6,8 @@ namespace threading
 	{
 	}
 	
-	int task::getID() const
+	int task::get_id() const
 	{
 		return m_taskID;
-	}
-	
-	
-	taskdesc::taskdesc()
-	{
-		m_task=NULL;
-		m_parentID=0;
 	}
 }

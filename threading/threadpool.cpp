@@ -1,3 +1,4 @@
+#if 0
 #include "threadpool.h"
 #include <process.h>
 #include <stdio.h>
@@ -132,7 +133,7 @@ namespace threading
 
 			while (true)
 			{
-				if (!task->m_runningchildnum)
+				if (!task->m_childnum)
 				{
 					task->m_state=TASK_COMPLETED;
 
@@ -155,7 +156,7 @@ namespace threading
 				if (task->m_parenttask>=0)
 				{
 					task=&m_taskbuf[task->m_parenttask];
-					--task->m_runningchildnum;
+					--task->m_childnum;
 				}
 				else
 				{
@@ -193,7 +194,7 @@ namespace threading
 			}
 		}
 
-		newtask.m_runningchildnum=0;
+		newtask.m_childnum=0;
 		newtask.m_parenttask=i_desc.m_parenttask;
 
 		m_taskbuf.push_back(newtask);
@@ -233,7 +234,7 @@ namespace threading
 				}
 			}
 
-			newtask.m_runningchildnum=0;
+			newtask.m_childnum=0;
 			newtask.m_parenttask=i_desc[taskc].m_parenttask;
 
 			o_taskid[taskc]=m_taskbuf.size();
@@ -278,3 +279,4 @@ namespace threading
 		
 	}
 }//namespace Dyn
+#endif

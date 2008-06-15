@@ -28,6 +28,13 @@ namespace ctr
 		basetype& front();
 		const basetype& front() const;
 
+		static const vector& emptyvector()
+		{
+			static const vector e;
+
+			return e;
+		}
+
 		void assign(unsigned i_count, const basetype& val);
 
 		void push_back(const basetype& i_newelem);
