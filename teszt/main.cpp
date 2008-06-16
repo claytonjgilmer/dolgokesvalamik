@@ -1,5 +1,6 @@
 #include "math/vec3.h"
 #include "math/math.h"
+#include "math/ssemtx4x3.h"
 #include "containers/listallocator.h"
 #include <stdio.h>
 #include <windows.h>
@@ -14,6 +15,7 @@ template<int n> int fact(){return n*fact<n-1>();}
 template<> int fact<1>(){return 1;}
 
 math::mtx4x3 gmtx(math::mtx4x3::identitymtx());
+math::ssemtx4x3 ssegmtx(math::ssemtx4x3::identitymtx());
 
 unsigned WINAPI threadrun(void* i_param)
 {
@@ -38,7 +40,7 @@ void _cdecl main()
 	th2.join();
 */
 
-	threading::taskmanager tm(3);
+	threading::taskmanager tm(10);
 #if 0
 	class spectask:public threading::task
 	{
@@ -60,7 +62,7 @@ void _cdecl main()
 		dv.push_back(depi);
 	}
 #endif
-	const int bufsize=100999000;
+	const int bufsize=100;//999000;
 	static int buf[bufsize];
 
 	for (int n=0; n<bufsize;++n)
@@ -79,7 +81,7 @@ void _cdecl main()
 
 		for (int n=0; n<bufsize;++n)
 		{
-			s+=(int)math::sqrt(buf[n]*buf[n]*buf[n]);
+			s+=(int)math::sqrt((float)(buf[n]*buf[n]*buf[n]));
 		}
 
 		sum=s;
@@ -104,7 +106,7 @@ void _cdecl main()
 			for (unsigned n=0; n<i_num; ++n)
 			{
 //				l+=i_buf[n];
-				l+=(int)math::sqrt(i_buf[n]*i_buf[n]*i_buf[n]);
+				l+=(int)math::sqrt((float)(i_buf[n]*i_buf[n]*i_buf[n]));
 			}
 
 			sum+=l;
@@ -152,7 +154,7 @@ void _cdecl main()
 	int x;
 
 	std::cin >> x;
-	return;
+//	return;
 	int a=fact<5>();
 
 	printf_s("%d!=%d\n",5,a);
@@ -184,7 +186,7 @@ void _cdecl main()
 
 	s->release();
 
-	const int itnum=100000000;
+	const int itnum=10000000;
 
 	{
 		math::mtx4x3 mtx(gmtx);//; mtx.identity();
@@ -225,6 +227,28 @@ void _cdecl main()
 
 		printf_s("time:%d\n",end-start);
 		printf_s("vec:%f %f %f\n",vec.x,vec.y,vec.z);
+	}
+
+	{
+		math::ssemtx4x3 mtx(ssegmtx);
+		mtx.trans.set(.00001f,0,0);
+		math::ssevec3 vec; vec.set(5,2,3);
+		math::ssevec3 vec2;
+
+		unsigned start=timeGetTime();
+
+		for (int n=0; n<itnum; ++n)
+		{
+			vec2=mtx.transform(vec);
+			vec=mtx.transform(vec2);
+//			mtx.transform(vec2,vec);
+//			mtx.transform(vec,vec2);
+		}
+
+		unsigned end=timeGetTime();
+
+		printf_s("time:%d\n",end-start);
+		printf_s("vec:%f %f %f\n",vec[0],vec[1],vec[2]);
 	}
 
 }
