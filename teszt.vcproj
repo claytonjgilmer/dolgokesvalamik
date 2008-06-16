@@ -200,10 +200,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\physics\DynBody.h"
-				>
-			</File>
-			<File
 				RelativePath=".\containers\fixedvector.h"
 				>
 			</File>
@@ -229,6 +225,10 @@
 			</File>
 			<File
 				RelativePath=".\threading\mutex.h"
+				>
+			</File>
+			<File
+				RelativePath=".\physics\nbody.h"
 				>
 			</File>
 			<File
@@ -337,6 +337,18 @@
 			</File>
 			<File
 				RelativePath=".\threading\threadpool.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="render"
+			>
+			<File
+				RelativePath=".\render\renderqueue.h"
+				>
+			</File>
+			<File
+				RelativePath=".\render\rendersystem.h"
 				>
 			</File>
 		</Filter>
