@@ -1,4 +1,8 @@
+#define _WIN32_WINNT 0x0501	// Change this to the appropriate value to target other versions of Windows.
 #include "taskmanager.h"
+//#ifndef _WIN32_WINNT		// Allow use of features specific to Windows XP or later.                   
+//#endif						
+#include <Windows.h>
 
 namespace threading
 {
@@ -14,7 +18,7 @@ namespace threading
 	taskmanager::taskmanager(unsigned i_threadnum/*=0*/)
 	{
 		m_incompletetasknum=0;
-		m_taskbuf.reserve(128);
+//		m_taskbuf.reserve(128);
 
 		m_workevent= CreateSemaphore(NULL,0,1000,NULL);
 		m_exitevent= CreateEvent(NULL,TRUE,FALSE,NULL);
@@ -34,6 +38,12 @@ namespace threading
 	taskmanager::~taskmanager()
 	{
 		exit();
+	}
+
+	void taskmanager::flush()
+	{
+		while (m_incompletetasknum) SwitchToThread();
+		m_taskbuf.clear();
 	}
 
 	void taskmanager::exit()
@@ -117,6 +127,7 @@ namespace threading
 		}
 
 
+		--m_incompletetasknum;
 		m_taskmutex.unlock();
 	}
 

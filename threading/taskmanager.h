@@ -48,6 +48,7 @@ namespace threading
 		friend unsigned WINAPI poolrun(void*);
 		taskmanager(unsigned i_threadnum=0);
 		~taskmanager();
+		void flush();
 		void exit();
 		unsigned spawn_task(task* i_task, unsigned i_parentID=-1, const ctr::fixedvector<unsigned,10>& i_dependency=ctr::fixedvector<unsigned,10>::emptyvector());
 		unsigned spawn_task(task* i_task, unsigned i_parentID=-1, unsigned i_dependency=-1);
@@ -127,8 +128,8 @@ namespace threading
 		ctr::vector<thread> m_threadbuf;
 		taskallocator m_allocator;
 
-		ctr::vector<taskdescinternal> m_taskbuf;
-		unsigned m_incompletetasknum;
+		ctr::fixedvector<taskdescinternal,128> m_taskbuf;
+		volatile unsigned m_incompletetasknum;
 		ctr::queue<unsigned,128> m_idletask;
 
 		mutex m_taskmutex;

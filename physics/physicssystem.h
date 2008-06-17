@@ -4,6 +4,7 @@
 #include "../containers/listallocator.h"
 #include "../math/mtx4x3.h"
 #include "../physics/body.h"
+#include "nbody.h"
 
 namespace physics
 {

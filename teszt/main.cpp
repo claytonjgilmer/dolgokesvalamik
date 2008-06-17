@@ -40,7 +40,7 @@ void _cdecl main()
 	th2.join();
 */
 
-	threading::taskmanager tm(10);
+	threading::taskmanager tm(2);
 #if 0
 	class spectask:public threading::task
 	{
@@ -62,7 +62,7 @@ void _cdecl main()
 		dv.push_back(depi);
 	}
 #endif
-	const int bufsize=100;//999000;
+	const int bufsize=100999;//000;
 	static int buf[bufsize];
 
 	for (int n=0; n<bufsize;++n)
@@ -151,9 +151,10 @@ void _cdecl main()
 
 
 
-	int x;
+	tm.flush();
+//	int x;
 
-	std::cin >> x;
+//	std::cin >> x;
 //	return;
 	int a=fact<5>();
 

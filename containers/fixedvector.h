@@ -19,6 +19,23 @@ namespace ctr
 			return m_size;
 		}
 
+		unsigned capacity() const
+		{
+			return bufsize;
+		}
+
+		void resize(unsigned i_newsize)
+		{
+			if (m_size<i_newsize)
+				for (unsigned n=m_size; n<i_newsize; ++n)
+					new (&TBuf[n]) T();
+			else
+				for (unsigned n=i_newsize; n<m_size; ++n)
+					TBuf[n].~T();
+
+			m_size=i_newsize;
+		}
+
 		void clear()
 		{
 #if 1
@@ -48,6 +65,17 @@ namespace ctr
 		{
 			return TBuf[i_index];
 		}
+
+		T& back()
+		{
+			return TBuf[m_size-1];
+		}
+
+		const T& back() const
+		{
+			return TBuf[m_size-1];
+		}
+
 
 		static const fixedvector& emptyvector()
 		{
