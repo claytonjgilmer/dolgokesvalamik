@@ -264,4 +264,6 @@ int _cdecl main()
 		printf_s("vec:%f %f %f\n",vec[0],vec[1],vec[2]);
 	}
 
+	system("PAUSE");
+
 }

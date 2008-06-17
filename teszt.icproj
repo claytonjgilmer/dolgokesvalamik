@@ -5,7 +5,7 @@
 	Name="teszt"
 	ProjectGUID="{80942A2A-4E6A-450F-8565-A944733701F7}"
 	VCNestedProjectGUID="{2EFECA19-BE9A-454E-B512-32FB94205791}"
-	VCNestedProjectCRC32="1216509115"
+	VCNestedProjectCRC32="3172164943"
 	VCNestedProjectFileName="teszt.vcproj"
 	Keyword="Win32Proj">
 	<Platforms>
@@ -23,6 +23,7 @@
 			<Tool 
 				Name="CppCmplrTool"
 				Optimization="0"
+				AdditionalIncludeDirectories=".\"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;"
 				MinimalRebuild="1"
 				BasicRuntimeChecks="3"
@@ -34,8 +35,9 @@
 			<Tool 
 				Name="LinkerTool"
 				LinkIncremental="2"
+				AdditionalDependencies="winmm.lib"
 				GenerateDebugInformation="1"
-				SubSystem="2"
+				SubSystem="1"
 				TargetMachine="1"
 				DelayImpLib=""/>
 			<Tool 
@@ -75,6 +77,7 @@
 				FavorSizeOrSpeed="1"
 				AdditionalIncludeDirectories="."
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				ExceptionHandling="0"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="0"
 				EnableEnhancedInstructionSet="2"
@@ -82,7 +85,7 @@
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="1"
 				DebugInformationFormat="3"
-				CallingConvention="1"
+				CallingConvention="0"
 				FlushDenormalResultsToZero="0"
 				FloatingPointSpeculation="3"
 				UseProcExt="0"

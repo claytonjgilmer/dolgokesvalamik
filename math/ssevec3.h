@@ -1,7 +1,7 @@
 #ifndef _ssevec3_h_
 #define _ssevec3_h_
 
-#include <emmintrin.h>
+#include <xmmintrin.h>
 #include <assert.h>
 
 namespace math

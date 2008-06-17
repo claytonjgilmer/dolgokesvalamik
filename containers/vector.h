@@ -118,25 +118,25 @@ namespace ctr
 	}
 
 	template<class basetype>
-	MYINLINE typename vector<typename basetype>::iterator vector<basetype>::begin()
+	MYINLINE vector<basetype>::iterator vector<basetype>::begin()
 	{
 		return m_buf;
 	}
 
 	template<class basetype>
-	MYINLINE typename vector<typename basetype>::const_iterator vector<basetype>::begin() const
+	MYINLINE vector<basetype>::const_iterator vector<basetype>::begin() const
 	{
 		return m_buf;
 	}
 
 	template<class basetype>
-	MYINLINE typename vector<basetype>::iterator vector<basetype>::end()
+	MYINLINE vector<basetype>::iterator vector<basetype>::end()
 	{
 		return m_buf+m_size;
 	}
 
 	template<class basetype>
-	MYINLINE typename vector<basetype>::const_iterator vector<basetype>::end() const
+	MYINLINE vector<basetype>::const_iterator vector<basetype>::end() const
 	{
 		return m_buf+m_size;
 	}
