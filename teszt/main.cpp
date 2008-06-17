@@ -29,7 +29,26 @@ unsigned WINAPI threadrun(void* i_param)
 	return 0;
 }
 
-void _cdecl main()
+class procclass
+{
+public:
+	procclass(int& i_sum):sum(i_sum){}
+	void operator()(int* i_buf, unsigned i_num) const
+	{
+		int l=0;
+		for (unsigned n=0; n<i_num; ++n)
+		{
+			//				l+=i_buf[n];
+			l+=(int)math::sqrt((float)(i_buf[n]*i_buf[n]*i_buf[n]));
+		}
+
+		sum+=l;
+	}
+
+	int& sum;
+};
+
+int _cdecl main()
 {
 /*
 	threading::thread th1("1"),th2("2");
@@ -96,28 +115,12 @@ void _cdecl main()
 
 	sum=0;
 
-	class procclass
-	{
-	public:
-		procclass(int& i_sum):sum(i_sum){}
-		void operator()(int* i_buf, unsigned i_num) const
-		{
-			int l=0;
-			for (unsigned n=0; n<i_num; ++n)
-			{
-//				l+=i_buf[n];
-				l+=(int)math::sqrt((float)(i_buf[n]*i_buf[n]*i_buf[n]));
-			}
-
-			sum+=l;
-		}
-
-		int& sum;
-	};
 
 	LARGE_INTEGER starttime;
 	::QueryPerformanceCounter(&starttime);
 	long long time=starttime.QuadPart;
+
+	;
 	unsigned id=tm.process_buffer(buf,bufsize,10,procclass(sum));
 
 	class printsum:public threading::task
@@ -191,7 +194,10 @@ void _cdecl main()
 
 	{
 		math::mtx4x3 mtx(gmtx);//; mtx.identity();
-		mtx.t.x=0.00001f;
+		mtx.xaxis.set(1.0000001f,0.0000001f,0.0000001f);
+		mtx.yaxis.set(0.0000001f,1.0000001f,0.0000001f);
+		mtx.zaxis.set(0.0000001f,0.0000001f,1.0000001f);
+		mtx.t.set(0.00001f,0.00001f,0.00001f);
 		math::vec3 vec; vec.set(5,2,3);
 		math::vec3 vec2;
 
@@ -212,7 +218,10 @@ void _cdecl main()
 	{
 //		math::mtx4x3 mtx; mtx.identity();
 		math::mtx4x3 mtx(gmtx);
-		mtx.t.x=0.00001f;
+		mtx.xaxis.set(1.0000001f,0.0000001f,0.0000001f);
+		mtx.yaxis.set(0.0000001f,1.0000001f,0.0000001f);
+		mtx.zaxis.set(0.0000001f,0.0000001f,1.0000001f);
+		mtx.t.set(0.00001f,0.00001f,0.00001f);
 		math::vec3 vec; vec.set(5,2,3);
 		math::vec3 vec2;
 
@@ -232,7 +241,10 @@ void _cdecl main()
 
 	{
 		math::ssemtx4x3 mtx(ssegmtx);
-		mtx.trans.set(.00001f,0,0);
+		mtx.xaxis.set(1.0000001f,0.0000001f,0.0000001f);
+		mtx.yaxis.set(0.0000001f,1.0000001f,0.0000001f);
+		mtx.zaxis.set(0.0000001f,0.0000001f,1.0000001f);
+		mtx.trans.set(.00001f,.00001f,.00001f);
 		math::ssevec3 vec; vec.set(5,2,3);
 		math::ssevec3 vec2;
 
