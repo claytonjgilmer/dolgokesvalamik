@@ -252,6 +252,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\render\renderqueue.h"
+				>
+			</File>
+			<File
+				RelativePath=".\render\rendershader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\render\rendersystem.h"
+				>
+			</File>
+			<File
 				RelativePath=".\math\ssemtx4x3.h"
 				>
 			</File>
@@ -324,6 +336,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\render\rendersystem.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\threading\task.cpp"
 				>
 			</File>
@@ -337,18 +353,6 @@
 			</File>
 			<File
 				RelativePath=".\threading\threadpool.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="render"
-			>
-			<File
-				RelativePath=".\render\renderqueue.h"
-				>
-			</File>
-			<File
-				RelativePath=".\render\rendersystem.h"
 				>
 			</File>
 		</Filter>

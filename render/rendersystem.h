@@ -1,11 +1,27 @@
 #ifndef _rendersystem_h_
 #define _rendersystem_h_
 
+#include "containers/listallocator.h"
+#include "renderqueue.h"
+#include "threading/taskmanager.h"
+
 namespace render
 {
+	class systemdesc
+	{
+	public:
+		threading::taskmanager* m_taskmanager;
+	};
 	class system
 	{
 	public:
+		system(const systemdesc& i_systemdesc);
+		~system();
+
+		void renderqueues();
+
+		threading::taskmanager* m_taskmanager;
+		ctr::listallocator<queue> m_queues;
 	};
 }
 #endif//_rendersystem_h_
