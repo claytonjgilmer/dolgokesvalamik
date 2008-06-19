@@ -1,7 +1,7 @@
 #ifndef _fixedvector_h_
 #define _fixedvector_h_
 
-#include <new>
+//#include <new>
 
 namespace ctr
 {

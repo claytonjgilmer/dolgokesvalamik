@@ -3,8 +3,7 @@
 
 #define  NULL 0
 #define MYINLINE
-#include <malloc.h>
-#include <new.h>
+#include <new>
 namespace ctr
 {
 	template <class basetype>

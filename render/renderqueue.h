@@ -6,6 +6,10 @@ namespace render
 	class queue
 	{
 	public:
+		void render();
+
+//	private:
+
 	};
 }
 #endif//_renderqueue_h_

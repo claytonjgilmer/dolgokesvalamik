@@ -18,8 +18,12 @@ namespace render
 		system(const systemdesc& i_systemdesc);
 		~system();
 
+		vertexbuffer* createvertexbuffer(unsigned i_vertexnum);
+		indexbuffer* createindexbuffer(unsigned i_indexnum);
+
 		void renderqueues();
 
+//	private:
 		threading::taskmanager* m_taskmanager;
 		ctr::listallocator<queue> m_queues;
 	};
