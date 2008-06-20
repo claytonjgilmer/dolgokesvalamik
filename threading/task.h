@@ -1,7 +1,7 @@
 #ifndef _task_h_
 #define _task_h_
 
-#include <string>
+#include "..\containers\string.h"
 #include "containers/vector.h"
 
 namespace threading
@@ -18,7 +18,7 @@ namespace threading
 		private:
 			int m_taskID;
 #ifdef _DEBUG
-			std::string m_name;
+			ctr::string m_name;
 #endif
 	};
 

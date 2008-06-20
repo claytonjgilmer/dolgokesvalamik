@@ -119,7 +119,7 @@
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="."
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -252,6 +252,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\base\referencedobject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\base\referencepointer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\render\renderindexbuffer.h"
 				>
 			</File>
@@ -288,11 +296,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\base\resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\base\resourcemanager.h"
+				>
+			</File>
+			<File
 				RelativePath=".\math\ssemtx4x3.h"
 				>
 			</File>
 			<File
 				RelativePath=".\math\ssevec3.h"
+				>
+			</File>
+			<File
+				RelativePath=".\containers\string.h"
 				>
 			</File>
 			<File

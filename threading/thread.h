@@ -1,8 +1,8 @@
 #ifndef _thread_h_
 #define _thread_h_
 
-#include <string>
 #include <windows.h> 
+#include "..\containers\string.h"
 namespace threading
 {
 	typedef unsigned (WINAPI *threadfunc)(void*);
@@ -10,13 +10,13 @@ namespace threading
 	class thread
 	{
 	public:
-		thread(const std::string& i_name="");
+		thread(const ctr::string& i_name="");
 		void start(threadfunc i_func, void* i_data);
 		unsigned getid() const;
 		void join() const;
 	private:
 		HANDLE m_handle;
-		std::string m_name;
+		ctr::string m_name;
 		unsigned m_id;
 	};
 }

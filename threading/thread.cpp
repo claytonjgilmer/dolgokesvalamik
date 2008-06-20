@@ -14,7 +14,7 @@ namespace threading
 	} threadname_info;
 #pragma pack(pop)
 
-	void setthreadname( unsigned i_threadID, const std::string& i_threadname)
+	void setthreadname( unsigned i_threadID, const ctr::string& i_threadname)
 	{
 		Sleep(1);
 		threadname_info info;
@@ -32,7 +32,7 @@ namespace threading
 		}
 	}
 	
-	thread::thread(const std::string& i_name):
+	thread::thread(const ctr::string& i_name):
 	m_name(i_name)
 	{
 	}

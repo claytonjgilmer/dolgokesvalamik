@@ -5,10 +5,14 @@
 
 namespace render
 {
+	class system;
 	class vertexbuffer
 	{
+		friend class system;
 	public:
-//	private:
+	private:
+		vertexbuffer(){}
+		~vertexbuffer(){}
 		IDirect3DVertexBuffer9* m_hwbuffer;
 	};
 }

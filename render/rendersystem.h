@@ -5,6 +5,9 @@
 #include "renderqueue.h"
 #include "threading/taskmanager.h"
 
+#include "rendervertexbuffer.h"
+#include "renderindexbuffer.h"
+
 namespace render
 {
 	class systemdesc

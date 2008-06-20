@@ -1,9 +1,9 @@
-#ifndef _VECTOR_H_
-#define _VECTOR_H_
+#ifndef _vector_h_
+#define _vector_h_
 
 #define  NULL 0
 #define MYINLINE
-#include <new>
+#include <new.h>
 namespace ctr
 {
 	template <class basetype>
@@ -63,6 +63,13 @@ namespace ctr
 	private:
 	};
 
+
+
+
+
+
+
+
 	template<class basetype>
 	MYINLINE void vector<basetype>::operator =(const vector& i_other)
 	{
@@ -117,25 +124,25 @@ namespace ctr
 	}
 
 	template<class basetype>
-	MYINLINE vector<basetype>::iterator vector<basetype>::begin()
+	MYINLINE typename vector<basetype>::iterator vector<basetype>::begin()
 	{
 		return m_buf;
 	}
 
 	template<class basetype>
-	MYINLINE vector<basetype>::const_iterator vector<basetype>::begin() const
+	MYINLINE typename vector<basetype>::const_iterator vector<basetype>::begin() const
 	{
 		return m_buf;
 	}
 
 	template<class basetype>
-	MYINLINE vector<basetype>::iterator vector<basetype>::end()
+	MYINLINE typename vector<basetype>::iterator vector<basetype>::end()
 	{
 		return m_buf+m_size;
 	}
 
 	template<class basetype>
-	MYINLINE vector<basetype>::const_iterator vector<basetype>::end() const
+	MYINLINE typename vector<basetype>::const_iterator vector<basetype>::end() const
 	{
 		return m_buf+m_size;
 	}
@@ -366,4 +373,4 @@ namespace ctr
 		m_buf=(basetype*)newbuf;
 	}
 }//namespace ctr
-#endif//_VECTOR_H_
+#endif//_vector_h_
