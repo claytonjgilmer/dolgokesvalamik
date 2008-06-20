@@ -10,6 +10,8 @@
 #include "threading/thread.h"
 #include "threading/taskmanager.h"
 
+#include "..\containers\string.h"
+
 template<int n> int fact(){return n*fact<n-1>();}
 template<> int fact<1>(){return 1;}
 
@@ -47,6 +49,8 @@ public:
 	int& sum;
 };
 
+#include <string>
+
 int _cdecl main()
 {
 /*
@@ -57,6 +61,7 @@ int _cdecl main()
 	th1.join();
 	th2.join();
 */
+
 
 	threading::taskmanager tm(2);
 #if 0

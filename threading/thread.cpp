@@ -40,7 +40,9 @@ namespace threading
 	void thread::start(threadfunc i_func, void* i_data)
 	{
 				m_handle=(HANDLE)_beginthreadex( NULL, 0, i_func, i_data, 0, &m_id);
-				setthreadname(m_id,m_name);
+
+				if (m_name.size())
+					setthreadname(m_id,m_name);
 	}
 
 	void thread::join() const
@@ -51,6 +53,13 @@ namespace threading
 	unsigned thread::getid() const
 	{
 		return m_id;
+	}
+
+	void thread::set_name(const ctr::string& i_name)
+	{
+		m_name=i_name;
+		if (m_name.size())
+			setthreadname(m_id,i_name);
 	}
 
 }

@@ -14,6 +14,7 @@ namespace threading
 		void start(threadfunc i_func, void* i_data);
 		unsigned getid() const;
 		void join() const;
+		void set_name(const ctr::string& i_name);
 	private:
 		HANDLE m_handle;
 		ctr::string m_name;
