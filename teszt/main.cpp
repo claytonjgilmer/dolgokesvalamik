@@ -60,7 +60,7 @@ public:
 	mapelem* Next;
 };
 
-#define _ME_(_NAME_) mapelem _NAME_(#_NAME_)
+#define _ME_(_NAME_) static mapelem _NAME_(#_NAME_)
 
 int _cdecl main()
 {
@@ -73,6 +73,20 @@ int _cdecl main()
 	_ME_(c000);
 	_ME_(d000);
 	_ME_(e000);
+
+	char str[6];
+
+	str[5]=0;
+
+	for (int n=0; n<100;++n)
+	{
+		for (int m=0; m<5; ++m)
+		{
+			str[m]=(rand() %26) + 'a';
+		}
+
+		strmap.add_data(new mapelem(str));
+	}
 
 	key=strmap.add_data(&a000);
 	key=strmap.add_data(&b000);

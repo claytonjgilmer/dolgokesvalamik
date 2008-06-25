@@ -67,8 +67,8 @@ namespace ctr
 				break;
 
 				prevptr=ptr;
-				ptr=ptr->Next;
 			}
+			ptr=ptr->Next;
 		}
 	}
 
@@ -84,8 +84,8 @@ namespace ctr
 			if (ptr->Name==i_name)
 			{
 				return ptr;
-				ptr=ptr->Next;
 			}
+			ptr=ptr->Next;
 		}
 
 		return NULL;

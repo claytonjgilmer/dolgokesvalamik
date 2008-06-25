@@ -1,3 +1,8 @@
+/*
+	betolt modellt, texturat (resourcemanagerbe)
+	modellekbol lehet peldanyt kerni (klonozni)
+
+*/
 #ifndef _rendersystem_h_
 #define _rendersystem_h_
 
