@@ -5,8 +5,6 @@
 
 //ezt azert at kellene gondolni
 
-#define myinline
-
 namespace math
 {
 	class vec4
@@ -68,11 +66,11 @@ namespace math
 		float x,y,z;
 	};//vec4
 
-	myinline vec4::vec4()
+	MLINLINE vec4::vec4()
 	{
 	}
 
-	myinline vec4::vec4(float i_xcoord, float i_ycoord, float i_zcoord, float i_wcoord)
+	MLINLINE vec4::vec4(float i_xcoord, float i_ycoord, float i_zcoord, float i_wcoord)
 	{
 		x=i_xcoord;
 		y=i_ycoord;
@@ -80,24 +78,24 @@ namespace math
 		w=i_wcoord
 	}
 
-	myinline float& vec4::operator[](int i_index)
+	MLINLINE float& vec4::operator[](int i_index)
 	{
 		return *(((float*)this)+i_index);
 	}
 
-	myinline const float& vec4::operator[](int i_index) const
+	MLINLINE const float& vec4::operator[](int i_index) const
 	{
 		return *(((float*)this)+i_index);
 	}
 
 
-	myinline void vec4::clear()
+	MLINLINE void vec4::clear()
 	{
 		x=y=z=0.0f;
 		w=1.0f; //???
 	}
 
-	myinline void vec4::set(float i_xcoord, float i_ycoord, float i_zcoord, float i_wcoord)
+	MLINLINE void vec4::set(float i_xcoord, float i_ycoord, float i_zcoord, float i_wcoord)
 	{
 		x=i_xcoord;
 		y=i_ycoord;
@@ -106,7 +104,7 @@ namespace math
 	}
 
 
-	myinline void	vec4::cross(const vec4& i_src1, const vec4& i_src2)
+	MLINLINE void	vec4::cross(const vec4& i_src1, const vec4& i_src2)
 	{
 		x=i_src1.y*i_src2.z-i_src1.z*i_src2.y;
 		y=i_src1.z*i_src2.x-i_src1.x*i_src2.z;
@@ -114,7 +112,7 @@ namespace math
 		w=1.0f;
 	}
 
-	myinline vec4 cross(const vec4& i_src1, const vec4& i_src2)
+	MLINLINE vec4 cross(const vec4& i_src1, const vec4& i_src2)
 	{
 		return vec4(
 			i_src1.y*i_src2.z-i_src1.z*i_src2.y,
@@ -123,32 +121,32 @@ namespace math
 			);
 	}
 
-	myinline vec4 vec4::cross(const vec4& i_other) const
+	MLINLINE vec4 vec4::cross(const vec4& i_other) const
 	{
 		return math::cross(*this,i_other);
 	}
 
-	myinline float	vec4::dot(const vec4& i_other) const
+	MLINLINE float	vec4::dot(const vec4& i_other) const
 	{
 		return x*i_other.x+y*i_other.y+z*i_other.z;
 	}
 
-	myinline float dot(const vec4& i_v1, const vec4& i_v2)
+	MLINLINE float dot(const vec4& i_v1, const vec4& i_v2)
 	{
 		return i_v1.x*i_v2.x+i_v1.y*i_v2.y+i_v1.z*i_v2.z;
 	}
 
-	myinline float	vec4::squarelength() const
+	MLINLINE float	vec4::squarelength() const
 	{
 		return x*x+y*y+z*z;
 	}
 
-	myinline float	vec4::length() const
+	MLINLINE float	vec4::length() const
 	{
 		return sqrt(squarelength());
 	}
 
-	myinline void	vec4::normalize()
+	MLINLINE void	vec4::normalize()
 	{
 		float length=length();
 
@@ -157,7 +155,7 @@ namespace math
 		z/=length;
 	}
 
-	myinline void	vec4::normalizesafe()
+	MLINLINE void	vec4::normalizesafe()
 	{
 		float squarelength=squarelength();
 
@@ -175,79 +173,79 @@ namespace math
 		}
 	}
 
-	myinline vec4	vec4::operator+(const vec4& i_other) const
+	MLINLINE vec4	vec4::operator+(const vec4& i_other) const
 	{
 		return vec4(x+i_other.x,y+i_other.y,z+i_other.z);
 	}
 
-	myinline vec4	vec4::operator-(const vec4& i_other) const
+	MLINLINE vec4	vec4::operator-(const vec4& i_other) const
 	{
 		return vec4(x-i_other.x,y-i_other.y,z-i_other.z);
 	}
 
-	myinline void	vec4::operator+=(const vec4& i_other)
+	MLINLINE void	vec4::operator+=(const vec4& i_other)
 	{
 		x+=i_other.x;
 		y+=i_other.y;
 		z+=i_other.z;
 	}
 
-	myinline void	vec4::operator-=(const vec4& i_other)
+	MLINLINE void	vec4::operator-=(const vec4& i_other)
 	{
 		x-=i_other.x;
 		y-=i_other.y;
 		z-=i_other.z;
 	}
 
-	myinline vec4	vec4::operator*(float i_scalar) const
+	MLINLINE vec4	vec4::operator*(float i_scalar) const
 	{
 		return vec4(x*i_scalar,y*i_scalar,z*i_scalar);
 	}
 
-	myinline vec4	vec4::operator/(float i_scalar) const
+	MLINLINE vec4	vec4::operator/(float i_scalar) const
 	{
 		return vec4(x/i_scalar,y/i_scalar,z/i_scalar);
 	}
 
-	myinline vec4 operator*(float i_scalar, const vec4& i_vector)
+	MLINLINE vec4 operator*(float i_scalar, const vec4& i_vector)
 	{
 		return i_vector*i_scalar;
 	}
 
-	myinline void	vec4::operator*=(float i_scalar)
+	MLINLINE void	vec4::operator*=(float i_scalar)
 	{
 		x*=i_scalar;
 		y*=i_scalar;
 		z*=i_scalar;
 	}
 
-	myinline void	vec4::operator/=(float i_scalar)
+	MLINLINE void	vec4::operator/=(float i_scalar)
 	{
 		x/=i_scalar;
 		y/=i_scalar;
 		z/=i_scalar;
 	}
 
-	myinline vec4	vec4::operator-() const
+	MLINLINE vec4	vec4::operator-() const
 	{
 		return vec4(-x,-y,-z);
 	}
 
-	myinline void vec4::abs(const vec4& i_src)
+	MLINLINE void vec4::abs(const vec4& i_src)
 	{
 		x=fabsf(i_src.x);
 		y=fabsf(i_src.y);
 		z=fabsf(i_src.z);
 	}
 
-	myinline void vec4::max(const vec4& i_v1, const vec4& i_v2)
+	MLINLINE void vec4::max(const vec4& i_v1, const vec4& i_v2)
 	{
 		x=i_v1.x > i_v2.x ? i_v1.x : i_v2.x;
 		y=i_v1.y > i_v2.y ? i_v1.y : i_v2.y;
 		z=i_v1.z > i_v2.z ? i_v1.z : i_v2.z;
 	}
 
-	myinline void vec4::max(const vec4& i_other)
+	MLINLINE void vec4::max(const vec4& i_other)
 	{
 		if (i_other.x>x)
 			x=i_other.x;
@@ -257,7 +255,7 @@ namespace math
 			z=i_other.z;
 	}
 
-	myinline float vec4::maxelem() const
+	MLINLINE float vec4::maxelem() const
 	{
 		float r=x;
 		if (y>r) r=y;
@@ -266,14 +264,14 @@ namespace math
 		return r;
 	}
 
-	myinline void vec4::min(const vec4& i_v1, const vec4& i_v2)
+	MLINLINE void vec4::min(const vec4& i_v1, const vec4& i_v2)
 	{
 		x=i_v1.x < i_v2.x ? i_v1.x : i_v2.x;
 		y=i_v1.y < i_v2.y ? i_v1.y : i_v2.y;
 		z=i_v1.z < i_v2.z ? i_v1.z : i_v2.z;
 	}
 
-	myinline void vec4::min(const vec4& i_other)
+	MLINLINE void vec4::min(const vec4& i_other)
 	{
 		if (i_other.x<x)
 			x=i_other.x;
@@ -283,7 +281,7 @@ namespace math
 			z=i_other.z;
 	}
 
-	myinline void vec4::rotate(const vec4& i_src, const vec4& i_axis, float i_angle)
+	MLINLINE void vec4::rotate(const vec4& i_src, const vec4& i_axis, float i_angle)
 	{
 		vec4 a=i_src.dot(i_axis)*i_axis;
 		vec4 b=i_src-a;
@@ -291,7 +289,7 @@ namespace math
 		*this=b*cosf(i_angle)+c*sinf(i_angle)+a;
 	}
 
-	myinline void getorthogonalaxes(vec4& o_axis1, vec4& o_axis2, const vec4& i_axissrc)
+	MLINLINE void getorthogonalaxes(vec4& o_axis1, vec4& o_axis2, const vec4& i_axissrc)
 	{
 		if ((i_axissrc.z) > 0.707f || i_axissrc.z<-0.707f)
 		{
@@ -321,7 +319,7 @@ namespace math
 		}
 	}
 
-	myinline void vec4::interpolate(const vec4& i_src1, const vec4& i_src2, float i_time)
+	MLINLINE void vec4::interpolate(const vec4& i_src1, const vec4& i_src2, float i_time)
 	{
 		x=i_src1.x+i_time*(i_src2.x-i_src1.x);
 		y=i_src1.y+i_time*(i_src2.y-i_src1.y);

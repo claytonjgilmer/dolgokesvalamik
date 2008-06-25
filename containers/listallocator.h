@@ -103,7 +103,7 @@ namespace ctr
 	}; //class listallocator
 
 	template <class basetype,int blocksize> 
-	MYINLINE void listallocator<basetype,blocksize>::allocfree()
+	MLINLINE void listallocator<basetype,blocksize>::allocfree()
 	{
 		elem* newelem=(elem*)malloc(blocksize*sizeof(elem));
 
@@ -116,7 +116,7 @@ namespace ctr
 	}
 
 	template <class basetype,int blocksize> 
-	MYINLINE basetype* listallocator<basetype,blocksize>::allocate()
+	MLINLINE basetype* listallocator<basetype,blocksize>::allocate()
 	{
 		elem* newelem;
 		if (!m_free)
@@ -136,7 +136,7 @@ namespace ctr
 	}
 
 	template <class basetype,int blocksize> 
-	MYINLINE basetype* listallocator<basetype,blocksize>::allocateplace()
+	MLINLINE basetype* listallocator<basetype,blocksize>::allocateplace()
 	{
 		elem* newelem;
 
@@ -157,7 +157,7 @@ namespace ctr
 	}
 
 	template <class basetype, int blocksize> 
-	MYINLINE void listallocator<basetype,blocksize>::deallocate(basetype* i_data)
+	MLINLINE void listallocator<basetype,blocksize>::deallocate(basetype* i_data)
 	{
 		i_data->~basetype();
 		elem* actelem=(elem*)i_data;
@@ -172,7 +172,7 @@ namespace ctr
 	}
 
 	template <class basetype, int blocksize> 
-	MYINLINE void listallocator<basetype,blocksize>::deallocateall()
+	MLINLINE void listallocator<basetype,blocksize>::deallocateall()
 	{
 		if (!m_size)
 			return;
@@ -208,20 +208,20 @@ namespace ctr
 	}
 
 	template <class basetype, int blocksize>
-	MYINLINE listallocator<basetype,blocksize>::~listallocator()
+	MLINLINE listallocator<basetype,blocksize>::~listallocator()
 	{
 		for (unsigned int n=0; n<m_allocated.size(); ++n)
 			free(m_allocated[n]);
 	}
 
 	template <class basetype, int blocksize>
-	MYINLINE unsigned listallocator<basetype,blocksize>::size() const
+	MLINLINE unsigned listallocator<basetype,blocksize>::size() const
 	{
 		return m_size;
 	}
 
 	template<class basetype, int blocksize>
-	MYINLINE void listallocator<basetype,blocksize>::moveafter(iterator i_elem, iterator i_after)
+	MLINLINE void listallocator<basetype,blocksize>::moveafter(iterator i_elem, iterator i_after)
 	{
 		elem* e=i_elem.m_elem;
 		elem* after=i_after.m_elem;
@@ -242,7 +242,7 @@ namespace ctr
 	}
 
 	template<class basetype, int blocksize>
-	MYINLINE void listallocator<basetype,blocksize>::movebefore(iterator i_elem, iterator i_before)
+	MLINLINE void listallocator<basetype,blocksize>::movebefore(iterator i_elem, iterator i_before)
 	{
 		elem* e=i_elem.m_elem;
 		elem* before=i_before.m_elem;

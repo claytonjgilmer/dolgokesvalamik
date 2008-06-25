@@ -1,9 +1,9 @@
 #ifndef _physicssystem_h_
 #define _physicssystem_h_
 
-#include "../containers/listallocator.h"
-#include "../math/mtx4x3.h"
-#include "../physics/body.h"
+#include "containers/listallocator.h"
+#include "math/mtx4x3.h"
+#include "physics/body.h"
 #include "nbody.h"
 
 namespace physics

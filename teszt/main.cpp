@@ -2,6 +2,7 @@
 #include "math/math.h"
 #include "math/ssemtx4x3.h"
 #include "containers/listallocator.h"
+#include <conio.h>
 #include <stdio.h>
 #include <windows.h>
 #include <MMSystem.h>
@@ -10,7 +11,8 @@
 #include "threading/thread.h"
 #include "threading/taskmanager.h"
 
-#include "..\containers\string.h"
+#include "containers/string.h"
+#include "containers/stringmap.h"
 
 template<int n> int fact(){return n*fact<n-1>();}
 template<> int fact<1>(){return 1;}
@@ -49,10 +51,39 @@ public:
 	int& sum;
 };
 
-#include <string>
+class mapelem
+{
+public:
+	mapelem(ctr::string i_name):Name(i_name){}
+	ctr::string Name;
+
+	mapelem* Next;
+};
+
+#define _ME_(_NAME_) mapelem _NAME_(#_NAME_)
 
 int _cdecl main()
 {
+	ctr::stringmap<mapelem,128> strmap;
+
+	unsigned key;
+
+	_ME_(a000);
+	_ME_(b000);
+	_ME_(c000);
+	_ME_(d000);
+	_ME_(e000);
+
+	key=strmap.add_data(&a000);
+	key=strmap.add_data(&b000);
+	key=strmap.add_data(&c000);
+	key=strmap.add_data(&d000);
+	key=strmap.add_data(&e000);
+	mapelem* T;
+	T=strmap.get_data("egy");
+	T=strmap.get_data("ketto");
+	T=strmap.get_data("harom");
+	T=strmap.get_data("negy");
 /*
 	threading::thread th1("1"),th2("2");
 
@@ -268,6 +299,5 @@ int _cdecl main()
 		printf_s("vec:%f %f %f\n",vec[0],vec[1],vec[2]);
 	}
 
-	system("PAUSE");
-
+	while (!_kbhit());
 }

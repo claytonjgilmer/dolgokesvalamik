@@ -2,7 +2,6 @@
 #define _mtx4x3_h_
 
 #include "mtx3x3.h"
-#define myinline __forceinline
 
 namespace math
 {
@@ -49,35 +48,35 @@ namespace math
 		};
 	}; //class mtx4x3
 
-	myinline vec3& mtx4x3::trans()
+	MLINLINE vec3& mtx4x3::trans()
 	{
 		return t;
 	}
 
-	myinline const vec3& mtx4x3::trans() const
+	MLINLINE const vec3& mtx4x3::trans() const
 	{
 		return t;
 	}
 
-	myinline void mtx4x3::identity()
+	MLINLINE void mtx4x3::identity()
 	{
 		mtx3x3::identity();
 		_41=_42=_43=0.0f;
 	}
 
-	myinline mtx4x3 mtx4x3::identitymtx()
+	MLINLINE mtx4x3 mtx4x3::identitymtx()
 	{
 		mtx4x3 ret; ret.identity(); return ret;
 	}
 
-	myinline void mtx4x3::transform(vec3& o_dst, const vec3& i_src) const
+	MLINLINE void mtx4x3::transform(vec3& o_dst, const vec3& i_src) const
 	{
 		o_dst.x=i_src.x*_11+i_src.y*_21+i_src.z*_31+_41;
 		o_dst.y=i_src.x*_12+i_src.y*_22+i_src.z*_32+_42;
 		o_dst.z=i_src.x*_13+i_src.y*_23+i_src.z*_33+_43;
 	}
 
-	myinline void mtx4x3::transform2(vec3& o_dst, const vec3& i_src) const
+	MLINLINE void mtx4x3::transform2(vec3& o_dst, const vec3& i_src) const
 	{
 //		o_dst[0]=i_src[0]*_11+i_src[1]*_21+i_src[2]*_31+_41;
 //		o_dst[1]=i_src[0]*_12+i_src[1]*_22+i_src[2]*_32+_42;
@@ -98,7 +97,7 @@ namespace math
 //		o_dst.z+=_43;
 	}
 
-	myinline vec3 mtx4x3::transform(const vec3& i_src) const
+	MLINLINE vec3 mtx4x3::transform(const vec3& i_src) const
 	{
 		return vec3
 		(
@@ -109,17 +108,17 @@ namespace math
 
 	}
 
-	myinline void mtx4x3::transformtransposed(vec3& o_dst, const vec3& i_src) const
+	MLINLINE void mtx4x3::transformtransposed(vec3& o_dst, const vec3& i_src) const
 	{
 		transformtransposed3x3(o_dst,i_src-t);
 	}
 
-	myinline vec3 mtx4x3::transformtransposed(const vec3& i_src) const
+	MLINLINE vec3 mtx4x3::transformtransposed(const vec3& i_src) const
 	{
 		return transformtransposed3x3(i_src-t);
 	}
 
-	myinline void mtx4x3::multiply(const mtx4x3& i_src1, const mtx4x3& i_src2)
+	MLINLINE void mtx4x3::multiply(const mtx4x3& i_src1, const mtx4x3& i_src2)
 	{
 		_11=i_src1._11*i_src2._11+i_src1._12*i_src2._21+i_src1._13*i_src2._31;
 		_12=i_src1._11*i_src2._12+i_src1._12*i_src2._22+i_src1._13*i_src2._32;
@@ -138,7 +137,7 @@ namespace math
 		_43=i_src1._41*i_src2._13+i_src1._42*i_src2._23+i_src1._43*i_src2._33+i_src2._43;
 	}
 
-	myinline void mtx4x3::multiplytransposed(const mtx4x3& i_src1, const mtx4x3& i_srctransposed)
+	MLINLINE void mtx4x3::multiplytransposed(const mtx4x3& i_src1, const mtx4x3& i_srctransposed)
 	{
 		axisx()=i_srctransposed.transformtransposed3x3(i_src1.axisx());
 		axisy()=i_srctransposed.transformtransposed3x3(i_src1.axisy());
@@ -147,7 +146,7 @@ namespace math
 	}
 
 
-	myinline void mtx4x3::invert(const mtx4x3& i_src)
+	MLINLINE void mtx4x3::invert(const mtx4x3& i_src)
 	{
 		float d11 = i_src._22*i_src._33 - i_src._23*i_src._32;
 		float d12 = i_src._23*i_src._31 - i_src._21*i_src._33;
@@ -171,7 +170,7 @@ namespace math
 		_43 = -(i_src._41*_13 + i_src._42*_23 + i_src._43*_33);
 	}
 
-	myinline void mtx4x3::normalize()
+	MLINLINE void mtx4x3::normalize()
 	{
 		axisz().normalize();
 		axisx().cross(axisy(),axisz());
@@ -180,14 +179,14 @@ namespace math
 
 	}
 
-	myinline void mtx4x3::rotate(const mtx4x3& i_src, const vec3& i_axis, float i_angle)
+	MLINLINE void mtx4x3::rotate(const mtx4x3& i_src, const vec3& i_axis, float i_angle)
 	{
 		axisz().rotate(i_src.axisz(),i_axis,i_angle);
 		axisy().rotate(i_src.axisy(),i_axis,i_angle);
 		normalize();
 	}
 
-	myinline void mtx4x3::interpolate(const mtx4x3& i_src1, const mtx4x3& i_src2, float i_time)
+	MLINLINE void mtx4x3::interpolate(const mtx4x3& i_src1, const mtx4x3& i_src2, float i_time)
 	{
 		xaxis.interpolate(i_src1.xaxis, i_src2.xaxis, i_time);
 		yaxis.interpolate(i_src1.yaxis, i_src2.yaxis, i_time);

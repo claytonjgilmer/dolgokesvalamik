@@ -2,7 +2,7 @@
 #define _thread_h_
 
 #include <windows.h> 
-#include "..\containers\string.h"
+#include "containers\string.h"
 namespace threading
 {
 	typedef unsigned (WINAPI *threadfunc)(void*);

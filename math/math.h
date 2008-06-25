@@ -2,8 +2,7 @@
 #define _math_h_
 
 #include <math.h>
-
-#define myinline __forceinline
+#include "base\misc.h"
 
 namespace math
 {
@@ -46,57 +45,57 @@ namespace math
 
 
 
-	myinline float pi()
+	MLINLINE float pi()
 	{
 		return 3.1415926536f;
 	}
 
-	myinline float twopi()
+	MLINLINE float twopi()
 	{
 		return 2.0f*pi();
 	}
 
-	myinline float pihalf()
+	MLINLINE float pihalf()
 	{
 		return 0.5f*pi();
 	}
 
-	myinline float sin(float i_value)
+	MLINLINE float sin(float i_value)
 	{
 		return sinf(i_value);
 	}
 
-	myinline float cos(float i_value)
+	MLINLINE float cos(float i_value)
 	{
 		return cosf(i_value);
 	}
 
-	myinline float abs(float i_value)
+	MLINLINE float abs(float i_value)
 	{
 		return fabsf(i_value);
 	}
 
-	myinline float asin(float i_value)
+	MLINLINE float asin(float i_value)
 	{
 		return asinf(i_value);
 	}
 
-	myinline float acos(float i_value)
+	MLINLINE float acos(float i_value)
 	{
 		return acosf(i_value);
 	}
 
-	myinline float atan2(float i_value1,float i_value2)
+	MLINLINE float atan2(float i_value1,float i_value2)
 	{
 		return atan2f(i_value1,i_value2);
 	}
 
-	myinline float sqrt(float i_value)
+	MLINLINE float sqrt(float i_value)
 	{
 		return sqrtf(i_value);
 	}
 
-	myinline float pow(float i_value, float i_power)
+	MLINLINE float pow(float i_value, float i_power)
 	{
 		return powf(i_value,i_power);
 	}
@@ -106,27 +105,27 @@ namespace math
 		return i_value*i_value;
 	}
 
-	myinline float radtodegree(float i_degree)
+	MLINLINE float radtodegree(float i_degree)
 	{
 		return i_degree*(180.0f/pi());
 	}
 
-	myinline float degreetorad(float i_radian)
+	MLINLINE float degreetorad(float i_radian)
 	{
 		return i_radian*(pi()/180.0f);
 	}
 
-	template<typename T> myinline T Min(const T& i_value1, const T& i_value2)
+	template<typename T> MLINLINE T Min(const T& i_value1, const T& i_value2)
 	{
 		return i_value1<i_value2 ? i_value1 : i_value2;
 	}
 
-	template<class t> myinline t Max(t i_value1, t i_value2)
+	template<class t> MLINLINE t Max(t i_value1, t i_value2)
 	{
 		return i_value1>i_value2 ? i_value1 : i_value2;
 	}
 
-	template<class t> myinline t clamp(t i_src, t i_minvalue, t i_maxvalue)
+	template<class t> MLINLINE t clamp(t i_src, t i_minvalue, t i_maxvalue)
 	{
 		if (i_src<i_minvalue)
 			return i_minvalue;
@@ -138,30 +137,30 @@ namespace math
 
 	}
 
-	myinline float sign(float i_value)
+	MLINLINE float sign(float i_value)
 	{
 		return i_value>0.0f ? 1.0f : -1.0f;
 	}
 
-	myinline double sign(double i_value)
+	MLINLINE double sign(double i_value)
 	{
 		return i_value>0.0 ? 1.0 : -1.0;
 	}
 
-	myinline void swap(int& io_value1, int& io_value2)
+	MLINLINE void swap(int& io_value1, int& io_value2)
 	{
 		io_value1^=io_value2;
 		io_value2^=io_value1;
 		io_value1^=io_value2;
 	}
 
-	myinline void swap(float& io_value1, float& io_value2)
+	MLINLINE void swap(float& io_value1, float& io_value2)
 	{
 		swap((int&)io_value1,(int&)io_value2);
 	}
 
 	template<class t>
-	myinline void swap(t& io_value1, t& io_value2)
+	MLINLINE void swap(t& io_value1, t& io_value2)
 	{
 		t tmp=io_value1;
 		io_value1=io_value2;
@@ -169,14 +168,14 @@ namespace math
 	}
 
 	template<class t>
-	myinline void sort(t& id0, t& id1)
+	MLINLINE void sort(t& id0, t& id1)
 	{
 		if(id0>id1)	std::swap(id0, id1);
 	}
 
 
 
-	myinline unsigned nextpoweroftwo(unsigned i_value)
+	MLINLINE unsigned nextpoweroftwo(unsigned i_value)
 	{
 		i_value|= (i_value >> 1);
 		i_value|= (i_value >> 2);
@@ -186,12 +185,12 @@ namespace math
 		return i_value+1;
 	}
 
-	myinline int ispoweroftwo(unsigned i_value)
+	MLINLINE int ispoweroftwo(unsigned i_value)
 	{
 		return !(i_value & (i_value-1));
 	}
 
-	myinline int nextnumbermodulo3(int i_actnumber)
+	MLINLINE int nextnumbermodulo3(int i_actnumber)
 	{
 		return (1 << i_actnumber) & 3;
 	}
@@ -206,8 +205,8 @@ namespace math
 		return (v2-v1)*x+v1;
 	}
 
-	template <int n> myinline int logn(){return 1+logn<(n >> 1)>();}
-	template<> myinline int logn<1>(){return 0;}
+	template <int n> MLINLINE int logn(){return 1+logn<(n >> 1)>();}
+	template<> MLINLINE int logn<1>(){return 0;}
 
 
 

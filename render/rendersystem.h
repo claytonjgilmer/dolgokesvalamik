@@ -24,11 +24,14 @@ namespace render
 		vertexbuffer* createvertexbuffer(unsigned i_vertexnum);
 		indexbuffer* createindexbuffer(unsigned i_indexnum);
 
+
 		void renderqueues();
 
 //	private:
 		threading::taskmanager* m_taskmanager;
 		ctr::listallocator<queue> m_queues;
 	};
+
+	extern system* g_system;
 }
 #endif//_rendersystem_h_

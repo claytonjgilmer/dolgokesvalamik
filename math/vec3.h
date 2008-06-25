@@ -3,7 +3,7 @@
 
 #include "math.h"
 
-//#define myinline
+//#define MLINLINE
 
 namespace math
 {
@@ -66,34 +66,34 @@ namespace math
 		float x,y,z;
 	};//vec3
 
-	myinline vec3::vec3()
+	MLINLINE vec3::vec3()
 	{
 	}
 
-	myinline vec3::vec3(float i_xcoord, float i_ycoord, float i_zcoord)
+	MLINLINE vec3::vec3(float i_xcoord, float i_ycoord, float i_zcoord)
 	{
 		x=i_xcoord;
 		y=i_ycoord;
 		z=i_zcoord;
 	}
 
-	myinline float& vec3::operator[](int i_index)
+	MLINLINE float& vec3::operator[](int i_index)
 	{
 		return *(&x+i_index);
 	}
 
-	myinline const float& vec3::operator[](int i_index) const
+	MLINLINE const float& vec3::operator[](int i_index) const
 	{
 		return *(&x+i_index);
 	}
 
 
-	myinline void vec3::clear()
+	MLINLINE void vec3::clear()
 	{
 		x=y=z=0.0f;
 	}
 
-	myinline void vec3::set(float i_xcoord, float i_ycoord, float i_zcoord)
+	MLINLINE void vec3::set(float i_xcoord, float i_ycoord, float i_zcoord)
 	{
 		x=i_xcoord;
 		y=i_ycoord;
@@ -101,14 +101,14 @@ namespace math
 	}
 
 
-	myinline void	vec3::cross(const vec3& i_src1, const vec3& i_src2)
+	MLINLINE void	vec3::cross(const vec3& i_src1, const vec3& i_src2)
 	{
 		x=i_src1.y*i_src2.z-i_src1.z*i_src2.y;
 		y=i_src1.z*i_src2.x-i_src1.x*i_src2.z;
 		z=i_src1.x*i_src2.y-i_src1.y*i_src2.x;
 	}
 
-	myinline vec3 cross(const vec3& i_src1, const vec3& i_src2)
+	MLINLINE vec3 cross(const vec3& i_src1, const vec3& i_src2)
 	{
 		return vec3(
 			i_src1.y*i_src2.z-i_src1.z*i_src2.y,
@@ -117,32 +117,32 @@ namespace math
 			);
 	}
 
-	myinline vec3 vec3::cross(const vec3& i_other) const
+	MLINLINE vec3 vec3::cross(const vec3& i_other) const
 	{
 		return math::cross(*this,i_other);
 	}
 
-	myinline float	vec3::dot(const vec3& i_other) const
+	MLINLINE float	vec3::dot(const vec3& i_other) const
 	{
 		return x*i_other.x+y*i_other.y+z*i_other.z;
 	}
 
-	myinline float dot(const vec3& i_v1, const vec3& i_v2)
+	MLINLINE float dot(const vec3& i_v1, const vec3& i_v2)
 	{
 		return i_v1.x*i_v2.x+i_v1.y*i_v2.y+i_v1.z*i_v2.z;
 	}
 
-	myinline float	vec3::squarelength() const
+	MLINLINE float	vec3::squarelength() const
 	{
 		return x*x+y*y+z*z;
 	}
 
-	myinline float	vec3::length() const
+	MLINLINE float	vec3::length() const
 	{
 		return sqrt(squarelength());
 	}
 
-	myinline void	vec3::normalize()
+	MLINLINE void	vec3::normalize()
 	{
 		float l=length();
 
@@ -151,7 +151,7 @@ namespace math
 		z/=l;
 	}
 
-	myinline void	vec3::normalizesafe()
+	MLINLINE void	vec3::normalizesafe()
 	{
 		float sqlength=squarelength();
 
@@ -169,79 +169,79 @@ namespace math
 		}
 	}
 
-	myinline vec3	vec3::operator+(const vec3& i_other) const
+	MLINLINE vec3	vec3::operator+(const vec3& i_other) const
 	{
 		return vec3(x+i_other.x,y+i_other.y,z+i_other.z);
 	}
 
-	myinline vec3	vec3::operator-(const vec3& i_other) const
+	MLINLINE vec3	vec3::operator-(const vec3& i_other) const
 	{
 		return vec3(x-i_other.x,y-i_other.y,z-i_other.z);
 	}
 
-	myinline void	vec3::operator+=(const vec3& i_other)
+	MLINLINE void	vec3::operator+=(const vec3& i_other)
 	{
 		x+=i_other.x;
 		y+=i_other.y;
 		z+=i_other.z;
 	}
 
-	myinline void	vec3::operator-=(const vec3& i_other)
+	MLINLINE void	vec3::operator-=(const vec3& i_other)
 	{
 		x-=i_other.x;
 		y-=i_other.y;
 		z-=i_other.z;
 	}
 
-	myinline vec3	vec3::operator*(float i_scalar) const
+	MLINLINE vec3	vec3::operator*(float i_scalar) const
 	{
 		return vec3(x*i_scalar,y*i_scalar,z*i_scalar);
 	}
 
-	myinline vec3	vec3::operator/(float i_scalar) const
+	MLINLINE vec3	vec3::operator/(float i_scalar) const
 	{
 		return vec3(x/i_scalar,y/i_scalar,z/i_scalar);
 	}
 
-	myinline vec3 operator*(float i_scalar, const vec3& i_vector)
+	MLINLINE vec3 operator*(float i_scalar, const vec3& i_vector)
 	{
 		return i_vector*i_scalar;
 	}
 
-	myinline void	vec3::operator*=(float i_scalar)
+	MLINLINE void	vec3::operator*=(float i_scalar)
 	{
 		x*=i_scalar;
 		y*=i_scalar;
 		z*=i_scalar;
 	}
 
-	myinline void	vec3::operator/=(float i_scalar)
+	MLINLINE void	vec3::operator/=(float i_scalar)
 	{
 		x/=i_scalar;
 		y/=i_scalar;
 		z/=i_scalar;
 	}
 
-	myinline vec3	vec3::operator-() const
+	MLINLINE vec3	vec3::operator-() const
 	{
 		return vec3(-x,-y,-z);
 	}
 
-	myinline void vec3::abs(const vec3& i_src)
+	MLINLINE void vec3::abs(const vec3& i_src)
 	{
 		x=fabsf(i_src.x);
 		y=fabsf(i_src.y);
 		z=fabsf(i_src.z);
 	}
 
-	myinline void vec3::max(const vec3& i_v1, const vec3& i_v2)
+	MLINLINE void vec3::max(const vec3& i_v1, const vec3& i_v2)
 	{
 		x=i_v1.x > i_v2.x ? i_v1.x : i_v2.x;
 		y=i_v1.y > i_v2.y ? i_v1.y : i_v2.y;
 		z=i_v1.z > i_v2.z ? i_v1.z : i_v2.z;
 	}
 
-	myinline void vec3::max(const vec3& i_other)
+	MLINLINE void vec3::max(const vec3& i_other)
 	{
 		if (i_other.x>x)
 			x=i_other.x;
@@ -251,7 +251,7 @@ namespace math
 			z=i_other.z;
 	}
 
-	myinline float vec3::maxelem() const
+	MLINLINE float vec3::maxelem() const
 	{
 		float r=x;
 		if (y>r) r=y;
@@ -260,14 +260,14 @@ namespace math
 		return r;
 	}
 
-	myinline void vec3::min(const vec3& i_v1, const vec3& i_v2)
+	MLINLINE void vec3::min(const vec3& i_v1, const vec3& i_v2)
 	{
 		x=i_v1.x < i_v2.x ? i_v1.x : i_v2.x;
 		y=i_v1.y < i_v2.y ? i_v1.y : i_v2.y;
 		z=i_v1.z < i_v2.z ? i_v1.z : i_v2.z;
 	}
 
-	myinline void vec3::min(const vec3& i_other)
+	MLINLINE void vec3::min(const vec3& i_other)
 	{
 		if (i_other.x<x)
 			x=i_other.x;
@@ -277,7 +277,7 @@ namespace math
 			z=i_other.z;
 	}
 
-	myinline void vec3::rotate(const vec3& i_src, const vec3& i_axis, float i_angle)
+	MLINLINE void vec3::rotate(const vec3& i_src, const vec3& i_axis, float i_angle)
 	{
 		vec3 a=i_src.dot(i_axis)*i_axis;
 		vec3 b=i_src-a;
@@ -285,7 +285,7 @@ namespace math
 		*this=b*cosf(i_angle)+c*sinf(i_angle)+a;
 	}
 
-	myinline void getorthogonalaxes(vec3& o_axis1, vec3& o_axis2, const vec3& i_axissrc)
+	MLINLINE void getorthogonalaxes(vec3& o_axis1, vec3& o_axis2, const vec3& i_axissrc)
 	{
 		if ((i_axissrc.z) > 0.707f || i_axissrc.z<-0.707f)
 		{
@@ -315,7 +315,7 @@ namespace math
 		}
 	}
 
-	myinline void vec3::interpolate(const vec3& i_src1, const vec3& i_src2, float i_time)
+	MLINLINE void vec3::interpolate(const vec3& i_src1, const vec3& i_src2, float i_time)
 	{
 		x=i_src1.x+i_time*(i_src2.x-i_src1.x);
 		y=i_src1.y+i_time*(i_src2.y-i_src1.y);

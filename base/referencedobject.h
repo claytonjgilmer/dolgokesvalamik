@@ -28,7 +28,7 @@ namespace base
 		++m_refcount;
 	}
 
-	inline void referencepointer::remove_ref()
+	inline void referencedobject::remove_ref()
 	{
 		--m_refcount;
 	}

@@ -18,29 +18,29 @@ namespace math
 		float dist;
 	};
 
-	myinline plane::plane()
+	MLINLINE plane::plane()
 	{
 	}
 
-	myinline plane::plane(const vector3& i_normal, float i_dist)
-	{
-		normal=i_normal;
-		dist=i_dist;
-	}
-
-	myinline void plane::set(const vector3& i_normal, float i_dist)
+	MLINLINE plane::plane(const vector3& i_normal, float i_dist)
 	{
 		normal=i_normal;
 		dist=i_dist;
 	}
 
-	myinline void plane::set(const vector3& i_point, const vector3& i_normal)
+	MLINLINE void plane::set(const vector3& i_normal, float i_dist)
+	{
+		normal=i_normal;
+		dist=i_dist;
+	}
+
+	MLINLINE void plane::set(const vector3& i_point, const vector3& i_normal)
 	{
 		normal=i_normal;
 		dist=-i_point.dot(normal);
 	}
 
-	myinline float plane::getdistance(const vector3& i_point) const
+	MLINLINE float plane::getdistance(const vector3& i_point) const
 	{
 		return i_point.dot(normal)+dist;
 	}

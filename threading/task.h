@@ -1,7 +1,7 @@
 #ifndef _task_h_
 #define _task_h_
 
-#include "..\containers\string.h"
+#include "containers/string.h"
 #include "containers/vector.h"
 
 namespace threading
@@ -21,12 +21,5 @@ namespace threading
 			ctr::string m_name;
 #endif
 	};
-
-	class empty_task:public task
-	{
-	public:
-		virtual void run(){}
-	};
-	
 };
 #endif//_task_h_

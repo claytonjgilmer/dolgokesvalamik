@@ -220,6 +220,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\base\misc.h"
+				>
+			</File>
+			<File
 				RelativePath=".\math\mtx3x3.h"
 				>
 			</File>
@@ -320,6 +324,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\containers\stringmap.h"
+				>
+			</File>
+			<File
 				RelativePath=".\threading\task.h"
 				>
 			</File>
@@ -385,6 +393,10 @@
 			</File>
 			<File
 				RelativePath=".\render\rendersystem.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\base\resourcemanager.cpp"
 				>
 			</File>
 			<File

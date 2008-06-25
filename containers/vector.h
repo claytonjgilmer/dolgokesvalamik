@@ -2,8 +2,8 @@
 #define _vector_h_
 
 #define  NULL 0
-#define MYINLINE
 #include <new.h>
+#include "base\misc.h"
 namespace ctr
 {
 	template <class basetype>
@@ -71,7 +71,7 @@ namespace ctr
 
 
 	template<class basetype>
-	MYINLINE void vector<basetype>::operator =(const vector& i_other)
+	MLINLINE void vector<basetype>::operator =(const vector& i_other)
 	{
 		clear();
 		reserve(i_other.size());
@@ -83,7 +83,7 @@ namespace ctr
 	}
 
 	template<class basetype>
-	MYINLINE vector<basetype>::vector(const vector& i_other)
+	MLINLINE vector<basetype>::vector(const vector& i_other)
 	{
 		if (i_other.m_size)
 		{
@@ -103,7 +103,7 @@ namespace ctr
 	}
 
 	template<class basetype>
-	MYINLINE vector<basetype>::vector()
+	MLINLINE vector<basetype>::vector()
 	{
 		m_buf=NULL;
 		m_size=0;
@@ -111,7 +111,7 @@ namespace ctr
 	}
 
 	template<class basetype>
-	MYINLINE vector<basetype>::~vector()
+	MLINLINE vector<basetype>::~vector()
 	{
 		if (!m_buf)
 			return;
@@ -124,31 +124,31 @@ namespace ctr
 	}
 
 	template<class basetype>
-	MYINLINE typename vector<basetype>::iterator vector<basetype>::begin()
+	MLINLINE typename vector<basetype>::iterator vector<basetype>::begin()
 	{
 		return m_buf;
 	}
 
 	template<class basetype>
-	MYINLINE typename vector<basetype>::const_iterator vector<basetype>::begin() const
+	MLINLINE typename vector<basetype>::const_iterator vector<basetype>::begin() const
 	{
 		return m_buf;
 	}
 
 	template<class basetype>
-	MYINLINE typename vector<basetype>::iterator vector<basetype>::end()
+	MLINLINE typename vector<basetype>::iterator vector<basetype>::end()
 	{
 		return m_buf+m_size;
 	}
 
 	template<class basetype>
-	MYINLINE typename vector<basetype>::const_iterator vector<basetype>::end() const
+	MLINLINE typename vector<basetype>::const_iterator vector<basetype>::end() const
 	{
 		return m_buf+m_size;
 	}
 
 	template<class basetype>
-	MYINLINE void vector<basetype>::push_back(const basetype& i_newelem)
+	MLINLINE void vector<basetype>::push_back(const basetype& i_newelem)
 	{
 		if (m_size==m_capacity)
 			alloc();
@@ -158,14 +158,14 @@ namespace ctr
 	}
 
 	template <class basetype>
-	MYINLINE void vector<basetype>::pop_back()
+	MLINLINE void vector<basetype>::pop_back()
 	{
 		m_buf[--m_size].~basetype();
 	}
 
 
 	template<class basetype>
-	MYINLINE void vector<basetype>::insert(iterator i_where, const basetype& i_val)
+	MLINLINE void vector<basetype>::insert(iterator i_where, const basetype& i_val)
 	{
 		unsigned where=i_where-m_buf;
 
@@ -202,43 +202,43 @@ namespace ctr
 	}
 
 	template<class basetype>
-	MYINLINE basetype& vector<basetype>::back()
+	MLINLINE basetype& vector<basetype>::back()
 	{
 		return m_buf[m_size-1];
 	}
 
 	template<class basetype>
-	MYINLINE const basetype& vector<basetype>::back() const
+	MLINLINE const basetype& vector<basetype>::back() const
 	{
 		return m_buf[m_size-1];
 	}
 
 	template<class basetype>
-	MYINLINE basetype& vector<basetype>::front()
+	MLINLINE basetype& vector<basetype>::front()
 	{
 		return m_buf[0];
 	}
 
 	template<class basetype>
-	MYINLINE const basetype& vector<basetype>::front() const
+	MLINLINE const basetype& vector<basetype>::front() const
 	{
 		return m_buf[0];
 	}
 
 	template<class basetype>
-	MYINLINE unsigned vector<basetype>::size() const
+	MLINLINE unsigned vector<basetype>::size() const
 	{
 		return m_size;
 	}
 
 	template<class basetype>
-	MYINLINE bool vector<basetype>::empty() const
+	MLINLINE bool vector<basetype>::empty() const
 	{
 		return m_size==0;
 	}
 
 	template<class basetype>
-	MYINLINE void vector<basetype>::clear()
+	MLINLINE void vector<basetype>::clear()
 	{
 		if (m_size)
 		{
@@ -252,7 +252,7 @@ namespace ctr
 	}
 
 	template<class basetype>
-	MYINLINE void vector<basetype>::assign(unsigned i_count, const basetype& val)
+	MLINLINE void vector<basetype>::assign(unsigned i_count, const basetype& val)
 	{
 		clear();
 		alloc(i_count);
@@ -266,7 +266,7 @@ namespace ctr
 
 
 	template<class basetype>
-	MYINLINE void vector<basetype>::erase(iterator i_where)
+	MLINLINE void vector<basetype>::erase(iterator i_where)
 	{
 		for (iterator it=i_where; it!=end()-1; ++it)
 			*it=*(it+1);
@@ -276,7 +276,7 @@ namespace ctr
 	}
 
 	template<class basetype>
-	MYINLINE void vector<basetype>::eraseunordered(iterator i_where)
+	MLINLINE void vector<basetype>::eraseunordered(iterator i_where)
 	{
 
 		*i_where=back();
@@ -285,7 +285,7 @@ namespace ctr
 	}
 
 	template<class basetype>
-	MYINLINE void vector<basetype>::resize(unsigned i_newsize)
+	MLINLINE void vector<basetype>::resize(unsigned i_newsize)
 	{
 		if (i_newsize>m_size)
 		{
@@ -312,20 +312,20 @@ namespace ctr
 	}
 
 	template<class basetype>
-	MYINLINE basetype& vector<basetype>::operator[](unsigned i_index)
+	MLINLINE basetype& vector<basetype>::operator[](unsigned i_index)
 	{
 		return m_buf[i_index];
 	}
 
 	template<class basetype>
-	MYINLINE const basetype& vector<basetype>::operator[](unsigned i_index) const
+	MLINLINE const basetype& vector<basetype>::operator[](unsigned i_index) const
 	{
 		return m_buf[i_index];
 	}
 
 
 	template<class basetype>
-	MYINLINE void vector<basetype>::alloc()
+	MLINLINE void vector<basetype>::alloc()
 	{
 		++m_capacity<<=1;
 		char* newbuf=new char[m_capacity*sizeof(basetype)];
@@ -346,14 +346,14 @@ namespace ctr
 	}
 
 	template<class basetype>
-	MYINLINE void vector<basetype>::reserve(unsigned i_capacity)
+	MLINLINE void vector<basetype>::reserve(unsigned i_capacity)
 	{
 		if (m_capacity<i_capacity)
 			alloc(i_capacity);
 	}
 
 	template<class basetype>
-	MYINLINE void vector<basetype>::alloc(int i_newcapacity)
+	MLINLINE void vector<basetype>::alloc(int i_newcapacity)
 	{
 		m_capacity=i_newcapacity;
 		char* newbuf=new char[m_capacity*sizeof(basetype)];

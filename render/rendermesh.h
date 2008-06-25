@@ -8,6 +8,7 @@ namespace render
 	public:
 		void render(const math::mtx4x3& i_mtx);
 
+	private:
 
 	};
 }

@@ -3,7 +3,7 @@
 
 #define  NULL 0
 #include <string.h>
-#include "..\base\assert.h"
+#include "base\assert.h"
 namespace ctr
 {
 #define STRING_MIN_CAPACITY 16
@@ -20,6 +20,10 @@ namespace ctr
 		void operator=(const char* i_str);
 		const char* c_str() const;
 		unsigned size() const;
+
+		bool operator==(const string& i_str) const;
+		bool operator==(const char* i_str) const;
+		char operator[](unsigned i_index) const;
 
 	private:
 		char* m_buf;
@@ -104,6 +108,21 @@ namespace ctr
 	inline unsigned string::size() const
 	{
 		return m_length;
+	}
+
+	inline bool string::operator ==(const string& i_str) const
+	{
+		return !strcmp(m_buf,i_str.m_buf);
+	}
+
+	inline bool string::operator ==(const char* i_str) const
+	{
+		return !strcmp(m_buf,i_str);
+	}
+
+	inline char string::operator [](unsigned i_index) const
+	{
+		return m_buf[i_index];
 	}
 }
 #endif//_string_h_

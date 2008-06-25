@@ -1,11 +1,11 @@
 #ifndef _rendertexture_h_
 #define _rendertexture_h_
 
-#include "..\base\referencedobject.h"
+#include "base/referencedobject.h"
 
 namespace render
 {
-	class texture:public referencedobject
+	class texture:public base::referencedobject
 	{
 	public:
 	private:
