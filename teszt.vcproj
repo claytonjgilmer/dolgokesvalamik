@@ -304,6 +304,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\render\rendervertexformat.h"
+				>
+			</File>
+			<File
 				RelativePath=".\base\resource.h"
 				>
 			</File>
