@@ -1,7 +1,6 @@
 #ifndef _vector_h_
 #define _vector_h_
 
-#define  NULL 0
 #include <new.h>
 #include "base\misc.h"
 namespace ctr

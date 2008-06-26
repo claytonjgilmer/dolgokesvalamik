@@ -204,6 +204,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\file\file.h"
+				>
+			</File>
+			<File
 				RelativePath=".\containers\fixedvector.h"
 				>
 			</File>
@@ -325,6 +329,10 @@
 			</File>
 			<File
 				RelativePath=".\containers\string.h"
+				>
+			</File>
+			<File
+				RelativePath=".\utils\stringhash.h"
 				>
 			</File>
 			<File

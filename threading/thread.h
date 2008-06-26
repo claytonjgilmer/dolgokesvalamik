@@ -10,7 +10,7 @@ namespace threading
 	class thread
 	{
 	public:
-		thread(const ctr::string& i_name="");
+		thread(const ctr::string& i_name=ctr::string(""));
 		void start(threadfunc i_func, void* i_data);
 		unsigned getid() const;
 		void join() const;

@@ -5,4 +5,5 @@
 namespace base
 {
 #define MLINLINE __forceinline
+#define  NULL 0
 }

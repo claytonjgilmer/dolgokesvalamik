@@ -14,6 +14,8 @@
 #include "containers/string.h"
 #include "containers/stringmap.h"
 
+#include "file/file.h"
+
 template<int n> int fact(){return n*fact<n-1>();}
 template<> int fact<1>(){return 1;}
 
@@ -54,17 +56,32 @@ public:
 class mapelem
 {
 public:
-	mapelem(ctr::string i_name):Name(i_name){}
+	mapelem(const char* i_name):Name(i_name){}
 	ctr::string Name;
 
 	mapelem* Next;
 };
 
+int szamlalo=0;
+int maxkeynum=0;
+
 #define _ME_(_NAME_) static mapelem _NAME_(#_NAME_)
 
 int _cdecl main()
 {
-	ctr::stringmap<mapelem,128> strmap;
+	{
+		file::file f("c:\\faszom.txt","r");
+		file::file f2("c:\\faszom2.txt","w");
+
+		ctr::string line;
+
+		while (f.readline(line))
+		{
+			printf_s("%s\n",line.c_str());
+			f2.writeline(line.c_str());
+		}
+	}
+	ctr::stringmap<mapelem,32768> strmap;
 
 	unsigned key;
 
@@ -78,15 +95,27 @@ int _cdecl main()
 
 	str[5]=0;
 
-	for (int n=0; n<100;++n)
 	{
-		for (int m=0; m<5; ++m)
+		int n=0;
+		for (; n<16384;)
 		{
-			str[m]=(rand() %26) + 'a';
-		}
+			for (int m=0; m<5; ++m)
+			{
+				str[m]=(rand() %26) + 'a';
+			}
 
-		strmap.add_data(new mapelem(str));
+			if (!strmap.get_data(str))
+			{
+				strmap.add_data(new mapelem(str));
+				++n;
+			}
+		}
 	}
+
+	printf_s("szamlalo:%d\n",szamlalo);
+	printf_s("maxkeynum:%d\n",maxkeynum);
+	while (!_kbhit());
+	return 0;
 
 	key=strmap.add_data(&a000);
 	key=strmap.add_data(&b000);
@@ -312,6 +341,10 @@ int _cdecl main()
 		printf_s("time:%d\n",end-start);
 		printf_s("vec:%f %f %f\n",vec[0],vec[1],vec[2]);
 	}
+
+
+	ctr::tstring<16> str1("fasszom");
+	ctr::tstring<64> str2(str1);
 
 	while (!_kbhit());
 }

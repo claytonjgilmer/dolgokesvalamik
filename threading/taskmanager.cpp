@@ -33,7 +33,7 @@ namespace threading
 			m_threadbuf[n].start(&poolrun,this);
 
 			char str[256]; sprintf(str,"working thread #%d",n+1);
-			m_threadbuf[n].set_name(str);
+			m_threadbuf[n].set_name(ctr::string(str));
 		}
 
 	}
