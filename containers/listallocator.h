@@ -1,5 +1,5 @@
-#ifndef _dynlistallocator_h_
-#define _dynlistallocator_h_
+#ifndef _listallocator_h_
+#define _listallocator_h_
 
 #include "vector.h"
 
@@ -70,6 +70,7 @@ namespace ctr
 		~listallocator();
 		basetype* allocate();
 		void deallocate(basetype*);
+		void deallocateplace(basetype*);
 		void deallocateall();
 		basetype* allocateplace();
 		iterator begin()
@@ -160,6 +161,12 @@ namespace ctr
 	MLINLINE void listallocator<basetype,blocksize>::deallocate(basetype* i_data)
 	{
 		i_data->~basetype();
+		deallocateplace(i_data);
+	}
+
+	template <class basetype, int blocksize> 
+	MLINLINE void listallocator<basetype,blocksize>::deallocateplace(basetype* i_data)
+	{
 		elem* actelem=(elem*)i_data;
 
 		actelem->m_next->m_prev=actelem->m_prev;
@@ -262,5 +269,15 @@ namespace ctr
 		before->m_prev=e;
 	}
 
-} //namespace dyn
-#endif//_dynlistallocator_h_
+} //namespace ctr
+
+template<class basetype> void* operator new(size_t i_size, ctr::listallocator<basetype>& i_allocator)
+{
+	return i_allocator.allocateplace();
+}
+
+template<class basetype> void operator delete(void* i_obj,ctr::listallocator<basetype>& i_allocator)
+{
+	i_allocator.deallocateplace((basetype*)i_obj);
+}
+#endif//_listallocator_h_

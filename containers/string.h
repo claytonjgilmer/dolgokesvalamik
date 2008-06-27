@@ -12,7 +12,7 @@ namespace ctr
 		tstring();
 		~tstring();
 
-		explicit tstring(const char* i_str);
+		tstring(const char* i_str);
 		template <unsigned MINCAP2> tstring(const tstring<MINCAP2>& i_str);
 
 		template <unsigned MINCAP2> void operator=(const tstring<MINCAP2>& i_str);

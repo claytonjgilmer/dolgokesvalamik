@@ -208,6 +208,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\file\filesystem.h"
+				>
+			</File>
+			<File
 				RelativePath=".\containers\fixedvector.h"
 				>
 			</File>

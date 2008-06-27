@@ -20,6 +20,8 @@ namespace file
 		unsigned read_bytes(char* o_bytes, unsigned i_numbytes) const;
 		void write_bytes(const char* i_bytes, unsigned i_numbytes) const;
 	private:
+		file(const file&);
+		void operator=(const file&);
 		FILE* m_handle;
 		ctr::string m_name;
 	};

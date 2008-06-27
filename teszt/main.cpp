@@ -15,6 +15,7 @@
 #include "containers/stringmap.h"
 
 #include "file/file.h"
+#include "file/filesystem.h"
 
 template<int n> int fact(){return n*fact<n-1>();}
 template<> int fact<1>(){return 1;}
@@ -70,6 +71,10 @@ int maxkeynum=0;
 int _cdecl main()
 {
 	{
+		file::system s;
+
+		s.register_path("faszom","fasza");
+		s.unregisterpath("faszom","fasza");
 		file::file f("c:\\faszom.txt","r");
 		file::file f2("c:\\faszom2.txt","w");
 
