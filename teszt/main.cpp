@@ -75,10 +75,10 @@ int _cdecl main()
 
 		ctr::string line;
 
-		while (f.readline(line))
+		while (f.read_line(line))
 		{
 			printf_s("%s\n",line.c_str());
-			f2.writeline(line.c_str());
+			f2.write_line(line.c_str());
 		}
 	}
 	ctr::stringmap<mapelem,32768> strmap;
@@ -114,6 +114,9 @@ int _cdecl main()
 
 	printf_s("szamlalo:%d\n",szamlalo);
 	printf_s("maxkeynum:%d\n",maxkeynum);
+	ctr::tstring<4> str1("fasszom");
+	ctr::tstring<2> str2(str1);
+
 	while (!_kbhit());
 	return 0;
 
@@ -342,9 +345,6 @@ int _cdecl main()
 		printf_s("vec:%f %f %f\n",vec[0],vec[1],vec[2]);
 	}
 
-
-	ctr::tstring<16> str1("fasszom");
-	ctr::tstring<64> str2(str1);
 
 	while (!_kbhit());
 }

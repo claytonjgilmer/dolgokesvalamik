@@ -13,14 +13,15 @@ namespace ctr
 		~tstring();
 
 		explicit tstring(const char* i_str);
-		tstring(const tstring<unsigned MINCAP2>& i_str);
+		template <unsigned MINCAP2> tstring(const tstring<MINCAP2>& i_str);
 
-		void operator=(const tstring& i_str);
+		template <unsigned MINCAP2> void operator=(const tstring<MINCAP2>& i_str);
 		void operator=(const char* i_str);
 		const char* c_str() const;
 		unsigned size() const;
+		unsigned capacity() const;
 
-		bool operator==(const tstring& i_str) const;
+		template <unsigned MINCAP2> bool operator==(const tstring<MINCAP2>& i_str) const;
 		bool operator==(const char* i_str) const;
 		char operator[](unsigned i_index) const;
 
@@ -55,18 +56,19 @@ namespace ctr
 		m_length=0;
 	}
 
-	template <unsigned TSTRING_MIN_CAPACITY,unsigned MINCAP2>
+	template <unsigned TSTRING_MIN_CAPACITY>
+	template <unsigned MINCAP2>
 	inline tstring<TSTRING_MIN_CAPACITY>::tstring(const tstring<MINCAP2>& i_str)
 	{
 		m_buf=m_innerbuf;
 		m_buf[0]=0;
 		m_capacity=TSTRING_MIN_CAPACITY;
 
-		if (i_str.m_capacity>TSTRING_MIN_CAPACITY)
-			grow(i_str.m_capacity);
+		if (i_str.capacity()>TSTRING_MIN_CAPACITY)
+			grow(i_str.capacity());
 
-		strcpy(m_buf,i_str.m_buf);
-		m_length=i_str.m_length;
+		strcpy(m_buf,i_str.c_str());
+		m_length=i_str.size();
 	}
 
 	template <unsigned TSTRING_MIN_CAPACITY>
@@ -101,13 +103,14 @@ namespace ctr
 	}
 
 	template <unsigned TSTRING_MIN_CAPACITY>
-	inline void tstring<TSTRING_MIN_CAPACITY>::operator =(const tstring& i_str)
+	template <unsigned MINCAP2>
+	inline void tstring<TSTRING_MIN_CAPACITY>::operator =(const tstring<MINCAP2>& i_str)
 	{
-		if (m_capacity<=i_str.m_length)
-			grow(i_str.m_length+1);
+		if (m_capacity<=i_str.size())
+			grow(i_str.size()+1);
 
-		strcpy(m_buf,i_str.m_buf);
-		m_length=i_str.m_length;
+		strcpy(m_buf,i_str.c_str());
+		m_length=i_str.size();
 	}
 
 	template <unsigned TSTRING_MIN_CAPACITY>
@@ -129,9 +132,10 @@ namespace ctr
 	}
 
 	template <unsigned TSTRING_MIN_CAPACITY>
-	inline bool tstring<TSTRING_MIN_CAPACITY>::operator ==(const tstring& i_str) const
+	template <unsigned MINCAP2> 
+	inline bool tstring<TSTRING_MIN_CAPACITY>::operator ==(const tstring<MINCAP2>& i_str) const
 	{
-		return !strcmp(m_buf,i_str.m_buf);
+		return !strcmp(m_buf,i_str.c_str());
 	}
 
 	template <unsigned TSTRING_MIN_CAPACITY>
@@ -146,6 +150,11 @@ namespace ctr
 		return m_buf[i_index];
 	}
 
+	template <unsigned TSTRING_MIN_CAPACITY>
+	inline unsigned tstring<TSTRING_MIN_CAPACITY>::capacity() const
+	{
+		return m_capacity;
+	}
 	typedef tstring<16> string;
 }
 #endif//_string_h_

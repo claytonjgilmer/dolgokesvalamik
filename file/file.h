@@ -15,8 +15,10 @@ namespace file
 		void open(const char* i_name, const char* i_attributes);
 		void close();
 
-		bool readline(ctr::string& o_line) const;
-		void writeline(const char* i_line) const;
+		bool read_line(ctr::string& o_line) const;
+		void write_line(const char* i_line) const;
+		unsigned read_bytes(char* o_bytes, unsigned i_numbytes) const;
+		void write_bytes(const char* i_bytes, unsigned i_numbytes) const;
 	private:
 		FILE* m_handle;
 		ctr::string m_name;
@@ -58,7 +60,7 @@ namespace file
 		fclose(m_handle);
 	}
 
-	MLINLINE bool file::readline(ctr::string& o_line) const
+	MLINLINE bool file::read_line(ctr::string& o_line) const
 	{
 		char line[16384];
 
@@ -86,10 +88,20 @@ namespace file
 		}
 	}
 
-	MLINLINE void file::writeline(const char* i_line) const
+	MLINLINE void file::write_line(const char* i_line) const
 	{
 		fputs(i_line,m_handle);
 		fputs("\n",m_handle);
+	}
+
+	MLINLINE unsigned file::read_bytes(char* o_bytes, unsigned i_numbytes) const
+	{
+		return (unsigned)fread(o_bytes,1,i_numbytes,m_handle);
+	}
+
+	MLINLINE void file::write_bytes(const char* i_bytes, unsigned i_numbytes) const
+	{
+		fwrite(i_bytes,1,i_numbytes,m_handle);
 	}
 
 
