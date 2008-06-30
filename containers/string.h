@@ -2,7 +2,8 @@
 #define _string_h_
 
 #include <string.h>
-#include "base\assert.h"
+#include "base/assert.h"
+#include "base/misc.h"
 namespace ctr
 {
 	template <unsigned TSTRING_MIN_CAPACITY=16>
@@ -13,9 +14,11 @@ namespace ctr
 		~tstring();
 
 		tstring(const char* i_str);
+		tstring(const tstring& i_str);
 		template <unsigned MINCAP2> tstring(const tstring<MINCAP2>& i_str);
 
 		template <unsigned MINCAP2> void operator=(const tstring<MINCAP2>& i_str);
+		void operator=(const tstring& i_str);
 		void operator=(const char* i_str);
 		const char* c_str() const;
 		unsigned size() const;
@@ -25,17 +28,26 @@ namespace ctr
 		bool operator==(const char* i_str) const;
 		char operator[](unsigned i_index) const;
 
+		tstring& operator+=(const char* i_str);
+		tstring& operator+=(int i_num);
+		tstring& operator+=(float i_num);
+
+		tstring operator+(const char* i_str) const;
+		tstring operator+(int i_num) const;
+		tstring operator+(float i_num) const;
+
 	private:
 		char* m_buf;
 		char m_innerbuf[TSTRING_MIN_CAPACITY];
 		unsigned m_capacity;
 		unsigned m_length;
 
-		void grow(unsigned i_capacity);
+		void alloc(unsigned i_capacity);
+		void grow(unsigned i_newcapacity);
 	};
 
 	template <unsigned TSTRING_MIN_CAPACITY>
-	inline void tstring<TSTRING_MIN_CAPACITY>::grow(unsigned i_capacity)
+	MLINLINE void tstring<TSTRING_MIN_CAPACITY>::alloc(unsigned i_capacity)
 	{
 		if (m_buf!=m_innerbuf)
 			delete [] m_buf;
@@ -48,7 +60,21 @@ namespace ctr
 	}
 
 	template <unsigned TSTRING_MIN_CAPACITY>
-	inline tstring<TSTRING_MIN_CAPACITY>::tstring()
+	MLINLINE void tstring<TSTRING_MIN_CAPACITY>::grow(unsigned i_newcapacity)
+	{
+
+		char* tmpbuf=new char[i_newcapacity];
+		strcpy(tmpbuf,m_buf);
+
+		if (m_buf!=m_innerbuf)
+			delete [] m_buf;
+
+		m_buf=tmpbuf;
+		m_capacity=i_newcapacity;
+	}
+
+	template <unsigned TSTRING_MIN_CAPACITY>
+	MLINLINE tstring<TSTRING_MIN_CAPACITY>::tstring()
 	{
 		m_buf=m_innerbuf;
 		m_buf[0]=0;
@@ -57,22 +83,36 @@ namespace ctr
 	}
 
 	template <unsigned TSTRING_MIN_CAPACITY>
-	template <unsigned MINCAP2>
-	inline tstring<TSTRING_MIN_CAPACITY>::tstring(const tstring<MINCAP2>& i_str)
+	MLINLINE tstring<TSTRING_MIN_CAPACITY>::tstring(const tstring& i_str)
 	{
 		m_buf=m_innerbuf;
 		m_buf[0]=0;
 		m_capacity=TSTRING_MIN_CAPACITY;
 
 		if (i_str.capacity()>TSTRING_MIN_CAPACITY)
-			grow(i_str.capacity());
+			alloc(i_str.capacity());
 
 		strcpy(m_buf,i_str.c_str());
 		m_length=i_str.size();
 	}
 
 	template <unsigned TSTRING_MIN_CAPACITY>
-	inline tstring<TSTRING_MIN_CAPACITY>::tstring(const char* i_str)
+	template <unsigned MINCAP2>
+	MLINLINE tstring<TSTRING_MIN_CAPACITY>::tstring(const tstring<MINCAP2>& i_str)
+	{
+		m_buf=m_innerbuf;
+		m_buf[0]=0;
+		m_capacity=TSTRING_MIN_CAPACITY;
+
+		if (i_str.capacity()>TSTRING_MIN_CAPACITY)
+			alloc(i_str.capacity());
+
+		strcpy(m_buf,i_str.c_str());
+		m_length=i_str.size();
+	}
+
+	template <unsigned TSTRING_MIN_CAPACITY>
+	MLINLINE tstring<TSTRING_MIN_CAPACITY>::tstring(const char* i_str)
 	{
 		base::assertion(i_str!=NULL,"ctr::tstringnek nem illik nullpointert atadni");
 
@@ -83,78 +123,145 @@ namespace ctr
 		m_capacity=TSTRING_MIN_CAPACITY;
 
 		if (len>=TSTRING_MIN_CAPACITY)
-			grow(len+1);
+			alloc(len+1);
 
 		m_length=len;
 		strcpy(m_buf,i_str);
 	}
 
 	template <unsigned TSTRING_MIN_CAPACITY>
-	inline tstring<TSTRING_MIN_CAPACITY>::~tstring()
+	MLINLINE tstring<TSTRING_MIN_CAPACITY>::~tstring()
 	{
 		if (m_buf!=m_innerbuf)
 			delete [] m_buf;
 	}
 
 	template <unsigned TSTRING_MIN_CAPACITY>
-	inline const char* tstring<TSTRING_MIN_CAPACITY>::c_str() const
+	MLINLINE const char* tstring<TSTRING_MIN_CAPACITY>::c_str() const
 	{
 		return m_buf;
 	}
 
 	template <unsigned TSTRING_MIN_CAPACITY>
-	template <unsigned MINCAP2>
-	inline void tstring<TSTRING_MIN_CAPACITY>::operator =(const tstring<MINCAP2>& i_str)
+	MLINLINE void tstring<TSTRING_MIN_CAPACITY>::operator =(const tstring& i_str)
 	{
 		if (m_capacity<=i_str.size())
-			grow(i_str.size()+1);
+			alloc(i_str.size()+1);
 
 		strcpy(m_buf,i_str.c_str());
 		m_length=i_str.size();
 	}
 
 	template <unsigned TSTRING_MIN_CAPACITY>
-	inline void tstring<TSTRING_MIN_CAPACITY>::operator =(const char* i_str)
+	template <unsigned MINCAP2>
+	MLINLINE void tstring<TSTRING_MIN_CAPACITY>::operator =(const tstring<MINCAP2>& i_str)
+	{
+		if (m_capacity<=i_str.size())
+			alloc(i_str.size()+1);
+
+		strcpy(m_buf,i_str.c_str());
+		m_length=i_str.size();
+	}
+
+	template <unsigned TSTRING_MIN_CAPACITY>
+	MLINLINE void tstring<TSTRING_MIN_CAPACITY>::operator =(const char* i_str)
 	{
 		unsigned len=(unsigned)strlen(i_str);
 
 		if (m_capacity<=len)
-			grow(len+1);
+			alloc(len+1);
 
 		strcpy(m_buf,i_str);
 		m_length=len;
 	}
 
 	template <unsigned TSTRING_MIN_CAPACITY>
-	inline unsigned tstring<TSTRING_MIN_CAPACITY>::size() const
+	MLINLINE unsigned tstring<TSTRING_MIN_CAPACITY>::size() const
 	{
 		return m_length;
 	}
 
 	template <unsigned TSTRING_MIN_CAPACITY>
 	template <unsigned MINCAP2> 
-	inline bool tstring<TSTRING_MIN_CAPACITY>::operator ==(const tstring<MINCAP2>& i_str) const
+	MLINLINE bool tstring<TSTRING_MIN_CAPACITY>::operator ==(const tstring<MINCAP2>& i_str) const
 	{
 		return !strcmp(m_buf,i_str.c_str());
 	}
 
 	template <unsigned TSTRING_MIN_CAPACITY>
-	inline bool tstring<TSTRING_MIN_CAPACITY>::operator ==(const char* i_str) const
+	MLINLINE bool tstring<TSTRING_MIN_CAPACITY>::operator ==(const char* i_str) const
 	{
 		return !strcmp(m_buf,i_str);
 	}
 
 	template <unsigned TSTRING_MIN_CAPACITY>
-	inline char tstring<TSTRING_MIN_CAPACITY>::operator [](unsigned i_index) const
+	MLINLINE char tstring<TSTRING_MIN_CAPACITY>::operator [](unsigned i_index) const
 	{
 		return m_buf[i_index];
 	}
 
 	template <unsigned TSTRING_MIN_CAPACITY>
-	inline unsigned tstring<TSTRING_MIN_CAPACITY>::capacity() const
+	MLINLINE unsigned tstring<TSTRING_MIN_CAPACITY>::capacity() const
 	{
 		return m_capacity;
 	}
+
+
+	template <unsigned TSTRING_MIN_CAPACITY>
+	MLINLINE tstring<TSTRING_MIN_CAPACITY>& tstring<TSTRING_MIN_CAPACITY>::operator+=(const char* i_str)
+	{
+		unsigned len=(unsigned)strlen(i_str);
+
+		if (m_capacity<=m_length+len)
+			grow(m_length+len+1);
+
+		strcpy(m_buf+m_length,i_str);
+		m_length+=len;
+
+		return *this;
+	}
+
+	template <unsigned TSTRING_MIN_CAPACITY>
+	MLINLINE tstring<TSTRING_MIN_CAPACITY>& tstring<TSTRING_MIN_CAPACITY>::operator+=(int i_num)
+	{
+		char strtmp[16];
+		_itoa(i_num,strtmp,10);
+		return *this+=strtmp;
+	}
+
+	template <unsigned TSTRING_MIN_CAPACITY>
+	MLINLINE tstring<TSTRING_MIN_CAPACITY>& tstring<TSTRING_MIN_CAPACITY>::operator+=(float i_num)
+	{
+		char strtmp[16];
+		_ftoa(i_num,strtmp,10);
+		return *this+=strtmp;
+	}
+
+	template <unsigned TSTRING_MIN_CAPACITY>
+	MLINLINE tstring<TSTRING_MIN_CAPACITY> tstring<TSTRING_MIN_CAPACITY>::operator+(const char* i_str) const
+	{
+		tstring strmp(*this);
+		strmp+=i_str;
+		return strmp;
+	}
+
+	template <unsigned TSTRING_MIN_CAPACITY>
+	MLINLINE tstring<TSTRING_MIN_CAPACITY> tstring<TSTRING_MIN_CAPACITY>::operator+(int i_num) const
+	{
+		tstring strmp(*this);
+		strmp+=i_num;
+		return strmp;
+	}
+
+	template <unsigned TSTRING_MIN_CAPACITY>
+	MLINLINE tstring<TSTRING_MIN_CAPACITY> tstring<TSTRING_MIN_CAPACITY>::operator+(float i_num) const
+	{
+		tstring strmp(*this);
+		strmp+=i_num;
+		return strmp;
+	}
+
+
 	typedef tstring<16> string;
 }
 #endif//_string_h_

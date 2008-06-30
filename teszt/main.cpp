@@ -70,49 +70,45 @@ int maxkeynum=0;
 
 int _cdecl main()
 {
+	if (1)
 	{
 		file::system s;
 
-		s.register_path("faszom","fasza");
-		s.unregisterpath("faszom","fasza");
-		file::file f("c:\\faszom.txt","r");
-		file::file f2("c:\\faszom2.txt","w");
+		s.register_path("faszom","c:/lacika/dolgokesvalamik/");
+
+		ctr::string v1("valami");
+		ctr::tstring<12> v2("valami mas");
+
+		v2=v1;
 
 		ctr::string line;
+		file::file f; s.openfile(f,"faszom","dumdir.au3","r");
 
-		while (f.read_line(line))
+		if (f.opened())
 		{
-			printf_s("%s\n",line.c_str());
-			f2.write_line(line.c_str());
+			file::file w("c:/filedump2.txt","w");
+
+			int numlines=0;
+
+			while (f.read_line(line))
+			{
+				++numlines;
+				w.write_line((line+", a kurva anyad: " + numlines).c_str());
+			}
 		}
+
+		s.unregister_path("faszom","fasza");
 	}
-	ctr::stringmap<mapelem,32768> strmap;
-
-	unsigned key;
-
-	_ME_(a000);
-	_ME_(b000);
-	_ME_(c000);
-	_ME_(d000);
-	_ME_(e000);
-
-	char str[6];
-
-	str[5]=0;
+	ctr::stringmap<mapelem,16384> strmap;
 
 	{
-		int n=0;
-		for (; n<16384;)
+		file::file dump("c:\\filedump.txt","r");
+		ctr::string line;
+		while(dump.read_line(line))
 		{
-			for (int m=0; m<5; ++m)
+			if (!strmap.get_data(line.c_str()))
 			{
-				str[m]=(rand() %26) + 'a';
-			}
-
-			if (!strmap.get_data(str))
-			{
-				strmap.add_data(new mapelem(str));
-				++n;
+				strmap.add_data(new mapelem(line.c_str()));
 			}
 		}
 	}
@@ -122,19 +118,10 @@ int _cdecl main()
 	ctr::tstring<4> str1("fasszom");
 	ctr::tstring<2> str2(str1);
 
+	printf_s("pressz eni kí tu kontinyú...\n");
 	while (!_kbhit());
 	return 0;
 
-	key=strmap.add_data(&a000);
-	key=strmap.add_data(&b000);
-	key=strmap.add_data(&c000);
-	key=strmap.add_data(&d000);
-	key=strmap.add_data(&e000);
-	mapelem* T;
-	T=strmap.get_data("egy");
-	T=strmap.get_data("ketto");
-	T=strmap.get_data("harom");
-	T=strmap.get_data("negy");
 /*
 	threading::thread th1("1"),th2("2");
 

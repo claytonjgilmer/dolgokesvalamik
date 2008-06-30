@@ -324,6 +324,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\base\singleton.h"
+				>
+			</File>
+			<File
 				RelativePath=".\math\ssemtx4x3.h"
 				>
 			</File>
@@ -353,6 +357,10 @@
 			</File>
 			<File
 				RelativePath=".\threading\taskmanager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\render\texturemanager.h"
 				>
 			</File>
 			<File
@@ -421,6 +429,10 @@
 			</File>
 			<File
 				RelativePath=".\threading\taskmanager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\render\texturemanager.cpp"
 				>
 			</File>
 			<File

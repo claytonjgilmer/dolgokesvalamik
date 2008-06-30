@@ -13,7 +13,7 @@ namespace threading
 		void* allocate()
 		{
 			m.lock();
-			void* r=(void*)m_taskalloc.allocateplace();
+			void* r=(void*)m_taskalloc.allocate_place();
 			m.unlock();
 			return r;
 		}

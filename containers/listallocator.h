@@ -72,7 +72,7 @@ namespace ctr
 		void deallocate(basetype*);
 		void deallocateplace(basetype*);
 		void deallocateall();
-		basetype* allocateplace();
+		basetype* allocate_place();
 		iterator begin()
 		{
 			return iterator(m_head.m_next);
@@ -137,7 +137,7 @@ namespace ctr
 	}
 
 	template <class basetype,int blocksize> 
-	MLINLINE basetype* listallocator<basetype,blocksize>::allocateplace()
+	MLINLINE basetype* listallocator<basetype,blocksize>::allocate_place()
 	{
 		elem* newelem;
 
@@ -270,14 +270,4 @@ namespace ctr
 	}
 
 } //namespace ctr
-
-template<class basetype> void* operator new(size_t i_size, ctr::listallocator<basetype>& i_allocator)
-{
-	return i_allocator.allocateplace();
-}
-
-template<class basetype> void operator delete(void* i_obj,ctr::listallocator<basetype>& i_allocator)
-{
-	i_allocator.deallocateplace((basetype*)i_obj);
-}
 #endif//_listallocator_h_

@@ -19,6 +19,8 @@ namespace file
 		void write_line(const char* i_line) const;
 		unsigned read_bytes(char* o_bytes, unsigned i_numbytes) const;
 		void write_bytes(const char* i_bytes, unsigned i_numbytes) const;
+
+		bool opened() const;
 	private:
 		file(const file&);
 		void operator=(const file&);
@@ -59,7 +61,8 @@ namespace file
 
 	MLINLINE file::~file()
 	{
-		fclose(m_handle);
+		if (m_handle)
+			fclose(m_handle);
 	}
 
 	MLINLINE bool file::read_line(ctr::string& o_line) const
@@ -106,6 +109,10 @@ namespace file
 		fwrite(i_bytes,1,i_numbytes,m_handle);
 	}
 
-
+	MLINLINE bool file::opened() const
+	{
+		return m_handle!=NULL;
+	}
 }
+
 #endif//_file_h_
