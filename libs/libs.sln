@@ -1,12 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libs", "libs\libs.vcproj", "{2B939032-FE56-4A52-B30B-3188904F3E67}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "teszt", "teszt\teszt.vcproj", "{7F11FB18-91EF-4BDD-94A8-02BDB2C5F0F3}"
-	ProjectSection(ProjectDependencies) = postProject
-		{2B939032-FE56-4A52-B30B-3188904F3E67} = {2B939032-FE56-4A52-B30B-3188904F3E67}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libs", "libs.vcproj", "{2B939032-FE56-4A52-B30B-3188904F3E67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,10 +13,6 @@ Global
 		{2B939032-FE56-4A52-B30B-3188904F3E67}.Debug|Win32.Build.0 = Debug|Win32
 		{2B939032-FE56-4A52-B30B-3188904F3E67}.Release|Win32.ActiveCfg = Release|Win32
 		{2B939032-FE56-4A52-B30B-3188904F3E67}.Release|Win32.Build.0 = Release|Win32
-		{7F11FB18-91EF-4BDD-94A8-02BDB2C5F0F3}.Debug|Win32.ActiveCfg = Debug|Win32
-		{7F11FB18-91EF-4BDD-94A8-02BDB2C5F0F3}.Debug|Win32.Build.0 = Debug|Win32
-		{7F11FB18-91EF-4BDD-94A8-02BDB2C5F0F3}.Release|Win32.ActiveCfg = Release|Win32
-		{7F11FB18-91EF-4BDD-94A8-02BDB2C5F0F3}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
