@@ -53,10 +53,7 @@ namespace ctr
 			delete [] m_buf;
 
 		m_buf=new char[i_capacity];
-//		m_buf[0]=0;
-
 		m_capacity=i_capacity;
-//		m_length=0;
 	}
 
 	template <unsigned TSTRING_MIN_CAPACITY>
