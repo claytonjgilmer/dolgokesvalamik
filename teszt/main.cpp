@@ -72,9 +72,9 @@ int _cdecl main()
 {
 	if (1)
 	{
-		file::system s;
+		file::system::create(NULL);
 
-		s.register_path("faszom","c:/lacika/dolgokesvalamik/");
+		file::system::instance()->register_path("faszom","c:/lacika/dolgokesvalamik/");
 
 		ctr::string v1("valami");
 		ctr::tstring<12> v2("valami mas");
@@ -82,7 +82,7 @@ int _cdecl main()
 		v2=v1;
 
 		ctr::string line;
-		file::file f; s.openfile(f,"faszom","dumdir.au3","r");
+		file::file f; file::system::instance()->open_file(f,"faszom","dumdir.au3","r");
 
 		if (f.opened())
 		{
@@ -97,7 +97,7 @@ int _cdecl main()
 			}
 		}
 
-		s.unregister_path("faszom","fasza");
+		file::system::instance()->unregister_path("faszom","fasza");
 	}
 	ctr::stringmap<mapelem,16384> strmap;
 
@@ -118,7 +118,7 @@ int _cdecl main()
 	ctr::tstring<4> str1("fasszom");
 	ctr::tstring<2> str2(str1);
 
-	printf_s("pressz eni kí tu kontinyú...\n");
+	printf_s("pressz eni ki tu kontinyu...\n");
 	while (!_kbhit());
 	return 0;
 

@@ -8,9 +8,10 @@ namespace base
 	{
 		friend class referencepointer;
 	public:
+	protected:
 		referencedobject();
-	private:
 		virtual ~referencedobject(){}
+	private:
 		int m_refcount;
 
 		void add_ref();

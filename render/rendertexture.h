@@ -2,25 +2,29 @@
 #define _rendertexture_h_
 
 #include "base/referencedobject.h"
+#include "containers/string.h"
+#include <d3d9.h>
 
 namespace render
 {
+	class system;
+	class texturemanager;
+
 	class texture:public base::referencedobject
 	{
+		friend class system;
+		friend class texturemanager;
 	public:
+		texture* Next;
+		const ctr::string& Name;
+
 	private:
-		texture();
+		texture(void* i_buf, unsigned i_size, const char* i_name);
 		~texture();
 		IDirect3DTexture9* m_hwbuffer;
+
+		ctr::string m_name;
 	};
 
-	inline void texture::texture()
-	{
-		m_hwbuffer=NULL;
-	}
-
-	inline void texture::~texture()
-	{
-	}
 }
 #endif//_rendertexture_h_

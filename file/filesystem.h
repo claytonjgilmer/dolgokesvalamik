@@ -5,18 +5,22 @@
 #include "containers/stringmap.h"
 #include "containers/listallocator.h"
 #include "file/file.h"
+#include "base/singleton.h"
 
 namespace file
 {
+	class systemdesc
+	{
+
+	};
 	class system
 	{
+		DECLARE_SINGLETON(system);
 	public:
-		system(){}
-		~system(){}
 
 		void register_path(const char* i_group,const char* i_path);
 		void unregister_path(const char* i_group, const char* i_path);
-		void openfile(file& o_file, const char* i_group, const char* i_filename, const char* i_mode) const;
+		void open_file(file& o_file, const char* i_group, const char* i_filename, const char* i_mode) const;
 	private:
 		struct groupstruct
 		{
@@ -76,7 +80,7 @@ namespace file
 		}
 	}
 
-	MLINLINE void system::openfile(file& o_file, const char* i_group, const char* i_filename, const char* i_mode) const
+	MLINLINE void system::open_file(file& o_file, const char* i_group, const char* i_filename, const char* i_mode) const
 	{
 		groupstruct* group=m_pathmap.get_data(i_group);
 

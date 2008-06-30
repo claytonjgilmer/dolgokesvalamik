@@ -20,24 +20,31 @@ namespace file
 		unsigned read_bytes(char* o_bytes, unsigned i_numbytes) const;
 		void write_bytes(const char* i_bytes, unsigned i_numbytes) const;
 
+		unsigned size() const;
+
 		bool opened() const;
 	private:
 		file(const file&);
 		void operator=(const file&);
 		FILE* m_handle;
 		ctr::string m_name;
+		unsigned m_size;
 	};
 
 
 	MLINLINE file::file()
 	{
 		m_handle=NULL;
+		m_size=0;
 	}
 
 	MLINLINE file::file(const char* i_name,const char* i_attributes):
 	m_name(i_name)
 	{
 		m_handle=fopen(i_name,i_attributes);
+
+		if (m_handle)
+			m_size=GetFileSize(m_handle,NULL);
 	}
 
 	MLINLINE void file::open(const char* i_name, const char* i_attributes)
@@ -46,7 +53,11 @@ namespace file
 			close();
 
 		m_handle=fopen(i_name,i_attributes);
-		m_name=i_name;
+		if (m_handle)
+		{
+			m_size=GetFileSize(m_handle,NULL);
+			m_name=i_name;
+		}
 	}
 
 	MLINLINE void file::close()
@@ -57,6 +68,7 @@ namespace file
 		fclose(m_handle);
 		m_handle=NULL;
 		m_name="";
+		m_size=0;
 	}
 
 	MLINLINE file::~file()
@@ -112,6 +124,11 @@ namespace file
 	MLINLINE bool file::opened() const
 	{
 		return m_handle!=NULL;
+	}
+
+	MLINLINE unsigned file::size() const
+	{
+		return m_size;
 	}
 }
 
