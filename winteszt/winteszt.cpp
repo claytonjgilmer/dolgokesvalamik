@@ -168,6 +168,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		g_done=1;
 		PostQuitMessage(0);
 		break;
+	case WM_KEYUP:
+		if (wParam==VK_ESCAPE)
+		{
+			g_done=1;
+			PostQuitMessage(0);
+			break;
+		}
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
