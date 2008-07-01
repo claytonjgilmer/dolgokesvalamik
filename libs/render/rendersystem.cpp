@@ -57,21 +57,32 @@ namespace render
 		return m_device;
 	}
 
-	void system::renderqueues()
+	void system::render_queues()
 	{
 	}
 
-	vertexbuffer* system::create_vertexbuffer(unsigned i_vertexnum)
+	vertexbuffer* system::create_vertexbuffer(unsigned i_vertexnum, unsigned i_vertexsize)
 	{
 		vertexbuffer* vb=new vertexbuffer;
-
+		m_device->CreateVertexBuffer(i_vertexnum*i_vertexsize,D3DUSAGE_WRITEONLY,0,D3DPOOL_DEFAULT,&vb->m_hwbuffer,NULL);
 		return vb;
 	}
 
 	indexbuffer* system::create_indexbuffer(unsigned i_indexnum)
 	{
 		indexbuffer* ib=new indexbuffer;
+		IDirect3DIndexBuffer9* hwbuf;
+		D3DFORMAT indexformat=D3DFMT_INDEX16;
+		const int indexsize=sizeof(short);
 
+		m_device->CreateIndexBuffer(	i_indexnum*indexsize,
+			D3DUSAGE_WRITEONLY,
+			indexformat,
+			D3DPOOL_DEFAULT,
+			&hwbuf,
+			NULL);
+
+		ib->m_hwbuffer=hwbuf;
 		return ib;
 	}
 

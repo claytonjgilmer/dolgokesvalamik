@@ -7,19 +7,14 @@
 
 namespace render
 {
-	class system;
-	class texturemanager;
-
 	class texture:public base::referencedobject
 	{
-		friend class system;
-		friend class texturemanager;
 	public:
 		texture* Next;
 		const ctr::string& Name;
+		texture(void* i_buf, unsigned i_size, const char* i_name);
 
 	private:
-		texture(void* i_buf, unsigned i_size, const char* i_name);
 		~texture();
 		IDirect3DTexture9* m_hwbuffer;
 

@@ -2,7 +2,8 @@
 #define _vector_h_
 
 #include <new.h>
-#include "base\misc.h"
+#include "base/misc.h"
+#include "base/assert.h"
 namespace ctr
 {
 	template <class basetype>
@@ -46,8 +47,13 @@ namespace ctr
 		bool empty() const;
 		void reserve(unsigned i_capacity);
 
+#ifndef _DEBUG
+		operator basetype* ();
+		operator const basetype* () const;
+#else
 		basetype& operator[](unsigned i_index);
 		const basetype& operator[](unsigned i_index) const;
+#endif//_DEBUG
 
 		void operator=(const vector& i_other);
 		vector(const vector& i_other);
@@ -125,24 +131,28 @@ namespace ctr
 	template<class basetype>
 	MLINLINE typename vector<basetype>::iterator vector<basetype>::begin()
 	{
+		base::assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
 		return m_buf;
 	}
 
 	template<class basetype>
 	MLINLINE typename vector<basetype>::const_iterator vector<basetype>::begin() const
 	{
+		base::assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
 		return m_buf;
 	}
 
 	template<class basetype>
 	MLINLINE typename vector<basetype>::iterator vector<basetype>::end()
 	{
+		base::assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
 		return m_buf+m_size;
 	}
 
 	template<class basetype>
 	MLINLINE typename vector<basetype>::const_iterator vector<basetype>::end() const
 	{
+		base::assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
 		return m_buf+m_size;
 	}
 
@@ -159,6 +169,8 @@ namespace ctr
 	template <class basetype>
 	MLINLINE void vector<basetype>::pop_back()
 	{
+		base::assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
+		base::assertion(m_size>0,"vector<basetype>::size() <=0!!!");
 		m_buf[--m_size].~basetype();
 	}
 
@@ -203,24 +215,32 @@ namespace ctr
 	template<class basetype>
 	MLINLINE basetype& vector<basetype>::back()
 	{
+		base::assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
+		base::assertion(m_size>0,"vector<basetype>::size() <=0!!!");
 		return m_buf[m_size-1];
 	}
 
 	template<class basetype>
 	MLINLINE const basetype& vector<basetype>::back() const
 	{
+		base::assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
+		base::assertion(m_size>0,"vector<basetype>::size() <=0!!!");
 		return m_buf[m_size-1];
 	}
 
 	template<class basetype>
 	MLINLINE basetype& vector<basetype>::front()
 	{
+		base::assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
+		base::assertion(m_size>0,"vector<basetype>::size() <=0!!!");
 		return m_buf[0];
 	}
 
 	template<class basetype>
 	MLINLINE const basetype& vector<basetype>::front() const
 	{
+		base::assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
+		base::assertion(m_size>0,"vector<basetype>::size() <=0!!!");
 		return m_buf[0];
 	}
 
@@ -309,19 +329,34 @@ namespace ctr
 		m_size=i_newsize;
 
 	}
-
+#ifdef _DEBUG
 	template<class basetype>
 	MLINLINE basetype& vector<basetype>::operator[](unsigned i_index)
 	{
+		base::assertion(i_index<m_size,"vector<basetype>::size() <=i_index!!!");
 		return m_buf[i_index];
 	}
 
 	template<class basetype>
 	MLINLINE const basetype& vector<basetype>::operator[](unsigned i_index) const
 	{
+		base::assertion(i_index<m_size,"vector<basetype>::size() <=i_index!!!");
 		return m_buf[i_index];
 	}
+#else
+	template<class basetype>
+	MLINLINE vector<basetype>::operator basetype* ()
+	{
+		return m_buf;
+	}
 
+	template<class basetype>
+	MLINLINE vector<basetype>::operator const basetype* () const
+	{
+		return m_buf;
+	}
+
+#endif//_DEBUG
 
 	template<class basetype>
 	MLINLINE void vector<basetype>::alloc()

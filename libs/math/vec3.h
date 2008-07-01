@@ -53,10 +53,10 @@ namespace math
 
 		vec3	operator-() const;
 
-		void max(const vec3& i_v1, const vec3& i_v2);
-		void max(const vec3& i_other);
-		void min(const vec3& i_v1, const vec3& i_v2);
-		void min(const vec3& i_other);
+		void set_max(const vec3& i_v1, const vec3& i_v2);
+		void set_max(const vec3& i_other);
+		void set_min(const vec3& i_v1, const vec3& i_v2);
+		void set_min(const vec3& i_other);
 
 		float maxelem() const;
 
@@ -234,14 +234,14 @@ namespace math
 		z=fabsf(i_src.z);
 	}
 
-	MLINLINE void vec3::max(const vec3& i_v1, const vec3& i_v2)
+	MLINLINE void vec3::set_max(const vec3& i_v1, const vec3& i_v2)
 	{
 		x=i_v1.x > i_v2.x ? i_v1.x : i_v2.x;
 		y=i_v1.y > i_v2.y ? i_v1.y : i_v2.y;
 		z=i_v1.z > i_v2.z ? i_v1.z : i_v2.z;
 	}
 
-	MLINLINE void vec3::max(const vec3& i_other)
+	MLINLINE void vec3::set_max(const vec3& i_other)
 	{
 		if (i_other.x>x)
 			x=i_other.x;
@@ -260,14 +260,14 @@ namespace math
 		return r;
 	}
 
-	MLINLINE void vec3::min(const vec3& i_v1, const vec3& i_v2)
+	MLINLINE void vec3::set_min(const vec3& i_v1, const vec3& i_v2)
 	{
 		x=i_v1.x < i_v2.x ? i_v1.x : i_v2.x;
 		y=i_v1.y < i_v2.y ? i_v1.y : i_v2.y;
 		z=i_v1.z < i_v2.z ? i_v1.z : i_v2.z;
 	}
 
-	MLINLINE void vec3::min(const vec3& i_other)
+	MLINLINE void vec3::set_min(const vec3& i_other)
 	{
 		if (i_other.x<x)
 			x=i_other.x;

@@ -70,6 +70,20 @@ int maxkeynum=0;
 
 int _cdecl main()
 {
+	ctr::vector<unsigned int> vec;
+	vec.resize(100);
+
+	unsigned* v=vec;
+
+	for (unsigned int n=0; n<vec.size(); ++n)
+	{
+		v[n]=n;
+	}
+
+	for (unsigned n=0; n<vec.size(); ++n)
+	{
+		printf_s("%d: %d\n",n,vec[n]);
+	}
 	if (1)
 	{
 		file::system::create(NULL);
