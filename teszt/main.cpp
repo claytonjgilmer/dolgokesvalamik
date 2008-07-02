@@ -66,7 +66,7 @@ public:
 int szamlalo=0;
 int maxkeynum=0;
 
-#define _ME_(_NAME_) static mapelem _NAME_(#_NAME_)
+//#define _ME_(_NAME_) static mapelem _NAME_(#_NAME_)
 
 int _cdecl main()
 {
