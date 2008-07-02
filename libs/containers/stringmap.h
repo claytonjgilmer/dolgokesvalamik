@@ -4,11 +4,16 @@
 #include "base/misc.h"
 #include "utils/stringhash.h"
 
-extern int szamlalo;
-extern int maxkeynum;
+//extern int szamlalo;
+//extern int maxkeynum;
 
 namespace ctr
 {
+	struct stringmapstat
+	{
+		float m_avg;
+		int m_max;
+	};
 	template <class T, unsigned bufsize=1024>
 	class stringmap
 	{
@@ -17,6 +22,8 @@ namespace ctr
 		unsigned add_data(T* i_data);
 		void remove_data(const char* i_name);
 		T* get_data(const char* i_name) const; 
+
+		stringmapstat statistics() const;
 
 	private:
 		T* m_buf[bufsize];
@@ -38,20 +45,20 @@ namespace ctr
 		unsigned hashkey=hashfn(i_data->Name) & (bufsize-1);
 //		unsigned hashkey=hashfn(i_data->Name) % bufsize;
 		i_data->Next=m_buf[hashkey];
-		if (m_buf[hashkey]!=NULL)
-			szamlalo++;
+//		if (m_buf[hashkey]!=NULL)
+//			szamlalo++;
 		m_buf[hashkey]=i_data;
 
-		int szam=0;
-		T* ptr=m_buf[hashkey];
+//		int szam=0;
+//		T* ptr=m_buf[hashkey];
 
-		while (ptr)
-		{
-			++szam;
-			ptr=ptr->Next;
-		}
+//		while (ptr)
+//		{
+//			++szam;
+//			ptr=ptr->Next;
+//		}
 
-		if (szam>maxkeynum) maxkeynum=szam;
+//		if (szam>maxkeynum) maxkeynum=szam;
 
 
 		return hashkey;
@@ -103,5 +110,38 @@ namespace ctr
 		return NULL;
 	}
 
+	template<class T, unsigned bufsize>
+	MLINLINE stringmapstat stringmap<T,bufsize>::statistics() const
+	{
+		stringmapstat stat;
+		stat.m_avg=0;
+		stat.m_max=0;
+
+		unsigned count=0;
+
+		for (unsigned int n=0; n<bufsize;++n)
+		{
+			if (m_buf[n])
+			{
+				++count;
+				int act=0;
+				T* ptr=m_buf[n];
+
+				while (ptr)
+				{
+					ptr=ptr->Next;
+					++act;
+				}
+
+				stat.m_avg+=(float)act;
+
+				if (stat.m_max<act)
+					stat.m_max=act;
+			}
+		}
+
+		stat.m_avg/=(float)count;
+		return stat;
+	}
 }
 #endif//_stringmap_h_

@@ -7,6 +7,12 @@ namespace render
 	class triset
 	{
 	public:
+		unsigned m_firstvertex;
+		unsigned m_numvertices;
+		unsigned m_firstindex;
+		unsigned m_numindices;
+
+		material* m_material;
 
 	};
 }

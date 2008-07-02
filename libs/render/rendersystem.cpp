@@ -68,6 +68,14 @@ namespace render
 		return vb;
 	}
 
+	void system::release_vertexbuffer(vertexbuffer* i_vb)
+	{
+		if (i_vb && i_vb->m_hwbuffer)
+			i_vb->m_hwbuffer->Release();
+
+		i_vb->m_hwbuffer=NULL;
+	}
+
 	indexbuffer* system::create_indexbuffer(unsigned i_indexnum)
 	{
 		indexbuffer* ib=new indexbuffer;
@@ -84,6 +92,14 @@ namespace render
 
 		ib->m_hwbuffer=hwbuf;
 		return ib;
+	}
+
+	void system::release_indexbuffer(indexbuffer* i_ib)
+	{
+		if (i_ib && i_ib->m_hwbuffer)
+			i_ib->m_hwbuffer->Release();
+
+		i_ib->m_hwbuffer=0;
 	}
 
 	void system::create_texture(LPDIRECT3DTEXTURE9& o_hwbuf,void* i_buf, unsigned i_size)

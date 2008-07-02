@@ -63,9 +63,6 @@ public:
 	mapelem* Next;
 };
 
-int szamlalo=0;
-int maxkeynum=0;
-
 //#define _ME_(_NAME_) static mapelem _NAME_(#_NAME_)
 
 int _cdecl main()
@@ -73,7 +70,7 @@ int _cdecl main()
 	ctr::vector<unsigned int> vec;
 	vec.resize(100);
 
-	unsigned* v=vec;
+	unsigned* v=&vec[0];
 
 	for (unsigned int n=0; n<vec.size(); ++n)
 	{
@@ -113,7 +110,7 @@ int _cdecl main()
 
 		file::system::instance()->unregister_path("faszom","fasza");
 	}
-	ctr::stringmap<mapelem,16384> strmap;
+	ctr::stringmap<mapelem,128> strmap;
 
 	{
 		file::file dump("c:\\filedump.txt","r");
@@ -127,8 +124,10 @@ int _cdecl main()
 		}
 	}
 
-	printf_s("szamlalo:%d\n",szamlalo);
-	printf_s("maxkeynum:%d\n",maxkeynum);
+	ctr::stringmapstat stat=strmap.statistics();
+
+	printf_s("avg:%.1f\n",stat.m_avg);
+	printf_s("max:%d\n",stat.m_max);
 	ctr::tstring<4> str1("fasszom");
 	ctr::tstring<2> str2(str1);
 

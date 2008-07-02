@@ -37,7 +37,9 @@ namespace render
 		DECLARE_SINGLETON(system);
 	public:
 		vertexbuffer* create_vertexbuffer(unsigned i_vertexnum, unsigned i_vertexsize);
+		void release_vertexbuffer(vertexbuffer* i_vb);
 		indexbuffer* create_indexbuffer(unsigned i_indexnum);
+		void release_indexbuffer(indexbuffer* i_ib);
 		void create_texture(LPDIRECT3DTEXTURE9& o_hwbuf,void* i_buf, unsigned i_size);
 		void release_texture(LPDIRECT3DTEXTURE9 i_hwbuf);
 
