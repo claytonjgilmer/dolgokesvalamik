@@ -25,7 +25,7 @@ namespace file
 		struct groupstruct
 		{
 			groupstruct(const char* i_group):
-			Name(i_group)
+			m_name(i_group)
 			{
 			}
 
@@ -34,7 +34,9 @@ namespace file
 				int a=0;
 			}
 
-			ctr::tstring<16> Name; //group
+			const ctr::tstring<16>& get_name() const {return m_name;}
+
+			ctr::tstring<16> m_name; //group
 			groupstruct* Next;
 			ctr::vector<ctr::tstring<64>> m_pathbuf;
 		} ;

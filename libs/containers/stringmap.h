@@ -42,8 +42,8 @@ namespace ctr
 	template<class T, unsigned bufsize>
 	MLINLINE unsigned stringmap<T,bufsize>::add_data(T* i_data)
 	{
-		unsigned hashkey=hashfn(i_data->Name) & (bufsize-1);
-//		unsigned hashkey=hashfn(i_data->Name) % bufsize;
+		unsigned hashkey=hashfn(i_data->get_name()) & (bufsize-1);
+//		unsigned hashkey=hashfn(i_data->get_name()) % bufsize;
 		i_data->Next=m_buf[hashkey];
 //		if (m_buf[hashkey]!=NULL)
 //			szamlalo++;
@@ -75,7 +75,7 @@ namespace ctr
 
 		while (ptr)
 		{
-			if (ptr->Name==i_name)
+			if (ptr->get_name()==i_name)
 			{
 				if (prevptr)
 					prevptr->Next=ptr->Next;
@@ -100,7 +100,7 @@ namespace ctr
 
 		while (ptr)
 		{
-			if (ptr->Name==i_name)
+			if (ptr->get_name()==i_name)
 			{
 				return ptr;
 			}

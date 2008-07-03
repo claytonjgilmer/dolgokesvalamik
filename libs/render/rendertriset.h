@@ -4,6 +4,7 @@
 
 namespace render
 {
+	class material;
 	class triset
 	{
 	public:

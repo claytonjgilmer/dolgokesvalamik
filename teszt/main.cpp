@@ -57,8 +57,8 @@ public:
 class mapelem
 {
 public:
-	mapelem(const char* i_name):Name(i_name){}
-	ctr::string Name;
+	mapelem(const char* i_name):get_name()(i_name){}
+	ctr::string get_name();
 
 	mapelem* Next;
 };

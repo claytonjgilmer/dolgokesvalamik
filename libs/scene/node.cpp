@@ -2,7 +2,7 @@
 
 namespace scene
 {
-	node::node()
+	node::node():
 	m_localpos(math::mtx4x3::identitymtx()),
 	m_worldpos(math::mtx4x3::identitymtx())
 	{
@@ -64,14 +64,14 @@ namespace scene
 		i_child->m_bro=NULL;
 	}
 	
-	node* node::get_next() const
+	node* node::get_next(node* i_root) const
 	{
 		if (m_child)
 			return m_child;
 			
-		node* ptr=this;
+		const node* ptr=this;
 		
-		while (ptr)
+		while (ptr!=i_root)
 		{
 			if (ptr->m_bro)
 				return ptr->m_bro;
@@ -89,15 +89,12 @@ namespace scene
 		//ennek a node-nak es a childnode-oknak ilyenkor invalidalodik a worldmatrixa
 		m_flags&=~nodeflag_valid_worldpos;
 		
-		node* ptr=m_child;
+		node* ptr=this;
 		
-		if (ptr)
+		while (ptr)
 		{
-			while (ptr!=this)
-			{
-				ptr->m_flags&=~nodeflag_valid_worldpos;
-				ptr=ptr->get_next();
-			}
+			ptr->m_flags&=~nodeflag_valid_worldpos;
+			ptr=ptr->get_next(this);
 		}
 	}
 	const math::mtx4x3& node::get_localposition() const
@@ -115,19 +112,35 @@ namespace scene
 		
 		m_flags|=nodeflag_valid_worldpos;
 		
-		//
-		node* ptr=m_child;
+		node* ptr=this;
+		ptr=ptr->get_next(this);
 		
-		if (ptr)
+		while (ptr)
 		{
-			while (ptr!=this)
-			{
-				ptr->m_flags&=~nodeflag_valid_worldpos;
-				ptr=ptr->get_next();
-			}
+			ptr->m_flags&=~nodeflag_valid_worldpos;
+			ptr=ptr->get_next(this);
 		}
 	}
 	
-	const math::mtx4x3& get_worldposition() const;
+	const math::mtx4x3& node::get_worldposition() const
+	{
+		node* buf[128];
+		unsigned bufsize=0;
+		node* ptr=this;
+
+		while (!(ptr->m_flags & nodeflag_valid_worldpos))
+		{
+			buf[bufsize++]=ptr;
+			ptr=ptr->m_parent;
+		}
+
+		for (unsigned n=bufsize-1; n>=0; --n)
+		{
+			node->m_worldpos.multiply(node->m_localpos,node->m_parent->m_worldpos);
+			node->m_flags|=nodeflag_valid_worldpos;
+		}
+
+		return m_worldpos;
+	}
 	
 }

@@ -11,7 +11,7 @@ namespace render
 	{
 	public:
 		texture* Next;
-		const ctr::string& Name;
+		const ctr::string& get_name(){return m_name;}
 		texture(void* i_buf, unsigned i_size, const char* i_name);
 
 	private:

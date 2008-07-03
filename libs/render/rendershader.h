@@ -6,6 +6,9 @@ namespace render
 	{
 	public:
 
+	private:
+		LPD3DXEFFECT m_effect;
+		ctr::string m_name;
 	};
 }
 #endif//_rendershader_h_

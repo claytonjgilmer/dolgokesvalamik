@@ -3,6 +3,7 @@
 
 #include "containers/string.h"
 #include "base/assert.h"
+#include "math/mtx4x3.h"
 
 namespace scene
 {
@@ -27,7 +28,7 @@ namespace scene
 		void set_worldposition(const math::mtx4x3&);
 		const math::mtx4x3& get_worldposition() const;
 		
-		node* get_next() const;
+		node* get_next(node* i_root=NULL) const;
 		
 	protected:
 		node* m_parent;
@@ -35,7 +36,7 @@ namespace scene
 		node* m_bro;
 
 		ctr::string m_name;
-		math:mtx4x3 m_localpos;
+		math::mtx4x3 m_localpos;
 		math::mtx4x3 m_worldpos;
 		
 		unsigned m_flags;

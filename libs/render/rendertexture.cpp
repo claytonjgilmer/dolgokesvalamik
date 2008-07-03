@@ -5,8 +5,7 @@
 namespace render
 {
 	texture::texture(void* i_buf, unsigned i_size, const char* i_name):
-	m_name(i_name),
-	Name(m_name)
+	m_name(i_name)
 	{
 		Next=NULL;
 		system::instance()->create_texture(m_hwbuffer,i_buf,i_size);

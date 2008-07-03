@@ -43,6 +43,6 @@ namespace render
 
 	void texturemanager::erase_texture(texture* t)
 	{
-		m_map.remove_data(t->Name.c_str());
+		m_map.remove_data(t->get_name().c_str());
 	}
 }
