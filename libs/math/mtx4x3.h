@@ -27,7 +27,9 @@ namespace math
 
 		void multiply(const mtx4x3& i_mtx1, const mtx4x3& i_mtx2);
 		void multiplytransposed(const mtx4x3& i_src1, const mtx4x3& i_src2transposed);
+
 		void invert(const mtx4x3& i_src);
+		void linearinvert(const mtx4x3& i_src);
 
 		void interpolate(const mtx4x3& i_src1, const mtx4x3& i_src2, float i_time);
 
@@ -168,6 +170,15 @@ namespace math
 		_41 = -(i_src._41*_11 + i_src._42*_21 + i_src._43*_31);
 		_42 = -(i_src._41*_12 + i_src._42*_22 + i_src._43*_32);
 		_43 = -(i_src._41*_13 + i_src._42*_23 + i_src._43*_33);
+	}
+
+	MLINLINE void mtx4x3::linearinvert(const mtx4x3& i_src)
+	{
+		xaxis/=i_src.xaxis.squarelength();
+		yaxis/=i_src.yaxis.squarelength();
+		zaxis/=i_src.zaxis.squarelength();
+
+		transform3x3(t,i_src.t);
 	}
 
 	MLINLINE void mtx4x3::normalize()

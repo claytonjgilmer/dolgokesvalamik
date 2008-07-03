@@ -26,7 +26,7 @@ namespace scene
 		const math::mtx4x3& get_localposition() const;
 		
 		void set_worldposition(const math::mtx4x3&);
-		const math::mtx4x3& get_worldposition() const;
+		const math::mtx4x3& get_worldposition();
 		
 		node* get_next(node* i_root=NULL) const;
 		

@@ -6,7 +6,7 @@
 
 namespace base
 {
-	class resource//:public referencedobject
+	class resource:public referencedobject
 	{
 	public:
 		resource(const ctr::string& i_name):
@@ -14,8 +14,11 @@ namespace base
 		{
 
 		}
-	private:
+
+	const ctr::string& get_name(){return m_name;}
+	protected:
 		~resource(){}
+	private:
 		ctr::string m_name;
 
 	};

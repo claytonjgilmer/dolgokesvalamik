@@ -2,32 +2,36 @@
 #define _referencepointer_h_
 
 #include "referencedobject.h"
+#include "base/misc.h"
 
 namespace base
 {
+	template <class REF>
 	class referencepointer
 	{
 	public:
 		referencepointer();
 		referencepointer(const referencepointer& i_other);
-		referencepointer(referencedobject* i_object);
+		referencepointer(REF* i_object);
 
 		void operator=(const referencepointer& i_other);
-		void operator=(referencedobject* i_object);
+		void operator=(REF* i_object);
 
-		referencedobject* operator*();
+		REF* operator*();
 
 		~referencepointer();
 	//private:
-		referencedobject* m_ptr;
+		REF* m_ptr;
 	};
 
-	inline referencepointer::referencepointer()
+	template <class REF>
+	inline referencepointer<REF>::referencepointer()
 	{
 		m_ptr=0;
 	}
 
-	inline referencepointer::referencepointer(const referencepointer& i_other)
+	template <class REF>
+	inline referencepointer<REF>::referencepointer(const referencepointer& i_other)
 	{
 		m_ptr=i_other.m_ptr;
 
@@ -35,7 +39,8 @@ namespace base
 			m_ptr->add_ref();
 	}
 
-	inline referencepointer::referencepointer(referencedobject* i_object)
+	template <class REF>
+	inline referencepointer<REF>::referencepointer(REF* i_object)
 	{
 		m_ptr=i_object;
 
@@ -43,7 +48,8 @@ namespace base
 			m_ptr->add_ref();
 	}
 
-	inline void referencepointer::operator =(const referencepointer& i_other)
+	template <class REF>
+	inline void referencepointer<REF>::operator =(const referencepointer& i_other)
 	{
 		if (m_ptr)
 		{
@@ -59,7 +65,8 @@ namespace base
 			m_ptr->add_ref();
 	}
 
-	inline void referencepointer::operator =(referencedobject* i_object)
+	template <class REF>
+	inline void referencepointer<REF>::operator =(REF* i_object)
 	{
 		if (m_ptr)
 		{
@@ -75,18 +82,20 @@ namespace base
 			m_ptr->add_ref();
 	}
 
-	inline referencedobject* referencepointer::operator *()
+	template <class REF>
+	inline REF* referencepointer<REF>::operator *()
 	{
 		return m_ptr;
 	}
 
-	inline referencepointer::~referencepointer()
+	template <class REF>
+	inline referencepointer<REF>::~referencepointer()
 	{
 		if (m_ptr)
 		{
 			m_ptr->remove_ref();
 
-			if (!m_ptr->m_refcount)
+			if (!m_ptr->get_ref())
 				delete m_ptr;
 
 			m_ptr=NULL;

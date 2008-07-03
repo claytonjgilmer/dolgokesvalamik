@@ -1,23 +1,30 @@
 #ifndef _referencedobject_h_
 #define _referencedobject_h_
 
+#include "base/referencepointer.h"
+#include "base/misc.h"
+
 namespace base
 {
-	class referencepointer;
+
 	class referencedobject
 	{
-		friend class referencepointer;
 	public:
+		void add_ref();
+		void remove_ref();
+		int get_ref() const;
 	protected:
 		referencedobject();
 		virtual ~referencedobject(){}
+
 	private:
 		int m_refcount;
-
-		void add_ref();
-		void remove_ref();
 	};
 
+	MLINLINE int referencedobject::get_ref() const
+	{
+		return m_refcount;
+	}
 
 	inline referencedobject::referencedobject()
 	{

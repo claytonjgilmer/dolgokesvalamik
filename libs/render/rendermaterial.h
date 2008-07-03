@@ -2,17 +2,22 @@
 #define _rendermaterial_h_
 
 #include "base/colorf.h"
+#include "base/resource.h"
+#include "base/referencepointer.h"
+#include "containers/vector.h"
 
 namespace render
 {
 	class shader;
 	class texture;
 
-	class material
+	class material:public base::resource
 	{
 	public:
-		ctr::vector<texture*> m_texture;
-		render::shader* m_shader;
+		material(const char* i_name);
+
+		ctr::vector<base::referencepointer<texture> > m_texture;
+		base::referencepointer<render::shader> m_shader;
 //		base::colorf m_diffuse;
 //		base::colorf m_ambient;
 	};

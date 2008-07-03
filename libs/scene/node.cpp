@@ -122,7 +122,7 @@ namespace scene
 		}
 	}
 	
-	const math::mtx4x3& node::get_worldposition() const
+	const math::mtx4x3& node::get_worldposition()
 	{
 		node* buf[128];
 		unsigned bufsize=0;
@@ -136,8 +136,8 @@ namespace scene
 
 		for (unsigned n=bufsize-1; n>=0; --n)
 		{
-			node->m_worldpos.multiply(node->m_localpos,node->m_parent->m_worldpos);
-			node->m_flags|=nodeflag_valid_worldpos;
+			buf[n]->m_worldpos.multiply(buf[n]->m_localpos,buf[n]->m_parent->m_worldpos);
+			buf[n]->m_flags|=nodeflag_valid_worldpos;
 		}
 
 		return m_worldpos;

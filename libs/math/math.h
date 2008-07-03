@@ -205,10 +205,32 @@ namespace math
 		return (v2-v1)*x+v1;
 	}
 
+	MLINLINE float inv_sqrt(float i_val)
+	{
+		union {float f;int i;} val;
+		val.f=i_val;
+		float xhalf=0.5f*i_val;
+
+//		val.i=0x5f3fba86-(val.i>>1);
+//		val.i=0x5f3fba86-(val.i>>1);
+		val.i=0x5f375a86-(val.i>>1);
+//		val.i=0x5f3759df-(val.i>>1);
+		return val.f*(1.5f-xhalf*val.f*val.f);
+	}
+
+	MLINLINE float fast_sqrt(float i_val)
+	{
+		union {float f;int i;} val;
+		val.f=i_val;
+		float xhalf=0.5f*i_val;
+
+		//		val.i=0x5f3fba86-(val.i>>1);
+		//		val.i=0x5f3fba86-(val.i>>1);
+		val.i=0x5f375a86-(val.i>>1);
+		//		val.i=0x5f3759df-(val.i>>1);
+		return i_val*val.f*(1.5f-xhalf*val.f*val.f);
+	}
 	template <int n> MLINLINE int logn(){return 1+logn<(n >> 1)>();}
 	template<> MLINLINE int logn<1>(){return 0;}
-
-
-
 }
 #endif// _math_h_

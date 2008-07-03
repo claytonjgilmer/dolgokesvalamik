@@ -3,7 +3,7 @@
 namespace render
 {
 	object3d::object3d():
-	m_mesh(NULL),
+	m_mesh(NULL)
 	{
 	}
 	

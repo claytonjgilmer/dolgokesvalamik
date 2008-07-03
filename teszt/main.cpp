@@ -57,8 +57,9 @@ public:
 class mapelem
 {
 public:
-	mapelem(const char* i_name):get_name()(i_name){}
-	ctr::string get_name();
+	mapelem(const char* i_name):m_name(i_name){}
+	const ctr::string& get_name(){return m_name;}
+	ctr::string m_name;
 
 	mapelem* Next;
 };
@@ -67,6 +68,29 @@ public:
 
 int _cdecl main()
 {
+	{
+		float f1=0.5f;
+		float f2;
+		LARGE_INTEGER starttime;
+		::QueryPerformanceCounter(&starttime);
+		for (int n=0; n<10000000;++n)
+		{
+//			f2=math::inv_sqrt(f1);
+//			f1=math::inv_sqrt(f2);
+			f2=sqrt(f1);
+			f1=sqrt(f2);
+		}
+
+		LARGE_INTEGER endtime;
+		::QueryPerformanceCounter(&endtime);
+
+		LARGE_INTEGER freq; ::QueryPerformanceFrequency(&freq);
+
+		printf_s("num,time: %f,%f\n",f1,(endtime.QuadPart-starttime.QuadPart)/(double)freq.QuadPart);
+	}
+
+	printf_s("1/gyok4:%f\n",math::inv_sqrt(0.01f));
+	system("PAUSE"); return 0;
 	ctr::vector<unsigned int> vec;
 	vec.resize(100);
 
