@@ -13,7 +13,9 @@ namespace render
 	private:
 		vertexbuffer(){}
 		~vertexbuffer(){}
-		IDirect3DVertexBuffer9* m_hwbuffer;
+		LPDIRECT3DVERTEXBUFFER9 m_hwbuffer;
+		LPDIRECT3DVERTEXDECLARATION9 m_decl;
+
 	};
 }
 #endif//_rendervertexbuffer_h_

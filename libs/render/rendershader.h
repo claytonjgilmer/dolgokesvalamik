@@ -8,11 +8,13 @@ namespace render
 {
 	class shader:public base::resource
 	{
+		friend class base::referencepointer<shader>;
 	public:
-		shader(const ctr::string& i_name);
-		~shader();
+		shader(const void* i_buf, unsigned i_bufsize, const char* i_name);
+		shader* Next;
 
 	private:
+		~shader();
 		LPD3DXEFFECT m_effect;
 		ctr::string m_name;
 	};

@@ -12,9 +12,11 @@
 
 #include "rendervertexbuffer.h"
 #include "renderindexbuffer.h"
+#include "vertexelements.h"
 
 #include "base/singleton.h"
 #include <d3d9.h>
+#include <d3dx9.h>
 
 namespace render
 {
@@ -36,12 +38,15 @@ namespace render
 	{
 		DECLARE_SINGLETON(system);
 	public:
-		vertexbuffer* create_vertexbuffer(unsigned i_vertexnum, unsigned i_vertexsize);
-		void release_vertexbuffer(vertexbuffer* i_vb);
-		indexbuffer* create_indexbuffer(unsigned i_indexnum);
-		void release_indexbuffer(indexbuffer* i_ib);
-		void create_texture(LPDIRECT3DTEXTURE9& o_hwbuf,void* i_buf, unsigned i_size);
-		void release_texture(LPDIRECT3DTEXTURE9 i_hwbuf);
+		vertexbuffer* create_vertexbuffer(unsigned i_vertexnum, const ctr::vector<vertexelements>& i_vertexelements) const;
+		void release_vertexbuffer(vertexbuffer* i_vb) const;
+		indexbuffer* create_indexbuffer(unsigned i_indexnum) const;
+		void release_indexbuffer(indexbuffer* i_ib) const;
+		void create_texture(LPDIRECT3DTEXTURE9& o_hwbuf,const void* i_buf, unsigned i_size) const;
+		void release_texture(LPDIRECT3DTEXTURE9 i_hwbuf) const;
+
+		void create_shader(LPD3DXEFFECT& i_effect,const void* i_buf, unsigned i_bufsize) const;
+		void release_shader(LPD3DXEFFECT i_effect) const;
 
 		void set_renderstate(const state& i_state);
 

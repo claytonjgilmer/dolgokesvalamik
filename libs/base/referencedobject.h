@@ -9,15 +9,16 @@ namespace base
 
 	class referencedobject
 	{
+		template <class T> friend class referencepointer;
 	public:
-		void add_ref();
-		void remove_ref();
 		int get_ref() const;
 	protected:
 		referencedobject();
 		virtual ~referencedobject(){}
 
 	private:
+		void add_ref();
+		void remove_ref();
 		int m_refcount;
 	};
 

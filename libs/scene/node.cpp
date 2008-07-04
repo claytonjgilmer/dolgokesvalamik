@@ -102,16 +102,16 @@ namespace scene
 		//localpos mindig valid;
 		return m_localpos;
 	}
-	
+
 	void node::set_worldposition(const math::mtx4x3& i_mtx)
 	{
 		m_worldpos=i_mtx;
 		math::mtx4x3 parentinvworld;
 		parentinvworld.invert(m_parent->get_worldposition());
 		m_localpos.multiply(m_worldpos,parentinvworld);
-		
+
 		m_flags|=nodeflag_valid_worldpos;
-		
+
 		node* ptr=this;
 		ptr=ptr->get_next(this);
 		
@@ -121,7 +121,7 @@ namespace scene
 			ptr=ptr->get_next(this);
 		}
 	}
-	
+
 	const math::mtx4x3& node::get_worldposition()
 	{
 		node* buf[128];
@@ -142,5 +142,4 @@ namespace scene
 
 		return m_worldpos;
 	}
-	
 }

@@ -8,13 +8,14 @@ namespace render
 {
 	class texture:public base::resource
 	{
+		friend class base::referencepointer<texture>;
 	public:
 		texture* Next;
-		texture(void* i_buf, unsigned i_size, const char* i_name);
-		~texture();
+		texture(const void* i_buf, unsigned i_size, const char* i_name);
 
 	private:
 		IDirect3DTexture9* m_hwbuffer;
+		~texture();
 	};
 
 }

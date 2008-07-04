@@ -77,8 +77,10 @@ int _cdecl main()
 		{
 //			f2=math::inv_sqrt(f1);
 //			f1=math::inv_sqrt(f2);
-			f2=sqrt(f1);
-			f1=sqrt(f2);
+			f2=1.0f/sqrt(f1);
+			f1=1.0f/sqrt(f2);
+//			f2=1287/sqrt(f1);
+//			f1=1287/sqrt(f2);
 		}
 
 		LARGE_INTEGER endtime;

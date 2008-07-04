@@ -312,6 +312,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\render\shadermanager.h"
+				>
+			</File>
+			<File
 				RelativePath=".\base\singleton.h"
 				>
 			</File>
@@ -379,6 +383,10 @@
 				RelativePath=".\containers\vector.h"
 				>
 			</File>
+			<File
+				RelativePath=".\render\vertexelements.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -420,6 +428,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\render\rendershader.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\render\rendersystem.cpp"
 				>
 			</File>
@@ -429,6 +441,10 @@
 			</File>
 			<File
 				RelativePath=".\base\resourcemanager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\render\shadermanager.cpp"
 				>
 			</File>
 			<File

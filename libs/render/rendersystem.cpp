@@ -61,14 +61,40 @@ namespace render
 	{
 	}
 
-	vertexbuffer* system::create_vertexbuffer(unsigned i_vertexnum, unsigned i_vertexsize)
+	const D3DVERTEXELEMENT9 g_decl[element_last+1]=
+	{
+		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+		{ 0, 16, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+		{ 0, 8, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
+		{ 0, 16, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
+		D3DDECL_END()
+	};
+
+	vertexbuffer* system::create_vertexbuffer(unsigned i_vertexnum, const ctr::vector<vertexelements>& i_vertexelements) const
 	{
 		vertexbuffer* vb=new vertexbuffer;
-		m_device->CreateVertexBuffer(i_vertexnum*i_vertexsize,D3DUSAGE_WRITEONLY,0,D3DPOOL_DEFAULT,&vb->m_hwbuffer,NULL);
+
+		
+		unsigned siz=0;
+
+		ctr::fixedvector<D3DVERTEXELEMENT9,20> decl;
+
+		for (unsigned n=0; n<i_vertexelements.size(); ++n)
+		{
+			decl.push_back(g_decl[i_vertexelements[n]]);
+			unsigned offs=decl.back().Offset;
+			decl.back().Offset=siz;
+			siz+=offs;
+		}
+
+		decl.push_back(g_decl[element_last]);
+
+		m_device->CreateVertexBuffer(i_vertexnum*siz,D3DUSAGE_WRITEONLY,0,D3DPOOL_DEFAULT,&vb->m_hwbuffer,NULL);
+		m_device->CreateVertexDeclaration(&decl[0],&vb->m_decl);
 		return vb;
 	}
 
-	void system::release_vertexbuffer(vertexbuffer* i_vb)
+	void system::release_vertexbuffer(vertexbuffer* i_vb) const
 	{
 		if (i_vb && i_vb->m_hwbuffer)
 			i_vb->m_hwbuffer->Release();
@@ -76,7 +102,7 @@ namespace render
 		i_vb->m_hwbuffer=NULL;
 	}
 
-	indexbuffer* system::create_indexbuffer(unsigned i_indexnum)
+	indexbuffer* system::create_indexbuffer(unsigned i_indexnum) const
 	{
 		indexbuffer* ib=new indexbuffer;
 		IDirect3DIndexBuffer9* hwbuf;
@@ -94,7 +120,7 @@ namespace render
 		return ib;
 	}
 
-	void system::release_indexbuffer(indexbuffer* i_ib)
+	void system::release_indexbuffer(indexbuffer* i_ib) const
 	{
 		if (i_ib && i_ib->m_hwbuffer)
 			i_ib->m_hwbuffer->Release();
@@ -102,14 +128,24 @@ namespace render
 		i_ib->m_hwbuffer=0;
 	}
 
-	void system::create_texture(LPDIRECT3DTEXTURE9& o_hwbuf,void* i_buf, unsigned i_size)
+	void system::create_texture(LPDIRECT3DTEXTURE9& o_hwbuf,const void* i_buf, unsigned i_size) const
 	{
 		D3DXCreateTextureFromFileInMemory(m_device,i_buf,i_size,&o_hwbuf);
 	}
 
-	void system::release_texture(LPDIRECT3DTEXTURE9 i_hwbuf)
+	void system::release_texture(LPDIRECT3DTEXTURE9 i_hwbuf) const
 	{
 		i_hwbuf->Release();
+	}
+
+	void system::create_shader(LPD3DXEFFECT& i_effect,const void* i_buf, unsigned i_bufsize) const
+	{
+		D3DXCreateEffect(m_device,i_buf,i_bufsize,NULL,NULL,0,NULL,&i_effect,NULL);
+	}
+
+	void system::release_shader(LPD3DXEFFECT i_effect) const
+	{
+		i_effect->Release();
 	}
 
 	void system::set_renderstate(const state& i_state)

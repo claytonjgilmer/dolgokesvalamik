@@ -4,7 +4,7 @@
 
 namespace render
 {
-	texture::texture(void* i_buf, unsigned i_size, const char* i_name):
+	texture::texture(const void* i_buf, unsigned i_size, const char* i_name):
 		resource(i_name)
 	{
 		Next=NULL;
