@@ -23,7 +23,6 @@ namespace render
 	class systemdesc
 	{
 	public:
-		threading::taskmanager* m_taskmanager;
 		bool					m_windowed;
 		unsigned				m_backbuffercount;
 		unsigned				m_screenwidth;
@@ -50,13 +49,15 @@ namespace render
 
 		void set_renderstate(const state& i_state);
 
+		void render();
 
-		void render_queues();
+		void add_mesh(mesh* i_mesh, const math::mtx4x3& i_mtx, unsigned i_queueindex=0);
+
+
 		LPDIRECT3DDEVICE9 device() const;
 	private:
 		LPDIRECT3DDEVICE9 m_device;
 		LPDIRECT3D9 m_sys;
-		threading::taskmanager* m_taskmanager;
 		ctr::listallocator<queue> m_queues;
 		HWND m_window;
 	};

@@ -59,6 +59,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="d3d9.lib d3dx9d.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -125,6 +126,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="d3d9.lib d3dx9.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -364,6 +366,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\utils\timer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\math\vec2.h"
 				>
 			</File>
@@ -428,6 +434,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\render\renderqueue.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\render\rendershader.cpp"
 				>
 			</File>
@@ -465,6 +475,10 @@
 			</File>
 			<File
 				RelativePath=".\threading\threadpool.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\utils\timer.cpp"
 				>
 			</File>
 		</Filter>

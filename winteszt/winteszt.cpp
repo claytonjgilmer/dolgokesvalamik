@@ -18,6 +18,9 @@ LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 
 int g_done=0;
+extern void init_app(HWND);
+extern void update_app();
+extern void exit_app();
 
 int APIENTRY _tWinMain(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,
@@ -47,15 +50,20 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	// Main message loop:
 //	while (PeekMessage(&msg, NULL, 0, 0))
 	while (!g_done)
-	while (PeekMessage(&msg,NULL,0,0,PM_REMOVE))
 	{
-		if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+		while (PeekMessage(&msg,NULL,0,0,PM_REMOVE))
 		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+			if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+			{
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
 		}
+		update_app();
 	}
 
+
+	exit_app();
 	return (int) msg.wParam;
 }
 
@@ -121,6 +129,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
+
+   init_app(hWnd);
 
    return TRUE;
 }

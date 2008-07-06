@@ -11,6 +11,11 @@ namespace render
 	class texturemanagerdesc
 	{
 	public:
+		texturemanagerdesc(const char* i_texturegroup):
+		m_texturegroup(i_texturegroup)
+		{
+		}
+
 		ctr::string m_texturegroup;
 	};
 	class texturemanager

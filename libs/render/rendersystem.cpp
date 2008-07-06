@@ -9,8 +9,7 @@ namespace render
 {
 	DEFINE_SINGLETON(system);
 
-	system::system(const systemdesc* i_desc):
-	m_taskmanager(i_desc->m_taskmanager)
+	system::system(const systemdesc* i_desc)
 	{
 		m_sys = Direct3DCreate9( D3D_SDK_VERSION );
 
@@ -57,8 +56,17 @@ namespace render
 		return m_device;
 	}
 
-	void system::render_queues()
+	void system::render()
 	{
+		for (unsigned int n = 0; n < m_queues.size() ; n++)
+		{
+			
+		}
+	}
+
+	void system::add_mesh(mesh* i_mesh, const math::mtx4x3& i_mtx, unsigned i_queueindex/* =0 */)
+	{
+		m_queues[0].push_back()
 	}
 
 	const D3DVERTEXELEMENT9 g_decl[element_last+1]=

@@ -12,6 +12,11 @@ namespace render
 	{
 	public:
 		ctr::string m_shadergroup;
+
+		shadermanagerdesc(const char* i_shadergroup):
+		m_shadergroup(i_shadergroup)
+		{
+		}
 	};
 	class shadermanager
 	{

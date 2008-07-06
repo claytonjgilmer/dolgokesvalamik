@@ -75,8 +75,8 @@ int _cdecl main()
 		::QueryPerformanceCounter(&starttime);
 		for (int n=0; n<10000000;++n)
 		{
-//			f2=math::inv_sqrt(f1);
-//			f1=math::inv_sqrt(f2);
+//			f2=1/sqrt(f1);
+//			f1=1/sqrt(f2);
 			f2=1.0f/sqrt(f1);
 			f1=1.0f/sqrt(f2);
 //			f2=1287/sqrt(f1);
