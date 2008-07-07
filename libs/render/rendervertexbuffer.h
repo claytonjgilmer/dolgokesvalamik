@@ -15,6 +15,7 @@ namespace render
 		~vertexbuffer(){}
 		LPDIRECT3DVERTEXBUFFER9 m_hwbuffer;
 		LPDIRECT3DVERTEXDECLARATION9 m_decl;
+		unsigned m_vertexsize;
 
 	};
 }

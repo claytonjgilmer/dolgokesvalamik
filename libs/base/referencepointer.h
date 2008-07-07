@@ -18,6 +18,11 @@ namespace base
 		void operator=(REF* i_object);
 
 		REF* operator*();
+		REF& operator->()
+		{
+			return *m_ptr;
+		}
+		const REF* operator*() const;
 
 		~referencepointer();
 	//private:
@@ -84,6 +89,12 @@ namespace base
 
 	template <class REF>
 	inline REF* referencepointer<REF>::operator *()
+	{
+		return m_ptr;
+	}
+
+	template <class REF>
+	inline const REF* referencepointer<REF>::operator *() const
 	{
 		return m_ptr;
 	}

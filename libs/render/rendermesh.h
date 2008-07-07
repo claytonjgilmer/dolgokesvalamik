@@ -19,7 +19,6 @@ namespace render
 		void set_vertexbuffer(vertexbuffer* i_vb);
 		void set_indexbuffer(indexbuffer* i_ib);
 
-	private:
 		vertexbuffer* m_vb;
 		indexbuffer* m_ib;
 

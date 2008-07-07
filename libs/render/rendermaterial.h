@@ -17,7 +17,7 @@ namespace render
 	public:
 		material(const char* i_name);
 
-		ctr::vector<base::referencepointer<texture> > m_texture;
+		ctr::vector<base::referencepointer<texture> > m_texturebuf;
 		base::referencepointer<render::shader> m_shader;
 //		base::colorf m_diffuse;
 //		base::colorf m_ambient;

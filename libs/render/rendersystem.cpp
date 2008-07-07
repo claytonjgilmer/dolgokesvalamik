@@ -4,6 +4,7 @@
 #include "rendersystem.h"
 #include "base/assert.h"
 #include "renderstate.h"
+#include "rendermaterial.h"
 
 namespace render
 {
@@ -58,15 +59,36 @@ namespace render
 
 	void system::render()
 	{
-		for (unsigned int n = 0; n < m_queues.size() ; n++)
+		for (unsigned int queueindex = 0; queueindex < m_queue.size() ; queueindex++)
 		{
-			
+			const queue& q=m_queue[queueindex];
+			const unsigned meshnum=q.m_buf.size();
+			const queueelem* buf=q.m_buf;
+
+			for (unsigned meshindex=0; meshindex<meshnum; ++meshindex)
+			{
+				mesh* m=buf[meshindex].m_mesh;
+				m_device->SetStreamSource(0,m->m_vb->m_hwbuffer,0,m->m_vb->m_vertexsize);
+				m_device->SetIndices(m->m_ib->m_hwbuffer);
+
+				for (unsigned trisetindex=0; trisetindex<m->m_triset.size(); ++trisetindex)
+				{
+					const triset& t=m->m_triset[trisetindex];
+					const material* mat=t.m_material;
+
+					for (unsigned txtindex=0; txtindex<mat->m_texturebuf.size(); ++txtindex)
+					{
+						m_device->SetTexture(txtindex,mat->m_texturebuf[txtindex]->m_hwbuffer;
+					}
+				}
+			}
+						
 		}
 	}
 
 	void system::add_mesh(mesh* i_mesh, const math::mtx4x3& i_mtx, unsigned i_queueindex/* =0 */)
 	{
-		m_queues[0].push_back()
+		m_queue[i_queueindex].m_buf.push_back(queueelem(i_mesh,i_mtx));
 	}
 
 	const D3DVERTEXELEMENT9 g_decl[element_last+1]=
@@ -99,6 +121,7 @@ namespace render
 
 		m_device->CreateVertexBuffer(i_vertexnum*siz,D3DUSAGE_WRITEONLY,0,D3DPOOL_DEFAULT,&vb->m_hwbuffer,NULL);
 		m_device->CreateVertexDeclaration(&decl[0],&vb->m_decl);
+		vb->m_vertexsize=siz;
 		return vb;
 	}
 
@@ -160,4 +183,12 @@ namespace render
 	{
 		m_device->SetRenderState(i_state.m_type,i_state.m_value);
 	}
+
+	void system::init_queues(const ctr::vector<ctr::string> i_queuenames)
+	{
+		m_queue.resize(i_queuenames.size());
+		for (unsigned n = 0; n < m_queue.size() ; n++)
+			m_queue[n].m_name=i_queuenames[n];
+	}
+
 }

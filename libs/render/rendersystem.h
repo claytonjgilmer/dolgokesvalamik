@@ -53,12 +53,14 @@ namespace render
 
 		void add_mesh(mesh* i_mesh, const math::mtx4x3& i_mtx, unsigned i_queueindex=0);
 
+		void init_queues(const ctr::vector<ctr::string> i_queuenames);
+
 
 		LPDIRECT3DDEVICE9 device() const;
 	private:
 		LPDIRECT3DDEVICE9 m_device;
 		LPDIRECT3D9 m_sys;
-		ctr::listallocator<queue> m_queues;
+		ctr::vector<render::queue> m_queue;
 		HWND m_window;
 	};
 }
