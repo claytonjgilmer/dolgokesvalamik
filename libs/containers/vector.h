@@ -47,7 +47,7 @@ namespace ctr
 		bool empty() const;
 		void reserve(unsigned i_capacity);
 
-#ifndef _DEBUG
+#if 1//ndef _DEBUG
 		operator basetype* ();
 		operator const basetype* () const;
 #else
@@ -329,7 +329,7 @@ namespace ctr
 		m_size=i_newsize;
 
 	}
-#ifdef _DEBUG
+#if 0//def _DEBUG
 	template<class basetype>
 	MLINLINE basetype& vector<basetype>::operator[](unsigned i_index)
 	{

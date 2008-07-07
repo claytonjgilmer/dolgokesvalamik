@@ -214,6 +214,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\math\mtx4x4.h"
+				>
+			</File>
+			<File
 				RelativePath=".\threading\mutex.h"
 				>
 			</File>

@@ -105,14 +105,14 @@ namespace math
 		return i_value*i_value;
 	}
 
-	MLINLINE float radtodegree(float i_degree)
+	MLINLINE float radtodegree(float i_radian)
 	{
-		return i_degree*(180.0f/pi());
+		return i_radian*(180.0f/pi());
 	}
 
-	MLINLINE float degreetorad(float i_radian)
+	MLINLINE float degreetorad(float i_degree)
 	{
-		return i_radian*(pi()/180.0f);
+		return i_degree*(pi()/180.0f);
 	}
 
 	template<typename T> MLINLINE T Min(const T& i_value1, const T& i_value2)

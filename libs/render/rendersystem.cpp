@@ -5,6 +5,8 @@
 #include "base/assert.h"
 #include "renderstate.h"
 #include "rendermaterial.h"
+#include "rendertexture.h"
+#include "rendershader.h"
 
 namespace render
 {
@@ -78,7 +80,7 @@ namespace render
 
 					for (unsigned txtindex=0; txtindex<mat->m_texturebuf.size(); ++txtindex)
 					{
-						m_device->SetTexture(txtindex,mat->m_texturebuf[txtindex]->m_hwbuffer;
+						m_device->SetTexture(txtindex,mat->m_texturebuf[txtindex]->m_hwbuffer);
 					}
 				}
 			}

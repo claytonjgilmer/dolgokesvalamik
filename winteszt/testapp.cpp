@@ -7,6 +7,7 @@
 #include "threading/taskmanager.h"
 #include "render/shadermanager.h"
 #include "render/texturemanager.h"
+#include "math/mtx4x4.h"
 
 struct game
 {
@@ -47,6 +48,10 @@ void init_app(HWND i_hwnd)
 	::GetWindowRect(i_hwnd,&g_rect);
 	g_time=timeGetTime();
 	g_hwnd=i_hwnd;
+
+	math::mtx4x4 mtx; mtx.set_projectionmatrix(tan(math::degreetorad(45)),4.0f/3,1,10000);
+
+	render::system->device()->Set
 }
 
 void update_app()

@@ -28,8 +28,8 @@ namespace math
 		friend
 		float	dot(const vec4& i_v1, const vec4& i_v2);
 
-		float	squarelength() const;
-		float	length() const;
+		float	get_squarelength() const;
+		float	get_length() const;
 		void	normalize();
 		void	normalizesafe();
 
@@ -53,17 +53,10 @@ namespace math
 
 		vec4	operator-() const;
 
-		void max(const vec4& i_v1, const vec4& i_v2);
-		void max(const vec4& i_other);
-		void min(const vec4& i_v1, const vec4& i_v2);
-		void min(const vec4& i_other);
-
-		float maxelem() const;
-
 		void interpolate(const vec4& i_src1, const vec4& i_src2, float i_time);
 
 
-		float x,y,z;
+		float x,y,z,w;
 	};//vec4
 
 	MLINLINE vec4::vec4()
@@ -75,7 +68,7 @@ namespace math
 		x=i_xcoord;
 		y=i_ycoord;
 		z=i_zcoord;
-		w=i_wcoord
+		w=i_wcoord;
 	}
 
 	MLINLINE float& vec4::operator[](int i_index)
@@ -136,19 +129,19 @@ namespace math
 		return i_v1.x*i_v2.x+i_v1.y*i_v2.y+i_v1.z*i_v2.z;
 	}
 
-	MLINLINE float	vec4::squarelength() const
+	MLINLINE float	vec4::get_squarelength() const
 	{
 		return x*x+y*y+z*z;
 	}
 
-	MLINLINE float	vec4::length() const
+	MLINLINE float	vec4::get_length() const
 	{
-		return sqrt(squarelength());
+		return sqrt(get_squarelength());
 	}
 
 	MLINLINE void	vec4::normalize()
 	{
-		float length=length();
+		float length=get_length();
 
 		x/=length;
 		y/=length;
@@ -157,7 +150,7 @@ namespace math
 
 	MLINLINE void	vec4::normalizesafe()
 	{
-		float squarelength=squarelength();
+		float squarelength=get_squarelength();
 
 		if (squarelength>0.000001f)
 		{
@@ -236,49 +229,6 @@ namespace math
 		x=fabsf(i_src.x);
 		y=fabsf(i_src.y);
 		z=fabsf(i_src.z);
-	}
-
-	MLINLINE void vec4::max(const vec4& i_v1, const vec4& i_v2)
-	{
-		x=i_v1.x > i_v2.x ? i_v1.x : i_v2.x;
-		y=i_v1.y > i_v2.y ? i_v1.y : i_v2.y;
-		z=i_v1.z > i_v2.z ? i_v1.z : i_v2.z;
-	}
-
-	MLINLINE void vec4::max(const vec4& i_other)
-	{
-		if (i_other.x>x)
-			x=i_other.x;
-		if (i_other.y>y)
-			y=i_other.y;
-		if (i_other.z>z)
-			z=i_other.z;
-	}
-
-	MLINLINE float vec4::maxelem() const
-	{
-		float r=x;
-		if (y>r) r=y;
-		if (z>r) r=z;
-
-		return r;
-	}
-
-	MLINLINE void vec4::min(const vec4& i_v1, const vec4& i_v2)
-	{
-		x=i_v1.x < i_v2.x ? i_v1.x : i_v2.x;
-		y=i_v1.y < i_v2.y ? i_v1.y : i_v2.y;
-		z=i_v1.z < i_v2.z ? i_v1.z : i_v2.z;
-	}
-
-	MLINLINE void vec4::min(const vec4& i_other)
-	{
-		if (i_other.x<x)
-			x=i_other.x;
-		if (i_other.y<y)
-			y=i_other.y;
-		if (i_other.z<z)
-			z=i_other.z;
 	}
 
 	MLINLINE void vec4::rotate(const vec4& i_src, const vec4& i_axis, float i_angle)

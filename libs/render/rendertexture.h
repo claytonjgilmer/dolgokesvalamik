@@ -13,8 +13,8 @@ namespace render
 		texture* Next;
 		texture(const void* i_buf, unsigned i_size, const char* i_name);
 
-	private:
 		IDirect3DTexture9* m_hwbuffer;
+	private:
 		~texture();
 	};
 
