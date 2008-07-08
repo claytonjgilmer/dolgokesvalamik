@@ -51,7 +51,6 @@ void init_app(HWND i_hwnd)
 
 	math::mtx4x4 mtx; mtx.set_projectionmatrix(tan(math::degreetorad(45)),4.0f/3,1,10000);
 
-	render::system->device()->Set
 }
 
 void update_app()

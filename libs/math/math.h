@@ -232,5 +232,32 @@ namespace math
 	}
 	template <int n> MLINLINE int logn(){return 1+logn<(n >> 1)>();}
 	template<> MLINLINE int logn<1>(){return 0;}
+
+	MLINLINE unsigned gcd(unsigned a1, unsigned a2)
+	{
+		while (a1!=a2)
+		{
+			if (a1<a2)
+				a2-=a1;
+			else
+				a1-=a2;
+		}
+
+		return a1;
+	}
+
+	MLINLINE unsigned gcd2(unsigned a1, unsigned a2)
+	{
+		while (a1 && a2)
+		{
+			if (a1<a2)
+				a2%=a1;
+			else
+				a1%=a2;
+		}
+
+		return a1 ? a1 : a2;
+	}
+
 }
 #endif// _math_h_
