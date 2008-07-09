@@ -12,11 +12,6 @@ namespace render
 	{
 	}
 
-	texturemanager::~texturemanager()
-	{
-
-	}
-
 	texture* texturemanager::get_texture(const char* i_texturename)
 	{
 		texture* t=m_map.get_data(i_texturename);

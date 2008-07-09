@@ -4,8 +4,4 @@
 
 namespace render
 {
-	material::material(const char* i_name):
-	base::resource(i_name)
-	{
-	}
 }

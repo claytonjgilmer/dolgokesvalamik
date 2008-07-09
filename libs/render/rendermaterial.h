@@ -11,19 +11,14 @@ namespace render
 	class shader;
 	class texture;
 
-	class material:public base::resource
+	class material
 	{
-		friend class base::referencepointer<material>;
 	public:
-		material(const char* i_name);
+		material(){}
+		~material(){}
 
 		ctr::vector<base::referencepointer<texture> > m_texturebuf;
 		base::referencepointer<render::shader> m_shader;
-//		base::colorf m_diffuse;
-//		base::colorf m_ambient;
-
-	private:
-		~material(){}
 	};
 }
 #endif//_rendermaterial_h_

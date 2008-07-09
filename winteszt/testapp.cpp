@@ -22,7 +22,7 @@ HWND g_hwnd;
 
 void init_app(HWND i_hwnd)
 {
-	file::system::create(NULL);
+	file::system::create();
 	file::system::instance()->register_path("shader","shader");
 	file::system::instance()->register_path("texture","texture");
 

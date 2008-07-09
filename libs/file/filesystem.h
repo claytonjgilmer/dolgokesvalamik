@@ -9,10 +9,6 @@
 
 namespace file
 {
-	class systemdesc
-	{
-
-	};
 	class system
 	{
 		DECLARE_SINGLETON(system);

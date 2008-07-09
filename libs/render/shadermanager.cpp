@@ -12,11 +12,6 @@ namespace render
 	{
 	}
 
-	shadermanager::~shadermanager()
-	{
-
-	}
-
 	shader* shadermanager::get_shader(const char* i_shadername)
 	{
 		shader* t=m_map.get_data(i_shadername);

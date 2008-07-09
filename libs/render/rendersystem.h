@@ -35,8 +35,10 @@ namespace render
 
 	class system
 	{
-		DECLARE_SINGLETON(system);
+		DECLARE_SINGLETON_DESC(system,systemdesc);
 	public:
+		system(const systemdesc*);
+		~system();
 		vertexbuffer* create_vertexbuffer(unsigned i_vertexnum, const ctr::vector<vertexelements>& i_vertexelements) const;
 		void release_vertexbuffer(vertexbuffer* i_vb) const;
 		indexbuffer* create_indexbuffer(unsigned i_indexnum) const;

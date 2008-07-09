@@ -20,8 +20,9 @@ namespace render
 	};
 	class texturemanager
 	{
-		DECLARE_SINGLETON(texturemanager);
+		DECLARE_SINGLETON_DESC(texturemanager,texturemanagerdesc);
 	public:
+		texturemanager(const texturemanagerdesc* i_desc);
 		texture* get_texture(const char* i_texturename);
 		void erase_texture(texture*);
 

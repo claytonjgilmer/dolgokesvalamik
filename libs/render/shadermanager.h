@@ -20,8 +20,9 @@ namespace render
 	};
 	class shadermanager
 	{
-		DECLARE_SINGLETON(shadermanager);
+		DECLARE_SINGLETON_DESC(shadermanager,shadermanagerdesc);
 	public:
+		shadermanager(const shadermanagerdesc*);
 		shader* get_shader(const char* i_shadername);
 		void erase_shader(shader*);
 
