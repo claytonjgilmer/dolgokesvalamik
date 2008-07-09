@@ -9,6 +9,8 @@ namespace render
 	class shader:public utils::resource
 	{
 		friend class utils::referencepointer<shader>;
+		friend struct shaderparameteradogato;
+
 	public:
 		shader(const void* i_buf, unsigned i_bufsize, const char* i_name);
 		shader* Next;

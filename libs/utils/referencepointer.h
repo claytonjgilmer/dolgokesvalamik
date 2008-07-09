@@ -17,8 +17,13 @@ namespace utils
 		void operator=(const referencepointer& i_other);
 		void operator=(REF* i_object);
 
-		REF& operator*();
-		const REF& operator*() const;
+		operator const REF* () const
+		{
+			return m_ptr;
+		}
+
+//		REF& operator*();
+//		const REF& operator*() const;
 
 		REF* operator->()
 		{
@@ -92,7 +97,7 @@ namespace utils
 		if (m_ptr)
 			m_ptr->add_ref();
 	}
-
+/*
 	template <class REF>
 	inline REF& referencepointer<REF>::operator *()
 	{
@@ -104,7 +109,7 @@ namespace utils
 	{
 		return m_ptr;
 	}
-
+*/
 	template <class REF>
 	inline referencepointer<REF>::~referencepointer()
 	{

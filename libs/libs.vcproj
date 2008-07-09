@@ -314,10 +314,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\utils\resourcemanager.h"
-				>
-			</File>
-			<File
 				RelativePath=".\render\shadermanager.h"
 				>
 			</File>
@@ -451,10 +447,6 @@
 			</File>
 			<File
 				RelativePath=".\render\rendertexture.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\utils\resourcemanager.cpp"
 				>
 			</File>
 			<File

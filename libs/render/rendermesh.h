@@ -22,7 +22,7 @@ namespace render
 		vertexbuffer* m_vb;
 		indexbuffer* m_ib;
 
-		ctr::vector<triset> m_triset;
+		ctr::vector<triset> m_trisetbuf;
 	};
 }
 #endif//_rendermesh_h_

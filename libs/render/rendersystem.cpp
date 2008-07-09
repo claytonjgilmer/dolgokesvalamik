@@ -73,9 +73,9 @@ namespace render
 				m_device->SetStreamSource(0,m->m_vb->m_hwbuffer,0,m->m_vb->m_vertexsize);
 				m_device->SetIndices(m->m_ib->m_hwbuffer);
 
-				for (unsigned trisetindex=0; trisetindex<m->m_triset.size(); ++trisetindex)
+				for (unsigned trisetindex=0; trisetindex<m->m_trisetbuf.size(); ++trisetindex)
 				{
-					const triset& t=m->m_triset[trisetindex];
+					const triset& t=m->m_trisetbuf[trisetindex];
 					const material* mat=t.m_material;
 
 					for (unsigned txtindex=0; txtindex<mat->m_texturebuf.size(); ++txtindex)

@@ -7,12 +7,14 @@
 #include "threading/taskmanager.h"
 #include "render/shadermanager.h"
 #include "render/texturemanager.h"
+#include "render/rendermaterial.h"
 #include "math/mtx4x4.h"
 
 struct game
 {
-	
-};
+	render::mesh* m_mesh;
+	math::mtx4x4 m_mtx;
+} g_game;
 
 threading::taskmanager* g_taskmanager=NULL;
 
@@ -50,6 +52,28 @@ void init_app(HWND i_hwnd)
 	g_hwnd=i_hwnd;
 
 	math::mtx4x4 mtx; mtx.set_projectionmatrix(tan(math::degreetorad(45)),4.0f/3,1,10000);
+
+	render::mesh* mesh=new render::mesh;
+
+	ctr::vector<render::vertexelements> ve;
+
+	ve.push_back(render::element_pos3);
+	ve.push_back(render::element_uv);
+
+	mesh->m_vb=render::system::instance()->create_vertexbuffer(4,ve);
+	mesh->m_ib=render::system::instance()->create_indexbuffer(6);
+	render::texture* txt=render::texturemanager::instance()->get_texture("test.bmp");
+
+	mesh->m_trisetbuf.resize(1);
+	render::triset& ts=mesh->m_trisetbuf.back();
+	ts.m_firstindex=0;
+	ts.m_numindices=6;
+	ts.m_firstvertex=0;
+	ts.m_numvertices=4;
+	ts.m_material=new render::material;
+
+	ts.m_material->set_shader(render::shadermanager::instance()->get_shader("dx9_hlsl_fx_simple.fx"));
+	ts.m_material->m_texturebuf.push_back(txt);
 
 }
 
