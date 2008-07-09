@@ -1,10 +1,10 @@
 #ifndef _referencedobject_h_
 #define _referencedobject_h_
 
-#include "base/referencepointer.h"
-#include "base/misc.h"
+#include "utils/referencepointer.h"
+#include "utils/misc.h"
 
-namespace base
+namespace utils
 {
 
 	class referencedobject

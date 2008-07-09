@@ -14,7 +14,7 @@
 #include "renderindexbuffer.h"
 #include "vertexelements.h"
 
-#include "base/singleton.h"
+#include "utils/singleton.h"
 #include <d3d9.h>
 #include <d3dx9.h>
 

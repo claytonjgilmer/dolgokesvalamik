@@ -4,7 +4,7 @@
 #include "referencedobject.h"
 #include "containers/string.h"
 
-namespace base
+namespace utils
 {
 	class resource:public referencedobject
 	{

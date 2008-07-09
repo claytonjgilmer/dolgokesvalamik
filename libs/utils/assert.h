@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <Windows.h>
 
-namespace base
+namespace utils
 {
 	inline void assertion(bool i_condition, const char* i_msg)
 	{

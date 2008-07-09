@@ -1,7 +1,7 @@
 #ifndef _texturemanager_h_
 #define _texturemanager_h_
 
-#include "base/singleton.h"
+#include "utils/singleton.h"
 #include "containers/string.h"
 #include "containers/stringmap.h"
 #include "render/rendertexture.h"

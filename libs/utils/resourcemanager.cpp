@@ -1,6 +1,6 @@
 #include "resourcemanager.h"
 
-namespace base
+namespace utils
 {
 	resourcemanager::resourcemanager()
 	{

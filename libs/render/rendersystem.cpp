@@ -2,7 +2,7 @@
 #include <d3dx9.h>
 
 #include "rendersystem.h"
-#include "base/assert.h"
+#include "utils/assert.h"
 #include "renderstate.h"
 #include "rendermaterial.h"
 #include "rendertexture.h"

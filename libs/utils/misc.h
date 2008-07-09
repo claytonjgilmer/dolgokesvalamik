@@ -2,7 +2,7 @@
 #define _misc_h_
 #endif//_misc_h_
 
-namespace base
+namespace utils
 {
 	#define MLINLINE __forceinline
 	#define  NULL 0

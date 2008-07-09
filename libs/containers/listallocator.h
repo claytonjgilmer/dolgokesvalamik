@@ -6,13 +6,13 @@
 namespace ctr
 {
 
-	template <class basetype, int blocksize=128> class listallocator //blocksize kettohatvany!
+	template <class utilstype, int blocksize=128> class listallocator //blocksize kettohatvany!
 	{
 	protected:
 		class elem
 		{
 		public:
-			char m_data[sizeof(basetype)];
+			char m_data[sizeof(utilstype)];
 			elem* m_prev;
 			elem* m_next;
 		};
@@ -27,7 +27,7 @@ namespace ctr
 				m_elem=NULL;
 			}
 
-			iterator(basetype* i_elem)
+			iterator(utilstype* i_elem)
 			{
 				m_elem=(elem*)i_elem;
 			}
@@ -37,9 +37,9 @@ namespace ctr
 				m_elem=i_elem;
 			}
 
-			basetype* operator *() const
+			utilstype* operator *() const
 			{
-				return (basetype*)(&m_elem->m_data);
+				return (utilstype*)(&m_elem->m_data);
 			}
 
 			void operator++()
@@ -68,11 +68,11 @@ namespace ctr
 	public:
 		listallocator();
 		~listallocator();
-		basetype* allocate();
-		void deallocate(basetype*);
-		void deallocateplace(basetype*);
+		utilstype* allocate();
+		void deallocate(utilstype*);
+		void deallocateplace(utilstype*);
 		void deallocateall();
-		basetype* allocate_place();
+		utilstype* allocate_place();
 		iterator begin()
 		{
 			return iterator(m_head.m_next);
@@ -103,8 +103,8 @@ namespace ctr
 		void allocfree();
 	}; //class listallocator
 
-	template <class basetype,int blocksize> 
-	MLINLINE void listallocator<basetype,blocksize>::allocfree()
+	template <class utilstype,int blocksize> 
+	MLINLINE void listallocator<utilstype,blocksize>::allocfree()
 	{
 		elem* newelem=(elem*)malloc(blocksize*sizeof(elem));
 
@@ -116,15 +116,15 @@ namespace ctr
 		m_allocated.push_back(newelem);
 	}
 
-	template <class basetype,int blocksize> 
-	MLINLINE basetype* listallocator<basetype,blocksize>::allocate()
+	template <class utilstype,int blocksize> 
+	MLINLINE utilstype* listallocator<utilstype,blocksize>::allocate()
 	{
 		elem* newelem;
 		if (!m_free)
 			allocfree();
 		newelem=m_free;
 
-		new(&(newelem->m_data)) basetype();
+		new(&(newelem->m_data)) utilstype();
 		m_free=m_free->m_next;
 		m_size++;
 
@@ -133,11 +133,11 @@ namespace ctr
 		m_end.m_prev->m_next=newelem;
 		m_end.m_prev=newelem;
 
-		return (basetype*)(&newelem->m_data);
+		return (utilstype*)(&newelem->m_data);
 	}
 
-	template <class basetype,int blocksize> 
-	MLINLINE basetype* listallocator<basetype,blocksize>::allocate_place()
+	template <class utilstype,int blocksize> 
+	MLINLINE utilstype* listallocator<utilstype,blocksize>::allocate_place()
 	{
 		elem* newelem;
 
@@ -154,18 +154,18 @@ namespace ctr
 		m_end.m_prev->m_next=newelem;
 		m_end.m_prev=newelem;
 
-		return (basetype*)(&newelem->m_data);
+		return (utilstype*)(&newelem->m_data);
 	}
 
-	template <class basetype, int blocksize> 
-	MLINLINE void listallocator<basetype,blocksize>::deallocate(basetype* i_data)
+	template <class utilstype, int blocksize> 
+	MLINLINE void listallocator<utilstype,blocksize>::deallocate(utilstype* i_data)
 	{
-		i_data->~basetype();
+		i_data->~utilstype();
 		deallocateplace(i_data);
 	}
 
-	template <class basetype, int blocksize> 
-	MLINLINE void listallocator<basetype,blocksize>::deallocateplace(basetype* i_data)
+	template <class utilstype, int blocksize> 
+	MLINLINE void listallocator<utilstype,blocksize>::deallocateplace(utilstype* i_data)
 	{
 		elem* actelem=(elem*)i_data;
 
@@ -178,8 +178,8 @@ namespace ctr
 		m_size--;
 	}
 
-	template <class basetype, int blocksize> 
-	MLINLINE void listallocator<basetype,blocksize>::deallocateall()
+	template <class utilstype, int blocksize> 
+	MLINLINE void listallocator<utilstype,blocksize>::deallocateall()
 	{
 		if (!m_size)
 			return;
@@ -188,11 +188,11 @@ namespace ctr
 
 		while (ptr->m_next!=&m_end)
 		{
-			((basetype*)ptr)->~basetype();
+			((utilstype*)ptr)->~utilstype();
 			ptr=ptr->m_next;
 		}
 		
-		((basetype*)ptr)->~basetype();
+		((utilstype*)ptr)->~utilstype();
 
 		ptr->m_next=m_free;
 		m_free=m_head.m_next;
@@ -202,8 +202,8 @@ namespace ctr
 		m_size=0;
 	}
 
-	template <class basetype,int blocksize>
-	listallocator<basetype,blocksize>::listallocator()
+	template <class utilstype,int blocksize>
+	listallocator<utilstype,blocksize>::listallocator()
 	{
 		m_end.m_prev=&m_head;
 		m_end.m_next=NULL;
@@ -214,21 +214,21 @@ namespace ctr
 		allocfree();
 	}
 
-	template <class basetype, int blocksize>
-	MLINLINE listallocator<basetype,blocksize>::~listallocator()
+	template <class utilstype, int blocksize>
+	MLINLINE listallocator<utilstype,blocksize>::~listallocator()
 	{
 		for (unsigned int n=0; n<m_allocated.size(); ++n)
 			free(m_allocated[n]);
 	}
 
-	template <class basetype, int blocksize>
-	MLINLINE unsigned listallocator<basetype,blocksize>::size() const
+	template <class utilstype, int blocksize>
+	MLINLINE unsigned listallocator<utilstype,blocksize>::size() const
 	{
 		return m_size;
 	}
 
-	template<class basetype, int blocksize>
-	MLINLINE void listallocator<basetype,blocksize>::moveafter(iterator i_elem, iterator i_after)
+	template<class utilstype, int blocksize>
+	MLINLINE void listallocator<utilstype,blocksize>::moveafter(iterator i_elem, iterator i_after)
 	{
 		elem* e=i_elem.m_elem;
 		elem* after=i_after.m_elem;
@@ -248,8 +248,8 @@ namespace ctr
 		after->m_next=e;
 	}
 
-	template<class basetype, int blocksize>
-	MLINLINE void listallocator<basetype,blocksize>::movebefore(iterator i_elem, iterator i_before)
+	template<class utilstype, int blocksize>
+	MLINLINE void listallocator<utilstype,blocksize>::movebefore(iterator i_elem, iterator i_before)
 	{
 		elem* e=i_elem.m_elem;
 		elem* before=i_before.m_elem;

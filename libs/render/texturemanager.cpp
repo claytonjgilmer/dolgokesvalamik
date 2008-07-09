@@ -1,5 +1,5 @@
 #include "texturemanager.h"
-#include "base/misc.h"
+#include "utils/misc.h"
 #include "file/filesystem.h"
 #include "render/rendersystem.h"
 

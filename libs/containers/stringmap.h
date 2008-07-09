@@ -1,7 +1,7 @@
 #ifndef _stringmap_h_
 #define _stringmap_h_
 
-#include "base/misc.h"
+#include "utils/misc.h"
 #include "utils/stringhash.h"
 
 //extern int szamlalo;

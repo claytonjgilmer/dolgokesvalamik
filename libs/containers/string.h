@@ -2,8 +2,8 @@
 #define _string_h_
 
 #include <string.h>
-#include "base/assert.h"
-#include "base/misc.h"
+#include "utils/assert.h"
+#include "utils/misc.h"
 namespace ctr
 {
 	template <unsigned TSTRING_MIN_CAPACITY=16>
@@ -111,7 +111,7 @@ namespace ctr
 	template <unsigned TSTRING_MIN_CAPACITY>
 	MLINLINE tstring<TSTRING_MIN_CAPACITY>::tstring(const char* i_str)
 	{
-		base::assertion(i_str!=NULL,"ctr::tstringnek nem illik nullpointert atadni");
+		utils::assertion(i_str!=NULL,"ctr::tstringnek nem illik nullpointert atadni");
 
 		unsigned len=(unsigned)strlen(i_str);
 

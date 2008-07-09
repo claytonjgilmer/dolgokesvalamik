@@ -43,7 +43,7 @@ namespace scene
 
 	void node::remove_child(node* i_child)
 	{
-		base::assertion(i_child->get_parent()==this,"nonono!");
+		utils::assertion(i_child->get_parent()==this,"nonono!");
 
 
 		node* ptr=m_child;

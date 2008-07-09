@@ -5,7 +5,7 @@
 #include "containers/stringmap.h"
 #include "containers/listallocator.h"
 #include "file/file.h"
-#include "base/singleton.h"
+#include "utils/singleton.h"
 
 namespace file
 {

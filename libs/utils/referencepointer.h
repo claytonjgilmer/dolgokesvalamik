@@ -2,9 +2,9 @@
 #define _referencepointer_h_
 
 #include "referencedobject.h"
-#include "base/misc.h"
+#include "utils/misc.h"
 
-namespace base
+namespace utils
 {
 	template <class REF>
 	class referencepointer

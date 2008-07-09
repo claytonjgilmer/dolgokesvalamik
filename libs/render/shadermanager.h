@@ -1,7 +1,7 @@
 #ifndef _shadermanager_h_
 #define _shadermanager_h_
 
-#include "base/singleton.h"
+#include "utils/singleton.h"
 #include "containers/string.h"
 #include "containers/stringmap.h"
 #include "render/rendershader.h"

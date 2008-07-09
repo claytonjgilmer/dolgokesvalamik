@@ -158,7 +158,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\base\assert.h"
+				RelativePath=".\utils\assert.h"
 				>
 			</File>
 			<File
@@ -170,7 +170,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\base\colorf.h"
+				RelativePath=".\utils\colorf.h"
 				>
 			</File>
 			<File
@@ -202,7 +202,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\base\misc.h"
+				RelativePath=".\utils\misc.h"
 				>
 			</File>
 			<File
@@ -250,11 +250,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\base\referencedobject.h"
+				RelativePath=".\utils\referencedobject.h"
 				>
 			</File>
 			<File
-				RelativePath=".\base\referencepointer.h"
+				RelativePath=".\utils\referencepointer.h"
 				>
 			</File>
 			<File
@@ -310,11 +310,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\base\resource.h"
+				RelativePath=".\utils\resource.h"
 				>
 			</File>
 			<File
-				RelativePath=".\base\resourcemanager.h"
+				RelativePath=".\utils\resourcemanager.h"
 				>
 			</File>
 			<File
@@ -322,7 +322,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\base\singleton.h"
+				RelativePath=".\utils\singleton.h"
 				>
 			</File>
 			<File
@@ -454,7 +454,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\base\resourcemanager.cpp"
+				RelativePath=".\utils\resourcemanager.cpp"
 				>
 			</File>
 			<File

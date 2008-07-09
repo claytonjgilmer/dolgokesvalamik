@@ -1,7 +1,7 @@
 #ifndef _stringhash_h_
 #define _stringhash_h_
 
-#include "base/misc.h"
+#include "utils/misc.h"
 #include "containers/string.h"
 
 namespace utils

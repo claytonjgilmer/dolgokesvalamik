@@ -2,7 +2,7 @@
 #define _node_h_
 
 #include "containers/string.h"
-#include "base/assert.h"
+#include "utils/assert.h"
 #include "math/mtx4x3.h"
 
 namespace scene

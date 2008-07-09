@@ -1,7 +1,7 @@
 #ifndef _colorf_h_
 #define _colorf_h_
 
-namespace base
+namespace utils
 {
 	struct colorf
 	{

@@ -2,13 +2,13 @@
 #define _rendershader_h_
 
 #include <d3dx9.h>
-#include "base/resource.h"
+#include "utils/resource.h"
 
 namespace render
 {
-	class shader:public base::resource
+	class shader:public utils::resource
 	{
-		friend class base::referencepointer<shader>;
+		friend class utils::referencepointer<shader>;
 	public:
 		shader(const void* i_buf, unsigned i_bufsize, const char* i_name);
 		shader* Next;

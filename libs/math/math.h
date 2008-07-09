@@ -2,7 +2,7 @@
 #define _math_h_
 
 #include <math.h>
-#include "base\misc.h"
+#include "utils\misc.h"
 
 namespace math
 {

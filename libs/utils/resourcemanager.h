@@ -2,7 +2,7 @@
 #define _resourcemanager_h_
 #include "resource.h"
 
-namespace base
+namespace utils
 {
 	class resourcemanager
 	{

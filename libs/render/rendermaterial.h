@@ -1,9 +1,9 @@
 #ifndef _rendermaterial_h_
 #define _rendermaterial_h_
 
-#include "base/colorf.h"
-#include "base/resource.h"
-#include "base/referencepointer.h"
+#include "utils/colorf.h"
+#include "utils/resource.h"
+#include "utils/referencepointer.h"
 #include "containers/vector.h"
 
 namespace render
@@ -17,8 +17,8 @@ namespace render
 		material(){}
 		~material(){}
 
-		ctr::vector<base::referencepointer<texture> > m_texturebuf;
-		base::referencepointer<render::shader> m_shader;
+		ctr::vector<utils::referencepointer<texture> > m_texturebuf;
+		utils::referencepointer<render::shader> m_shader;
 	};
 }
 #endif//_rendermaterial_h_
