@@ -24,16 +24,14 @@ namespace math
 		vec4 cross(const vec4& i_src1, const vec4& i_src2);
 		vec4 cross(const vec4& i_other) const;
 		
-		float	dot(const vec4& i_other) const;
+		float	dot4(const vec4& i_other) const;
 		friend
-		float	dot(const vec4& i_v1, const vec4& i_v2);
+		float	dot4(const vec4& i_v1, const vec4& i_v2);
 
 		float	get_squarelength() const;
 		float	get_length() const;
 		void	normalize();
 		void	normalizesafe();
-
-		void rotate(const vec4& i_src, const vec4& i_axis, float i_angle);
 
 		void	abs(const vec4& i_src);
 
@@ -119,14 +117,14 @@ namespace math
 		return math::cross(*this,i_other);
 	}
 
-	MLINLINE float	vec4::dot(const vec4& i_other) const
+	MLINLINE float	vec4::dot4(const vec4& i_other) const
 	{
-		return x*i_other.x+y*i_other.y+z*i_other.z;
+		return x*i_other.x+y*i_other.y+z*i_other.z+w*i_other.w;
 	}
 
-	MLINLINE float dot(const vec4& i_v1, const vec4& i_v2)
+	MLINLINE float dot4(const vec4& i_v1, const vec4& i_v2)
 	{
-		return i_v1.x*i_v2.x+i_v1.y*i_v2.y+i_v1.z*i_v2.z;
+		return i_v1.x*i_v2.x+i_v1.y*i_v2.y+i_v1.z*i_v2.z+i_v1.w*i_v2.w;
 	}
 
 	MLINLINE float	vec4::get_squarelength() const
@@ -229,14 +227,6 @@ namespace math
 		x=fabsf(i_src.x);
 		y=fabsf(i_src.y);
 		z=fabsf(i_src.z);
-	}
-
-	MLINLINE void vec4::rotate(const vec4& i_src, const vec4& i_axis, float i_angle)
-	{
-		vec4 a=i_src.dot(i_axis)*i_axis;
-		vec4 b=i_src-a;
-		vec4 c; c.cross(i_axis,b);
-		*this=b*cosf(i_angle)+c*sinf(i_angle)+a;
 	}
 
 	MLINLINE void getorthogonalaxes(vec4& o_axis1, vec4& o_axis2, const vec4& i_axissrc)

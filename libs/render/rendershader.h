@@ -14,10 +14,10 @@ namespace render
 	public:
 		shader(const void* i_buf, unsigned i_bufsize, const char* i_name);
 		shader* Next;
+		LPD3DXEFFECT m_effect;
 
 	private:
 		~shader();
-		LPD3DXEFFECT m_effect;
 		ctr::string m_name;
 	};
 }

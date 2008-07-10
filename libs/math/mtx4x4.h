@@ -13,23 +13,39 @@ namespace math
 
 		void set_projectionmatrix(float i_tgfovhalf, float i_aspect, float i_nearz, float i_farz);
 		void multiply(const mtx4x4& i_src1, const mtx4x4& i_src2);
+		void multiplytransposed(const mtx4x4& i_src1, const mtx4x4& i_src2t);
 		void transform(vec4& o_dst, const vec4& i_src) const;
+		void transformtransposed(vec4& o_dst, const vec4& i_src) const;
 
-		float _11,_12,_13,_14;
-		float _21,_22,_23,_24;
-		float _31,_32,_33,_34;
-		float _41,_42,_43,_44;
+		union
+		{
+			struct
+			{
+				float _11,_12,_13,_14;
+				float _21,_22,_23,_24;
+				float _31,_32,_33,_34;
+				float _41,_42,_43,_44;
+			};
+
+			struct 
+			{
+				vec4 x,y,z,t;
+			};
+		};
 	};
 
 	MLINLINE mtx4x4::mtx4x4()
 	{
 	}
-/*
+
 	MLINLINE mtx4x4::mtx4x4(const mtx4x3& i_mtx)
 	{
-		_11=i_mtx._11;_12=i_mtx._12; _13
+		_11=i_mtx._11;_12=i_mtx._12; _13=i_mtx._13; _14=0;
+		_21=i_mtx._21;_12=i_mtx._22; _23=i_mtx._13; _24=0;
+		_31=i_mtx._31;_12=i_mtx._32; _33=i_mtx._13; _34=0;
+		_41=i_mtx._41;_12=i_mtx._42; _43=i_mtx._13; _44=1;
 	}
-*/
+
 
 	MLINLINE void mtx4x4::transform(vec4& o_dst, const vec4& i_src) const
 	{
@@ -62,6 +78,22 @@ namespace math
 		i_src2.transform((vec4&)_21,(const vec4&)i_src1._21);
 		i_src2.transform((vec4&)_31,(const vec4&)i_src1._31);
 		i_src2.transform((vec4&)_41,(const vec4&)i_src1._41);
+	}
+
+	MLINLINE void mtx4x4::multiplytransposed(const mtx4x4& i_src1, const mtx4x4& i_src2t)
+	{
+		i_src2t.transformtransposed(x,i_src1.x);
+		i_src2t.transformtransposed(y,i_src1.y);
+		i_src2t.transformtransposed(z,i_src1.z);
+		i_src2t.transformtransposed(t,i_src1.t);
+	}
+
+	MLINLINE void mtx4x4::transformtransposed(vec4& o_dst, const vec4& i_src) const
+	{
+		o_dst.x=x.dot4(i_src);
+		o_dst.y=y.dot4(i_src);
+		o_dst.z=z.dot4(i_src);
+		o_dst.w=t.dot4(i_src);
 	}
 }
 #endif//_mtx4x4_h_

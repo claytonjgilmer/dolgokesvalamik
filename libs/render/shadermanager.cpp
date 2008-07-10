@@ -24,7 +24,8 @@ namespace render
 
 		if (shaderfile.opened())
 		{
-			char* buf=new char [shaderfile.size()];
+			char* buf=new char [shaderfile.size()+1];
+			buf[shaderfile.size()]=0;
 			shaderfile.read_bytes(buf,shaderfile.size());
 
 			if (t=new shader(buf,shaderfile.size(),i_shadername))

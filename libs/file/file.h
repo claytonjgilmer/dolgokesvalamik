@@ -3,6 +3,7 @@
 
 #include "utils/misc.h"
 #include "containers/string.h"
+#include <sys/stat.h>
 
 namespace file
 {
@@ -39,12 +40,9 @@ namespace file
 	}
 
 	MLINLINE file::file(const char* i_name,const char* i_attributes):
-	m_name(i_name)
+	m_handle(NULL)
 	{
-		m_handle=fopen(i_name,i_attributes);
-
-		if (m_handle)
-			m_size=GetFileSize(m_handle,NULL);
+		open(i_name,i_attributes);
 	}
 
 	MLINLINE void file::open(const char* i_name, const char* i_attributes)
@@ -55,7 +53,9 @@ namespace file
 		m_handle=fopen(i_name,i_attributes);
 		if (m_handle)
 		{
-			m_size=GetFileSize(m_handle,NULL);
+			struct stat statistics;
+			fstat(_fileno(m_handle),&statistics);
+			m_size=statistics.st_size;
 			m_name=i_name;
 		}
 	}

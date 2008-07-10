@@ -13,7 +13,7 @@
 struct game
 {
 	render::mesh* m_mesh;
-	math::mtx4x4 m_mtx;
+	math::mtx4x3 m_mtx;
 } g_game;
 
 threading::taskmanager* g_taskmanager=NULL;
@@ -25,8 +25,8 @@ HWND g_hwnd;
 void init_app(HWND i_hwnd)
 {
 	file::system::create();
-	file::system::instance()->register_path("shader","shader");
-	file::system::instance()->register_path("texture","texture");
+	file::system::instance()->register_path("shader","c:\\data\\shader\\");
+	file::system::instance()->register_path("texture","c:\\data\\texture\\");
 
 	g_taskmanager=new threading::taskmanager(4);
 
@@ -62,7 +62,7 @@ void init_app(HWND i_hwnd)
 
 	mesh->m_vb=render::system::instance()->create_vertexbuffer(4,ve);
 	mesh->m_ib=render::system::instance()->create_indexbuffer(6);
-	render::texture* txt=render::texturemanager::instance()->get_texture("test.bmp");
+	render::texture* txt=render::texturemanager::instance()->get_texture("teszt.jpg");
 
 	mesh->m_trisetbuf.resize(1);
 	render::triset& ts=mesh->m_trisetbuf.back();
@@ -74,6 +74,9 @@ void init_app(HWND i_hwnd)
 
 	ts.m_material->set_shader(render::shadermanager::instance()->get_shader("dx9_hlsl_fx_simple.fx"));
 	ts.m_material->m_texturebuf.push_back(txt);
+
+	g_game.m_mtx.identity();
+	g_game.m_mesh=mesh;
 
 }
 
@@ -96,6 +99,14 @@ void update_app()
 //		::SetWindowPos()
 //		::setwin
 //	::MoveWindow()
+
+	math::mtx4x3 cammtx=math::mtx4x3::identitymtx();
+	cammtx.t.z=-10;
+
+	render::system::instance()->set_projection_params(math::degreetorad(45),1,1,100,(math::mtx4x4)cammtx);
+
+	render::system::instance()->add_mesh(g_game.m_mesh,g_game.m_mtx);
+	render::system::instance()->render();
 }
 
 void exit_app()

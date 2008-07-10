@@ -15,6 +15,7 @@
 #include "vertexelements.h"
 
 #include "utils/singleton.h"
+#include "math/mtx4x4.h"
 #include <d3d9.h>
 #include <d3dx9.h>
 
@@ -57,6 +58,8 @@ namespace render
 
 		void init_queues(const ctr::vector<ctr::string> i_queuenames);
 
+		void set_projection_params(float i_fov, float i_aspect, float i_nearz, float i_farz, const math::mtx4x4& i_cameramatrix);
+
 
 		LPDIRECT3DDEVICE9 device() const;
 	private:
@@ -64,6 +67,8 @@ namespace render
 		LPDIRECT3D9 m_sys;
 		ctr::vector<render::queue> m_queue;
 		HWND m_window;
+
+		member(math::mtx4x4,viewprojection_matrix);
 	};
 }
 #endif//_rendersystem_h_

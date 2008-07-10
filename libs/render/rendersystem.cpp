@@ -7,6 +7,7 @@
 #include "rendermaterial.h"
 #include "rendertexture.h"
 #include "rendershader.h"
+#include "math/mtx4x4.h"
 
 namespace render
 {
@@ -43,6 +44,8 @@ namespace render
 			m_sys->CreateDevice(	D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_window,
 			D3DCREATE_SOFTWARE_VERTEXPROCESSING,
 			&d3dpp, &m_device );
+
+		m_queue.resize(1);
 	}
 
 	system::~system()
@@ -61,31 +64,58 @@ namespace render
 
 	void system::render()
 	{
+		m_device->BeginScene();
+		m_device->Clear(0,0,D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER,D3DCOLOR_XRGB(23,65,96),1,0);
+
 		for (unsigned int queueindex = 0; queueindex < m_queue.size() ; queueindex++)
 		{
-			const queue& q=m_queue[queueindex];
+			queue& q=m_queue[queueindex];
 			const unsigned meshnum=q.m_buf.size();
 			const queueelem* buf=q.m_buf;
 
 			for (unsigned meshindex=0; meshindex<meshnum; ++meshindex)
 			{
 				mesh* m=buf[meshindex].m_mesh;
+				const math::mtx4x4 objmtx=(math::mtx4x4)buf[meshindex].m_mtx;
+				math::mtx4x4 faszommtx; faszommtx.multiply(m_viewprojection_matrix,objmtx);
+
 				m_device->SetStreamSource(0,m->m_vb->m_hwbuffer,0,m->m_vb->m_vertexsize);
 				m_device->SetIndices(m->m_ib->m_hwbuffer);
 
 				for (unsigned trisetindex=0; trisetindex<m->m_trisetbuf.size(); ++trisetindex)
 				{
 					const triset& t=m->m_trisetbuf[trisetindex];
-					const material* mat=t.m_material;
+					material* mat=t.m_material;
 
 					for (unsigned txtindex=0; txtindex<mat->m_texturebuf.size(); ++txtindex)
 					{
 						m_device->SetTexture(txtindex,mat->m_texturebuf[txtindex]->m_hwbuffer);
 					}
+
+					mat->m_shaderparam.set_constants();
+
+					{
+						LPD3DXEFFECT acteffect=mat->m_shader->m_effect;
+						acteffect->SetValue("worldViewProj",&faszommtx,sizeof(math::mtx4x4));
+						unsigned numpasses;
+						acteffect->Begin( &numpasses, D3DXFX_DONOTSAVESTATE|D3DXFX_DONOTSAVESHADERSTATE);
+
+						for (unsigned uPass = 0; uPass < numpasses; ++uPass )
+						{
+							acteffect->BeginPass( uPass );
+							m_device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST,0,t.m_firstvertex,t.m_numvertices,t.m_firstindex,t.m_numindices);
+							acteffect->EndPass();
+						}
+
+						acteffect->End();
+					}
 				}
 			}
-						
+			q.m_buf.clear();
 		}
+
+		m_device->EndScene();
+		m_device->Present( NULL, NULL, NULL, NULL );
 	}
 
 	void system::add_mesh(mesh* i_mesh, const math::mtx4x3& i_mtx, unsigned i_queueindex/* =0 */)
@@ -173,7 +203,12 @@ namespace render
 
 	void system::create_shader(LPD3DXEFFECT& i_effect,const void* i_buf, unsigned i_bufsize) const
 	{
-		D3DXCreateEffect(m_device,i_buf,i_bufsize,NULL,NULL,0,NULL,&i_effect,NULL);
+		LPD3DXBUFFER errors;;
+		if (D3DXCreateEffect(m_device,i_buf,i_bufsize,NULL,NULL,0,NULL,&i_effect,&errors)!=D3D_OK)
+		{
+			const char* v=(const char*)(errors->GetBufferPointer());
+			utils::assertion(0,v);
+		}
 	}
 
 	void system::release_shader(LPD3DXEFFECT i_effect) const
@@ -191,6 +226,12 @@ namespace render
 		m_queue.resize(i_queuenames.size());
 		for (unsigned n = 0; n < m_queue.size() ; n++)
 			m_queue[n].m_name=i_queuenames[n];
+	}
+
+	void system::set_projection_params(float i_fov, float i_aspect, float i_nearz, float i_farz, const math::mtx4x4& i_cameramatrix)
+	{
+		math::mtx4x4 projmtx; projmtx.set_projectionmatrix(tan(i_fov/2), i_aspect,i_nearz,i_farz);
+
 	}
 
 }
