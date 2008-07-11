@@ -35,6 +35,8 @@ namespace math
 
 		void normalize();
 		void rotate(const mtx4x3& i_src, const vec3& i_axis, float i_angle);
+
+		void set_euler(float i_x,float i_y, float i_z);
 		
 		union
 		{
@@ -203,6 +205,17 @@ namespace math
 		yaxis.interpolate(i_src1.yaxis, i_src2.yaxis, i_time);
 		zaxis.interpolate(i_src1.zaxis, i_src2.zaxis, i_time);
 		t.interpolate(i_src1.t, i_src2.t, i_time);
+	}
+
+	MLINLINE void mtx4x3::set_euler(float i_x,float i_y, float i_z)
+	{
+		float sx=(sin(i_x)), cx=(cos(i_x));
+		float sy=(sin(i_y)), cy=(cos(i_y));
+		float sz=(sin(i_z)), cz=(cos(i_z));
+
+		_11 = cz*cy-sz*sx*sy;	_12 = sz*cx;	_13 = -sz*sx*cy-cz*sy;
+		_21 = -cz*sx*sy-sz*cy;	_22 = cz*cx;	_23 = sz*sy-cz*sx*cy;
+		_31 = cx*sy;			_32 = sx;		_33 = cx*cy;
 	}
 
 }// namespace math

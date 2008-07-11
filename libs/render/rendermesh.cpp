@@ -3,7 +3,7 @@
 
 namespace render
 {
-	mesh::mesh()
+	mesh::mesh(const char* i_name):resource(i_name)
 	{
 		m_vb=NULL;
 		m_ib=NULL;

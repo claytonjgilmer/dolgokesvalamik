@@ -3,7 +3,7 @@
 
 namespace ctr
 {
-	template<class basetype, unsigned bufsize> //bufsize kettohatvany!!!
+	template<typename basetype, unsigned bufsize> //bufsize kettohatvany!!!
 	class queue
 	{
 	public:

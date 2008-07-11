@@ -290,6 +290,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\render\rendersubmesh.h"
+				>
+			</File>
+			<File
 				RelativePath=".\render\rendersystem.h"
 				>
 			</File>

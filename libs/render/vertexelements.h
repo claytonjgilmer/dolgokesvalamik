@@ -7,6 +7,7 @@ namespace render
 	{
 		element_pos3,
 		element_pos4,
+		element_normal,
 		element_uv,
 		element_color,
 

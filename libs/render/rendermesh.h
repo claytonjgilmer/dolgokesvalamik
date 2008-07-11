@@ -4,15 +4,16 @@
 #include "math/mtx4x3.h"
 #include "rendervertexbuffer.h"
 #include "renderindexbuffer.h"
-#include "rendertriset.h"
+#include "rendersubmesh.h"
 #include "containers/vector.h"
+#include "utils/resource.h"
 
 namespace render
 {
-	class mesh
+	class mesh:public utils::resource
 	{
 	public:
-		mesh();
+		mesh(const char* i_name);
 		~mesh();
 		void render(const math::mtx4x3& i_mtx);
 
@@ -22,7 +23,7 @@ namespace render
 		vertexbuffer* m_vb;
 		indexbuffer* m_ib;
 
-		ctr::vector<triset> m_trisetbuf;
+		ctr::vector<submesh> m_submeshbuf;
 	};
 }
 #endif//_rendermesh_h_

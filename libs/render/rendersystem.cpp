@@ -4,7 +4,7 @@
 #include "rendersystem.h"
 #include "utils/assert.h"
 #include "renderstate.h"
-#include "rendermaterial.h"
+#include "rendersubmesh.h"
 #include "rendertexture.h"
 #include "rendershader.h"
 #include "math/mtx4x4.h"
@@ -85,29 +85,28 @@ namespace render
 
 				faszommtx.transpose();
 
-				for (unsigned trisetindex=0; trisetindex<m->m_trisetbuf.size(); ++trisetindex)
+				for (unsigned trisetindex=0; trisetindex<m->m_submeshbuf.size(); ++trisetindex)
 				{
-					const triset& t=m->m_trisetbuf[trisetindex];
-					material* mat=t.m_material;
+					submesh& sm=m->m_submeshbuf[trisetindex];
 
-					for (unsigned txtindex=0; txtindex<mat->m_texturebuf.size(); ++txtindex)
+					for (unsigned txtindex=0; txtindex<sm.m_texturebuf.size(); ++txtindex)
 					{
-						m_device->SetTexture(txtindex,mat->m_texturebuf[txtindex]->m_hwbuffer);
+						m_device->SetTexture(txtindex,sm.m_texturebuf[txtindex]->m_hwbuffer);
 					}
 
 
 					{
-						LPD3DXEFFECT acteffect=mat->m_shader->m_effect;
+						LPD3DXEFFECT acteffect=sm.m_shader->m_effect;
 						acteffect->SetTechnique( "Technique0" );
 						acteffect->SetValue("worldViewProj",&faszommtx,sizeof(math::mtx4x4));
-						mat->m_shaderparam.set_constants();
+						sm.set_constants();
 						unsigned numpasses;
 						acteffect->Begin( &numpasses, D3DXFX_DONOTSAVESTATE|D3DXFX_DONOTSAVESHADERSTATE);
 
 						for (unsigned uPass = 0; uPass < numpasses; ++uPass )
 						{
 							acteffect->BeginPass( uPass );
-							m_device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST,0,t.m_firstvertex,t.m_numvertices,t.m_firstindex,t.m_numindices/3);
+							m_device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST,0,sm.m_firstvertex,sm.m_numvertices,sm.m_firstindex,sm.m_numindices/3);
 							acteffect->EndPass();
 						}
 
@@ -131,6 +130,7 @@ namespace render
 	{
 		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
 		{ 0, 16, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
 		{ 0, 8, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
 		{ 0, 16, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
 		D3DDECL_END()

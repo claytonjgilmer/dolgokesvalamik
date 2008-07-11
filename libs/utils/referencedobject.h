@@ -3,6 +3,7 @@
 
 #include "utils/referencepointer.h"
 #include "utils/misc.h"
+#include "utils/assert.h"
 
 namespace utils
 {
@@ -14,7 +15,10 @@ namespace utils
 		int get_ref() const;
 	protected:
 		referencedobject();
-		virtual ~referencedobject(){}
+		virtual ~referencedobject()
+		{
+			utils::assertion(m_refcount==0,"referencedobject refcountja nem nulla!");
+		}
 
 	private:
 		void add_ref();
