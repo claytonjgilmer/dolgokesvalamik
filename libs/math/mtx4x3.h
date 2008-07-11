@@ -174,11 +174,11 @@ namespace math
 
 	MLINLINE void mtx4x3::linearinvert(const mtx4x3& i_src)
 	{
-		xaxis/=i_src.xaxis.squarelength();
-		yaxis/=i_src.yaxis.squarelength();
-		zaxis/=i_src.zaxis.squarelength();
+		xaxis=i_src.xaxis/i_src.xaxis.squarelength();
+		yaxis=i_src.yaxis/i_src.yaxis.squarelength();
+		zaxis=i_src.zaxis/i_src.zaxis.squarelength();
 
-		transform3x3(t,i_src.t);
+		transform3x3(t,-i_src.t);
 	}
 
 	MLINLINE void mtx4x3::normalize()

@@ -46,6 +46,7 @@ namespace render
 			&d3dpp, &m_device );
 
 		m_queue.resize(1);
+		m_device->SetRenderState(D3DRS_CULLMODE,D3DCULL_NONE);
 	}
 
 	system::~system()
@@ -76,11 +77,13 @@ namespace render
 			for (unsigned meshindex=0; meshindex<meshnum; ++meshindex)
 			{
 				mesh* m=buf[meshindex].m_mesh;
-				const math::mtx4x4 objmtx=(math::mtx4x4)buf[meshindex].m_mtx;
-				math::mtx4x4 faszommtx; faszommtx.multiply(m_viewprojection_matrix,objmtx);
-
 				m_device->SetStreamSource(0,m->m_vb->m_hwbuffer,0,m->m_vb->m_vertexsize);
+				m_device->SetVertexDeclaration(m->m_vb->m_decl);
 				m_device->SetIndices(m->m_ib->m_hwbuffer);
+				const math::mtx4x4 objmtx=(math::mtx4x4)buf[meshindex].m_mtx;
+				math::mtx4x4 faszommtx; faszommtx.multiply(objmtx,m_viewprojection_matrix);
+
+				faszommtx.transpose();
 
 				for (unsigned trisetindex=0; trisetindex<m->m_trisetbuf.size(); ++trisetindex)
 				{
@@ -92,18 +95,19 @@ namespace render
 						m_device->SetTexture(txtindex,mat->m_texturebuf[txtindex]->m_hwbuffer);
 					}
 
-					mat->m_shaderparam.set_constants();
 
 					{
 						LPD3DXEFFECT acteffect=mat->m_shader->m_effect;
+						acteffect->SetTechnique( "Technique0" );
 						acteffect->SetValue("worldViewProj",&faszommtx,sizeof(math::mtx4x4));
+						mat->m_shaderparam.set_constants();
 						unsigned numpasses;
 						acteffect->Begin( &numpasses, D3DXFX_DONOTSAVESTATE|D3DXFX_DONOTSAVESHADERSTATE);
 
 						for (unsigned uPass = 0; uPass < numpasses; ++uPass )
 						{
 							acteffect->BeginPass( uPass );
-							m_device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST,0,t.m_firstvertex,t.m_numvertices,t.m_firstindex,t.m_numindices);
+							m_device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST,0,t.m_firstvertex,t.m_numvertices,t.m_firstindex,t.m_numindices/3);
 							acteffect->EndPass();
 						}
 
@@ -228,10 +232,10 @@ namespace render
 			m_queue[n].m_name=i_queuenames[n];
 	}
 
-	void system::set_projection_params(float i_fov, float i_aspect, float i_nearz, float i_farz, const math::mtx4x4& i_cameramatrix)
+	void system::set_projection_params(float i_fov, float i_aspect, float i_nearz, float i_farz, const math::mtx4x4& i_viewmatrix)
 	{
 		math::mtx4x4 projmtx; projmtx.set_projectionmatrix(tan(i_fov/2), i_aspect,i_nearz,i_farz);
-
+		m_viewprojection_matrix.multiply(i_viewmatrix,projmtx);
 	}
 
 }

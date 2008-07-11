@@ -9,6 +9,7 @@
 #include "render/texturemanager.h"
 #include "render/rendermaterial.h"
 #include "math/mtx4x4.h"
+#include "math/vec2.h"
 
 struct game
 {
@@ -62,7 +63,31 @@ void init_app(HWND i_hwnd)
 
 	mesh->m_vb=render::system::instance()->create_vertexbuffer(4,ve);
 	mesh->m_ib=render::system::instance()->create_indexbuffer(6);
-	render::texture* txt=render::texturemanager::instance()->get_texture("teszt.jpg");
+
+	class vertex_t
+	{
+	public:
+		math::vec3 pos;
+		math::vec2 uv;
+	};
+
+	vertex_t* vb=(vertex_t*)mesh->m_vb->lock();
+
+	vb[0].pos.set(-1.0f, 1.0f, 0.0f); vb[0].uv.set(0.0f,0.0f);
+	vb[1].pos.set(1.0f, 1.0f, 0.0f); vb[1].uv.set(1.0f,0.0f );
+	vb[2].pos.set(-1.0f,-1.0f, 0.0f); vb[2].uv.set(0.0f,1.0f );
+	vb[3].pos.set(1.0f,-1.0f, 0.0f); vb[3].uv.set( 1.0f,1.0f );
+
+	mesh->m_vb->unlock();
+
+	unsigned short* ib=mesh->m_ib->lock();
+
+	const unsigned short buf[]={0,1,2,1,3,2};
+
+	memcpy(ib,buf,6*sizeof(short));
+
+	mesh->m_ib->unlock();
+
 
 	mesh->m_trisetbuf.resize(1);
 	render::triset& ts=mesh->m_trisetbuf.back();
@@ -73,9 +98,12 @@ void init_app(HWND i_hwnd)
 	ts.m_material=new render::material;
 
 	ts.m_material->set_shader(render::shadermanager::instance()->get_shader("dx9_hlsl_fx_simple.fx"));
-	ts.m_material->m_texturebuf.push_back(txt);
+
+//	render::texture* txt=render::texturemanager::instance()->get_texture("test.bmp");
+//	ts.m_material->m_texturebuf.push_back(txt);
 
 	g_game.m_mtx.identity();
+	g_game.m_mtx.trans().z=4;
 	g_game.m_mesh=mesh;
 
 }
@@ -101,9 +129,11 @@ void update_app()
 //	::MoveWindow()
 
 	math::mtx4x3 cammtx=math::mtx4x3::identitymtx();
-	cammtx.t.z=-10;
+//	cammtx.t.z=-10;
 
-	render::system::instance()->set_projection_params(math::degreetorad(45),1,1,100,(math::mtx4x4)cammtx);
+	math::mtx4x3 viewmtx; viewmtx.linearinvert(cammtx);
+
+	render::system::instance()->set_projection_params(math::degreetorad(90),1,0.1f,100,(math::mtx4x4)cammtx);
 
 	render::system::instance()->add_mesh(g_game.m_mesh,g_game.m_mtx);
 	render::system::instance()->render();

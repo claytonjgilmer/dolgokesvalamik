@@ -10,6 +10,16 @@ namespace render
 	{
 		friend class system;
 	public:
+		void* lock()
+		{
+			void* ret;
+			m_hwbuffer->Lock( 0, sizeof(m_vertexsize), &ret, 0 );
+			return ret;
+		}
+		void unlock()
+		{
+			m_hwbuffer->Unlock();
+		}
 	private:
 		vertexbuffer(){}
 		~vertexbuffer(){}

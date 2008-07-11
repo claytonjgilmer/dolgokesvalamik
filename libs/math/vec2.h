@@ -19,6 +19,12 @@ namespace math
 			y=i_y;
 		}
 
+		void set(float i_x, float i_y)
+		{
+			x=i_x;
+			y=i_y;
+		}
+
 		float dot(const vec2& i_other) const
 		{
 			return x*i_other.x+y*i_other.y;
@@ -51,9 +57,9 @@ namespace math
 
 		void normalize()
 		{
-			float length=length();
-			x/=length;
-			y/=length;
+			float l=length();
+			x/=l;
+			y/=l;
 		}
 	};
 }

@@ -58,7 +58,7 @@ namespace render
 
 		void init_queues(const ctr::vector<ctr::string> i_queuenames);
 
-		void set_projection_params(float i_fov, float i_aspect, float i_nearz, float i_farz, const math::mtx4x4& i_cameramatrix);
+		void set_projection_params(float i_fov, float i_aspect, float i_nearz, float i_farz, const math::mtx4x4& i_viewmatrix);
 
 
 		LPDIRECT3DDEVICE9 device() const;

@@ -16,6 +16,7 @@ namespace math
 		void multiplytransposed(const mtx4x4& i_src1, const mtx4x4& i_src2t);
 		void transform(vec4& o_dst, const vec4& i_src) const;
 		void transformtransposed(vec4& o_dst, const vec4& i_src) const;
+		void transpose();
 
 		union
 		{
@@ -41,9 +42,9 @@ namespace math
 	MLINLINE mtx4x4::mtx4x4(const mtx4x3& i_mtx)
 	{
 		_11=i_mtx._11;_12=i_mtx._12; _13=i_mtx._13; _14=0;
-		_21=i_mtx._21;_12=i_mtx._22; _23=i_mtx._13; _24=0;
-		_31=i_mtx._31;_12=i_mtx._32; _33=i_mtx._13; _34=0;
-		_41=i_mtx._41;_12=i_mtx._42; _43=i_mtx._13; _44=1;
+		_21=i_mtx._21;_22=i_mtx._22; _23=i_mtx._23; _24=0;
+		_31=i_mtx._31;_32=i_mtx._32; _33=i_mtx._33; _34=0;
+		_41=i_mtx._41;_42=i_mtx._42; _43=i_mtx._43; _44=1;
 	}
 
 
@@ -61,7 +62,7 @@ namespace math
 
 		w = 1/(i_tgfovhalf*i_aspect);
 		h = 1/i_tgfovhalf;
-		Q = i_nearz/(i_farz-i_nearz);
+		Q = i_farz/(i_farz-i_nearz);
 
 		ZeroMemory(this, sizeof(mtx4x4));
 
@@ -94,6 +95,13 @@ namespace math
 		o_dst.y=y.dot4(i_src);
 		o_dst.z=z.dot4(i_src);
 		o_dst.w=t.dot4(i_src);
+	}
+
+	MLINLINE void mtx4x4::transpose()
+	{
+		swap(_12,_21); swap(_13,_31);swap(_14,_41);
+		swap(_23,_32);swap(_24,_42);
+		swap(_34,_43);
 	}
 }
 #endif//_mtx4x4_h_
