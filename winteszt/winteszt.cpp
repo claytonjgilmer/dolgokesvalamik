@@ -21,6 +21,7 @@ int g_done=0;
 extern void init_app(HWND);
 extern void update_app();
 extern void exit_app();
+extern void change_screen_size(unsigned i_newwidth, unsigned i_newheight);
 
 int APIENTRY _tWinMain(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,
@@ -153,6 +154,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	switch (message)
 	{
+	case WM_SIZE:
+	{
+		change_screen_size(LOWORD(lParam),HIWORD(lParam));
+		break;
+	}
 	case WM_COMMAND:
 		wmId    = LOWORD(wParam);
 		wmEvent = HIWORD(wParam);

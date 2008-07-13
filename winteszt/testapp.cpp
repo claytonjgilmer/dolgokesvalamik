@@ -23,6 +23,14 @@ struct game
 	math::vec3 light_dir;
 } g_game;
 
+void change_screen_size(unsigned i_newwidth, unsigned i_newheight)
+{
+	if (!i_newheight || !i_newwidth)
+		return;
+	g_game.m_aspect=i_newwidth/(float)i_newheight;
+}
+
+
 threading::taskmanager* g_taskmanager=NULL;
 
 RECT g_rect;
@@ -66,7 +74,7 @@ void init_app(HWND i_hwnd)
 	g_time=timeGetTime();
 	g_hwnd=i_hwnd;
 
-	math::mtx4x4 mtx; mtx.set_projectionmatrix(tan(math::degreetorad(45)),g_game.m_aspect,1,10000);
+//	math::mtx4x4 mtx; mtx.set_projectionmatrix(tan(math::degreetorad(45)),g_game.m_aspect,1,10000);
 
 	render::mesh* mesh=new render::mesh("fucka");
 
@@ -119,8 +127,8 @@ void init_app(HWND i_hwnd)
 	ts.bind_param("light_dir",&g_game.light_dir,3*sizeof(float));
 
 
-//	render::texture* txt=render::texturemanager::instance()->get_texture("teszt.jpg");
-	render::texture* txt=render::texturemanager::instance()->get_texture("white.bmp");
+	render::texture* txt=render::texturemanager::instance()->get_texture("teszt.jpg");
+//	render::texture* txt=render::texturemanager::instance()->get_texture("white.bmp");
 	ts.m_texturebuf.push_back(txt);
 
 	g_game.x=g_game.y=g_game.z=0;
@@ -133,7 +141,7 @@ void init_app(HWND i_hwnd)
 	short index[16384];
 	int indexnum;
 
-	generate_sphere(pos,posnum,index,indexnum,1,4);
+	generate_sphere(pos,posnum,index,indexnum,1,1);
 	g_game.sphere=new render::mesh("sphere");
 	g_game.sphere->m_vb=render::system::instance()->create_vertexbuffer(posnum,ve);
 	g_game.sphere->m_ib=render::system::instance()->create_indexbuffer(indexnum*3);
