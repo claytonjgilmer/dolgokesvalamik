@@ -6,6 +6,8 @@
 
 namespace threading
 {
+	DEFINE_SINGLETON(taskmanager);
+
 	unsigned WINAPI poolrun(void* i_param)
 	{
 		taskmanager* tm=(taskmanager*)i_param;
@@ -15,7 +17,7 @@ namespace threading
 		return 0;
 	}
 
-	taskmanager::taskmanager(unsigned i_threadnum/*=0*/)
+	taskmanager::taskmanager(const taskmanagerdesc* i_desc)
 	{
 		m_incompletetasknum=0;
 //		m_taskbuf.reserve(128);
@@ -25,8 +27,8 @@ namespace threading
 
 		ResetEvent(m_exitevent);
 
-		if (i_threadnum)
-			m_threadbuf.resize(i_threadnum);
+		if (i_desc->m_threadnum)
+			m_threadbuf.resize(i_desc->m_threadnum);
 
 		for (unsigned n=0; n<m_threadbuf.size();++n)
 		{

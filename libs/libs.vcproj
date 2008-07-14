@@ -194,7 +194,99 @@
 				>
 			</File>
 			<File
+				RelativePath=".\scripting\lualib\lapi.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lauxlib.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lcode.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\ldebug.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\ldo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lfunc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lgc.h"
+				>
+			</File>
+			<File
 				RelativePath=".\containers\listallocator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\llex.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\llimits.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lmem.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lobject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lopcodes.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lparser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lstate.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lstring.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\ltable.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\ltm.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lua.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lua.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lualib.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lundump.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lvm.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lzio.h"
 				>
 			</File>
 			<File
@@ -227,6 +319,10 @@
 			</File>
 			<File
 				RelativePath=".\scene\node.h"
+				>
+			</File>
+			<File
+				RelativePath=".\render\objectmanager.h"
 				>
 			</File>
 			<File
@@ -414,11 +510,131 @@
 				>
 			</File>
 			<File
+				RelativePath=".\scripting\lualib\lapi.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lauxlib.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lbaselib.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lcode.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\ldblib.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\ldebug.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\ldo.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\ldump.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lfunc.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lgc.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\liolib.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\llex.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lmathlib.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lmem.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\loadlib.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lobject.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lopcodes.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lparser.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lstate.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lstring.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lstrlib.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\ltable.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\ltablib.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\ltests.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\ltm.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lua.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lundump.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lvm.c"
+				>
+			</File>
+			<File
+				RelativePath=".\scripting\lualib\lzio.c"
+				>
+			</File>
+			<File
 				RelativePath=".\threading\mutex.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\scene\node.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\render\objectmanager.cpp"
 				>
 			</File>
 			<File

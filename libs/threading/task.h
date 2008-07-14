@@ -15,6 +15,8 @@ namespace threading
 			virtual void run() =0;
 			int get_id() const;
 
+			void* operator new(size_t i_sixe);
+
 		private:
 			int m_taskID;
 #ifdef _DEBUG

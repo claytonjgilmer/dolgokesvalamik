@@ -18,8 +18,11 @@
 #include "file/filesystem.h"
 #include "utils/timer.h"
 
+#include "scripting/lua.h"
+
 int _cdecl main()
 {
+#if 0
 	utils::timer t;
 
 	const unsigned iternum=100000;
@@ -54,6 +57,24 @@ int _cdecl main()
 	printf("1 time:%d\n",t.get_tick());
 
 	delete [] val;
+#endif
+	scripting::lua Lua;
+	Lua.InitState((scripting::lua::eLuaLib)(scripting::lua::LL_BASE | scripting::lua::LL_MATH));//| scripting::lua::LL_IO| scripting::lua::LL_STRING));
 
-	while (!_kbhit());
+/*
+	scripting::lua::Variable inittable=Lua.GetGlobalTable().GetVariable("InitParams");
+
+	if (inittable.IsTable())
+	int width=inittable.GetVariable("Width").GetInt(640);
+	else if (inittable.IsNil())
+		strlen("");
+*/
+
+	for (int n=0; n<4; ++n)
+	{
+		Lua.DoFile("faszom.lua");
+		system("PAUSE");
+//		while (!_kbhit());
+//		while (_kbhit());
+	}
 }

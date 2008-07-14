@@ -52,6 +52,7 @@ namespace render
 
 		void set_renderstate(const state& i_state);
 
+		void flush_queues();
 		void render();
 
 		void add_mesh(mesh* i_mesh, const math::mtx4x3& i_mtx, unsigned i_queueindex=0);

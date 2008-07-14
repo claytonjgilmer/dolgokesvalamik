@@ -31,8 +31,6 @@ void change_screen_size(unsigned i_newwidth, unsigned i_newheight)
 }
 
 
-threading::taskmanager* g_taskmanager=NULL;
-
 RECT g_rect;
 unsigned g_time;
 HWND g_hwnd;
@@ -49,7 +47,8 @@ void init_app(HWND i_hwnd)
 	file::system::instance()->register_path("shader","c:\\data\\shader\\");
 	file::system::instance()->register_path("texture","c:\\data\\texture\\");
 
-	g_taskmanager=new threading::taskmanager(4);
+	threading::taskmanagerdesc tdesc;
+	threading::taskmanager::create(&tdesc);
 
 	render::shadermanagerdesc shaderdesc("shader");
 	render::shadermanager::create(&shaderdesc);
@@ -127,8 +126,8 @@ void init_app(HWND i_hwnd)
 	ts.bind_param("light_dir",&g_game.light_dir,3*sizeof(float));
 
 
-	render::texture* txt=render::texturemanager::instance()->get_texture("teszt.jpg");
-//	render::texture* txt=render::texturemanager::instance()->get_texture("white.bmp");
+//	render::texture* txt=render::texturemanager::instance()->get_texture("teszt.jpg");
+	render::texture* txt=render::texturemanager::instance()->get_texture("white.bmp");
 	ts.m_texturebuf.push_back(txt);
 
 	g_game.x=g_game.y=g_game.z=0;
@@ -141,7 +140,7 @@ void init_app(HWND i_hwnd)
 	short index[16384];
 	int indexnum;
 
-	generate_sphere(pos,posnum,index,indexnum,1,1);
+	generate_sphere(pos,posnum,index,indexnum,1,5);
 	g_game.sphere=new render::mesh("sphere");
 	g_game.sphere->m_vb=render::system::instance()->create_vertexbuffer(posnum,ve);
 	g_game.sphere->m_ib=render::system::instance()->create_indexbuffer(indexnum*3);
@@ -181,6 +180,7 @@ unsigned sumtime=0;
 
 void update_app()
 {
+	threading::taskmanager::instance()->flush();
 	unsigned acttime=::timeGetTime();
 	unsigned deltatime=acttime-g_time;
 	g_time=acttime;
@@ -221,10 +221,10 @@ void update_app()
 
 void exit_app()
 {
+	file::system::release();
+	threading::taskmanager::release();
 	delete g_game.m_mesh;
 	delete g_game.sphere;
-	file::system::release();
-	delete g_taskmanager; g_taskmanager=NULL;
 	render::shadermanager::release();
 	render::texturemanager::release();
 	render::system::release();

@@ -9,6 +9,8 @@
 #include "rendershader.h"
 #include "math/mtx4x4.h"
 
+#include "threading/taskmanager.h"
+
 namespace render
 {
 	DEFINE_SINGLETON(system);
@@ -63,7 +65,22 @@ namespace render
 		return m_device;
 	}
 
+	class rendertask:public threading::task
+	{
+	public:
+		void run()
+		{
+			render::system::instance()->flush_queues();
+		}
+	};
+
+
 	void system::render()
+	{
+		threading::taskmanager::instance()->spawn_task(new rendertask,-1,-1);
+	}
+
+	void system::flush_queues()
 	{
 		m_device->BeginScene();
 		m_device->Clear(0,0,D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER,D3DCOLOR_XRGB(23,65,96),1,0);

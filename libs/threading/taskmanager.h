@@ -8,6 +8,7 @@
 #include "containers/fixedvector.h"
 #include "containers/queue.h"
 #include "math/math.h"
+#include "utils/singleton.h"
 
 namespace threading
 {
@@ -42,11 +43,19 @@ namespace threading
 /*                taskmanager                                           */
 /************************************************************************/
 
-	class taskmanager
+	class taskmanagerdesc
 	{
 	public:
+		unsigned m_threadnum;
+		taskmanagerdesc(): m_threadnum(4){}
+	};
+
+	class taskmanager
+	{
+		DECLARE_SINGLETON_DESC(taskmanager,taskmanagerdesc);
+	public:
 		friend unsigned WINAPI poolrun(void*);
-		taskmanager(unsigned i_threadnum=0);
+		taskmanager(const taskmanagerdesc*);
 		~taskmanager();
 		void flush();
 		void exit();
