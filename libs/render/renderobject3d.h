@@ -12,6 +12,8 @@ namespace render
 		object3d();
 		~object3d();
 		void set_mesh(mesh*);
+
+		object3d* Next;
 	protected:
 		mesh* m_mesh;
 	};

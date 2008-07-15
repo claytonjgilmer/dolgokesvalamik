@@ -1,6 +1,8 @@
 #ifndef _objectmanager_h_
 #define _objectmanager_h_
 
+#include "renderobject3d.h"
+
 namespace render
 {
 	struct objectmanagerdesc
@@ -15,11 +17,12 @@ namespace render
 		objectmanager(const objectmanagerdesc* i_desc);
 		~objectmanager();
 
-		scene::node* get_object(const char* i_name);
+		object3d* get_object(const char* i_name);
+
 
 	private:
 		ctr::string m_objectgroup;
-		ctr::stringmap<
+		ctr::stringmap<object3d> m_map;
 	};
 }
 #endif//_objectmanager_h_

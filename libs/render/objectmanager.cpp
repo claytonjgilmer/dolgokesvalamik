@@ -7,5 +7,15 @@ namespace render
 	{
 	}
 
+	object3d* objectmanager::get_object(const char* i_name)
+	{
+		object3d* obj=m_map.get_data(i_name);
+
+		if (obj)
+			return obj;
+
+
+	}
+
 
 }

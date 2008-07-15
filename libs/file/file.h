@@ -130,6 +130,22 @@ namespace file
 	{
 		return m_size;
 	}
+
+	MLINLINE 	ctr::string get_extension(const char* i_filename)
+	{
+		const char* tmp=i_filename;
+
+		while (tmp)
+		{
+			if (*tmp==".")
+				break;
+
+			++tmp;
+		}
+
+		getto
+	}
+
 }
 
 #endif//_file_h_
