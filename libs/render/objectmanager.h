@@ -2,6 +2,8 @@
 #define _objectmanager_h_
 
 #include "renderobject3d.h"
+#include "utils/singleton.h"
+#include "containers/stringmap.h"
 
 namespace render
 {
@@ -23,6 +25,8 @@ namespace render
 	private:
 		ctr::string m_objectgroup;
 		ctr::stringmap<object3d> m_map;
+
+		object3d* load_mmod_file(const char* i_name);
 	};
 }
 #endif//_objectmanager_h_

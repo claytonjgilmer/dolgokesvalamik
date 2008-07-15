@@ -134,16 +134,20 @@ namespace file
 	MLINLINE 	ctr::string get_extension(const char* i_filename)
 	{
 		const char* tmp=i_filename;
+		unsigned len=(unsigned)strlen(i_filename);
 
-		while (tmp)
+		while (len)
 		{
-			if (*tmp==".")
+			if (*(tmp+len-1)=='.')
 				break;
 
-			++tmp;
+			--len;
 		}
 
-		getto
+		if (!len)
+			return ctr::string("");
+
+		return ctr::string(tmp+len);
 	}
 
 }

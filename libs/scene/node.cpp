@@ -142,4 +142,9 @@ namespace scene
 
 		return m_worldpos;
 	}
+
+	const ctr::string& node::get_name() const
+	{
+		return m_name;
+	}
 }

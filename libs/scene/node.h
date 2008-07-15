@@ -29,6 +29,8 @@ namespace scene
 		const math::mtx4x3& get_worldposition();
 		
 		node* get_next(node* i_root=NULL) const;
+
+		const ctr::string& get_name() const;
 		
 	protected:
 		node* m_parent;

@@ -36,6 +36,8 @@ namespace ctr
 		tstring operator+(int i_num) const;
 		tstring operator+(float i_num) const;
 
+		void to_upper();
+
 	private:
 		char* m_buf;
 		char m_innerbuf[TSTRING_MIN_CAPACITY];
@@ -258,6 +260,12 @@ namespace ctr
 		return strmp;
 	}
 
+	template <unsigned TSTRING_MIN_CAPACITY>
+	MLINLINE void tstring<TSTRING_MIN_CAPACITY>::to_upper()
+	{
+		for (unsigned n=0; n<m_length; ++n)
+			m_buf[n]=toupper(m_buf[n]);
+	}
 
 	typedef tstring<16> string;
 }
