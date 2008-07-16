@@ -19,9 +19,23 @@
 #include "utils/timer.h"
 
 #include "scripting/lua.h"
+#include "render/renderobject3d.h"
+
+#include "containers/poolalloc.h"
+
+render::object3d* load_mmod(const char* i_filename);
 
 int _cdecl main()
 {
+	ctr::poolalloc<int,4> pa;
+
+	for (unsigned n=0; n<16; ++n)
+		pa.push_back(n);
+
+	for (unsigned n=0; n<16; ++n)
+		pa.erase(0);
+
+	load_mmod("test.mmod");
 #if 0
 	utils::timer t;
 

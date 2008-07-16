@@ -14,15 +14,15 @@
 
 using namespace std;
 
-void test();
 
+/*
 ostream* output_stream = 0;
 
 ostream& output()
 {
 	return *output_stream;
 }
-
+*/
 int all_promitivecount=0;
 int all_vertexcount=0;
 
@@ -124,7 +124,7 @@ struct LODInfo
 
 typedef vector<float> VertexArray;
 
-class Stream
+class Stream_t
 {
 public:
 	void AddFloat(const VertexArray& i_FloatArr)
@@ -185,6 +185,10 @@ public:
 		return	m_Indices;
 	}
 
+	vector<unsigned>& Get32bitIndexArray(){return m_32bitIndices;}
+
+	bool& Is32bit(){return m_32bit;}
+
 	void AddSubSetInfo(const SubsetInfo& i_Subset)
 	{
 		m_SubSet.push_back(i_Subset);
@@ -222,15 +226,15 @@ public:
 	{
 		return m_Streams.size();
 	}
-	const Stream& GetStream(size_t i) const
+	const Stream_t& GetStream(size_t i) const
 	{
 		return m_Streams[i];
 	}
 	void AddStream()
 	{
-		m_Streams.push_back(Stream());
+		m_Streams.push_back(Stream_t());
 	}
-	Stream& GetLastStream()
+	Stream_t& GetLastStream()
 	{
 		assert(m_Streams.size() > 0);
 		return m_Streams[m_Streams.size()-1];
@@ -241,13 +245,15 @@ public:
 protected:
 	typedef vector<SubsetInfo> SubsetArray;
 	typedef vector<LODInfo> LODArray;
-	typedef vector<Stream> StreamArray;
+	typedef vector<Stream_t> StreamArray;
 
 	SubsetArray	m_SubSet;
 	LODArray	m_LOD;
 
 	StreamArray	m_Streams;
 	IndexArray	m_Indices;
+	vector<unsigned> m_32bitIndices;
+	bool m_32bit;
 
 	int			m_RefCount;
 };
@@ -274,7 +280,12 @@ typedef map<string, TextureInfo> TextureInfoMap;
 TextureInfoMap gTextureInfo;
 
 vector<MeshLODInfo> gMeshLODInfoArray;
-float gSpereRadius, gSphereCenterZ;
+
+float g_sphere_radius;
+math::vec3 g_sphere_center;
+
+math::vec3 g_box_min,g_box_max;
+
 VertexArray gPrintedFloatArray;
 
 enum {
@@ -282,7 +293,6 @@ enum {
 	STAT_MODE_MODEL_PERF = 1<<0,
 	STAT_MODE_TEXEL_PERF = 1<<1,
 	STAT_MODE_HIERARCHY_OPTIMIZATION_CHECK = 1<<2,
-	STAT_MODE_SHIP_CONTOUR_DETECTION = 1<<3,
 };
 
 int gLODStatisticsMode;
@@ -291,7 +301,6 @@ string gInputFileName;
 vector<string> gResourceTypeNames;
 
 const float	gStepZ = 0.1f; // in meter
-map<float, float>	gZXContourMap;
 float gDeepestY;
 float gWaveSternAvgZ;
 
@@ -350,117 +359,7 @@ bool ClipSectionToY(float i_Y, const Vect& i_V0, const Vect& i_V1, Vect& o_VP)
 	return ret;
 }
 
-void CheckTriangle(const Vect i_vTri[])
-{
-	float xMin = Finf();
-	float xMax = -Finf();
 
-	float yMin = Finf();
-	float yMax = -Finf();
-
-	float zMin = Finf();
-	float zMax = -Finf();
-
-	for (int j=0; j<3; ++j)
-	{
-		Extend(xMin, xMax, i_vTri[j].GetX());
-		Extend(yMin, yMax, i_vTri[j].GetY());
-		Extend(zMin, zMax, i_vTri[j].GetZ());
-	}
-
-	// for deepest y coord
-	gDeepestY = min(gDeepestY, yMin);
-
-	if (xMin >= 0.f) // for symmetry in x
-	{
-		const float yClip = 0.f;//-0.05f;
-		if (InInterval(yClip, yMin, yMax)) // y=0 plane crossing triangle
-		{
-			float z1 = floor(zMin / gStepZ);
-			float z2 = floor(zMax / gStepZ);
-			if (z1 != z2) // zStep crossing in granularity
-			{
-				Vect clipPoints[3];
-				int clipnum = 0;
-				for (int j=0; j<3; ++j)
-				{
-					if (ClipSectionToY(yClip, i_vTri[j], i_vTri[Inc3(j)], clipPoints[clipnum]))
-						++clipnum;
-				}
-				assert(clipnum==2);
-
-				if (clipPoints[0].GetZ() > clipPoints[1].GetZ())
-					swap(clipPoints[0], clipPoints[1]);
-
-				Vect v10 = clipPoints[1] - clipPoints[0];
-				float dX = v10.GetX() / v10.GetZ();
-
-				float zF = floor(clipPoints[0].GetZ() / gStepZ);
-				float zL = floor(clipPoints[1].GetZ() / gStepZ);
-				if (zF * gStepZ != clipPoints[0].GetZ())
-				{
-					zF += 1.f;
-				}
-
-				float x = clipPoints[0].GetX() + dX * (zF*gStepZ - clipPoints[0].GetZ());
-				dX *= gStepZ;
-				for (; zF <= zL; zF += 1.f, x += dX)
-				{
-					assert(InInterval(x, xMin, xMax));
-
-					// Finding max x for contour at z
-					if (gZXContourMap.find(zF) == gZXContourMap.end() || gZXContourMap[zF] < x)
-					{
-						gZXContourMap[zF] = x;
-					}
-				}
-			}
-		}
-	}
-}
-
-void CalcShipContour()
-{
-	MeshLODInfo& curMesh = gMeshLODInfoArray.back();
-
-	size_t lod0Start;
-	size_t lod0End;
-	if (curMesh.GetLODNum() > 0)
-	{
-		lod0Start = curMesh.GetLOD(0).startSubset;
-		lod0End = curMesh.GetLOD(0).endSubset;
-	}
-	else
-	{
-		lod0Start = 0;
-		lod0End = curMesh.GetSubSetNum()-1;
-	}
-
-
-	// Only lod0 phase takes effect in high detail contour
-	const IndexArray& indices = curMesh.GetIndexArray();
-	for (size_t si = lod0Start; si<=lod0End; ++si)
-	{
-		const SubsetInfo& subset = curMesh.GetSubSet(si);
-		if (subset.shaderName == "ship.mshd") //only ship vertex contour
-		{
-			const Stream& stream = curMesh.GetStream(subset.vertexstreamidx);
-			IndexArray::const_iterator iIt = indices.begin() + subset.indexStart;
-			for (int n=0; n<subset.indexNum; ++n)
-			{
-				// Check triangle for ship contour
-				Vect vTri[3];
-				for (int j=0; j<3; ++j)
-				{
-					const float *pF = stream.GetFloat(*iIt++);
-					vTri[j].Set(pF[0], pF[1], pF[2]);
-				}
-
-				CheckTriangle(vTri);
-			}
-		}
-	}
-}
 
 bool GetFullPathName(const string& directory, const string& fName, string& fFullName)
 {
@@ -539,7 +438,8 @@ void AddTextureInfo(const string& str)
 			}
 			else
 			{
-				cout << str << " not found in " << resPath << endl;
+//				cout << str << " not found in " << resPath << endl;
+				assert(0);
 			}
 		}
 
@@ -554,60 +454,20 @@ TextureInfo& GetTextureInfo(const string& str)
 }
 
 
-////////////////////////////////////////////////////////////////////////////////
-
-class Indenter
-{
-public:
-	static int mIndentLevel;
-
-	friend ostream& operator<< (ostream& os, const Indenter& idr)
-	{
-		for (int i = 0; i < idr.mIndentLevel; ++i)
-			output() << ' ';
-		return os;
-	}
-
-	static void Indent() { mIndentLevel += 4; }
-	static void Unindent() { mIndentLevel -= 4; }
-
-};
-
-int Indenter::mIndentLevel = 0;
-Indenter indent;
-
-class IndentLevel
-{
-public:
-	IndentLevel() { output() << indent << "{\n"; Indenter::Indent(); }
-	~IndentLevel() { Indenter::Unindent(); output() << indent << "}\n"; }
-};
-
 int Version;
 
 ////////////////////////////////////////////////////////////////////////////////
-
-void PrintChunkName(MChunk& chunk)
-{
-	output() << indent << "Chunk \"" << chunk.GetName() << "\"\n";
-}
-
 void PrintFloats(MChunk& chunk, int count)
 {
 	gPrintedFloatArray.resize(0);
 
-	output() << indent;
 	for (int i = 0; i < count; ++i)
 	{
 		float fl = chunk.ReadFloat();
-		char num[64];
-		sprintf(num, " %8.3f", fl);
-		output() << num;
-
 		gPrintedFloatArray.push_back(fl);
 	}
-	output() << '\n';
 }
+/*
 
 template <class T>
 void PrintArray(MChunk& chunk)
@@ -621,7 +481,8 @@ void PrintArray(MChunk& chunk)
 		output() << indent << data << '\n';
 	}
 }
-
+*/
+/*
 void PrintRaw(MChunk& chunk, int bytes)
 {
 	string line;
@@ -634,7 +495,7 @@ void PrintRaw(MChunk& chunk, int bytes)
 	}
 	output() << indent << line << '\n';
 }
-
+*/
 void PrintMatrix(MChunk& chunk)
 {
 	for (int row = 0; row < 4; ++row)
@@ -647,15 +508,10 @@ void PrintMatrix(MChunk& chunk)
 
 void PrintVertexStreamChunk(MChunk& chunk)
 {
-	IndentLevel il;
 	int vertexcount = chunk.ReadInt();
-	output() << indent << "VertexCount " << vertexcount << "\n";
 	all_vertexcount+=vertexcount;
 	string strVF = chunk.ReadString();
-	output() << indent << "VertexFormatName \"" << strVF << "\"\n";
 	unsigned sizeleft = chunk.GetSizeLeft();
-	output() << indent << "RawData size " << sizeleft << "\n";
-	output() << indent << "Vertex size " << (float)sizeleft/(float)vertexcount << "\n";
 
 	unsigned vertexsize = sizeleft/vertexcount;
 	assert(vertexsize * vertexcount == sizeleft);
@@ -664,14 +520,10 @@ void PrintVertexStreamChunk(MChunk& chunk)
 	gMeshLODInfoArray.back().GetLastStream().SetFloatPerVertices(vertexsize / 4);
 	gMeshLODInfoArray.back().GetLastStream().SetMVF(strVF);
 
-	IndentLevel il2;
 	for (int i = 0; i < vertexcount; ++i)
 	{
 		PrintFloats(chunk, vertexsize / 4);
-		if (gLODStatisticsMode & STAT_MODE_MODEL_PERF)
-		{
-			gMeshLODInfoArray.back().GetLastStream().AddFloat(gPrintedFloatArray);
-		}
+		gMeshLODInfoArray.back().GetLastStream().AddFloat(gPrintedFloatArray);
 	}
 }
 
@@ -679,94 +531,69 @@ void PrintVertexStreamChunk(MChunk& chunk)
 
 void PrintIndicesChunk(MChunk& chunk)
 {
-	IndentLevel il;
 	bool printInd = (gLODStatisticsMode & STAT_MODE_MODEL_PERF) ? true : false;
-#ifdef PRINT_INDICES
-	printInd = true;
-#endif
-	if (!printInd)
-	{
-		output() << indent << "IndexCount " << chunk.ReadInt() << "\n";
-		chunk.Skip();
-	}
-	else
+
 	{
 		int indexCnt = chunk.ReadInt();
-		output() << indent << "IndexCount " << indexCnt << "\n";
-		output() << indent << "Format " << chunk.ReadInt() << "\n";
+		unsigned indexformat=chunk.ReadUnsigned();
 
-		IndexArray::iterator iti;
-		if (gLODStatisticsMode & STAT_MODE_MODEL_PERF)
+		bool shortindex=(indexformat==101);
+		gMeshLODInfoArray.back().Is32bit()=shortindex;
+
+		if (shortindex)
 		{
 			gMeshLODInfoArray.back().GetIndexArray().resize(indexCnt);
-			iti = gMeshLODInfoArray.back().GetIndexArray().begin();
-		}
-
-		for (int i=0; i<indexCnt; ++i)
-		{
-			unsigned short sh = (unsigned short)chunk.ReadShort();
-			output() << indent << sh << "\n";
-
-			if (gLODStatisticsMode & STAT_MODE_MODEL_PERF)
+			IndexArray::iterator iti = gMeshLODInfoArray.back().GetIndexArray().begin();
+			for (int i=0; i<indexCnt; ++i)
+			{
+				unsigned short sh = (unsigned short)chunk.ReadShort();
 				*iti++ = sh;
+			}
+		}
+		else
+		{
+			gMeshLODInfoArray.back().Get32bitIndexArray().resize(indexCnt);
+			vector<unsigned>::iterator iti = gMeshLODInfoArray.back().Get32bitIndexArray().begin();
+			for (int i=0; i<indexCnt; ++i)
+			{
+				unsigned sh = (unsigned)chunk.ReadUnsigned();
+				*iti++ = sh;
+			}
 		}
 	}
 }
 
 void PrintTextureChunk(MChunk& chunk, SubsetInfo& subset)
 {
-	IndentLevel il;
-
 	string str = chunk.ReadString();
 	subset.textureNames.push_back(str);
-	AddTextureInfo(str);
+	chunk.Skip();
+	return;
 
-	output() << indent << "TextureName \"" << str << "\"\n";
-	output() << indent << "TextureSlotIndex " << chunk.ReadInt() << "\n";
+	AddTextureInfo(str);
 
 	while (chunk)
 	{
 		MChunk subchunk = chunk.GetChunk();
-		PrintChunkName(subchunk);
+//		PrintChunkName(subchunk);
 		subchunk.Skip();
 	}
 }
 
 void PrintBoundingBoxChunk(MChunk& chunk)
 {
-	IndentLevel il;
-
-	float ix, iy, iz;
-	float ax, ay, az;
-	chunk >> ix >> iy >> iz;
-	chunk >> ax >> ay >> az;
-
-	output() << indent << "MinCorner " << ix << " " << iy << " " << iz << "\n";
-	output() << indent << "MaxCorner " << ax << " " << ay << " " << az << "\n";
+	chunk >> g_box_min.x >> g_box_min.y >> g_box_min.z;
+	chunk >> g_box_max.x >> g_box_max.y >> g_box_max.z;
 }
 
 void PrintBoundingSphereChunk(MChunk& chunk)
 {
-	IndentLevel il;
-
-	float cx, cy, cz;
-	float radius;
-	chunk >> cx >> cy >> cz >> radius;
-
-	if (gSpereRadius == 0.f)
-	{
-		gSpereRadius = radius;
-		gSphereCenterZ = cz;
-	}
-
-	output() << indent << "Center " << cx << " " << cy << " " << cz << "\n";
-	output() << indent << "Radius " << radius << "\n";
+	chunk >> g_sphere_center.x >> g_sphere_center.y >> g_sphere_center.z >> g_sphere_radius;
 }
 
 void PrintSubsetChunk(MChunk& chunk)
 {
-	IndentLevel il;
-	output() << indent << "PrimitiveType " << chunk.ReadInt() << "\n";
+	int primitive_type=chunk.ReadInt();
 
 	SubsetInfo subset;
 	subset.vertexStart = chunk.ReadInt();
@@ -776,23 +603,15 @@ void PrintSubsetChunk(MChunk& chunk)
 	subset.shaderName = chunk.ReadString();
 	subset.vertexstreamidx = 0;
 
-	output() << indent << "MinIndex " << subset.vertexStart << "\n";
-	output() << indent << "NumVertices " << subset.vertexNum << "\n";
-	output() << indent << "StartIndex " << subset.indexStart << "\n";
-	output() << indent << "PrimitiveCount " << subset.indexNum << "\n";
-	output() << indent << "ShaderName \"" << subset.shaderName << "\"\n";
 	all_promitivecount +=subset.indexNum;
 
 
 	while (chunk)
 	{
 		MChunk subchunk = chunk.GetChunk();
-		PrintChunkName(subchunk);
 		if (subchunk.GetName() == "VertexStreamIndex")
 		{
-			IndentLevel il;
 			subset.vertexstreamidx = subchunk.ReadInt();
-			output() << indent << "VertexStreamIndex \"" << subset.vertexstreamidx << "\"\n";
 			subchunk.Skip();
 		}
 		else if (subchunk.GetName() == "Texture")
@@ -814,13 +633,10 @@ void PrintSubsetChunk(MChunk& chunk)
 
 void PrintLODPhasesChunk(MChunk &subchunk)
 {
-	IndentLevel il;
 	int LODPhaseCount= subchunk.ReadInt();
-	output() << indent << "NumLodPhases:" << LODPhaseCount << "\n";
 
 	for (int i=0; i<LODPhaseCount; ++i)
 	{
-		output() << indent << i << ".\n";
 		{
 			LODInfo lod;
 			lod.minLODError = subchunk.ReadFloat();
@@ -828,46 +644,11 @@ void PrintLODPhasesChunk(MChunk &subchunk)
 			lod.startSubset = subchunk.ReadInt();
 			lod.endSubset   = subchunk.ReadInt();
 			gMeshLODInfoArray.back().AddLODInfo(lod);
-
-			IndentLevel il;
-			output() << indent << "MinLODError:" << lod.minLODError << "\n";
-			output() << indent << "MaxLODError:" << lod.maxLODError << "\n";
-			output() << indent << "StartSubset:" << lod.startSubset << "\n";
-			output() << indent << "  EndSubset:" << lod.endSubset << "\n";
 		}
 	}
 
 }
 
-void PrintIndicesStripPS2Chunk(MChunk &subchunk)
-{
-	IndentLevel il;
-#ifndef PRINT_INDICES
-	output() << indent << "IndexCount " << subchunk.ReadInt() << "\n";
-	subchunk.Skip();
-#else
-	int indexCnt = subchunk.ReadInt();
-	output() << indent << "IndexCount " << indexCnt << "\n";
-	for (int i=0; i<indexCnt; ++i)
-	{
-		short sh = subchunk.ReadShort();
-		if (sh >= 0){
-			output() << indent << sh << "\n";
-		}
-		else{
-			sh &= ~0x8000;
-			output() << indent << sh << " nokick\n";
-		}
-	}
-#endif
-}
-
-void PrintSubsetPS2Chunk(MChunk& chunk)
-{
-	IndentLevel il;
-	output() << indent << "FirstIndex " << chunk.ReadInt() << "\n";
-	output() << indent << "NumIndex " << chunk.ReadInt() << "\n";
-}
 
 
 void CalcTexelPerformanceStatistics()
@@ -920,7 +701,7 @@ void CalcTexelPerformanceStatistics()
 			for (int t=0; t<3; ++t)
 			{
 				size_t idx = iti[t];
-				const float* pF = meshLod.GetStream(0).GetFloat(idx);
+				const float* pF = meshLod.GetStream(0).GetFloat((int)idx);
 
 				vP[t].Set(pF[0], pF[1], pF[2]);
 
@@ -964,27 +745,28 @@ void PrintTexelPerfInfo()
 	TextureInfoMap::const_iterator it = gTextureInfo.begin();
 	for (; it != gTextureInfo.end(); ++it)
 	{
-		cout << it->first << " [" << it->second.width << "x" << it->second.height << "]" << endl;
+//		cout << it->first << " [" << it->second.width << "x" << it->second.height << "]" << endl;
 
 		float dMin = Meter2Centimeter(sqrtf(it->second.densityMin));
 		if (dMin == Finf())
 		{
-			cout << "None";
+//			cout << "None";
 		}
 		else
 		{
 			float dMax = Meter2Centimeter(sqrtf(it->second.densityMax));
 			float dAvg = Meter2Centimeter(sqrtf(it->second.densityAvg1 / it->second.densityAvg2));
 
-			char cBuf[128];
-			sprintf(cBuf, "%.3f\t[%.3f - %.0f]", dAvg, dMin, dMax);
-			cout << string(cBuf);
+//			char cBuf[128];
+//			sprintf(cBuf, "%.3f\t[%.3f - %.0f]", dAvg, dMin, dMax);
+//			cout << string(cBuf);
 		}
 
-		cout <<	endl;
+//		cout <<	endl;
 	}
 }
 
+/*
 void PrintCompressedVertexFormatDataChunk(MChunk& chunk)
 {
 	IndentLevel ilevel;
@@ -1010,25 +792,25 @@ void PrintCompressedVertexFormatDataChunk(MChunk& chunk)
 		output() << indent << "Bias  : " << bias[0] << "," << bias[1] << "," << bias[2] << "," << bias[3] << "\n";
 	}
 }
-
+*/
 void PrintMeshChunk(MChunk& chunk)
 {
-	IndentLevel il;
-	output() << indent << "Index \"" << chunk.ReadInt() << "\"\n";
+	int index=chunk.ReadInt();
 
 	gMeshLODInfoArray.push_back(MeshLODInfo());
 	while (chunk)
 	{
 		MChunk subchunk = chunk.GetChunk();
-		PrintChunkName(subchunk);
 		if (subchunk.GetName() == "VertexStream")
 		{
 			PrintVertexStreamChunk(subchunk);
 		}
+/*
 		else if (subchunk.GetName() == "CompressedVertexFormatData")
 		{
 			PrintCompressedVertexFormatDataChunk(subchunk);
 		}
+*/
 		else if (subchunk.GetName() == "Indices")
 		{
 			PrintIndicesChunk(subchunk);
@@ -1049,14 +831,6 @@ void PrintMeshChunk(MChunk& chunk)
 		{
 			PrintLODPhasesChunk(subchunk);
 		}
-		else if (subchunk.GetName() == "IndicesStripPS2")
-		{
-			PrintIndicesStripPS2Chunk(subchunk);
-		}
-		else if (subchunk.GetName() == "SubSetPS2")
-		{
-			PrintSubsetPS2Chunk(subchunk);
-		}
 		else
 		{
 			subchunk.Skip();
@@ -1065,26 +839,18 @@ void PrintMeshChunk(MChunk& chunk)
 
 	if (gLODStatisticsMode & STAT_MODE_TEXEL_PERF)
 		CalcTexelPerformanceStatistics();
-	if (gLODStatisticsMode & STAT_MODE_SHIP_CONTOUR_DETECTION)
-		CalcShipContour();
 	gMeshLODInfoArray.back().ClearStreams();
 }
 
 void PrintNodeChunk(MChunk& chunk)
 {
-	IndentLevel il;
-	output() << indent << "Typename \"" << chunk.ReadString() << "\"\n";
-	output() << indent << "Name \"" << chunk.ReadString() << "\"\n";
-
-	if (Version >= 2)
-	{
-		output() << indent << "Index " << chunk.ReadInt() << "\n";
-	}
+	std::string nodetypename=chunk.ReadString();
+	std::string nodename=chunk.ReadString();
+	int nodeindex=chunk.ReadInt();
 
 	while (chunk)
 	{
 		MChunk subchunk = chunk.GetChunk();
-		PrintChunkName(subchunk);
 		if (subchunk.GetName() == "Mesh")
 		{
 			PrintMeshChunk(subchunk);
@@ -1098,25 +864,21 @@ void PrintNodeChunk(MChunk& chunk)
 
 void PrintSceneChunk(MChunk& top_chunk)
 {
-	IndentLevel il;
 	while (top_chunk)
 	{
 		MChunk chunk = top_chunk.GetChunk();
-		PrintChunkName(chunk);
 		if (chunk.GetName() == "Node" && Version >= 3)
 		{
-			IndentLevel il;
 			while (chunk) 
 			{
 				MChunk subchunk = chunk.GetChunk();
-				PrintChunkName(subchunk);
 				if (subchunk.GetName() == "Hierarchy")
 				{
-					IndentLevel il;
-					output() << indent << "Index " << subchunk.ReadInt() << "\n";
-					output() << indent << "Parent " << subchunk.ReadInt() << "\n";
+					int nodeindex=subchunk.ReadInt();
+					int parentindex=subchunk.ReadInt();
 					PrintMatrix(subchunk);
 				}
+/*
 				else if (subchunk.GetName() == "Notes")
 				{
 					PrintArray<string>(subchunk);
@@ -1124,20 +886,8 @@ void PrintSceneChunk(MChunk& top_chunk)
 				else if (subchunk.GetName() == "Children")
 				{
 					PrintArray<int>(subchunk);
-					/*
-					int nchildren = chunk.ReadInt();
-					output() << indent << "Count " << nchildren << "\n";
-					if (nchildren)
-					{
-					output() << indent << "Children";
-					for (int i = 0; i < nchildren; ++i)
-					{
-					output() << chunk.ReadInt();
-					}
-					output() << '\n';
-					}
-					*/
 				}
+*/
 				else
 				{
 					subchunk.Skip();
@@ -1149,13 +899,12 @@ void PrintSceneChunk(MChunk& top_chunk)
 
 void PrintAuxChunk(MChunk& chunk)
 {
-	IndentLevel il;
-	output() << indent << "Name \"" << chunk.ReadString() << "\"\n";
+	std::string name=chunk.ReadString();
 
 	while (chunk)
 	{
 		MChunk subchunk = chunk.GetChunk();
-		PrintChunkName(subchunk);
+//		PrintChunkName(subchunk);
 		subchunk.Skip();
 	}
 }
@@ -1164,37 +913,24 @@ void PrintAux2Chunk(MChunk& chunk)
 {
 	bool is_wave_stern = false;
 
-	IndentLevel il;
 	while (chunk)
 	{
 		MChunk subchunk = chunk.GetChunk();
-		PrintChunkName(subchunk);
 		if (subchunk.GetName() == "Identifier")
 		{
-			IndentLevel il;
-
 			string name;
 			int index;
 			subchunk >> name >> index;
-
-			output() << indent << "Name \"" << name << "\"\n";
-			output() << indent << "Index " << index << "\n";
 
 			is_wave_stern = (name == "wave_stern");
 		}
 		else if (subchunk.GetName() == "Category")
 		{
-			IndentLevel il;
-
 			string cat;
 			subchunk >> cat;
-
-			output() << indent << "Category \"" << cat << "\"\n";
 		}
 		else if (subchunk.GetName() == "Points")
 		{
-			IndentLevel il;
-
 			float zSum = 0.f;
 			int num = 0;
 
@@ -1218,66 +954,11 @@ void PrintAux2Chunk(MChunk& chunk)
 	}
 }
 
-void PrintZoneChunk(MChunk& chunk)
-{
-	IndentLevel il;
-	while (chunk)
-	{
-		MChunk subchunk = chunk.GetChunk();
-		PrintChunkName(subchunk);
-		if (subchunk.GetName() == "Name")
-		{
-			IndentLevel il;
-
-			string name;
-			subchunk >> name;
-
-			output() << indent << "Name \"" << name << "\"\n";
-		}
-		else if (subchunk.GetName() == "Index")
-		{
-			IndentLevel il;
-
-			int index;
-			subchunk >> index;
-
-			output() << indent << "Index " << index << "\n";
-		}
-		else if (subchunk.GetName() == "Armor")
-		{
-			IndentLevel il;
-
-			int armor;
-			subchunk >> armor;
-
-			output() << indent << "Armor " << armor << "\n";
-		}
-		else if (subchunk.GetName() == "Sphere")
-		{
-			IndentLevel il;
-
-			float cx, cy, cz;
-			float radius;
-			subchunk >> cx >> cy >> cz >> radius;
-
-			output() << indent << "Center " << cx << " " << cy << " " << cz << "\n";
-			output() << indent << "Radius " << radius << "\n";
-		}
-		else
-		{
-			subchunk.Skip();
-		}
-	}
-}
 
 void PrintNoteChunk(MChunk& chunk)
 {
-	IndentLevel il;
-
 	string note;
 	chunk >> note;
-
-	output() << indent << "Note \"" << note << "\"\n";
 
 	gResourceTypeNames.back() = "Note(\"" + note + "\")";
 }
@@ -1292,16 +973,12 @@ void PrintGeomMeshDataChunk(MChunk& chunk)
 {
 	int id_index, armor;
 	chunk >> id_index >> armor;
-	output()	<< indent << "Index    " << id_index << endl
-		<< indent << "Armor    " << armor << endl;
 }
 
 void PrintGeomChunk(MChunk& chunk, GeomMeshDataFunc datafunc)
 {
 	unsigned npoints = chunk.ReadUnsigned();
-	output() << indent << "NumVertices " << npoints << endl;
 	{
-		IndentLevel il;
 		for (unsigned i = 0; i < npoints; ++i)
 		{
 			PrintFloats(chunk, 3);
@@ -1309,53 +986,39 @@ void PrintGeomChunk(MChunk& chunk, GeomMeshDataFunc datafunc)
 	}
 
 	unsigned nedges = chunk.ReadUnsigned();
-	output() << indent << "NumEdges " << nedges << endl;
 	{
-		IndentLevel il;
 		for (unsigned i = 0; i < nedges; ++i)
 		{
 			int a, b;
 			chunk >> a >> b;
-			output() << indent << a << " " << b << endl;
 		}
 	}
 
 	unsigned ntris = chunk.ReadUnsigned();
-	output() << indent << "NumTris " << ntris << endl;
 	{
-		IndentLevel il;
 		for (unsigned i = 0; i < ntris; ++i)
 		{
-			IndentLevel il;
 
 			datafunc(chunk);
 
 			int A, B, C;
 			chunk >> A >> B >> C;
-			output() << indent << "Vertices " << A << " " << B << " " << C << endl;
 
 			int a, b, c;
 			chunk >> a >> b >> c;
-			output() << indent << "Edges    " << a << " " << b << " " << c << endl;
 		}
 	}
 }
 
 void PrintGeomMeshChunk(MChunk& chunk)
 {
-	IndentLevel il;
-
 	unsigned nids = chunk.ReadUnsigned();
-	output() << indent << "NumIds " << nids << endl;
 	{
-		IndentLevel il;
 		for (unsigned i = 0; i < nids; ++i)
 		{
 			string cat;
 			int index;
 			chunk >> cat >> index;
-
-			output() << indent << (boost::format("%-20s %3d     #%d") % cat % index % i) << endl;
 		}
 	}
 
@@ -1364,44 +1027,27 @@ void PrintGeomMeshChunk(MChunk& chunk)
 
 void PrintNewGeomChunk(MChunk& chunk)
 {
-	IndentLevel il;
-
 	while (chunk)
 	{
 		MChunk subchunk = chunk.GetChunk();
-		PrintChunkName(subchunk);
 
 		if (subchunk.GetName() == "Category")
 		{
-			IndentLevel il;
-
 			string category;
 			subchunk >> category;
-
-			output() << indent << "Category \"" << category << "\"" << endl;
 		}
 		else if (subchunk.GetName() == "Index")
 		{
-			IndentLevel il;
-
 			int index;
 			subchunk >> index;
-
-			output() << indent << "Index " << index << endl;
 		}
 		else if (subchunk.GetName() == "Armor")
 		{
-			IndentLevel il;
-
 			int armor;
 			subchunk >> armor;
-
-			output() << indent << "Armor " << armor << endl;
 		}
 		else if (subchunk.GetName() == "Mesh")
 		{
-			IndentLevel il;
-
 			PrintGeomChunk(subchunk, EmptyGeomMeshDataChunk);
 		}
 		else
@@ -1413,28 +1059,19 @@ void PrintNewGeomChunk(MChunk& chunk)
 
 void PrintAnimationChannelsChunk(MChunk& chunk)
 {
-	IndentLevel il;
-
 	while (chunk)
 	{
 		MChunk subchunk = chunk.GetChunk();
-		PrintChunkName(subchunk);
 
 		if (subchunk.GetName() == "AnimationGroupName")
 		{
-			IndentLevel il;
-
 			string animationgroupname;
 			subchunk >> animationgroupname;
-			output() << indent << "\"" << animationgroupname << "\"" << endl;
 		}
 		else if (subchunk.GetName() == "ChannelAnimation")
 		{
-			IndentLevel il;
-
 			string chanName;
 			subchunk >> chanName;
-			output() << indent << "\"" << chanName << "\"" << endl;
 
 			subchunk.Skip();
 		}
@@ -1447,12 +1084,10 @@ void PrintAnimationChannelsChunk(MChunk& chunk)
 
 void PrintResourceChunk(MChunk& chunk)
 {
-	IndentLevel il;
 	int index = 0;
 	while (chunk)
 	{
 		MChunk subchunk = chunk.GetChunk();
-		output() << indent << "Chunk \"" << subchunk.GetName() << "\" (index " << index++ << ")\n";
 
 		gResourceTypeNames.push_back(subchunk.GetName());
 
@@ -1470,10 +1105,6 @@ void PrintResourceChunk(MChunk& chunk)
 		else if (subchunk.GetName() == "Mesh" ||  subchunk.GetName() == "SkinedMesh" || subchunk.GetName() == "MatrixIndexedMesh")
 		{
 			PrintMeshChunk(subchunk);
-		}
-		else if (subchunk.GetName() == "Zone")
-		{
-			PrintZoneChunk(subchunk);
 		}
 		else if (subchunk.GetName() == "Aux")
 		{
@@ -1500,9 +1131,6 @@ void PrintResourceChunk(MChunk& chunk)
 			subchunk.Skip();
 		}
 	}
-
-	output() << indent << "AllVertexCount: "<<all_vertexcount<<"\n";
-	output() << indent << "AllPrimitiveCount: "<<all_promitivecount<<"\n";
 }
 
 void PrintHierarchyItemChunk(MChunk& chunk)
@@ -1512,42 +1140,27 @@ void PrintHierarchyItemChunk(MChunk& chunk)
 	string name;
 	vector<string> itemResTypeNames;
 
-	IndentLevel il;
 	while (chunk)
 	{
 		MChunk subchunk = chunk.GetChunk();
-		PrintChunkName(subchunk);
 		if (subchunk.GetName() == "Parent")
 		{
-			IndentLevel il;
-
 			int index;
 			subchunk >> index;
-
-			output() << indent << "Index " << index << "\n";
 
 			isRootItem = false;
 		}
 		else if (subchunk.GetName() == "Name")
 		{
-			IndentLevel il;
-
 			subchunk >> name;
-
-			output() << indent << "Name \"" << name << "\"\n";
 		}
 		else if (subchunk.GetName() == "Matrix")
 		{
-			IndentLevel il;
-
 			PrintMatrix(subchunk);
 		}
-		//else if (subchunk.GetName() == "Name" || subchunk.GetName() == "Note")
 		else if (subchunk.GetName() == "Name")
 		{
-			IndentLevel il;
 			string str = subchunk.ReadString();
-			output() << str << "\n";
 		}
 		else if (	subchunk.GetName() == "Resource" || 
 			subchunk.GetName() == "RenderMesh" || 
@@ -1556,12 +1169,8 @@ void PrintHierarchyItemChunk(MChunk& chunk)
 			subchunk.GetName() == "Aux" ||
 			subchunk.GetName() == "Note" )
 		{
-			IndentLevel il;
-
 			int index;
 			subchunk >> index;
-
-			output() << indent << "Index " << index << "\n";
 
 			const string& resTypeName = gResourceTypeNames[index];
 			itemResTypeNames.push_back(resTypeName);
@@ -1588,41 +1197,15 @@ void PrintHierarchyItemChunk(MChunk& chunk)
 			subchunk.Skip();
 		}
 	}
-
-	if (gLODStatisticsMode & STAT_MODE_HIERARCHY_OPTIMIZATION_CHECK)
-	{
-		static int rootItemNum = 0;
-		rootItemNum += isRootItem;
-
-		if (rootItemNum == 2)
-		{
-			cout << "  #PERF: No rootitem in MMOD !!!" << endl;
-		}
-
-		if (!isRootItem && !isOK)
-		{
-			cout << "  #WARNPERF: Hierarchy is NOT optimal at Node " << name;
-			cout << " Resources[";
-			for(int i=0; i<itemResTypeNames.size(); ++i)
-			{
-				cout << itemResTypeNames[i];
-				if (i+1 < itemResTypeNames.size())
-					cout << ", ";
-			}
-			cout << "]" << endl;
-		}
-	}
 }
 
 void PrintHierarchyChunk(MChunk& chunk)
 {
-	gSpereRadius = 0.f;
+	g_sphere_radius= 0.f;
 
-	IndentLevel il;
 	while (chunk)
 	{
 		MChunk subchunk = chunk.GetChunk();
-		PrintChunkName(subchunk);
 		if (subchunk.GetName() == "Item")
 		{
 			PrintHierarchyItemChunk(subchunk);
@@ -1633,7 +1216,6 @@ void PrintHierarchyChunk(MChunk& chunk)
 
 void here()
 {
-	output() << "\nThis is terrible.\n";
 	terminate();
 }
 
@@ -1718,10 +1300,10 @@ static float LODErrToDist(float lodErr, float mulRad, float centerZ)
 
 void PrintLODInfo(float i_Fov, const vector<float>& i_DitanceBuf)
 {
-	if (gSpereRadius == 0.f)
+	if (g_sphere_radius== 0.f)
 	{
-		gSpereRadius = 1.f;
-		gSphereCenterZ = 0.f;
+		g_sphere_radius= 1.f;
+		g_sphere_center.set(0,0,0);
 	}
 
 	float mulRadius;
@@ -1729,62 +1311,31 @@ void PrintLODInfo(float i_Fov, const vector<float>& i_DitanceBuf)
 		const float pi = 3.14159265358979323846f;
 		float fovRadian = (i_Fov / 180.f) * pi; // degree -> radian
 		float h = 1.f / tanf(fovRadian / 2.f); //Cotan(fovradian/2)
-		mulRadius = gSpereRadius * h;
+		mulRadius = g_sphere_radius * h;
 	}
 
 	float maxLODerr = 1.f;
 	for (size_t e=0; e<i_DitanceBuf.size(); ++e)
 	{
-		float lodErr = DistToLODErr(i_DitanceBuf[e], mulRadius, gSphereCenterZ);
+		float lodErr = DistToLODErr(i_DitanceBuf[e], mulRadius, g_sphere_center.z);
 
 		int vertexNum, faceNum;
 		maxLODerr = MakeLODInfo(lodErr, vertexNum, faceNum);
-		cout << faceNum << "\t" << vertexNum << "\t\t";
 	}
 
 	if (maxLODerr != 1.f)
 	{
-		cout << LODErrToDist(maxLODerr, mulRadius, gSphereCenterZ) << " m\t";
 	}
 	else
 	{
 		int vertexNum, faceNum;
 		MakeLODInfo(1.f, vertexNum, faceNum);
-		cout << faceNum << "\t" << vertexNum << "\t\t";
 	}
-
-	cout << endl;
 }
 
-void WriteContours(string i_Fname)
-{
-	ofstream contourFile(i_Fname.c_str(), ios::out | ios::binary);
-
-	contourFile.write(reinterpret_cast<char*>(&gWaveSternAvgZ), sizeof(float));
-	contourFile.write(reinterpret_cast<char*>(&gDeepestY), sizeof(float));
-
-	cout << gWaveSternAvgZ << ", " << gDeepestY << endl;
-
-	for (map<float, float>::const_iterator it = gZXContourMap.begin(); it != gZXContourMap.end(); ++it)
-	{
-		float z = it->first * gStepZ;
-		float x = it->second;
-
-		contourFile.write(reinterpret_cast<char*>(&z), sizeof(float));
-		contourFile.write(reinterpret_cast<char*>(&x), sizeof(float));
-
-		cout << z << ", " << x << endl;
-	}
-	contourFile.close();
-
-	cout << i_Fname << ": " << gZXContourMap.size() << " (z,x) coords writen." << endl;
-}
 
 render::object3d* load_mmod(const char* i_filename)
 {
-
-	ofstream outfile("faszomfasza.txt");
-	output_stream = &outfile;
 
 	MChunkStream stream(i_filename);
 
@@ -1793,16 +1344,11 @@ render::object3d* load_mmod(const char* i_filename)
 	try
 	{
 		MChunk chunk = stream.GetTopChunk();
-		PrintChunkName(chunk);
-
-		IndentLevel il;
 		Version = chunk.ReadUnsigned();
-		output() << indent << "Version " << Version << "\n";
 
 		while (chunk)
 		{
 			MChunk subchunk = chunk.GetChunk();
-			PrintChunkName(subchunk);
 
 			if (Version >= 5)
 			{
@@ -1849,166 +1395,19 @@ render::object3d* load_mmod(const char* i_filename)
 		}
 
 
-		if (gLODStatisticsMode & STAT_MODE_SHIP_CONTOUR_DETECTION)
-		{
-			size_t lastPer = max(in_filename.find_last_of('\\'), in_filename.find_last_of('/')) + 1;
-			string fname = 
-				"Y:\\" + in_filename.substr(lastPer, in_filename.find_last_of('.') - lastPer) + ".cont";
-
-			WriteContours(fname);
-		}
 	}
 	catch (chunk_exception& ce)
 	{
-		output() << "\n\nREAD ERROR: " << ce.what() << '\n';
 	}
 
 	return 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// ez nem ide valo, csak teszteles
-//
-
-
-class formatter
-{
-	string buffer;
-
-public:
-	formatter()
-	{
-	}
-
-	formatter(const formatter& fmt)
-	{
-	}
-
-	~formatter()
-	{
-	}
-
-	formatter& operator<< (const string& str)
-	{
-		buffer += str;
-		return *this;
-	}
-
-	formatter& operator<< (const char* str)
-	{
-		buffer += str;
-		return *this;
-	}
-
-	const string& str() const { return buffer; }
-};
-
-formatter fmt()
-{
-	return formatter();
-}
-
-void test2(const formatter& fmt)
-{
-	cout << fmt.str();
-}
 
 
 
-template <unsigned N> 
-class HighBit
-{
-public:
-	enum { value = HighBit< (N>>1) >::value + 1 };
-};
-
-template <>
-class HighBit<1>
-{
-public:
-	enum { value = 0 };
-};
-
-template <bool is_pow_2, unsigned N>
-class NearestPow2_Helper { };
-
-template <unsigned N>
-class NearestPow2_Helper<false, N>
-{
-public:
-	enum { value = 1 << (HighBit<N>::value + 1) };
-};
-
-template <unsigned N>
-class NearestPow2_Helper<true, N>
-{
-public:
-	enum { value = N };
-};
-
-template <unsigned N>
-class NearestPow2 
-{
-public:
-	typedef typename NearestPow2_Helper< (N & (N-1)) == 0, N > Helper;
-	enum { value = Helper::value };
-};
 
 
-/*
-template <unsigned N> 
-unsigned Factorial()
-{
-return Factorial< N-1 >() * N;
-}
-
-template <>
-inline unsigned Factorial<1>()
-{
-return 1;
-}
-
-template <>
-inline unsigned Factorial<0>()
-{
-return 0;
-}
-*/
-
-template <unsigned Size>
-class BlkSize
-{
-};
-
-template <unsigned Size>
-class MyAllocator
-{
-	enum { size = NearestPow2<Size>::value };
-	typedef BlkSize< size > block_size;
-};
-
-void test()
-{
-	test2(formatter() << "Hello\n");
-	test2(fmt() << "Hello\n");
-
-	unsigned hb1 = NearestPow2<1>::value; 
-	unsigned hb2 = NearestPow2<129>::value;
-	unsigned hb3 = NearestPow2<65536>::value;
-
-	MyAllocator<73> xal;
-
-	cout << hb1 << " " << hb2 << " " << hb3 << endl;
-
-	/*
-	unsigned f1 = Factorial<1>(); 
-	unsigned f2 = Factorial<5>();
-	unsigned f3 = Factorial<9>();
-
-	cout << f1 << " " << f2 << " " << f3 << endl;
-	*/
-}
 
 
 
