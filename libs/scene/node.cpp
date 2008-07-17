@@ -14,6 +14,17 @@ namespace scene
 
 	node::~node()
 	{
+		if (m_parent)
+			m_parent->remove_child(this);
+
+		node* ptr=m_child;
+
+		while (ptr)
+		{
+			node* nextptr=ptr->m_bro;
+			delete ptr;
+			ptr=nextptr;
+		}
 	}
 
 	node* node::get_bro() const

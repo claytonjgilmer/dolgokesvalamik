@@ -1,4 +1,4 @@
-#include "rendershader.h"
+#include "shader.h"
 #include "rendersystem.h"
 #include "shadermanager.h"
 
@@ -8,13 +8,18 @@ namespace render
 	resource(i_name)
 	{
 		Next=NULL;
-		system::instance()->create_shader(m_effect,i_buf,i_size);
+		LPD3DXBUFFER errors;;
+		if (D3DXCreateEffect(system::instance()->device(),i_buf,i_size,NULL,NULL,0,NULL,&m_effect,&errors)!=D3D_OK)
+		{
+			const char* v=(const char*)(errors->GetBufferPointer());
+			utils::assertion(0,v);
+		}
 	}
 
 	shader::~shader()
 	{
 		if (m_effect)
-			system::instance()->release_shader(m_effect);
+			m_effect->Release();
 
 		shadermanager::instance()->erase_shader(this);
 	}

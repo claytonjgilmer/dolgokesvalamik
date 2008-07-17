@@ -1,5 +1,5 @@
-#ifndef _renderindexbuffer_h_
-#define _renderindexbuffer_h_
+#ifndef _indexbuffer_h_
+#define _indexbuffer_h_
 
 #include <d3d9.h>
 
@@ -8,6 +8,8 @@ namespace render
 	class indexbuffer
 	{
 	public:
+		indexbuffer(unsigned i_indexnum);
+		~indexbuffer();
 		unsigned short* lock()
 		{
 			void* ret;
@@ -24,4 +26,4 @@ namespace render
 		IDirect3DIndexBuffer9* m_hwbuffer;
 	};
 }
-#endif//_renderindexbuffer_h_
+#endif//_indexbuffer_h_

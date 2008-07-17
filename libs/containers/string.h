@@ -26,6 +26,7 @@ namespace ctr
 
 		template <unsigned MINCAP2> bool operator==(const tstring<MINCAP2>& i_str) const;
 		bool operator==(const char* i_str) const;
+		bool operator!=(const char* i_str) const;
 		char operator[](unsigned i_index) const;
 
 		tstring& operator+=(const char* i_str);
@@ -35,6 +36,12 @@ namespace ctr
 		tstring operator+(const char* i_str) const;
 		tstring operator+(int i_num) const;
 		tstring operator+(float i_num) const;
+
+		friend
+		tstring operator+(const char* i_str, const tstring& i_ts)
+		{
+			return tstring(i_str)+i_ts.c_str();
+		}
 
 		void to_upper();
 
@@ -191,6 +198,12 @@ namespace ctr
 	MLINLINE bool tstring<TSTRING_MIN_CAPACITY>::operator ==(const char* i_str) const
 	{
 		return !strcmp(m_buf,i_str);
+	}
+
+	template <unsigned TSTRING_MIN_CAPACITY>
+	MLINLINE bool tstring<TSTRING_MIN_CAPACITY>::operator !=(const char* i_str) const
+	{
+		return strcmp(m_buf,i_str)!=0;
 	}
 
 	template <unsigned TSTRING_MIN_CAPACITY>

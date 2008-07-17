@@ -162,6 +162,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\utils\auto_ptr.h"
+				>
+			</File>
+			<File
 				RelativePath=".\physics\body.h"
 				>
 			</File>
@@ -191,6 +195,10 @@
 			</File>
 			<File
 				RelativePath=".\containers\fixedvector.h"
+				>
+			</File>
+			<File
+				RelativePath=".\render\indexbuffer.h"
 				>
 			</File>
 			<File
@@ -270,11 +278,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\scripting\lualib\lua.h"
+				RelativePath=".\scripting\lua.h"
 				>
 			</File>
 			<File
-				RelativePath=".\scripting\lua.h"
+				RelativePath=".\scripting\lualib\lua.h"
 				>
 			</File>
 			<File
@@ -295,6 +303,10 @@
 			</File>
 			<File
 				RelativePath=".\math\math.h"
+				>
+			</File>
+			<File
+				RelativePath=".\render\mesh.h"
 				>
 			</File>
 			<File
@@ -358,27 +370,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\render\renderindexbuffer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\render\rendermaterial.h"
-				>
-			</File>
-			<File
-				RelativePath=".\render\rendermesh.h"
-				>
-			</File>
-			<File
 				RelativePath=".\render\renderobject3d.h"
 				>
 			</File>
 			<File
 				RelativePath=".\render\renderqueue.h"
-				>
-			</File>
-			<File
-				RelativePath=".\render\rendershader.h"
 				>
 			</File>
 			<File
@@ -390,31 +386,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\render\rendersubmesh.h"
-				>
-			</File>
-			<File
 				RelativePath=".\render\rendersystem.h"
 				>
 			</File>
 			<File
-				RelativePath=".\render\rendertexture.h"
-				>
-			</File>
-			<File
-				RelativePath=".\render\rendertriset.h"
-				>
-			</File>
-			<File
-				RelativePath=".\render\rendervertexbuffer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\render\rendervertexformat.h"
-				>
-			</File>
-			<File
 				RelativePath=".\utils\resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\render\shader.h"
 				>
 			</File>
 			<File
@@ -446,6 +426,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\render\submesh.h"
+				>
+			</File>
+			<File
 				RelativePath=".\threading\task.h"
 				>
 			</File>
@@ -455,6 +439,10 @@
 			</File>
 			<File
 				RelativePath=".\threading\taskmanager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\render\texture.h"
 				>
 			</File>
 			<File
@@ -498,7 +486,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\render\vertexbuffer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\render\vertexelements.h"
+				>
+			</File>
+			<File
+				RelativePath=".\render\vertexformat.h"
 				>
 			</File>
 		</Filter>
@@ -519,6 +515,10 @@
 			</File>
 			<File
 				RelativePath=".\file\filesystem.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\render\indexbuffer.cpp"
 				>
 			</File>
 			<File
@@ -638,6 +638,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\render\mesh.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\utils\mmod-loader.cpp"
 				>
 			</File>
@@ -658,14 +662,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\render\rendermaterial.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\render\rendermesh.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\render\renderobject3d.cpp"
 				>
 			</File>
@@ -674,15 +670,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\render\rendershader.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\render\rendersystem.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\render\rendertexture.cpp"
+				RelativePath=".\render\shader.cpp"
 				>
 			</File>
 			<File
@@ -695,6 +687,10 @@
 			</File>
 			<File
 				RelativePath=".\threading\taskmanager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\render\texture.cpp"
 				>
 			</File>
 			<File
@@ -711,6 +707,10 @@
 			</File>
 			<File
 				RelativePath=".\utils\timer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\render\vertexbuffer.cpp"
 				>
 			</File>
 		</Filter>

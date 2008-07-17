@@ -7,7 +7,7 @@
 #include "threading/taskmanager.h"
 #include "render/shadermanager.h"
 #include "render/texturemanager.h"
-#include "render/rendersubmesh.h"
+#include "render/submesh.h"
 #include "math/mtx4x4.h"
 #include "math/vec2.h"
 
@@ -43,6 +43,7 @@ math::vec2 g_uv[]={V2(0,0),V2(1,0),V2(1,1),V2(0,1),V2(1,0),V2(0,0),V2(0,1),V2(1,
 
 void init_app(HWND i_hwnd)
 {
+//	render::texture ttt(0,0,0);
 	file::system::create();
 	file::system::instance()->register_path("shader","c:\\data\\shader\\");
 	file::system::instance()->register_path("texture","c:\\data\\texture\\");
@@ -79,12 +80,12 @@ void init_app(HWND i_hwnd)
 
 	ctr::vector<render::vertexelements> ve;
 
-	ve.push_back(render::element_pos3);
-	ve.push_back(render::element_normal);
-	ve.push_back(render::element_uv);
+	ve.push_back(render::vertexelement_pos3);
+	ve.push_back(render::vertexelement_normal);
+	ve.push_back(render::vertexelement_uv);
 
-	mesh->m_vb=render::system::instance()->create_vertexbuffer(8,ve);
-	mesh->m_ib=render::system::instance()->create_indexbuffer(3*12);
+	mesh->m_vb=new render::vertexbuffer(8,ve);
+	mesh->m_ib=new render::indexbuffer(3*12);
 
 	class vertex_t
 	{
@@ -142,8 +143,8 @@ void init_app(HWND i_hwnd)
 
 	generate_sphere(pos,posnum,index,indexnum,1,5);
 	g_game.sphere=new render::mesh("sphere");
-	g_game.sphere->m_vb=render::system::instance()->create_vertexbuffer(posnum,ve);
-	g_game.sphere->m_ib=render::system::instance()->create_indexbuffer(indexnum*3);
+	g_game.sphere->m_vb=new render::vertexbuffer(posnum,ve);
+	g_game.sphere->m_ib=new render::indexbuffer(indexnum*3);
 	vb=(vertex_t*)g_game.sphere->m_vb->lock();
 
 	for (int n=0; n<posnum; ++n)
@@ -232,16 +233,16 @@ void exit_app()
 
 void generate_tetrahedron(math::vec3 o_pos[],float i_radius)
 {
-	double Pi = 3.141592653589793238462643383279502884197;
+	float Pi = 3.141592653589793238462643383279502884197f;
 
-	double phiaa  = -19.471220333; /* the phi angle needed for generation */
+	float phiaa  = -19.471220333f; /* the phi angle needed for generation */
 
-	double phia = Pi*phiaa/180.0; /* 1 set of three points */
-	double the120 = Pi*120.0/180.0;
-	o_pos[0][0] = 0.0;
-	o_pos[0][1] = 0.0;
+	float phia = Pi*phiaa/180.0f; /* 1 set of three points */
+	float the120 = Pi*120.0f/180.0f;
+	o_pos[0][0] = 0.0f;
+	o_pos[0][1] = 0.0f;
 	o_pos[0][2] = i_radius;
-	double the = 0.0;
+	float the = 0.0f;
 	for(int i=1; i<4; i++)
 	{
 		o_pos[i][0]=i_radius*cos(the)*cos(phia);

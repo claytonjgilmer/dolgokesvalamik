@@ -1,7 +1,9 @@
-#ifndef _rendervertexbuffer_h_
-#define _rendervertexbuffer_h_
+#ifndef _vertexbuffer_h_
+#define _vertexbuffer_h_
 
 #include <d3d9.h>
+#include "vertexelements.h"
+#include "containers/vector.h"
 
 namespace render
 {
@@ -10,6 +12,8 @@ namespace render
 	{
 		friend class system;
 	public:
+		vertexbuffer(unsigned i_vertexnum, const ctr::vector<vertexelements>& i_vertexelements);
+		~vertexbuffer();
 		void* lock()
 		{
 			void* ret;
@@ -21,12 +25,10 @@ namespace render
 			m_hwbuffer->Unlock();
 		}
 	private:
-		vertexbuffer(){}
-		~vertexbuffer(){}
 		LPDIRECT3DVERTEXBUFFER9 m_hwbuffer;
 		LPDIRECT3DVERTEXDECLARATION9 m_decl;
 		unsigned m_vertexsize;
 
 	};
 }
-#endif//_rendervertexbuffer_h_
+#endif//_vertexbuffer_h_

@@ -5,13 +5,13 @@ namespace render
 {
 	enum vertexelements
 	{
-		element_pos3,
-		element_pos4,
-		element_normal,
-		element_uv,
-		element_color,
+		vertexelement_pos3,
+		vertexelement_pos4,
+		vertexelement_normal,
+		vertexelement_uv,
+		vertexelement_color,
 
-		element_last
+		vertexelement_num
 	};
 }
 #endif//_vertexelements_h_

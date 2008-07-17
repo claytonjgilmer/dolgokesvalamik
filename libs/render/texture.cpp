@@ -1,4 +1,4 @@
-#include "rendertexture.h"
+#include "texture.h"
 #include "rendersystem.h"
 #include "texturemanager.h"
 
@@ -8,13 +8,13 @@ namespace render
 		resource(i_name)
 	{
 		Next=NULL;
-		system::instance()->create_texture(m_hwbuffer,i_buf,i_size);
+		D3DXCreateTextureFromFileInMemory(system::instance()->device(),i_buf,i_size,&m_hwbuffer);
 	}
 
 	texture::~texture()
 	{
 		if (m_hwbuffer)
-			system::instance()->release_texture(m_hwbuffer);
+			m_hwbuffer->Release();
 
 		texturemanager::instance()->erase_texture(this);
 	}

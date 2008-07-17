@@ -2,7 +2,7 @@
 #define _renderobject3d_h_
 
 #include "scene/node.h"
-#include "render/rendermesh.h"
+#include "render/mesh.h"
 
 namespace render
 {

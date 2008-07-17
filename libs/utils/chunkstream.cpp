@@ -44,7 +44,7 @@ mDepth(0)
 	mStream->PushChunk(this);
 }
 
-MChunkHandle::MChunkHandle(MChunkStream* s, const std::string& name) :
+MChunkHandle::MChunkHandle(MChunkStream* s, const ctr::string& name) :
 mStream(s),
 mParent(0),
 mDepth(0),
@@ -57,7 +57,7 @@ mName(name)
 	mStream->PushChunk(this);
 }
 
-MChunkHandle::MChunkHandle(MChunkStream* s, const std::string& name, unsigned size) :
+MChunkHandle::MChunkHandle(MChunkStream* s, const ctr::string& name, unsigned size) :
 mStream(s),
 mParent(0),
 mDepth(0),
@@ -150,10 +150,10 @@ short MChunkHandle::ReadShort()
 	return sh;
 }
 
-std::string MChunkHandle::ReadString()
+ctr::string MChunkHandle::ReadString()
 {
 	Assert(mStream!=NULL, "Reading from closed chunk");
-	std::string s = mStream->ReadString(mSizeLeft);
+	ctr::string s = mStream->ReadString(mSizeLeft);
 	Assert(mSizeLeft >= 0, "Reading past end of chunk");
 	return s;
 }
@@ -162,6 +162,7 @@ std::string MChunkHandle::ReadString()
 
 MChunk::MChunk()
 {
+	ptr=NULL;
 }
 
 MChunk::MChunk(MChunkHandle* c) : 
@@ -180,6 +181,7 @@ MChunk& MChunk::operator= (const MChunk& other)
 
 MChunk::~MChunk()
 {
+	if (ptr) delete ptr;
 }
 
 void MChunk::Close()
@@ -222,9 +224,9 @@ short MChunk::ReadShort()
 	return sh;
 }
 
-std::string MChunk::ReadString()
+ctr::string MChunk::ReadString()
 {
-	std::string s = ptr->ReadString();
+	ctr::string s = ptr->ReadString();
 	return s;
 }
 
@@ -251,7 +253,7 @@ MChunk& MChunk::operator>> (unsigned& u)
 	return *this;
 }
 
-MChunk& MChunk::operator>> (std::string& s)
+MChunk& MChunk::operator>> (ctr::string& s)
 {
 	s = ReadString();
 	return *this;
@@ -259,7 +261,7 @@ MChunk& MChunk::operator>> (std::string& s)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-MChunkStream::MChunkStream(const std::string& name) :
+MChunkStream::MChunkStream(const ctr::string& name) :
 m_Istream(name.c_str(), std::ios_base::binary)
 {
 }
@@ -316,14 +318,14 @@ short MChunkStream::ReadShort(unsigned& ucs)
 	return sh;
 }
 
-std::string MChunkStream::ReadString(unsigned& ucs)
+ctr::string MChunkStream::ReadString(unsigned& ucs)
 {
 	Assert(!m_Istream.fail());
 	unsigned len = ReadUnsigned(ucs);
 	char* buf = new char[len+1];
 	m_Istream.read(buf, len);
 	buf[len] = '\0';
-	std::string ret = buf;
+	ctr::string ret = buf;
 	delete buf;
 	ucs -= len;
 	return ret;
@@ -344,7 +346,7 @@ void MChunkStream::PushChunk(MChunkHandle* chk)
 
 void MChunkStream::PopChunk(MChunkHandle* chk)
 {
-	std::string last = mStack.back();
+	ctr::string last = mStack.back();
 	Assert(mStack.size() == chk->mDepth + 1 && last == chk->GetName(), 
 		"Hierarchy error during chunk reading. Forgot to close chunk?");
 	mStack.pop_back();

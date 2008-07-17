@@ -27,15 +27,9 @@ render::object3d* load_mmod(const char* i_filename);
 
 int _cdecl main()
 {
-	ctr::poolalloc<int,4> pa;
-
-	for (unsigned n=0; n<16; ++n)
-		pa.push_back(n);
-
-	for (unsigned n=0; n<16; ++n)
-		pa.erase(0);
-
+	int* a=new int[113];
 	load_mmod("test.mmod");
+	return 0;
 #if 0
 	utils::timer t;
 

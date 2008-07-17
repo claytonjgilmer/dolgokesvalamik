@@ -1,7 +1,7 @@
 #ifndef _renderqueue_h_
 #define _renderqueue_h_
 
-#include "rendermesh.h"
+#include "mesh.h"
 #include "math/mtx4x3.h"
 #include "containers/vector.h"
 #include "containers/string.h"

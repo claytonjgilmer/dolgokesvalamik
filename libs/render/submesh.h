@@ -1,8 +1,8 @@
-#ifndef _rendersubmesh_h_
-#define _rendersubmesh_h_
+#ifndef _submesh_h_
+#define _submesh_h_
 
-#include "rendershader.h"
-#include "rendertexture.h"
+#include "shader.h"
+#include "texture.h"
 #include "containers/vector.h"
 
 namespace render
@@ -64,4 +64,4 @@ namespace render
 		unsigned m_numparams;
 	};
 }
-#endif//_rendersubmesh_h_
+#endif//_submesh_h_

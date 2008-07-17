@@ -1,12 +1,13 @@
-#ifndef _rendermesh_h_
-#define _rendermesh_h_
+#ifndef _mesh_h_
+#define _mesh_h_
 
 #include "math/mtx4x3.h"
-#include "rendervertexbuffer.h"
-#include "renderindexbuffer.h"
-#include "rendersubmesh.h"
+#include "vertexbuffer.h"
+#include "indexbuffer.h"
+#include "submesh.h"
 #include "containers/vector.h"
 #include "utils/resource.h"
+#include "utils/auto_ptr.h"
 
 namespace render
 {
@@ -20,10 +21,10 @@ namespace render
 		void set_vertexbuffer(vertexbuffer* i_vb);
 		void set_indexbuffer(indexbuffer* i_ib);
 
-		vertexbuffer* m_vb;
-		indexbuffer* m_ib;
+		utils::auto_ptr<vertexbuffer> m_vb;
+		utils::auto_ptr<indexbuffer> m_ib;
 
 		ctr::vector<submesh> m_submeshbuf;
 	};
 }
-#endif//_rendermesh_h_
+#endif//_mesh_h_

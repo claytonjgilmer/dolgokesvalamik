@@ -1,5 +1,5 @@
-#ifndef _rendershader_h_
-#define _rendershader_h_
+#ifndef _shader_h_
+#define _shader_h_
 
 #include <d3dx9.h>
 #include "utils/resource.h"
@@ -21,4 +21,4 @@ namespace render
 		ctr::string m_name;
 	};
 }
-#endif//_rendershader_h_
+#endif//_shader_h_

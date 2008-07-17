@@ -1,12 +1,14 @@
 #ifndef _M_CHUNKREADER_H_
 #define _M_CHUNKREADER_H_
 
-#include <vector>
+#include "containers/vector.h"
+#include "containers/string.h"
 #include <fstream>
-//#include <iostream>
-#include <string>
+//#include <exception>
 
-#include "boost/shared_ptr.hpp"
+//#include <boost/format.hpp>
+
+//#include <boost/shared_ptr.hpp>
 
 class MChunk;
 class MChunkHandle;
@@ -35,7 +37,7 @@ class MChunkStream
 public:
 	friend class MChunkHandle;
 
-	MChunkStream(const std::string& filename);
+	MChunkStream(const ctr::string& filename);
 	~MChunkStream();
 
 	/// read the top chunk from the file
@@ -52,10 +54,10 @@ protected:
 	char ReadChar(unsigned& ucs);
 	unsigned ReadUnsigned(unsigned& ucs);
 	short ReadShort(unsigned& ucs);
-	std::string ReadString(unsigned& ucs);
+	ctr::string ReadString(unsigned& ucs);
 	void Skip(unsigned size);
 
-	std::vector<std::string> mStack;
+	ctr::vector<ctr::string> mStack;
 
 	std::ifstream m_Istream;
 };
@@ -71,7 +73,7 @@ class MChunkHandle
 
 	MChunkStream* mStream;
 	MChunkHandle* mParent;
-	std::string mName;
+	ctr::string mName;
 	int mDepth;
 	unsigned mTotalSize;
 	unsigned mSizeLeft;
@@ -81,8 +83,8 @@ public:
 	MChunkHandle(MChunkHandle* p);
 
 	MChunkHandle(MChunkStream* s);
-	MChunkHandle(MChunkStream* s, const std::string& name);
-	MChunkHandle(MChunkStream* s, const std::string& name, unsigned size);
+	MChunkHandle(MChunkStream* s, const ctr::string& name);
+	MChunkHandle(MChunkStream* s, const ctr::string& name, unsigned size);
 
 	MChunkHandle(const MChunkHandle& c); // undefined
 	MChunkHandle& operator= (const MChunkHandle& c); // undefined
@@ -109,7 +111,7 @@ public:
 	short ReadShort();
 
 	/// read a string from the current chunk
-	std::string ReadString();
+	ctr::string ReadString();
 
 	/// start reading a sub-chunk inside the current chunk
 	MChunk GetChunk();
@@ -130,7 +132,7 @@ public:
 	void Skip();
 
 	/// close the chunk so it can be reused
-	const std::string& GetName() const { return mName; }
+	const ctr::string& GetName() const { return mName; }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -138,7 +140,8 @@ public:
 /// helper class to read chunks from a ChunkStream
 class MChunk
 {
-	boost::shared_ptr<MChunkHandle> ptr;
+//	boost::shared_ptr<MChunkHandle> ptr;
+	MChunkHandle* ptr;
 
 public:
 	MChunk();
@@ -169,7 +172,7 @@ public:
 	short ReadShort();
 
 	/// read a string from the current chunk
-	std::string ReadString();
+	ctr::string ReadString();
 
 	/// start reading a sub-chunk inside the current chunk
 	MChunk GetChunk();
@@ -187,7 +190,7 @@ public:
 	MChunk& operator>> (unsigned& u);
 
 	/// read a string from the current chunk
-	MChunk& operator>> (std::string& s);
+	MChunk& operator>> (ctr::string& s);
 
 	/// returns true at the end of the chunk
 	bool operator! () const { return !ptr || ptr->eof(); }
@@ -208,56 +211,10 @@ public:
 	void Skip();
 
 	/// close the chunk so it can be reused
-	const std::string& GetName() const { return ptr->GetName(); }
+	const ctr::string& GetName() const { return ptr->GetName(); }
 
 	int GetSizeLeft() const { return ptr->mSizeLeft; }
 
-	/* kikommentezem, nehogy Gabor megilyedjen hogy miez
-	*
-	* pl. egy 3D vektorokat tartalmazo chunk beolvasasa egy taroloba igy tortenhet:
-	* std::copy(chunk_iterator<Mit::cVector3>(chunk), chunk_iterator<Mit::cVector3>(), std::back_inserter(container));
-	*
-	template <class Type>
-	class chunk_iterator 
-	{
-	MChunk* chunk;
-
-	public:
-	/// iterator that represent the end of chunk
-	chunk_iterator() : chunk(0) { }
-
-	/// iterator to read homogenous data from the given chunk
-	chunk_iterator(MChunk* chk0) : chunk(chk0) { }
-
-	Type operator* () 
-	{ 
-	Type t; 
-	(*chunk) >> t; 
-	return t; 
-	}
-
-	Type& operator++ () 
-	{ 
-	if (chunk->eof()) chunk = 0;
-	return *this; 
-	}
-
-	Type& operator++ (int)
-	{ 
-	if (chunk->eof()) chunk = 0;
-	return *this; 
-	}
-
-	bool operator== (const chunk_iterator& other) const
-	{
-	return other.chunk == chunk;
-	}
-	bool operator!= (const chunk_iterator& other) const
-	{
-	return other.chunk != chunk;
-	}
-	};
-	*/
 };
 
 #endif // _M_CHUNKREADER_H_

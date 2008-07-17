@@ -1,5 +1,5 @@
-#ifndef _rendertexture_h_
-#define _rendertexture_h_
+#ifndef _texture_h_
+#define _texture_h_
 
 #include "utils/resource.h"
 #include <d3d9.h>
@@ -19,4 +19,4 @@ namespace render
 	};
 
 }
-#endif//_rendertexture_h_
+#endif//_texture_h_

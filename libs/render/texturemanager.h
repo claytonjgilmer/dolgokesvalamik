@@ -4,7 +4,7 @@
 #include "utils/singleton.h"
 #include "containers/string.h"
 #include "containers/stringmap.h"
-#include "render/rendertexture.h"
+#include "render/texture.h"
 
 namespace render
 {

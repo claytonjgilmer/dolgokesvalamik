@@ -10,8 +10,8 @@
 #include "renderqueue.h"
 #include "threading/taskmanager.h"
 
-#include "rendervertexbuffer.h"
-#include "renderindexbuffer.h"
+#include "vertexbuffer.h"
+#include "indexbuffer.h"
 #include "vertexelements.h"
 
 #include "utils/singleton.h"
@@ -40,15 +40,6 @@ namespace render
 	public:
 		system(const systemdesc*);
 		~system();
-		vertexbuffer* create_vertexbuffer(unsigned i_vertexnum, const ctr::vector<vertexelements>& i_vertexelements) const;
-		void release_vertexbuffer(vertexbuffer* i_vb) const;
-		indexbuffer* create_indexbuffer(unsigned i_indexnum) const;
-		void release_indexbuffer(indexbuffer* i_ib) const;
-		void create_texture(LPDIRECT3DTEXTURE9& o_hwbuf,const void* i_buf, unsigned i_size) const;
-		void release_texture(LPDIRECT3DTEXTURE9 i_hwbuf) const;
-
-		void create_shader(LPD3DXEFFECT& i_effect,const void* i_buf, unsigned i_bufsize) const;
-		void release_shader(LPD3DXEFFECT i_effect) const;
 
 		void set_renderstate(const state& i_state);
 

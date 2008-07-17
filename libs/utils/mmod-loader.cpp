@@ -3,105 +3,19 @@
 
 #include "ChunkStream.h"
 #include "Tga.h"
-#include <exception>
-
-#include <boost/format.hpp>
-#include <map>
 
 #include <windows.h>
 
 #include "render/renderobject3d.h"
 
-using namespace std;
 
-
-/*
-ostream* output_stream = 0;
-
-ostream& output()
-{
-	return *output_stream;
-}
-*/
 int all_promitivecount=0;
 int all_vertexcount=0;
 
 
 ////////////////////////////////////////////////////////////////////////////////
-typedef vector<unsigned short> IndexArray;
-typedef vector<string> StringArray;
-
-struct Vect
-{
-	Vect() {}
-	Vect(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
-
-	void Set(float _x, float _y, float _z)
-	{
-		x = _x;
-		y = _y;
-		z = _z;
-	}
-
-	Vect& operator+=(const Vect& rhs)
-	{
-		x += rhs.x;
-		y += rhs.y;
-		z += rhs.z;
-
-		return *this;
-	}
-
-	Vect& operator-=(const Vect& rhs)
-	{
-		x -= rhs.x;
-		y -= rhs.y;
-		z -= rhs.z;
-
-		return *this;
-	}
-
-	Vect operator+(const Vect& rhs) const
-	{
-		return Vect(x + rhs.x, y + rhs.y, z + rhs.z);
-	}
-
-	Vect operator-(const Vect& rhs) const
-	{
-		return Vect(x - rhs.x, y - rhs.y, z - rhs.z);
-	}
-
-	Vect operator*(float rhs) const
-	{
-		return Vect(x * rhs, y * rhs, z * rhs);
-	}
-
-	Vect operator^(const Vect& rhs)
-	{
-		return Vect(y * rhs.z - z * rhs.y,
-			z * rhs.x - x * rhs.z,
-			x * rhs.y - y * rhs.x);
-	}
-
-	float Len2() { return x*x + y*y + z*z; }
-	float Len() { return sqrtf(Len2()); }
-
-	float GetX() const { return x; }
-	float GetY() const { return y; }
-	float GetZ() const { return z; }
-protected:
-	float x, y, z;
-};
-
-float Area(const Vect& v0, const Vect& v1, const Vect& v2)
-{
-	return (v1-v0 ^ v2-v0).Len() / 2.f;
-}
-
-float Area3(const Vect v[])
-{
-	return Area(v[0], v[1], v[2]);
-}
+typedef ctr::vector<unsigned short> IndexArray;
+typedef ctr::vector<ctr::string> StringArray;
 
 struct SubsetInfo
 {
@@ -110,7 +24,7 @@ struct SubsetInfo
 	int indexStart;
 	int indexNum;
 	StringArray textureNames;
-	string shaderName;
+	ctr::string shaderName;
 	int vertexstreamidx;
 };
 
@@ -122,14 +36,18 @@ struct LODInfo
 	int endSubset;
 };
 
-typedef vector<float> VertexArray;
+typedef ctr::vector<float> VertexArray;
 
 class Stream_t
 {
 public:
 	void AddFloat(const VertexArray& i_FloatArr)
 	{
-		copy(i_FloatArr.begin(), i_FloatArr.end(), back_inserter(m_Vertices));
+		for (unsigned int n=0; n<i_FloatArr.size(); ++n)
+		{
+			m_Vertices.push_back(i_FloatArr[n]);
+		}
+//		std::copy(i_FloatArr.begin(), i_FloatArr.end(), std::back_inserter(m_Vertices));
 	}
 
 	const float* GetFloat(int vertexIndex) const
@@ -151,19 +69,19 @@ public:
 		return m_FloatPerVertices;
 	}
 
-	void SetMVF(const string& str)
+	void SetMVF(const ctr::string& str)
 	{
 		m_MVF = str;
 	}
 
-	const string& GetMVF() const
+	const ctr::string& GetMVF() const
 	{
 		return m_MVF;
 	}
 
 protected:
 	int			m_FloatPerVertices;
-	string		m_MVF;
+	ctr::string		m_MVF;
 	VertexArray	m_Vertices;
 };
 
@@ -185,7 +103,7 @@ public:
 		return	m_Indices;
 	}
 
-	vector<unsigned>& Get32bitIndexArray(){return m_32bitIndices;}
+	ctr::vector<unsigned>& Get32bitIndexArray(){return m_32bitIndices;}
 
 	bool& Is32bit(){return m_32bit;}
 
@@ -243,16 +161,16 @@ public:
 	void IncRefCount() { ++m_RefCount; }
 	int  GetRefCount() const { return m_RefCount; }
 protected:
-	typedef vector<SubsetInfo> SubsetArray;
-	typedef vector<LODInfo> LODArray;
-	typedef vector<Stream_t> StreamArray;
+	typedef ctr::vector<SubsetInfo> SubsetArray;
+	typedef ctr::vector<LODInfo> LODArray;
+	typedef ctr::vector<Stream_t> StreamArray;
 
 	SubsetArray	m_SubSet;
 	LODArray	m_LOD;
 
 	StreamArray	m_Streams;
 	IndexArray	m_Indices;
-	vector<unsigned> m_32bitIndices;
+	ctr::vector<unsigned> m_32bitIndices;
 	bool m_32bit;
 
 	int			m_RefCount;
@@ -260,7 +178,7 @@ protected:
 
 inline float Finf()
 {
-	return std::numeric_limits<float>::infinity();
+	return FLT_MAX;// std::numeric_limits<float>::infinity();
 }
 
 struct TextureInfo{
@@ -276,10 +194,8 @@ struct TextureInfo{
 	int		height;
 };
 
-typedef map<string, TextureInfo> TextureInfoMap;
-TextureInfoMap gTextureInfo;
 
-vector<MeshLODInfo> gMeshLODInfoArray;
+ctr::vector<MeshLODInfo> gMeshLODInfoArray;
 
 float g_sphere_radius;
 math::vec3 g_sphere_center;
@@ -296,9 +212,9 @@ enum {
 };
 
 int gLODStatisticsMode;
-string gInputFileName;
+ctr::string gInputFileName;
 
-vector<string> gResourceTypeNames;
+ctr::vector<ctr::string> gResourceTypeNames;
 
 const float	gStepZ = 0.1f; // in meter
 float gDeepestY;
@@ -340,28 +256,10 @@ int Inc3(int i)
 	return i;
 }
 
-bool ClipSectionToY(float i_Y, const Vect& i_V0, const Vect& i_V1, Vect& o_VP)
-{
-	bool ret = false;
-
-	if (InIntervalSafe(i_Y, i_V0.GetY(), i_V1.GetY()))
-	{
-		Vect v10 = i_V1 - i_V0;
-		//		if (abs(v10.GetY()) > 0.001f)
-		{
-			float t = (i_Y - i_V0.GetY()) / v10.GetY();
-			o_VP = i_V0 + v10 * t;
-
-			ret = true;
-		}
-	}
-
-	return ret;
-}
 
 
 
-bool GetFullPathName(const string& directory, const string& fName, string& fFullName)
+bool GetFullPathName(const ctr::string& directory, const ctr::string& fName, ctr::string& fFullName)
 {
 	WIN32_FIND_DATA FindData;
 	HANDLE Handle = FindFirstFile((directory + '*').c_str() , &FindData );
@@ -393,64 +291,6 @@ bool GetFullPathName(const string& directory, const string& fName, string& fFull
 	}
 
 	return false;
-}
-
-void AddTextureInfo(const string& str)
-{
-	if (!(gLODStatisticsMode & STAT_MODE_TEXEL_PERF))
-		return;
-
-	if (gTextureInfo.find(str) == gTextureInfo.end())
-	{
-		TextureInfo ti;
-		{
-			for (string::iterator it = gInputFileName.begin(); it != gInputFileName.end(); ++it)
-			{
-				if (*it == '\\')
-					*it = '/';
-			}
-
-			string resPath("Y:/MidwayResource/");
-			{
-				string dataPath("Y:/MidwayData/");
-
-				size_t s1 = dataPath.size();
-				size_t s2 = gInputFileName.find_first_of("/", s1);
-				if (s2 == string::npos)
-					/*resPath += "PC/"*/;
-				else
-					resPath += gInputFileName.substr(s1, s2-s1+1);
-			}
-
-			string fFullName;
-			if (GetFullPathName(resPath, str, fFullName) || GetFullPathName(resPath="Y:/MidwayResource/PC/", str, fFullName))
-			{
-				unsigned char cBuf[sizeof(TGAHeader)];
-				FILE *fp = fopen(fFullName.c_str(), "rb");
-				fread(cBuf, sizeof(TGAHeader), 1, fp);
-				fclose(fp);
-
-				TGAHeader tgaHeader;
-				GetTGA(cBuf, tgaHeader);
-
-				ti.width = tgaHeader.imagespec.width;
-				ti.height = tgaHeader.imagespec.height;
-			}
-			else
-			{
-//				cout << str << " not found in " << resPath << endl;
-				assert(0);
-			}
-		}
-
-		gTextureInfo[str] = ti;
-	}
-}
-
-TextureInfo& GetTextureInfo(const string& str)
-{
-	assert(gTextureInfo.find(str) != gTextureInfo.end());
-	return gTextureInfo[str];
 }
 
 
@@ -510,7 +350,7 @@ void PrintVertexStreamChunk(MChunk& chunk)
 {
 	int vertexcount = chunk.ReadInt();
 	all_vertexcount+=vertexcount;
-	string strVF = chunk.ReadString();
+	ctr::string strVF = chunk.ReadString();
 	unsigned sizeleft = chunk.GetSizeLeft();
 
 	unsigned vertexsize = sizeleft/vertexcount;
@@ -553,7 +393,7 @@ void PrintIndicesChunk(MChunk& chunk)
 		else
 		{
 			gMeshLODInfoArray.back().Get32bitIndexArray().resize(indexCnt);
-			vector<unsigned>::iterator iti = gMeshLODInfoArray.back().Get32bitIndexArray().begin();
+			ctr::vector<unsigned>::iterator iti = gMeshLODInfoArray.back().Get32bitIndexArray().begin();
 			for (int i=0; i<indexCnt; ++i)
 			{
 				unsigned sh = (unsigned)chunk.ReadUnsigned();
@@ -565,19 +405,10 @@ void PrintIndicesChunk(MChunk& chunk)
 
 void PrintTextureChunk(MChunk& chunk, SubsetInfo& subset)
 {
-	string str = chunk.ReadString();
+	ctr::string str = chunk.ReadString();
 	subset.textureNames.push_back(str);
 	chunk.Skip();
 	return;
-
-	AddTextureInfo(str);
-
-	while (chunk)
-	{
-		MChunk subchunk = chunk.GetChunk();
-//		PrintChunkName(subchunk);
-		subchunk.Skip();
-	}
 }
 
 void PrintBoundingBoxChunk(MChunk& chunk)
@@ -651,120 +482,7 @@ void PrintLODPhasesChunk(MChunk &subchunk)
 
 
 
-void CalcTexelPerformanceStatistics()
-{
-	MeshLODInfo& meshLod = gMeshLODInfoArray.back();
-	IndexArray::const_iterator iti = meshLod.GetIndexArray().begin();
 
-	for (size_t j=0; j<meshLod.GetSubSetNum(); ++j)
-	{
-		const SubsetInfo& subset = meshLod.GetSubSet(j);
-
-		int uv0 = 2*3;
-		int uv1 = -1;
-
-		if (subset.shaderName.find("ship") == 0)
-		{
-			if (meshLod.GetStream(0).GetMVF() == "defaultps2.mvfm")
-			{
-			}
-			else if (meshLod.GetStream(0).GetMVF() == "defaultcolorps2.mvfm")
-			{
-				uv0 = 3*3;
-			}
-			else
-			{
-				uv0 = 4*3;
-				uv1 = uv0 + 2;
-			}
-		}
-		else if (subset.shaderName.find("airplane") == 0)
-		{
-			if (meshLod.GetStream(0).GetMVF() == "defaultps2.mvfm")
-			{
-			}
-			else if (meshLod.GetStream(0).GetMVF() == "defaultcolorps2.mvfm")
-			{
-				uv0 = 3*3;
-			}
-			else
-			{
-				uv0 = 4*3;
-			}
-		}
-
-		for (int k=0; k<subset.indexNum; ++k, iti += 3)
-		{
-			Vect vP[3];
-			Vect vUV0[3];
-			Vect vUV1[3];
-			for (int t=0; t<3; ++t)
-			{
-				size_t idx = iti[t];
-				const float* pF = meshLod.GetStream(0).GetFloat((int)idx);
-
-				vP[t].Set(pF[0], pF[1], pF[2]);
-
-				vUV0[t].Set(pF[uv0], pF[uv0+1], 1.f);
-
-				if (uv1 >= 0)
-					vUV1[t].Set(pF[uv1], pF[uv1+1], 1.f);
-			}
-
-			float area = Area3(vP);
-			float areaUV0 = Area3(vUV0);
-			float areaUV1 = uv1 >= 0 ? Area3(vUV1) : 0.f;
-
-			for (size_t k=0; k<subset.textureNames.size(); ++k)
-			{
-				float areaUV = (uv1 >= 0 && (k==1 || k==2)) ? areaUV1 : areaUV0;
-				if (areaUV <= 0.f)
-					continue;
-
-				TextureInfo& ti = GetTextureInfo(subset.textureNames[k]);
-				areaUV *= ti.Size();
-
-				ti.densityAvg1 += area;
-				ti.densityAvg2 += areaUV;
-
-				float density = area / areaUV;
-				ti.densityMin = min(ti.densityMin, density);
-				ti.densityMax = max(ti.densityMax, density);
-			}
-		}
-	}
-}
-
-inline float Meter2Centimeter(float x)
-{
-	return 100.f * x;
-}
-
-void PrintTexelPerfInfo()
-{
-	TextureInfoMap::const_iterator it = gTextureInfo.begin();
-	for (; it != gTextureInfo.end(); ++it)
-	{
-//		cout << it->first << " [" << it->second.width << "x" << it->second.height << "]" << endl;
-
-		float dMin = Meter2Centimeter(sqrtf(it->second.densityMin));
-		if (dMin == Finf())
-		{
-//			cout << "None";
-		}
-		else
-		{
-			float dMax = Meter2Centimeter(sqrtf(it->second.densityMax));
-			float dAvg = Meter2Centimeter(sqrtf(it->second.densityAvg1 / it->second.densityAvg2));
-
-//			char cBuf[128];
-//			sprintf(cBuf, "%.3f\t[%.3f - %.0f]", dAvg, dMin, dMax);
-//			cout << string(cBuf);
-		}
-
-//		cout <<	endl;
-	}
-}
 
 /*
 void PrintCompressedVertexFormatDataChunk(MChunk& chunk)
@@ -837,15 +555,13 @@ void PrintMeshChunk(MChunk& chunk)
 		}
 	}
 
-	if (gLODStatisticsMode & STAT_MODE_TEXEL_PERF)
-		CalcTexelPerformanceStatistics();
 	gMeshLODInfoArray.back().ClearStreams();
 }
 
 void PrintNodeChunk(MChunk& chunk)
 {
-	std::string nodetypename=chunk.ReadString();
-	std::string nodename=chunk.ReadString();
+	ctr::string nodetypename=chunk.ReadString();
+	ctr::string nodename=chunk.ReadString();
 	int nodeindex=chunk.ReadInt();
 
 	while (chunk)
@@ -899,7 +615,7 @@ void PrintSceneChunk(MChunk& top_chunk)
 
 void PrintAuxChunk(MChunk& chunk)
 {
-	std::string name=chunk.ReadString();
+	ctr::string name=chunk.ReadString();
 
 	while (chunk)
 	{
@@ -918,7 +634,7 @@ void PrintAux2Chunk(MChunk& chunk)
 		MChunk subchunk = chunk.GetChunk();
 		if (subchunk.GetName() == "Identifier")
 		{
-			string name;
+			ctr::string name;
 			int index;
 			subchunk >> name >> index;
 
@@ -926,7 +642,7 @@ void PrintAux2Chunk(MChunk& chunk)
 		}
 		else if (subchunk.GetName() == "Category")
 		{
-			string cat;
+			ctr::string cat;
 			subchunk >> cat;
 		}
 		else if (subchunk.GetName() == "Points")
@@ -957,7 +673,7 @@ void PrintAux2Chunk(MChunk& chunk)
 
 void PrintNoteChunk(MChunk& chunk)
 {
-	string note;
+	ctr::string note;
 	chunk >> note;
 
 	gResourceTypeNames.back() = "Note(\"" + note + "\")";
@@ -1016,7 +732,7 @@ void PrintGeomMeshChunk(MChunk& chunk)
 	{
 		for (unsigned i = 0; i < nids; ++i)
 		{
-			string cat;
+			ctr::string cat;
 			int index;
 			chunk >> cat >> index;
 		}
@@ -1033,7 +749,7 @@ void PrintNewGeomChunk(MChunk& chunk)
 
 		if (subchunk.GetName() == "Category")
 		{
-			string category;
+			ctr::string category;
 			subchunk >> category;
 		}
 		else if (subchunk.GetName() == "Index")
@@ -1065,12 +781,12 @@ void PrintAnimationChannelsChunk(MChunk& chunk)
 
 		if (subchunk.GetName() == "AnimationGroupName")
 		{
-			string animationgroupname;
+			ctr::string animationgroupname;
 			subchunk >> animationgroupname;
 		}
 		else if (subchunk.GetName() == "ChannelAnimation")
 		{
-			string chanName;
+			ctr::string chanName;
 			subchunk >> chanName;
 
 			subchunk.Skip();
@@ -1137,8 +853,8 @@ void PrintHierarchyItemChunk(MChunk& chunk)
 {
 	bool isRootItem = true;
 	bool isOK = false;
-	string name;
-	vector<string> itemResTypeNames;
+	ctr::string name;
+	ctr::vector<ctr::string> itemResTypeNames;
 
 	while (chunk)
 	{
@@ -1160,10 +876,10 @@ void PrintHierarchyItemChunk(MChunk& chunk)
 		}
 		else if (subchunk.GetName() == "Name")
 		{
-			string str = subchunk.ReadString();
+			ctr::string str = subchunk.ReadString();
 		}
 		else if (	subchunk.GetName() == "Resource" || 
-			subchunk.GetName() == "RenderMesh" || 
+			subchunk.GetName() == "mesh" || 
 			subchunk.GetName() == "GeomMesh" || 
 			subchunk.GetName() == "ConvexObject" || 
 			subchunk.GetName() == "Aux" ||
@@ -1172,7 +888,7 @@ void PrintHierarchyItemChunk(MChunk& chunk)
 			int index;
 			subchunk >> index;
 
-			const string& resTypeName = gResourceTypeNames[index];
+			const ctr::string& resTypeName = gResourceTypeNames[index];
 			itemResTypeNames.push_back(resTypeName);
 
 			if (resTypeName == "Mesh" || 
@@ -1212,11 +928,6 @@ void PrintHierarchyChunk(MChunk& chunk)
 		}
 		subchunk.Skip();
 	}
-}
-
-void here()
-{
-	terminate();
 }
 
 float MakeLODInfo(float i_LODError, int& o_VertexNum, int& o_FaceNum)
@@ -1298,7 +1009,7 @@ static float LODErrToDist(float lodErr, float mulRad, float centerZ)
 	return (mulRad / e) - centerZ;
 }
 
-void PrintLODInfo(float i_Fov, const vector<float>& i_DitanceBuf)
+void PrintLODInfo(float i_Fov, const ctr::vector<float>& i_DitanceBuf)
 {
 	if (g_sphere_radius== 0.f)
 	{
@@ -1339,65 +1050,55 @@ render::object3d* load_mmod(const char* i_filename)
 
 	MChunkStream stream(i_filename);
 
-	set_unexpected(here);
+	MChunk chunk = stream.GetTopChunk();
+	Version = chunk.ReadUnsigned();
 
-	try
+	while (chunk)
 	{
-		MChunk chunk = stream.GetTopChunk();
-		Version = chunk.ReadUnsigned();
+		MChunk subchunk = chunk.GetChunk();
 
-		while (chunk)
+		if (Version >= 5)
 		{
-			MChunk subchunk = chunk.GetChunk();
-
-			if (Version >= 5)
+			if (subchunk.GetName() == "BoundingSphere")
 			{
-				if (subchunk.GetName() == "BoundingSphere")
-				{
-					PrintBoundingSphereChunk(subchunk);
-				}
-				else if (subchunk.GetName() == "BoundingBox")
-				{
-					PrintBoundingBoxChunk(subchunk);
-				}
-				else if (subchunk.GetName() == "Resource")
-				{
-					PrintResourceChunk(subchunk);
-				}
-				else if (subchunk.GetName() == "Hierarchy")
-				{
-					PrintHierarchyChunk(subchunk);
-				}
-				else
-				{
-					subchunk.Skip();
-				}
+				PrintBoundingSphereChunk(subchunk);
+			}
+			else if (subchunk.GetName() == "BoundingBox")
+			{
+				PrintBoundingBoxChunk(subchunk);
+			}
+			else if (subchunk.GetName() == "Resource")
+			{
+				PrintResourceChunk(subchunk);
+			}
+			else if (subchunk.GetName() == "Hierarchy")
+			{
+				PrintHierarchyChunk(subchunk);
 			}
 			else
 			{
-				if (subchunk.GetName() == "Node")
-				{
-					PrintNodeChunk(subchunk);
-				}
-				else if (subchunk.GetName() == "Scene")
-				{
-					PrintSceneChunk(subchunk);
-				}
-				else if (subchunk.GetName() == "Aux")
-				{
-					PrintAuxChunk(subchunk);
-				}
-				else
-				{
-					subchunk.Skip();
-				}
+				subchunk.Skip();
 			}
 		}
-
-
-	}
-	catch (chunk_exception& ce)
-	{
+		else
+		{
+			if (subchunk.GetName() == "Node")
+			{
+				PrintNodeChunk(subchunk);
+			}
+			else if (subchunk.GetName() == "Scene")
+			{
+				PrintSceneChunk(subchunk);
+			}
+			else if (subchunk.GetName() == "Aux")
+			{
+				PrintAuxChunk(subchunk);
+			}
+			else
+			{
+				subchunk.Skip();
+			}
+		}
 	}
 
 	return 0;

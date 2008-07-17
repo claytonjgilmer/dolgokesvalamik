@@ -4,9 +4,9 @@
 #include "rendersystem.h"
 #include "utils/assert.h"
 #include "renderstate.h"
-#include "rendersubmesh.h"
-#include "rendertexture.h"
-#include "rendershader.h"
+#include "submesh.h"
+#include "texture.h"
+#include "shader.h"
 #include "math/mtx4x4.h"
 
 #include "threading/taskmanager.h"
@@ -39,7 +39,7 @@ namespace render
 		d3dpp.PresentationInterval=D3DPRESENT_INTERVAL_IMMEDIATE;
 
 		m_sys->CreateDevice(	D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_window,
-			D3DCREATE_HARDWARE_VERTEXPROCESSING,
+			D3DCREATE_HARDWARE_VERTEXPROCESSING|D3DCREATE_MULTITHREADED,
 			&d3dpp, &m_device);
 
 		if (!m_device)
@@ -141,100 +141,6 @@ namespace render
 	void system::add_mesh(mesh* i_mesh, const math::mtx4x3& i_mtx, unsigned i_queueindex/* =0 */)
 	{
 		m_queue[i_queueindex].m_buf.push_back(queueelem(i_mesh,i_mtx));
-	}
-
-	const D3DVERTEXELEMENT9 g_decl[element_last+1]=
-	{
-		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
-		{ 0, 16, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
-		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
-		{ 0, 8, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
-		{ 0, 16, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
-		D3DDECL_END()
-	};
-
-	vertexbuffer* system::create_vertexbuffer(unsigned i_vertexnum, const ctr::vector<vertexelements>& i_vertexelements) const
-	{
-		vertexbuffer* vb=new vertexbuffer;
-
-		
-		unsigned siz=0;
-
-		ctr::fixedvector<D3DVERTEXELEMENT9,20> decl;
-
-		for (unsigned n=0; n<i_vertexelements.size(); ++n)
-		{
-			decl.push_back(g_decl[i_vertexelements[n]]);
-			unsigned offs=decl.back().Offset;
-			decl.back().Offset=siz;
-			siz+=offs;
-		}
-
-		decl.push_back(g_decl[element_last]);
-
-		m_device->CreateVertexBuffer(i_vertexnum*siz,D3DUSAGE_WRITEONLY,0,D3DPOOL_DEFAULT,&vb->m_hwbuffer,NULL);
-		m_device->CreateVertexDeclaration(&decl[0],&vb->m_decl);
-		vb->m_vertexsize=siz;
-		return vb;
-	}
-
-	void system::release_vertexbuffer(vertexbuffer* i_vb) const
-	{
-		if (i_vb && i_vb->m_hwbuffer)
-			i_vb->m_hwbuffer->Release();
-
-		i_vb->m_hwbuffer=NULL;
-	}
-
-	indexbuffer* system::create_indexbuffer(unsigned i_indexnum) const
-	{
-		indexbuffer* ib=new indexbuffer;
-		IDirect3DIndexBuffer9* hwbuf;
-		D3DFORMAT indexformat=D3DFMT_INDEX16;
-		const int indexsize=sizeof(short);
-
-		m_device->CreateIndexBuffer(	i_indexnum*indexsize,
-			D3DUSAGE_WRITEONLY,
-			indexformat,
-			D3DPOOL_DEFAULT,
-			&hwbuf,
-			NULL);
-
-		ib->m_hwbuffer=hwbuf;
-		return ib;
-	}
-
-	void system::release_indexbuffer(indexbuffer* i_ib) const
-	{
-		if (i_ib && i_ib->m_hwbuffer)
-			i_ib->m_hwbuffer->Release();
-
-		i_ib->m_hwbuffer=0;
-	}
-
-	void system::create_texture(LPDIRECT3DTEXTURE9& o_hwbuf,const void* i_buf, unsigned i_size) const
-	{
-		D3DXCreateTextureFromFileInMemory(m_device,i_buf,i_size,&o_hwbuf);
-	}
-
-	void system::release_texture(LPDIRECT3DTEXTURE9 i_hwbuf) const
-	{
-		i_hwbuf->Release();
-	}
-
-	void system::create_shader(LPD3DXEFFECT& i_effect,const void* i_buf, unsigned i_bufsize) const
-	{
-		LPD3DXBUFFER errors;;
-		if (D3DXCreateEffect(m_device,i_buf,i_bufsize,NULL,NULL,0,NULL,&i_effect,&errors)!=D3D_OK)
-		{
-			const char* v=(const char*)(errors->GetBufferPointer());
-			utils::assertion(0,v);
-		}
-	}
-
-	void system::release_shader(LPD3DXEFFECT i_effect) const
-	{
-		i_effect->Release();
 	}
 
 	void system::set_renderstate(const state& i_state)
