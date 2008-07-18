@@ -8,14 +8,14 @@ namespace render
 	class indexbuffer
 	{
 	public:
-		indexbuffer(unsigned i_indexnum);
+		indexbuffer(unsigned i_indexnum, bool i_32bit=false);
 		~indexbuffer();
-		unsigned short* lock()
+		void* lock()
 		{
 			void* ret;
 			m_hwbuffer->Lock(0,0,&ret,0);
 
-			return (unsigned short*)ret;
+			return ret;
 		}
 
 		void unlock()
@@ -24,6 +24,7 @@ namespace render
 		}
 //	private:
 		IDirect3DIndexBuffer9* m_hwbuffer;
+		const int m_indexsize;
 	};
 }
 #endif//_indexbuffer_h_

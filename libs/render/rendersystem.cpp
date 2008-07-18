@@ -62,6 +62,7 @@ namespace render
 
 	LPDIRECT3DDEVICE9 system::device() const
 	{
+//		utils::assertion(m_device,"rendersystem nincs inicializalva");
 		return m_device;
 	}
 
@@ -108,7 +109,7 @@ namespace render
 
 					for (unsigned txtindex=0; txtindex<sm.m_texturebuf.size(); ++txtindex)
 					{
-						m_device->SetTexture(txtindex,sm.m_texturebuf[txtindex]->m_hwbuffer);
+						m_device->SetTexture(txtindex,sm.m_texturebuf[txtindex] ? sm.m_texturebuf[txtindex]->m_hwbuffer : NULL);
 					}
 
 

@@ -5,7 +5,7 @@
 									public:\
 										static void create(){if (!m_instance)m_instance=new _TYPE_;}\
 										static void release(){if (m_instance) delete m_instance; m_instance=NULL;}\
-										static _TYPE_* instance(){return m_instance;}\
+										static _TYPE_* instance(){utils::assertion(m_instance!=NULL,"singleton nincs inicializalva");return m_instance;}\
 									private:\
 										static _TYPE_* m_instance;
 

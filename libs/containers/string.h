@@ -24,6 +24,8 @@ namespace ctr
 		unsigned size() const;
 		unsigned capacity() const;
 
+		tstring substring(unsigned i_pos, unsigned i_length) const;
+
 		template <unsigned MINCAP2> bool operator==(const tstring<MINCAP2>& i_str) const;
 		bool operator==(const char* i_str) const;
 		bool operator!=(const char* i_str) const;
@@ -44,6 +46,7 @@ namespace ctr
 		}
 
 		void to_upper();
+		void to_lower();
 
 	private:
 		char* m_buf;
@@ -278,6 +281,31 @@ namespace ctr
 	{
 		for (unsigned n=0; n<m_length; ++n)
 			m_buf[n]=toupper(m_buf[n]);
+	}
+
+	template <unsigned TSTRING_MIN_CAPACITY>
+	MLINLINE void tstring<TSTRING_MIN_CAPACITY>::to_lower()
+	{
+		for (unsigned n=0; n<m_length; ++n)
+			m_buf[n]=tolower(m_buf[n]);
+	}
+
+	template<unsigned  TSTRING_MIN_CAPACITY>
+	MLINLINE tstring<TSTRING_MIN_CAPACITY> tstring<TSTRING_MIN_CAPACITY>::substring(unsigned i_pos, unsigned i_length) const
+	{
+		utils::assertion(i_pos+i_length<=m_length,"nem jau");
+		tstring res;
+		if (i_length+1>res.m_capacity)
+			res.grow(i_length);
+
+		for (unsigned n=0; n<i_length; ++n)
+		{
+			res.m_buf[n]=m_buf[i_pos+n];
+		}
+
+		res.m_buf[i_length]=0;
+
+		return res;
 	}
 
 	typedef tstring<16> string;

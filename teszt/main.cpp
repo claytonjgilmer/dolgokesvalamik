@@ -28,7 +28,6 @@ render::object3d* load_mmod(const char* i_filename);
 int _cdecl main()
 {
 	int* a=new int[113];
-	load_mmod("test.mmod");
 	return 0;
 #if 0
 	utils::timer t;

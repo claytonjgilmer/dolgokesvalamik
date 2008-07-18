@@ -12,7 +12,7 @@ namespace scene
 	class node
 	{
 	public:
-		node();
+		node(const char* i_name);
 		virtual ~node();
 
 		node* get_parent() const;

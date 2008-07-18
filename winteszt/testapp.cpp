@@ -10,8 +10,11 @@
 #include "render/submesh.h"
 #include "math/mtx4x4.h"
 #include "math/vec2.h"
+#include "render/renderobject3d.h"
+#include "utils/auto_ptr.h"
 
 void generate_sphere(math::vec3 o_pos[],int& o_numvertices,short o_indices[],int& o_numfaces,float i_radius, int i_depth);
+render::object3d* load_mmod(const char* i_filename);
 struct game
 {
 	render::mesh* m_mesh;
@@ -19,8 +22,15 @@ struct game
 //	math::mtx4x3 m_mtx;
 
 	float x,y,z;
+	float camx,camy,camz;
 	float m_aspect;
 	math::vec3 light_dir;
+	render::object3d* obj;
+
+	game()
+	{
+		camz=camy=camx=0;
+	}
 } g_game;
 
 void change_screen_size(unsigned i_newwidth, unsigned i_newheight)
@@ -68,6 +78,9 @@ void init_app(HWND i_hwnd)
 
 	render::system::create(&renderdesc);
 
+	g_game.obj=	load_mmod("test.mmod");
+
+
 	g_game.m_aspect=(float)renderdesc.m_screenwidth/(float)renderdesc.m_screenheight;
 
 	::GetWindowRect(i_hwnd,&g_rect);
@@ -78,11 +91,11 @@ void init_app(HWND i_hwnd)
 
 	render::mesh* mesh=new render::mesh("fucka");
 
-	ctr::vector<render::vertexelements> ve;
+	ctr::vector<render::vertexelem> ve;
 
-	ve.push_back(render::vertexelement_pos3);
-	ve.push_back(render::vertexelement_normal);
-	ve.push_back(render::vertexelement_uv);
+	ve.push_back(render::vertexelem(render::vertexelement_position,3));
+	ve.push_back(render::vertexelem(render::vertexelement_normal,3));
+	ve.push_back(render::vertexelem(render::vertexelement_uv,2));
 
 	mesh->m_vb=new render::vertexbuffer(8,ve);
 	mesh->m_ib=new render::indexbuffer(3*12);
@@ -107,7 +120,7 @@ void init_app(HWND i_hwnd)
 
 	mesh->m_vb->unlock();
 
-	unsigned short* ib=mesh->m_ib->lock();
+	unsigned short* ib=(unsigned short*)mesh->m_ib->lock();
 
 	const unsigned short buf[]={0,1,2,0,2,3,1,5,6,1,6,2,2,6,7,2,7,3,4,0,3,4,3,7,5,4,7,5,7,6,1,0,4,1,4,5};
 
@@ -156,7 +169,7 @@ void init_app(HWND i_hwnd)
 	}
 	g_game.sphere->m_vb->unlock();
 
-	ib=g_game.sphere->m_ib->lock();
+	ib=(unsigned short*)g_game.sphere->m_ib->lock();
 	memcpy(ib,index,indexnum*3*sizeof(short));
 	g_game.sphere->m_ib->unlock();
 
@@ -214,9 +227,13 @@ void update_app()
 	g_game.y+=2*dt;
 	g_game.z+=3*dt;
 
-	render::system::instance()->add_mesh(g_game.m_mesh,mtx);
-	mtx.t.set(1,0,2.5f);
-	render::system::instance()->add_mesh(g_game.sphere,mtx);
+//	render::system::instance()->add_mesh(g_game.m_mesh,mtx);
+//	mtx.t.set(1,0,2.5f);
+//	render::system::instance()->add_mesh(g_game.sphere,mtx);
+	mtx.t.set(0,0,22.5f);
+	g_game.obj->set_worldposition(mtx);
+	g_game.obj->render();
+//	render::system::instance()->add_mesh(g_game.obj->get_mesh(),mtx);
 	render::system::instance()->render();
 }
 
@@ -226,6 +243,7 @@ void exit_app()
 	threading::taskmanager::release();
 	delete g_game.m_mesh;
 	delete g_game.sphere;
+	delete g_game.obj;
 	render::shadermanager::release();
 	render::texturemanager::release();
 	render::system::release();

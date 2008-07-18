@@ -11,6 +11,16 @@ namespace math
 		mtx4x4();
 		explicit mtx4x4(const mtx4x3&);
 
+		operator mtx4x3 () const
+		{
+			mtx4x3 res;
+			res._11=_11; res._12=_12; res._13=_13;
+			res._21=_21; res._22=_22; res._23=_23;
+			res._31=_31; res._32=_32; res._33=_33;
+			res._41=_41; res._42=_42; res._43=_43;
+
+			return res;
+		}
 		void set_projectionmatrix(float i_tgfovhalf, float i_aspect, float i_nearz, float i_farz);
 		void multiply(const mtx4x4& i_src1, const mtx4x4& i_src2);
 		void multiplytransposed(const mtx4x4& i_src1, const mtx4x4& i_src2t);

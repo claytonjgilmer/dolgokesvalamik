@@ -16,7 +16,6 @@ namespace render
 	public:
 		mesh(const char* i_name);
 		~mesh();
-		void render(const math::mtx4x3& i_mtx);
 
 		void set_vertexbuffer(vertexbuffer* i_vb);
 		void set_indexbuffer(indexbuffer* i_ib);

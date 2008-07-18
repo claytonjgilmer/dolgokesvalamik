@@ -1,8 +1,10 @@
 #include "node.h"
+#include "containers/vector.h"
 
 namespace scene
 {
-	node::node():
+	node::node(const char* i_name):
+	m_name(i_name),
 	m_localpos(math::mtx4x3::identitymtx()),
 	m_worldpos(math::mtx4x3::identitymtx())
 	{
@@ -17,13 +19,25 @@ namespace scene
 		if (m_parent)
 			m_parent->remove_child(this);
 
+		ctr::vector<node*> subh;
+
+
+
 		node* ptr=m_child;
 
 		while (ptr)
 		{
-			node* nextptr=ptr->m_bro;
-			delete ptr;
-			ptr=nextptr;
+			subh.push_back(ptr);
+			ptr=ptr->get_next(this);
+		}
+
+		for (unsigned n=0; n<subh.size(); ++n)
+		{
+			subh[n]->m_child=0;
+			subh[n]->m_parent=0;
+			subh[n]->m_bro=0;
+
+			delete subh[n];
 		}
 	}
 
@@ -117,8 +131,13 @@ namespace scene
 	void node::set_worldposition(const math::mtx4x3& i_mtx)
 	{
 		m_worldpos=i_mtx;
+
 		math::mtx4x3 parentinvworld;
-		parentinvworld.invert(m_parent->get_worldposition());
+		if (m_parent)
+			parentinvworld.invert(m_parent->get_worldposition());
+		else
+			parentinvworld.identity();
+
 		m_localpos.multiply(m_worldpos,parentinvworld);
 
 		m_flags|=nodeflag_valid_worldpos;
@@ -136,7 +155,7 @@ namespace scene
 	const math::mtx4x3& node::get_worldposition()
 	{
 		node* buf[128];
-		unsigned bufsize=0;
+		int bufsize=0;
 		node* ptr=this;
 
 		while (!(ptr->m_flags & nodeflag_valid_worldpos))
@@ -145,7 +164,7 @@ namespace scene
 			ptr=ptr->m_parent;
 		}
 
-		for (unsigned n=bufsize-1; n>=0; --n)
+		for (int n=bufsize-1; n>=0; --n)
 		{
 			buf[n]->m_worldpos.multiply(buf[n]->m_localpos,buf[n]->m_parent->m_worldpos);
 			buf[n]->m_flags|=nodeflag_valid_worldpos;

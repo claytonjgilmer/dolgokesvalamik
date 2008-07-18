@@ -12,7 +12,8 @@ namespace render
 	{
 		friend class system;
 	public:
-		vertexbuffer(unsigned i_vertexnum, const ctr::vector<vertexelements>& i_vertexelements);
+		vertexbuffer(unsigned i_vertexnum, const ctr::vector<vertexelem>& i_vertexelements);
+		vertexbuffer(unsigned i_vertexnum, const ctr::vector<vertexelem>& i_vertexelements, unsigned i_vertexsize);
 		~vertexbuffer();
 		void* lock()
 		{
