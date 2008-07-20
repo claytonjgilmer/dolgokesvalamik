@@ -4,6 +4,7 @@
 #include "scene/node.h"
 #include "render/mesh.h"
 #include "utils/auto_ptr.h"
+#include "containers/fixedvector.h"
 
 namespace render
 {
@@ -12,14 +13,15 @@ namespace render
 	public:
 		object3d(const char* i_name);
 		~object3d();
-		void set_mesh(mesh* i_mesh){m_mesh=i_mesh;}
-		mesh* get_mesh(){return m_mesh;}
+		void add_mesh(mesh* i_mesh){m_mesh.push_back(i_mesh);}
+		mesh* get_mesh(unsigned i_index){return &*m_mesh[i_index];}
+		unsigned get_meshnum() const{return m_mesh.size();}
 
 		void render();
 
 		object3d* Next;
 	protected:
-		utils::auto_ptr<mesh> m_mesh;
+		ctr::fixedvector<utils::auto_ptr<mesh>,8> m_mesh;
 	};
 }
 #endif//_renderobject3d_h_

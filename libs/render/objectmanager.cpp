@@ -2,6 +2,7 @@
 #include "file/file.h"
 #include "file/filesystem.h"
 
+render::object3d* load_mmod(file::file& i_file);
 namespace render
 {
 	objectmanager::objectmanager(const objectmanagerdesc* i_desc):
@@ -19,12 +20,19 @@ namespace render
 		ctr::string ext=file::get_extension(i_name);
 		ext.to_upper();
 
+		object3d* obj=NULL;
+
 		if (ext=="MMOD")
 		{
-			return load_mmod_file(i_name);
+			obj=load_mmod_file(i_name);
 		}
 
-		return NULL;
+		if (obj)
+		{
+			m_map.add_data(obj);
+		}
+
+		return obj;
 
 	}
 
@@ -32,6 +40,17 @@ namespace render
 	{
 		file::file objfile;
 		file::system::instance()->open_file(objfile,i_name,m_objectgroup.c_str(),"rb");
+
+		if (objfile.opened())
+		{
+			object3d* obj=load_mmod(objfile);
+
+			if (obj)
+				obj->set_name(i_name);
+
+			return obj;
+		}
+
 
 		return NULL;
 	}

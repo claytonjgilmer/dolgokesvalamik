@@ -41,4 +41,30 @@ namespace render
 	{
 		m_map.remove_data(t->get_name().c_str());
 	}
+
+	void shadermanager::reload_shaders()
+	{
+		for (unsigned n=0; n<1024; ++n)
+		{
+			shader* ptr=m_map.get_buffer()[n];
+
+			while (ptr)
+			{
+				file::file shaderfile;
+				file::system::instance()->open_file(shaderfile,m_shadergroup.c_str(),ptr->get_name().c_str(),"rb");
+
+				if (shaderfile.opened())
+				{
+					char* buf=new char [shaderfile.size()+1];
+					buf[shaderfile.size()]=0;
+					shaderfile.read_bytes(buf,shaderfile.size());
+
+					ptr->reload(buf,shaderfile.size());
+					delete [] buf;
+				}
+
+				ptr=ptr->Next;
+			}
+		}
+	}
 }

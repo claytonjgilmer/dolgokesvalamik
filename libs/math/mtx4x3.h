@@ -180,6 +180,8 @@ namespace math
 		yaxis=i_src.yaxis/i_src.yaxis.squarelength();
 		zaxis=i_src.zaxis/i_src.zaxis.squarelength();
 
+		transpose3x3();
+
 		transform3x3(t,-i_src.t);
 	}
 

@@ -12,6 +12,7 @@
 #include "math/vec2.h"
 #include "render/renderobject3d.h"
 #include "utils/auto_ptr.h"
+#include "input/inputsystem.h"
 
 void generate_sphere(math::vec3 o_pos[],int& o_numvertices,short o_indices[],int& o_numfaces,float i_radius, int i_depth);
 render::object3d* load_mmod(const char* i_filename);
@@ -23,13 +24,16 @@ struct game
 
 	float x,y,z;
 	float camx,camy,camz;
+	math::vec3 camt;
 	float m_aspect;
 	math::vec3 light_dir;
 	render::object3d* obj;
+	render::object3d* sky;
 
 	game()
 	{
 		camz=camy=camx=0;
+		camt.set(0,20,0);
 	}
 } g_game;
 
@@ -64,6 +68,9 @@ void init_app(HWND i_hwnd)
 	render::shadermanagerdesc shaderdesc("shader");
 	render::shadermanager::create(&shaderdesc);
 
+	input::inputinitparams params; params.m_Window=i_hwnd;
+	input::system::create(&params);
+
 	render::texturemanagerdesc textdesc("texture");
 	render::texturemanager::create(&textdesc);
 
@@ -78,7 +85,20 @@ void init_app(HWND i_hwnd)
 
 	render::system::create(&renderdesc);
 
-	g_game.obj=	load_mmod("test.mmod");
+	g_game.obj=	load_mmod("c:/data/model/test.mmod");
+	g_game.sky= load_mmod("c:/data/model/skyBOX.MMOD");
+
+	for (unsigned n=0; n<g_game.sky->get_meshnum();++n)
+	{
+		render::mesh* m=g_game.sky->get_mesh(n);
+
+		for (unsigned k=0; k<m->m_submeshbuf.size(); ++k)
+		{
+			render::submesh& sm=m->m_submeshbuf[k];
+
+			sm.set_shader(render::shadermanager::instance()->get_shader("nothing.fx"));
+		}
+	}
 
 
 	g_game.m_aspect=(float)renderdesc.m_screenwidth/(float)renderdesc.m_screenheight;
@@ -112,7 +132,7 @@ void init_app(HWND i_hwnd)
 
 	for (int n=0; n<8; ++n)
 	{
-		vb[n].pos=g_pos[n];
+		vb[n].pos=0.1f*g_pos[n];
 		vb[n].uv=g_uv[n];
 		vb[n].normal=g_pos[n];  vb[n].normal.normalize();
 	}
@@ -154,7 +174,7 @@ void init_app(HWND i_hwnd)
 	short index[16384];
 	int indexnum;
 
-	generate_sphere(pos,posnum,index,indexnum,1,5);
+	generate_sphere(pos,posnum,index,indexnum,0.1f,5);
 	g_game.sphere=new render::mesh("sphere");
 	g_game.sphere->m_vb=new render::vertexbuffer(posnum,ve);
 	g_game.sphere->m_ib=new render::indexbuffer(indexnum*3);
@@ -190,6 +210,12 @@ void init_app(HWND i_hwnd)
 
 }
 
+
+
+
+
+
+
 unsigned sumtime=0;
 
 void update_app()
@@ -199,6 +225,14 @@ void update_app()
 	unsigned deltatime=acttime-g_time;
 	g_time=acttime;
 	sumtime+=deltatime;
+	float dt=(float)deltatime/1000.0f;
+
+	if (sumtime>33)
+	{
+		input::system::instance()->Update();
+		sumtime-=33;
+	}
+
 
 	if (sumtime>33 && 0)
 	{
@@ -208,31 +242,75 @@ void update_app()
 		::MoveWindow(g_hwnd,g_rect.left+(unsigned)(100*sin(acttime/1000.0)),g_rect.top,width,heigth,TRUE);
 	}
 
+	input::system* ip=input::system::instance();
+
 	math::mtx4x3 cammtx=math::mtx4x3::identitymtx();
-//	cammtx.t.z=-10;
+	cammtx.set_euler(g_game.camx,g_game.camy,g_game.camz);
+
+	float speed;
+
+	if (ip->KeyDown(KEYCODE_LSHIFT))
+		speed=10;
+	else
+		speed=3;
+
+	if (ip->KeyDown(KEYCODE_W))
+		g_game.camt+=speed*dt*cammtx.zaxis;
+
+	if (ip->KeyDown(KEYCODE_S))
+		g_game.camt-=speed*dt*cammtx.zaxis;
+
+	if (ip->KeyDown(KEYCODE_A))
+		g_game.camt-=speed*dt*cammtx.xaxis;
+
+	if (ip->KeyDown(KEYCODE_D))
+		g_game.camt+=speed*dt*cammtx.xaxis;
+
+	if (ip->KeyDown(KEYCODE_Q))
+		g_game.camt+=speed*dt*cammtx.yaxis;
+
+	if (ip->KeyDown(KEYCODE_Z))
+		g_game.camt-=speed*dt*cammtx.yaxis;
+
+	int mx=ip->GetMouseX();
+	int my=ip->GetMouseY();
+
+
+	g_game.camy+=dt*(float)ip->GetMouseX()/10.0f;
+	g_game.camx+=dt*(float)ip->GetMouseY()/10.0f;
+
+	cammtx.t=g_game.camt;
 
 	math::mtx4x3 viewmtx; viewmtx.linearinvert(cammtx);
 
-	render::system::instance()->set_projection_params(math::degreetorad(90),g_game.m_aspect,0.1f,100,(math::mtx4x4)cammtx);
+	render::system::instance()->set_projection_params(math::degreetorad(60),g_game.m_aspect,0.3f,10000,(math::mtx4x4)viewmtx);
 
 	math::mtx4x3 mtx;
 	mtx.set_euler(g_game.x,g_game.y,g_game.z);
 	mtx.t.set(-1,0,2.5f);
 
-	mtx.transformtransposed3x3(g_game.light_dir,math::vec3(0,0,-1));
+	g_game.obj->get_worldposition().transformtransposed3x3(g_game.light_dir,math::vec3(1,1,0));
+	g_game.light_dir.normalize();
 
-	float dt=(float)deltatime/10000.0f;
+	g_game.x+=dt/10;
+	g_game.y+=2*dt/10;
+	g_game.z+=3*dt/10;
 
-	g_game.x+=dt;
-	g_game.y+=2*dt;
-	g_game.z+=3*dt;
-
-//	render::system::instance()->add_mesh(g_game.m_mesh,mtx);
-//	mtx.t.set(1,0,2.5f);
-//	render::system::instance()->add_mesh(g_game.sphere,mtx);
+	render::system::instance()->add_mesh(g_game.m_mesh,mtx);
+	mtx.t.set(1,0,2.5f);
+	render::system::instance()->add_mesh(g_game.sphere,mtx);
+	mtx.set_euler(0,0,0);
 	mtx.t.set(0,0,22.5f);
 	g_game.obj->set_worldposition(mtx);
 	g_game.obj->render();
+
+//	math::mtx4x3 skymtx=g_game.sky->get_worldposition();
+//	skymtx.normalize();
+//	skymtx.axisx()*=0.01f;
+//	skymtx.axisy()*=0.01f;
+//	skymtx.axisz()*=0.01f;
+//	g_game.sky->set_worldposition(skymtx);
+	g_game.sky->render();
 //	render::system::instance()->add_mesh(g_game.obj->get_mesh(),mtx);
 	render::system::instance()->render();
 }
@@ -244,8 +322,10 @@ void exit_app()
 	delete g_game.m_mesh;
 	delete g_game.sphere;
 	delete g_game.obj;
+	delete g_game.sky;
 	render::shadermanager::release();
 	render::texturemanager::release();
+	input::system::release();
 	render::system::release();
 }
 
@@ -311,5 +391,10 @@ void generate_sphere(math::vec3 o_pos[],int& o_numvertices,short o_indices[],int
 		}
 		--i_depth;
 	}
+}
 
+void reload_shaders()
+{
+	if (render::shadermanager::instance())
+		render::shadermanager::instance()->reload_shaders();
 }

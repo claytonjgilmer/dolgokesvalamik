@@ -21,6 +21,8 @@ namespace file
 		unsigned read_bytes(char* o_bytes, unsigned i_numbytes) const;
 		void write_bytes(const char* i_bytes, unsigned i_numbytes) const;
 
+		void seek_cur(int i_offset);
+
 		unsigned size() const;
 
 		bool opened() const;
@@ -131,7 +133,13 @@ namespace file
 		return m_size;
 	}
 
-	MLINLINE 	ctr::string get_extension(const char* i_filename)
+	MLINLINE void file::seek_cur(int i_offset)
+	{
+		fseek(m_handle,i_offset,SEEK_CUR);
+	}
+
+
+	MLINLINE ctr::string get_extension(const char* i_filename)
 	{
 		const char* tmp=i_filename;
 		unsigned len=(unsigned)strlen(i_filename);
@@ -149,6 +157,7 @@ namespace file
 
 		return ctr::string(tmp+len);
 	}
+
 
 }
 

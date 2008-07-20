@@ -21,6 +21,7 @@ int g_done=0;
 extern void init_app(HWND);
 extern void update_app();
 extern void exit_app();
+extern void reload_shaders();
 extern void change_screen_size(unsigned i_newwidth, unsigned i_newheight);
 
 int APIENTRY _tWinMain(HINSTANCE hInstance,
@@ -154,6 +155,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	switch (message)
 	{
+	case WM_ACTIVATE:
+	{
+		reload_shaders();
+		break;
+	}
 	case WM_SIZE:
 	{
 		change_screen_size(LOWORD(lParam),HIWORD(lParam));

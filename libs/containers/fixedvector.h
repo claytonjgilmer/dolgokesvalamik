@@ -1,6 +1,8 @@
 #ifndef _fixedvector_h_
 #define _fixedvector_h_
 
+#include "utils/assert.h"
+
 //#include <new>
 
 namespace ctr
@@ -48,31 +50,37 @@ namespace ctr
 
 		void push_back(const T& i_elem)
 		{
+			utils::assertion(m_size<bufsize,"vector is full");
 			new (&TBuf[m_size++]) T(i_elem);
 		}
 
 		void pop_back()
 		{
+			utils::assertion(m_size>0,"vector is empty");
 			TBuf[--m_size].~T();
 		}
 
-		T& operator[](int i_index)
+		T& operator[](unsigned i_index)
 		{
+			utils::assertion(i_index<m_size,"wrong index");
 			return TBuf[i_index];
 		}
 
-		const T& operator[](int i_index) const
+		const T& operator[](unsigned i_index) const
 		{
+			utils::assertion(i_index<m_size,"wrong index");
 			return TBuf[i_index];
 		}
 
 		T& back()
 		{
+			utils::assertion(m_size>0,"vector is empty");
 			return TBuf[m_size-1];
 		}
 
 		const T& back() const
 		{
+			utils::assertion(m_size>0,"vector is empty");
 			return TBuf[m_size-1];
 		}
 

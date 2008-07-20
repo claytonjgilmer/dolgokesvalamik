@@ -33,6 +33,10 @@ namespace render
 			}
 			delete [] buf;
 		}
+		else
+		{
+			utils::PRINT("a %s terxtura nincsen meg!\n",i_texturename);
+		}
 		return t;
 	}
 

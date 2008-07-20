@@ -6,10 +6,7 @@
 static void Assert(bool condition, const char* message = "Unspecified exception")
 {
 	if (!condition)
-	{
 		__asm int 3
-			throw chunk_exception(message);
-	}
 }
 
 
@@ -261,8 +258,8 @@ MChunk& MChunk::operator>> (ctr::string& s)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-MChunkStream::MChunkStream(const ctr::string& name) :
-m_Istream(name.c_str(), std::ios_base::binary)
+MChunkStream::MChunkStream(file::file& i_file):
+m_file(i_file)
 {
 }
 
@@ -277,53 +274,61 @@ MChunk MChunkStream::GetTopChunk()
 
 float MChunkStream::ReadFloat(unsigned& ucs)
 {
-	Assert(!m_Istream.fail());
+//	Assert(!m_Istream.fail());
 	float f = 0;
-	m_Istream.read((char*)&f, 4);
+//	m_Istream.read((char*)&f, 4);
+	m_file.read_bytes((char*)&f, 4);
 	ucs -= 4;
 	return f;
 }
 
 int MChunkStream::ReadInt(unsigned& ucs)
 {
-	Assert(!m_Istream.fail());
+//	Assert(!m_Istream.fail());
 	int i = 0;
-	m_Istream.read((char*)&i, 4);
+//	m_Istream.read((char*)&i, 4);
+	m_file.read_bytes((char*)&i, 4);
 	ucs -= 4;
 	return i;
 }
 
 char MChunkStream::ReadChar(unsigned& ucs)
 {
-	Assert(!m_Istream.fail());
+//	Assert(!m_Istream.fail());
 	ucs -= 1;
-	return m_Istream.get();
+	char ch;
+	m_file.read_bytes((char*)&ch, 1);
+//	return m_Istream.get();
+	return ch;
 }
 
 unsigned MChunkStream::ReadUnsigned(unsigned& ucs)
 {
-	Assert(!m_Istream.fail());
+//	Assert(!m_Istream.fail());
 	unsigned u = 0;
-	m_Istream.read((char*)&u, 4);
+//	m_Istream.read((char*)&u, 4);
+	m_file.read_bytes((char*)&u, 4);
 	ucs -= 4;
 	return u;
 }
 
 short MChunkStream::ReadShort(unsigned& ucs)
 {
-	Assert(!m_Istream.fail());
+//	Assert(!m_Istream.fail());
 	short sh = 0;
-	m_Istream.read((char*)&sh, sizeof(short));
+//	m_Istream.read((char*)&sh, sizeof(short));
+	m_file.read_bytes((char*)&sh, 2);
 	ucs -= sizeof(short);
 	return sh;
 }
 
 ctr::string MChunkStream::ReadString(unsigned& ucs)
 {
-	Assert(!m_Istream.fail());
+//	Assert(!m_Istream.fail());
 	unsigned len = ReadUnsigned(ucs);
 	char* buf = new char[len+1];
-	m_Istream.read(buf, len);
+//	m_Istream.read(buf, len);
+	m_file.read_bytes(buf,len);
 	buf[len] = '\0';
 	ctr::string ret = buf;
 	delete buf;
@@ -333,8 +338,9 @@ ctr::string MChunkStream::ReadString(unsigned& ucs)
 
 void MChunkStream::Skip(unsigned size)
 {
-	unsigned pos = m_Istream.tellg();
-	m_Istream.seekg(size, std::ios_base::cur);
+//	unsigned pos = m_Istream.tellg();
+//	m_Istream.seekg(size, std::ios_base::cur);
+	m_file.seek_cur(size);
 	//Assert(m_Istream.tellg() == pos + size && !m_Istream.fail());
 }
 

@@ -7,6 +7,10 @@
 
 namespace utils
 {
+	inline void assertion(bool i_condition)
+	{
+		if (!i_condition) __asm int 3;
+	}
 	inline void assertion(bool i_condition, const char* i_msg)
 	{
 		if (!i_condition)

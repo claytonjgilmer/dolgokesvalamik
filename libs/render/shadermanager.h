@@ -25,6 +25,7 @@ namespace render
 		shadermanager(const shadermanagerdesc*);
 		shader* get_shader(const char* i_shadername);
 		void erase_shader(shader*);
+		void reload_shaders();
 
 	private:
 		ctr::string m_shadergroup;

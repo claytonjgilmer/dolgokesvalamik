@@ -26,6 +26,8 @@ namespace ctr
 
 		tstring substring(unsigned i_pos, unsigned i_length) const;
 
+		unsigned find(const char* i_substring) const;
+
 		template <unsigned MINCAP2> bool operator==(const tstring<MINCAP2>& i_str) const;
 		bool operator==(const char* i_str) const;
 		bool operator!=(const char* i_str) const;
@@ -306,6 +308,17 @@ namespace ctr
 		res.m_buf[i_length]=0;
 
 		return res;
+	}
+
+	template<unsigned  TSTRING_MIN_CAPACITY>
+	MLINLINE unsigned tstring<TSTRING_MIN_CAPACITY>::find(const char* i_substring) const
+	{
+		char* ret=strstr(m_buf,i_substring);
+
+		if (ret)
+			return ret-m_buf;
+		else
+			return m_length;
 	}
 
 	typedef tstring<16> string;

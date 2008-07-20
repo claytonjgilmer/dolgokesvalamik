@@ -13,12 +13,12 @@ namespace render
 
 	public:
 		shader(const void* i_buf, unsigned i_bufsize, const char* i_name);
+		void reload(const void* i_buf, unsigned i_bufsize);
 		shader* Next;
 		LPD3DXEFFECT m_effect;
 
 	private:
 		~shader();
-		ctr::string m_name;
 	};
 }
 #endif//_shader_h_

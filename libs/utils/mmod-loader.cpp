@@ -78,7 +78,126 @@ public:
 		m_MVF = str;
 		m_MVF.to_lower();
 
-		if (m_MVF=="ship.mvfm")
+
+		if (m_MVF == "simple.mvfm")
+			m_MVF = "pf43nf43uf42.mvfm";
+		else if (m_MVF == "simpleindexed.mvfm")
+			m_MVF = "pf43nf43uf42if41.mvfm";
+		else if (m_MVF == "color.mvfm")
+			m_MVF = "pf43cc.mvfm";
+		else if (m_MVF == "position.mvfm")
+			m_MVF = "pf43.mvfm";
+		else if (m_MVF == "oceanheightmapgen.mvfm")
+			m_MVF = "pf44uf42.mvfm";
+		else if (m_MVF == "oceannormalmapgen.mvfm")
+			m_MVF = "pf44uf42uf42uf42uf42uf42.mvfm";
+		else if (m_MVF == "oceanheightmap.mvfm")
+			//m_MVF = "nf24.mvfm";
+			m_MVF = "nc.mvfm";
+		else if (m_MVF == "simplecolor.mvfm")
+			m_MVF = "pf43ccuf42.mvfm";
+		else if (m_MVF == "simplecolor2.mvfm")
+			m_MVF = "pf44ccccuf42uf42.mvfm";
+		else if (m_MVF == "ship.mvfm")
+			m_MVF = "pf43nf43uf42uf42tf43bf43.mvfm";
+		else if (m_MVF == "shipindexed.mvfm")
+			m_MVF = "pf43nf43uf42uf42tf43bf43if41.mvfm";
+		else if (m_MVF == "shipvc.mvfm")
+			m_MVF = "pf43nf43uf42uf42tf43bf43cc.mvfm";
+		else if (m_MVF == "shipvcindexed.mvfm")
+			m_MVF = "pf43nf43uf42uf42tf43bf43ccif41.mvfm";
+		else if (m_MVF == "gun.mvfm")
+			m_MVF = "pf43nf43uf42.mvfm";
+		else if (m_MVF == "gunvc.mvfm")
+			m_MVF = "pf43nf43uf42cc.mvfm";
+		else if (m_MVF == "gunvcindexed.mvfm")
+			m_MVF = "pf43nf43uf42ccif41.mvfm";
+		else if (m_MVF == "ocean.mvfm")
+			m_MVF = "pf43nf43uf43.mvfm";
+		else if (m_MVF == "projocean.mvfm")
+			m_MVF = "pf42.mvfm";
+		else if (m_MVF == "projoceanfull.mvfm")
+			m_MVF = "pf42nc.mvfm";
+		else if (m_MVF == "terraindx9ati.mvfm")
+			m_MVF = "pcpc.mvfm";
+		else if (m_MVF == "shadowmap.mvfm")
+			m_MVF = "pf43nf43uf42.mvfm";
+		else if (m_MVF == "airplane.mvfm")
+			m_MVF = "pf43nf43uf42tf43bf43.mvfm";
+		else if (m_MVF == "airplaneindexed.mvfm")
+			m_MVF = "pf43nf43uf42tf43bf43if41.mvfm";
+		else if (m_MVF == "transformpps.mvfm")
+			m_MVF = "pf43.mvfm";
+		else if (m_MVF == "particlesprite.mvfm")
+			m_MVF = "pf43ccuf41uf41uf42uf42.mvfm";
+		else if (m_MVF == "particleaxial.mvfm")
+			m_MVF = "pf43ccuf43uf42uf42.mvfm";
+		else if (m_MVF == "particlefloating.mvfm")
+			m_MVF = "pf44ccuf24uf42.mvfm";
+		else if (m_MVF == "particleaxialsprite.mvfm")
+			m_MVF = "pf44ccuf44uf24uf42uf22.mvfm";
+		else if (m_MVF == "coast.mvfm")
+			m_MVF = "pf43.mvfm";
+		else if (m_MVF == "beam.mvfm")
+			m_MVF = "pf43cc.mvfm";
+		else if (m_MVF == "waterparticle.mvfm")
+			m_MVF = "cc.mvfm";
+		else if (m_MVF == "watertracer.mvfm")
+			m_MVF = "pf43ccuf42.mvfm";
+		else if (m_MVF == "choppy.mvfm")
+			m_MVF = "pf43nf43cc.mvfm";
+		else if (m_MVF == "cloud.mvfm")
+			m_MVF = "pf43ccuf42uf42.mvfm";
+		else if (m_MVF == "impostor.mvfm")
+			m_MVF = "pf43uf42.mvfm";
+		else if (m_MVF == "skined.mvfm")
+			m_MVF = "pf43nf43uf42wf44if44.mvfm";
+		else if (m_MVF == "skinedUW.mvfm")
+			m_MVF = "pf43nf43tf43bf43uf42wf44if44.mvfm";
+		else if (m_MVF == "FoliageNoInst.mvfm")
+			m_MVF = "pf43nf43uf42uf41cf43.mvfm";
+		else if (m_MVF == "rope.mvfm")
+			m_MVF = "pf43nf43uf42uf41.mvfm";
+		else if (m_MVF == "FullscreenQuad.mvfm")
+			m_MVF = "pf44uf42uf42uf42uf42.mvfm";
+		else if (m_MVF == "lightning.mvfm")
+			m_MVF = "pf43uf42uf41.mvfm";
+		else if (m_MVF == "foliagesprite.mvfm")
+			m_MVF = "pf43uf42ccuf43.mvfm";
+		else if (m_MVF == "traceline.mvfm")
+			m_MVF = "pf43uf43ccuf42uf41.mvfm";
+		else
+		if (m_MVF == "airfield.mvfm")
+			m_MVF = "pf43nf43uf42uf42.mvfm";
+		else
+		if (m_MVF == "watertracerskined.mvfm")
+			m_MVF = "pf44if43wf43uf44uf42.mvfm";
+		else
+		if (m_MVF == "watertracerskinedstatic.mvfm")
+			m_MVF = "pf44uf42uf42.mvfm";
+		else if (m_MVF == "waterspray.mvfm")
+			m_MVF = "pf43uf42uf44uf43.mvfm";
+		else if (m_MVF == "bterrain2.mvfm")
+			m_MVF = "pf43nf43uf42uf42.mvfm";
+		else
+		if (m_MVF == "bterrain3.mvfm")
+			m_MVF = "pf43nf43uf42uf42uf42.mvfm";
+		if (m_MVF == "bterrain4.mvfm")
+			m_MVF = "pf43nf43uf42uf42uf42uf42.mvfm";
+		if (m_MVF == "uterrain3.mvfm")
+			m_MVF = "pf43nf43uf42uf42uf42cc.mvfm";
+		if (m_MVF == "uterrain4.mvfm")
+			m_MVF = "pf43nf43uf42uf42uf42uf42cc.mvfm";
+		else if (m_MVF == "shore.mvfm")
+			m_MVF = "pf43uf42cc.mvfm";
+		else
+		if (m_MVF == "river.mvfm")
+			m_MVF = "pf43nf43tf43bf43uf42cc.mvfm";
+		else if (m_MVF == "foliagevc.mvfm")
+			m_MVF = "pf43nf43uf42cc.mvfm";
+		else if (m_MVF == "decal.mvfm")
+			m_MVF = "pf43nf43uf44uf42.mvfm";
+		else if (m_MVF=="ship.mvfm")
 			m_MVF="pf43nf43uf42uf42.mvfm";
 		else if (m_MVF=="shipvc.mvfm")
 			m_MVF="pf43nf43uf42uf42cc.mvfm";
@@ -161,7 +280,7 @@ public:
 	void PrintSubsetChunk(MChunk& chunk);
 	void PrintLODPhasesChunk(MChunk &subchunk);
 
-	render::mesh* generate_mesh();
+	ctr::fixedvector<render::mesh*,8> generate_mesh();
 	ctr::vector<render::vertexelem> createdecl(ctr::string i_filename);
 
 /*
@@ -329,6 +448,7 @@ ctr::vector<render::vertexelem> MeshLODInfo::createdecl(ctr::string i_filename)
 		}
 		if (!found)
 		{
+			utils::assertion(0,"hibas vertexformatnev");
 			error = true;
 			break;
 		}
@@ -347,6 +467,7 @@ ctr::vector<render::vertexelem> MeshLODInfo::createdecl(ctr::string i_filename)
 		}
 		if (!found)
 		{
+			utils::assertion(0,"hibas vertexformatnev");
 			error = true;
 			break;
 		}
@@ -359,69 +480,72 @@ ctr::vector<render::vertexelem> MeshLODInfo::createdecl(ctr::string i_filename)
 	return ret;
 }
 
-render::mesh* MeshLODInfo::generate_mesh()
+ctr::fixedvector<render::mesh*,8> MeshLODInfo::generate_mesh()
 {
-	render::mesh* mesh=new render::mesh("mesh");
-
-	if (m_32bit)
+	utils::assertion(m_Streams.size()>0,"0 a vertexbufferek szama!");
+	ctr::fixedvector<render::mesh*,8> res;
+	for (unsigned streamindex=0; streamindex<m_Streams.size(); ++streamindex)
 	{
-		mesh->m_ib=new render::indexbuffer(m_32bitIndices.size(),true);
-		int* ib=(int*)mesh->m_ib->lock();
+		render::mesh* mesh=new render::mesh("mesh");
+		res.push_back(mesh);
 
-		memcpy(ib,m_32bitIndices,m_32bitIndices.size()*sizeof(int));
-	}
-	else
-	{
-		mesh->m_ib=new render::indexbuffer(m_Indices.size(),false);
-		unsigned short* ib=(unsigned short*)mesh->m_ib->lock();
-		memcpy(ib,m_Indices,m_Indices.size()*sizeof(short));
-		mesh->m_ib->unlock();
-	}
-
-
-	utils::assertion(m_Streams.size()==1,"nem 1 a vertexbufferek szama!");
-
-	for (unsigned int n=0; n<1; ++n)
-//		for (unsigned int n=0; n<m_Streams.size(); ++n)
-	{
-		ctr::vector<render::vertexelem> vdecl=createdecl(m_Streams[n].GetMVF());
-		mesh->m_vb=new render::vertexbuffer(m_Streams[n].GetVertexCount(),vdecl,m_Streams[n].GetFloatPerVertices()*sizeof(float));
-		void* vb=mesh->m_vb->lock();
-		memcpy(vb,m_Streams[n].GetVertices(),m_Streams[n].GetVertexCount()*m_Streams[n].GetFloatPerVertices()*sizeof(float));
-		mesh->m_vb->unlock();
-	}
-
-	int startsubset,endsubset;
-	if (m_LOD.size())
-	{
-		startsubset=m_LOD[0].startSubset;
-		endsubset=m_LOD[0].endSubset;
-	}
-	else
-	{
-		startsubset=0;
-		endsubset=m_SubSet.size()-1;
-	}
-
-	for (int n=startsubset; n<=endsubset; ++n)
-	{
-		if (m_SubSet[n].vertexstreamidx!=0)
-			continue;
-
-		mesh->m_submeshbuf.push_back(render::submesh());
-		render::submesh& sm=mesh->m_submeshbuf.back();
-		sm.set_shader(render::shadermanager::instance()->get_shader("posnormuv.fx"));
-		sm.m_firstindex=m_SubSet[n].indexStart;
-		sm.m_numindices=m_SubSet[n].indexNum*3;
-		sm.m_firstvertex=m_SubSet[n].vertexStart;
-		sm.m_numvertices=m_SubSet[n].vertexNum;
-		for (unsigned m=0; m<m_SubSet[n].textureNames.size(); ++m)
+		if (m_32bit)
 		{
-			sm.m_texturebuf.push_back(render::texturemanager::instance()->get_texture(m_SubSet[n].textureNames[m].c_str()));
+			mesh->m_ib=new render::indexbuffer(m_32bitIndices.size(),true);
+			int* ib=(int*)mesh->m_ib->lock();
+
+			memcpy(ib,m_32bitIndices,m_32bitIndices.size()*sizeof(int));
+		}
+		else
+		{
+			mesh->m_ib=new render::indexbuffer(m_Indices.size(),false);
+			unsigned short* ib=(unsigned short*)mesh->m_ib->lock();
+			memcpy(ib,m_Indices,m_Indices.size()*sizeof(short));
+			mesh->m_ib->unlock();
+		}
+
+
+
+		{
+			ctr::vector<render::vertexelem> vdecl=createdecl(m_Streams[streamindex].GetMVF());
+			mesh->m_vb=new render::vertexbuffer(m_Streams[streamindex].GetVertexCount(),vdecl,m_Streams[streamindex].GetFloatPerVertices()*sizeof(float));
+			void* vb=mesh->m_vb->lock();
+			memcpy(vb,m_Streams[streamindex].GetVertices(),m_Streams[streamindex].GetVertexCount()*m_Streams[streamindex].GetFloatPerVertices()*sizeof(float));
+			mesh->m_vb->unlock();
+		}
+
+		int startsubset,endsubset;
+		if (m_LOD.size())
+		{
+			startsubset=m_LOD[0].startSubset;
+			endsubset=m_LOD[0].endSubset;
+		}
+		else
+		{
+			startsubset=0;
+			endsubset=m_SubSet.size()-1;
+		}
+
+		for (int n=startsubset; n<=endsubset; ++n)
+		{
+			if (m_SubSet[n].vertexstreamidx!=streamindex)
+				continue;
+
+			mesh->m_submeshbuf.push_back(render::submesh());
+			render::submesh& sm=mesh->m_submeshbuf.back();
+			sm.set_shader(render::shadermanager::instance()->get_shader("posnormuv.fx"));
+			sm.m_firstindex=m_SubSet[n].indexStart;
+			sm.m_numindices=m_SubSet[n].indexNum*3;
+			sm.m_firstvertex=m_SubSet[n].vertexStart;
+			sm.m_numvertices=m_SubSet[n].vertexNum;
+			for (unsigned m=0; m<m_SubSet[n].textureNames.size(); ++m)
+			{
+				sm.m_texturebuf.push_back(render::texturemanager::instance()->get_texture(m_SubSet[n].textureNames[m].c_str()));
+			}
 		}
 	}
 
-	return mesh;
+	return res;
 }
 
 //float g_sphere_radius;
@@ -997,12 +1121,12 @@ static float LODErrToDist(float lodErr, float mulRad, float centerZ)
 
 
 
-render::object3d* load_mmod(const char* i_filename)
+render::object3d* load_mmod(file::file& i_file)
 {
 	gMeshLODInfoArray.clear();
 	gHItemArray.clear();
 
-	MChunkStream stream(i_filename);
+	MChunkStream stream(i_file);
 
 	MChunk chunk = stream.GetTopChunk();
 	Version = chunk.ReadUnsigned();
@@ -1037,11 +1161,11 @@ render::object3d* load_mmod(const char* i_filename)
 		}
 	}
 
-	ctr::vector<render::mesh*> meshbuf;
+	ctr::vector<ctr::fixedvector<render::mesh*,8>> meshbuf;
 
 	for (unsigned n=0; n<gMeshLODInfoArray.size();++n)
 	{
-		render::mesh* mesh=0;
+		ctr::fixedvector<render::mesh*,8> mesh;
 		if (gMeshLODInfoArray[n].ismesh)
 			mesh=gMeshLODInfoArray[n].generate_mesh();
 
@@ -1059,7 +1183,8 @@ render::object3d* load_mmod(const char* i_filename)
 
 		if (gHItemArray[n].mesh!=-1)
 		{
-			objbuf.back()->set_mesh(meshbuf[gHItemArray[n].mesh]);
+			for (unsigned k=0; k<meshbuf[gHItemArray[n].mesh].size(); ++k)
+				objbuf.back()->add_mesh(meshbuf[gHItemArray[n].mesh][k]);
 		}
 	}
 
@@ -1076,6 +1201,12 @@ render::object3d* load_mmod(const char* i_filename)
 	return root;
 }
 
+render::object3d* load_mmod(const char* i_filename)
+{
+	file::file f(i_filename,"rb");
+
+	return load_mmod(f);
+}
 
 
 

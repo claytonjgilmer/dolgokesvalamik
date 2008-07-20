@@ -3,7 +3,8 @@
 
 #include "containers/vector.h"
 #include "containers/string.h"
-#include <fstream>
+//#include <fstream>
+#include "file/file.h"
 //#include <exception>
 
 //#include <boost/format.hpp>
@@ -14,21 +15,6 @@ class MChunk;
 class MChunkHandle;
 class MChunkStream;
 
-class chunk_exception : public std::exception
-{
-	char buffer[256];
-
-public:
-	chunk_exception(const char* msg)
-	{
-		strcpy(buffer, msg);
-	}
-
-	const char* what() const 
-	{
-		return buffer;
-	}
-};
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -37,7 +23,8 @@ class MChunkStream
 public:
 	friend class MChunkHandle;
 
-	MChunkStream(const ctr::string& filename);
+//	MChunkStream(const ctr::string& filename);
+	MChunkStream(file::file& i_file);
 	~MChunkStream();
 
 	/// read the top chunk from the file
@@ -59,7 +46,8 @@ protected:
 
 	ctr::vector<ctr::string> mStack;
 
-	std::ifstream m_Istream;
+//	std::ifstream m_Istream;
+	file::file& m_file;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

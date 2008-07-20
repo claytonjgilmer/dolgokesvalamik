@@ -24,6 +24,7 @@ namespace ctr
 		T* get_data(const char* i_name) const; 
 
 		stringmapstat statistics() const;
+		T** get_buffer(){return m_buf;}
 
 	private:
 		T* m_buf[bufsize];

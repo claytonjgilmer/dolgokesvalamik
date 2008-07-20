@@ -59,7 +59,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalDependencies="d3d9.lib d3dx9d.lib"
+				AdditionalDependencies="d3d9.lib d3dx9d.lib dinput8.lib dxguid.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -126,7 +126,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalDependencies="d3d9.lib d3dx9.lib"
+				AdditionalDependencies="d3d9.lib d3dx9.lib dxguid.lib dinput8.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -199,6 +199,10 @@
 			</File>
 			<File
 				RelativePath=".\render\indexbuffer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\input\inputsystem.h"
 				>
 			</File>
 			<File
@@ -519,6 +523,10 @@
 			</File>
 			<File
 				RelativePath=".\render\indexbuffer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\input\inputsystem.cpp"
 				>
 			</File>
 			<File

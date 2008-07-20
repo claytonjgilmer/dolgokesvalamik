@@ -158,7 +158,7 @@ namespace scene
 		int bufsize=0;
 		node* ptr=this;
 
-		while (!(ptr->m_flags & nodeflag_valid_worldpos))
+		while (ptr->m_parent && !(ptr->m_flags & nodeflag_valid_worldpos))
 		{
 			buf[bufsize++]=ptr;
 			ptr=ptr->m_parent;
@@ -176,5 +176,10 @@ namespace scene
 	const ctr::string& node::get_name() const
 	{
 		return m_name;
+	}
+
+	void node::set_name(const char* i_name)
+	{
+		m_name=i_name;
 	}
 }
