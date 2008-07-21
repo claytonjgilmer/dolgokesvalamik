@@ -1175,11 +1175,16 @@ render::object3d* load_mmod(file::file& i_file)
 	ctr::vector<render::object3d*> objbuf;
 	render::object3d* root=NULL;
 
+	unsigned parentnum=0;
+
 	for (unsigned n=0; n<gHItemArray.size(); ++n)
 	{
 		objbuf.push_back(gHItemArray[n].generate_object());
 		if (gHItemArray[n].parent==-1)
+		{
 			root=objbuf.back();
+			++parentnum;
+		}
 
 		if (gHItemArray[n].mesh!=-1)
 		{
@@ -1188,12 +1193,19 @@ render::object3d* load_mmod(file::file& i_file)
 		}
 	}
 
+	utils::assertion(parentnum>0,"nincs parentitem?");
+
+	if (parentnum>1)
+	{
+		root=new render::object3d("rootitem");
+	}
+
 	for (unsigned n=0; n<gHItemArray.size(); ++n)
 	{
-		if (objbuf[n]!=root)
-		{
+		if (gHItemArray[n].parent!=-1)
 			objbuf[gHItemArray[n].parent]->add_child(objbuf[n]);
-		}
+		else if (parentnum>1)
+				root->add_child(objbuf[n]);
 	}
 	gMeshLODInfoArray.clear();
 	gHItemArray.clear();

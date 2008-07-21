@@ -20,8 +20,6 @@ namespace render
 		ctr::string ext=file::get_extension(i_name);
 		ext.to_upper();
 
-		object3d* obj=NULL;
-
 		if (ext=="MMOD")
 		{
 			obj=load_mmod_file(i_name);

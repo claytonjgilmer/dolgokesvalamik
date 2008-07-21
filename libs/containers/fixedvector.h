@@ -16,6 +16,12 @@ namespace ctr
 			m_size=0;
 		}
 
+		~fixedvector()
+		{
+			for (unsigned int n=0; n<m_size;++n)
+				TBuf[n].~T();
+		}
+
 		unsigned size() const
 		{
 			return m_size;

@@ -30,6 +30,11 @@ namespace render
 		LPDIRECT3DVERTEXDECLARATION9 m_decl;
 		unsigned m_vertexsize;
 
+#ifdef _DEBUG
+		const ctr::vector<vertexelem> m_vertexelems;
+#endif
+
+
 	};
 }
 #endif//_vertexbuffer_h_

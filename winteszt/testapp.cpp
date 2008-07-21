@@ -29,11 +29,13 @@ struct game
 	math::vec3 light_dir;
 	render::object3d* obj;
 	render::object3d* sky;
+	bool inited;
 
 	game()
 	{
 		camz=camy=camx=0;
 		camt.set(0,20,0);
+		inited=false;
 	}
 } g_game;
 
@@ -208,6 +210,7 @@ void init_app(HWND i_hwnd)
 //	render::texture* txt=render::texturemanager::instance()->get_texture("white.bmp");
 	sts.m_texturebuf.push_back(txt);
 
+	g_game.inited=true;
 }
 
 
@@ -395,6 +398,6 @@ void generate_sphere(math::vec3 o_pos[],int& o_numvertices,short o_indices[],int
 
 void reload_shaders()
 {
-	if (render::shadermanager::instance())
+	if (g_game.inited)
 		render::shadermanager::instance()->reload_shaders();
 }

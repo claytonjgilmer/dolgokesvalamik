@@ -77,10 +77,8 @@ MChunkHandle::~MChunkHandle()
 void MChunkHandle::Close()
 {
 #ifdef _DEBUG
-	if (!std::uncaught_exception())
-	{
-		Assert(mSizeLeft == 0, "Garbage at the end of chunk. Use Skip() if this is OK");
-	}
+	Assert(mSizeLeft == 0, "Garbage at the end of chunk. Use Skip() if this is OK");
+
 	if (mSizeLeft)
 	{
 		Skip();

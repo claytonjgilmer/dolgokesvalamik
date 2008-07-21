@@ -35,7 +35,7 @@ namespace render
 		}
 		else
 		{
-			utils::PRINT("a %s terxtura nincsen meg!\n",i_texturename);
+			utils::PRINT("a %s textura nincsen meg!\n",i_texturename);
 		}
 		return t;
 	}

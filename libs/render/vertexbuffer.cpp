@@ -12,13 +12,16 @@ namespace render
 		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
 		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
 		{ 0, 8, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
-		{ 0, 16, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
+		{ 0, 16, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
 		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT, 0 },
 		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BINORMAL, 0 },
 		D3DDECL_END()
 	};
 
 	vertexbuffer::vertexbuffer(unsigned i_vertexnum, const ctr::vector<vertexelem>& i_vertexelements)
+#ifdef _DEBUG
+		:m_vertexelems(i_vertexelements)
+#endif
 	{
 		for (int n=0; n<vertexelement_num; ++n)
 			g_decl[n].UsageIndex=0;
@@ -46,6 +49,9 @@ namespace render
 	}
 
 	vertexbuffer::vertexbuffer(unsigned i_vertexnum, const ctr::vector<vertexelem>& i_vertexelements,unsigned i_vertexsize)
+#ifdef _DEBUG
+		:m_vertexelems(i_vertexelements)
+#endif
 	{
 		for (int n=0; n<vertexelement_num; ++n)
 			g_decl[n].UsageIndex=0;
