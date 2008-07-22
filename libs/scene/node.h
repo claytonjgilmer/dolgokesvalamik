@@ -31,7 +31,7 @@ namespace scene
 		node* get_next(node* i_root=NULL) const;
 
 		const ctr::string& get_name() const;
-		void set_name(const char*);
+		void set_name(const char* i_name);
 		
 	protected:
 		node* m_parent;
