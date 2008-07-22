@@ -438,7 +438,8 @@ ctr::vector<render::vertexelem> MeshLODInfo::createdecl(ctr::string i_filename)
 		bool found = false;
 		for (int j = 0 ; j < usageCount ; ++j)
 		{
-			if (i_filename.substring(i, usages[j].Name.size()) == usages[j].Name)
+			if (i_filename.match(i, usages[j].Name.c_str()))
+//				if (i_filename.substring(i, usages[j].Name.size()) == usages[j].Name)
 			{
 				usage = usages[j].Value;
 				i += usages[j].Name.size();
@@ -457,7 +458,8 @@ ctr::vector<render::vertexelem> MeshLODInfo::createdecl(ctr::string i_filename)
 		found = false;
 		for (int j = 0 ; j < typeCount ; ++j)
 		{
-			if (i_filename.substring(i, types[j].Name.size()) == types[j].Name)
+			if (i_filename.match(i,types[j].Name.c_str()))
+//				if (i_filename.substring(i, types[j].Name.size()) == types[j].Name)
 			{
 				type = types[j].Value;
 				i += types[j].Name.size();

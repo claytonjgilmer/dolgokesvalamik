@@ -11,7 +11,7 @@
 
 namespace render
 {
-	class mesh//:public utils::resource
+	class mesh:public utils::resource
 	{
 	public:
 		mesh(const char* i_name);

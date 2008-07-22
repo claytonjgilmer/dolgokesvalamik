@@ -10,8 +10,9 @@ namespace ctr
 	template <class T, unsigned bufsize> class fixedvector
 	{
 	public:
-#define TBuf ((T*)m_buf)
-		fixedvector()
+//#define TBuf ((T*)m_buf)
+		fixedvector():
+		TBuf((T*)m_buf)
 		{
 			m_size=0;
 		}
@@ -20,6 +21,26 @@ namespace ctr
 		{
 			for (unsigned int n=0; n<m_size;++n)
 				TBuf[n].~T();
+		}
+
+		fixedvector(const fixedvector& i_other):
+		TBuf((T*)m_buf)
+		{
+			m_size=i_other.m_size;
+
+			for (unsigned n=0; n<m_size; ++n)
+				new (&(((T*)m_buf)[n])) T(((T*)i_other.m_buf)[n]);
+		}
+
+		void operator=(const fixedvector& i_other)
+		{
+			for (unsigned int n=0; n<m_size;++n)
+				TBuf[n].~T();
+			
+			m_size=i_other.m_size;
+
+			for (unsigned n=0; n<m_size; ++n)
+				new ((&((T*)m_buf)[n])) T(((T*)i_other.m_buf)[n]);
 		}
 
 		unsigned size() const
@@ -98,6 +119,7 @@ namespace ctr
 
 	private:
 		char m_buf[bufsize*sizeof(T)];
+		T* TBuf;
 		unsigned m_size;
 	};
 		

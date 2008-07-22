@@ -3,7 +3,7 @@
 
 namespace render
 {
-	mesh::mesh(const char* i_name)//:resource(i_name)
+	mesh::mesh(const char* i_name):resource(i_name)
 	{
 	}
 

@@ -1,7 +1,7 @@
 #ifndef _referencedobject_h_
 #define _referencedobject_h_
 
-#include "utils/referencepointer.h"
+#include "utils/ref_ptr.h"
 #include "utils/misc.h"
 #include "utils/assert.h"
 
@@ -10,7 +10,7 @@ namespace utils
 
 	class referencedobject
 	{
-		template <class T> friend class referencepointer;
+		template <class T> friend class ref_ptr;
 	public:
 		int get_ref() const;
 	protected:

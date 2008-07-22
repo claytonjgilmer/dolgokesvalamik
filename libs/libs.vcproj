@@ -362,15 +362,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\prop\property.h"
+				>
+			</File>
+			<File
 				RelativePath=".\containers\queue.h"
 				>
 			</File>
 			<File
-				RelativePath=".\utils\referencedobject.h"
+				RelativePath=".\utils\ref_ptr.h"
 				>
 			</File>
 			<File
-				RelativePath=".\utils\referencepointer.h"
+				RelativePath=".\utils\referencedobject.h"
 				>
 			</File>
 			<File

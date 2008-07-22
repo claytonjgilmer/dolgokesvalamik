@@ -4,6 +4,7 @@
 #include "containers/string.h"
 #include "utils/assert.h"
 #include "math/mtx4x3.h"
+#include "prop/property.h"
 
 namespace scene
 {

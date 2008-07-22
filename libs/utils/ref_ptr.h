@@ -1,5 +1,5 @@
-#ifndef _referencepointer_h_
-#define _referencepointer_h_
+#ifndef _ref_ptr_h_
+#define _ref_ptr_h_
 
 #include "referencedobject.h"
 #include "utils/misc.h"
@@ -7,17 +7,22 @@
 namespace utils
 {
 	template <class REF>
-	class referencepointer
+	class ref_ptr
 	{
 	public:
-		referencepointer();
-		referencepointer(const referencepointer& i_other);
-		referencepointer(REF* i_object);
+		ref_ptr();
+		ref_ptr(const ref_ptr& i_other);
+		ref_ptr(REF* i_object);
 
-		void operator=(const referencepointer& i_other);
+		void operator=(const ref_ptr& i_other);
 		void operator=(REF* i_object);
 
 		operator const REF* () const
+		{
+			return m_ptr;
+		}
+
+		operator REF* ()
 		{
 			return m_ptr;
 		}
@@ -35,19 +40,19 @@ namespace utils
 			return m_ptr;
 		}
 
-		~referencepointer();
+		~ref_ptr();
 	//private:
 		REF* m_ptr;
 	};
 
 	template <class REF>
-	inline referencepointer<REF>::referencepointer()
+	inline ref_ptr<REF>::ref_ptr()
 	{
 		m_ptr=0;
 	}
 
 	template <class REF>
-	inline referencepointer<REF>::referencepointer(const referencepointer& i_other)
+	inline ref_ptr<REF>::ref_ptr(const ref_ptr& i_other)
 	{
 		m_ptr=i_other.m_ptr;
 
@@ -56,7 +61,7 @@ namespace utils
 	}
 
 	template <class REF>
-	inline referencepointer<REF>::referencepointer(REF* i_object)
+	inline ref_ptr<REF>::ref_ptr(REF* i_object)
 	{
 		m_ptr=i_object;
 
@@ -65,7 +70,7 @@ namespace utils
 	}
 
 	template <class REF>
-	inline void referencepointer<REF>::operator =(const referencepointer& i_other)
+	inline void ref_ptr<REF>::operator =(const ref_ptr& i_other)
 	{
 		if (m_ptr)
 		{
@@ -82,7 +87,7 @@ namespace utils
 	}
 
 	template <class REF>
-	inline void referencepointer<REF>::operator =(REF* i_object)
+	inline void ref_ptr<REF>::operator =(REF* i_object)
 	{
 		if (m_ptr)
 		{
@@ -99,19 +104,19 @@ namespace utils
 	}
 /*
 	template <class REF>
-	inline REF& referencepointer<REF>::operator *()
+	inline REF& ref_ptr<REF>::operator *()
 	{
 		return *m_ptr;
 	}
 
 	template <class REF>
-	inline const REF& referencepointer<REF>::operator *() const
+	inline const REF& ref_ptr<REF>::operator *() const
 	{
 		return m_ptr;
 	}
 */
 	template <class REF>
-	inline referencepointer<REF>::~referencepointer()
+	inline ref_ptr<REF>::~ref_ptr()
 	{
 		if (m_ptr)
 		{
@@ -124,4 +129,4 @@ namespace utils
 		}
 	}
 }
-#endif//_referencepointer_h_
+#endif//_ref_ptr_h_

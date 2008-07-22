@@ -50,8 +50,8 @@ namespace render
 
 		unsigned m_firstvertex, m_numvertices, m_firstindex,m_numindices;
 
-		ctr::vector<utils::referencepointer<texture>> m_texturebuf;
-		utils::referencepointer<shader> m_shader;
+		ctr::vector<utils::ref_ptr<texture>> m_texturebuf;
+		utils::ref_ptr<shader> m_shader;
 
 		struct param
 		{

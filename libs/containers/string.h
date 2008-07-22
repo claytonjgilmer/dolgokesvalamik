@@ -4,6 +4,7 @@
 #include <string.h>
 #include "utils/assert.h"
 #include "utils/misc.h"
+#include <string>
 namespace ctr
 {
 	template <unsigned TSTRING_MIN_CAPACITY=16>
@@ -25,6 +26,7 @@ namespace ctr
 		unsigned capacity() const;
 
 		tstring substring(unsigned i_pos, unsigned i_length) const;
+		bool match(unsigned i_pos, const char* i_str) const;
 
 		unsigned find(const char* i_substring) const;
 
@@ -319,6 +321,18 @@ namespace ctr
 			return ret-m_buf;
 		else
 			return m_length;
+	}
+
+	template<unsigned  TSTRING_MIN_CAPACITY>
+	MLINLINE bool tstring<TSTRING_MIN_CAPACITY>::match(unsigned i_pos, const char* i_str) const
+	{
+		utils::assertion(i_pos<=m_length);
+
+		int i=0;
+
+		while (m_buf[i_pos+i] && i_str[i] && m_buf[i_pos+i]==i_str[i]) ++i;
+
+		return (!i_str[i]);
 	}
 
 	typedef tstring<16> string;

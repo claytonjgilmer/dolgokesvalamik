@@ -8,7 +8,7 @@ namespace render
 {
 	class shader:public utils::resource
 	{
-		friend class utils::referencepointer<shader>;
+		friend class utils::ref_ptr<shader>;
 		friend struct shaderparameteradogato;
 
 	public:

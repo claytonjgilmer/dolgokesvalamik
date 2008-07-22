@@ -21,7 +21,7 @@ namespace render
 
 		object3d* Next;
 	protected:
-		ctr::fixedvector<utils::auto_ptr<mesh>,8> m_mesh;
+		ctr::fixedvector<utils::ref_ptr<mesh>,8> m_mesh;
 	};
 }
 #endif//_renderobject3d_h_
