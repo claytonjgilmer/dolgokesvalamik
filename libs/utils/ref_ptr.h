@@ -66,7 +66,7 @@ namespace utils
 		m_ptr=i_object;
 
 		if (m_ptr)
-			m_ptr->add_ref();
+			((utils::referencedobject*)m_ptr)->add_ref();
 	}
 
 	template <class REF>
@@ -94,7 +94,7 @@ namespace utils
 			m_ptr->remove_ref();
 
 			if (!m_ptr->m_refcount)
-				delete m_ptr;
+				delete (utils::referencedobject*)m_ptr;
 		}
 
 		m_ptr=i_object;
@@ -123,7 +123,7 @@ namespace utils
 			m_ptr->remove_ref();
 
 			if (!m_ptr->get_ref())
-				delete m_ptr;
+				delete ((utils::referencedobject*)m_ptr);
 
 			m_ptr=NULL;
 		}

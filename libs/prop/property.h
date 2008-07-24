@@ -12,17 +12,18 @@ namespace prop
 	kell callback a valtozaskor
 
 	*/
+/*
 	union propvalue
 	{
-		int m_intvalue;
-		float m_floatvalue;
-		ctr::string m_stringvalue;
-		math::vec3 m_vec3value;
-		math::vec2 m_vec2value;
+		int* m_intvalue;
+		float* m_floatvalue;
+		ctr::string* m_stringvalue;
+		math::vec3* m_vec3value;
+		math::vec2* m_vec2value;
 		
 	};
 
-#define _define_prop_(_type_,_val_) const _type_& get() const{return m_val.##_val_;} void set(const _type_& i_val){m_val.##_val_=i_val; Callbacks();}
+#define _define_prop_(_type_,_val_) const _type_& get_##_type_() const{return *m_val.##_val_;} void set(const _type_& i_val){*m_val.##_val_=i_val; Callbacks();}
 	struct property
 	{
 		propvalue m_val;
@@ -34,6 +35,7 @@ namespace prop
 		_define_prop_(math::vec2,m_vec2value)
 
 	};
+*/
 }
 
 #endif//_property_h_

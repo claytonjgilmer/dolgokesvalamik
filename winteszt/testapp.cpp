@@ -18,8 +18,8 @@ void generate_sphere(math::vec3 o_pos[],int& o_numvertices,short o_indices[],int
 render::object3d* load_mmod(const char* i_filename);
 struct game
 {
-	render::mesh* m_mesh;
-	render::mesh* sphere;
+	utils::ref_ptr<render::mesh> m_mesh;
+	utils::ref_ptr<render::mesh> sphere;
 //	math::mtx4x3 m_mtx;
 
 	float x,y,z;
@@ -322,8 +322,8 @@ void exit_app()
 {
 	file::system::release();
 	threading::taskmanager::release();
-	delete g_game.m_mesh;
-	delete g_game.sphere;
+	g_game.m_mesh=NULL;
+	g_game.sphere=NULL;
 	delete g_game.obj;
 	delete g_game.sky;
 	render::shadermanager::release();

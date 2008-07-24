@@ -15,7 +15,6 @@ namespace render
 	{
 	public:
 		mesh(const char* i_name);
-		~mesh();
 
 		void set_vertexbuffer(vertexbuffer* i_vb);
 		void set_indexbuffer(indexbuffer* i_ib);
@@ -24,6 +23,8 @@ namespace render
 		utils::auto_ptr<indexbuffer> m_ib;
 
 		ctr::vector<submesh> m_submeshbuf;
+	private:
+		~mesh();
 	};
 }
 #endif//_mesh_h_
