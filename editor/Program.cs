@@ -14,7 +14,9 @@ namespace editor
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new editorform());
+
+            editorform form = new editorform();
+//            Application.Run(new editorform());
         }
     }
 }

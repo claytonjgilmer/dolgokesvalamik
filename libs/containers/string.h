@@ -4,7 +4,6 @@
 #include <string.h>
 #include "utils/assert.h"
 #include "utils/misc.h"
-#include <string>
 namespace ctr
 {
 	template <unsigned TSTRING_MIN_CAPACITY=16>

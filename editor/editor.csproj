@@ -28,6 +28,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="libwrapper, Version=1.0.3127.42134, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\release\libwrapper.dll</HintPath>
+    </Reference>
     <Reference Include="SmartPropertyGrid, Version=1.4.0.0, Culture=neutral, PublicKeyToken=717018457dd20991, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\SmartPropertyGrid.dll</HintPath>

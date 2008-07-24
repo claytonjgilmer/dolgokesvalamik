@@ -113,7 +113,7 @@ namespace editor
 
         #endregion
 
-        editorpropgrid property_grid;
+        private editor.editorpropgrid property_grid;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer2;
     }
