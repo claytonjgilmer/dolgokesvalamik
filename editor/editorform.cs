@@ -13,8 +13,8 @@ namespace editor
         public editorform()
         {
             InitializeComponent();
-            mypropgrid=new editorpropgrid();
-            mypropgrid.Initialize();
+            property_grid.Initialize();
+            property_grid.SelectedObject = this;
 
         }
 
@@ -28,6 +28,5 @@ namespace editor
 
         }
 
-        editorpropgrid mypropgrid;
     }
 }

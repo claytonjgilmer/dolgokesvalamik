@@ -28,46 +28,18 @@ namespace editor
         /// </summary>
         private void InitializeComponent()
         {
-            this.propertyGrid1 = new editor.editorpropgrid();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.property_grid = new editor.editorpropgrid();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.SuspendLayout();
             // 
-            // propertyGrid1
-            // 
-            this.propertyGrid1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.propertyGrid1.CommentsBackColor = System.Drawing.SystemColors.Control;
-            this.propertyGrid1.CommentsForeColor = System.Drawing.SystemColors.ControlText;
-            this.propertyGrid1.CommentsHeight = 40;
-            this.propertyGrid1.CommentsVisibility = false;
-            this.propertyGrid1.DisplayMode = VisualHint.SmartPropertyGrid.PropertyGrid.DisplayModes.Categorized;
-            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propertyGrid1.EllipsisMode = VisualHint.SmartPropertyGrid.PropertyGrid.EllipsisModes.EllipsisOnValues;
-            this.propertyGrid1.Font = new System.Drawing.Font("Tahoma", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.World);
-            this.propertyGrid1.GridBackColor = System.Drawing.SystemColors.Window;
-            this.propertyGrid1.GridDisabledForeColor = System.Drawing.SystemColors.GrayText;
-            this.propertyGrid1.GridForeColor = System.Drawing.SystemColors.ControlText;
-            this.propertyGrid1.HighlightedTextColor = System.Drawing.SystemColors.HighlightText;
-            this.propertyGrid1.LabelColumnWidth = 150;
-            this.propertyGrid1.LeftColumnWidth = 16;
-            this.propertyGrid1.Location = new System.Drawing.Point(0, 0);
-            this.propertyGrid1.MultiSelectMode = VisualHint.SmartPropertyGrid.PropertyGrid.MultiSelectModes.None;
-            this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.PropertyVerticalMargin = 4;
-            this.propertyGrid1.ReadOnlyVisual = VisualHint.SmartPropertyGrid.PropertyGrid.ReadOnlyVisuals.Disabled;
-            this.propertyGrid1.SelectedBkgColor = System.Drawing.SystemColors.Highlight;
-            this.propertyGrid1.SelectedNotFocusedBkgColor = System.Drawing.SystemColors.ActiveBorder;
-            this.propertyGrid1.Size = new System.Drawing.Size(338, 402);
-            this.propertyGrid1.TabIndex = 0;
-            this.propertyGrid1.ToolbarVisibility = false;
-            this.propertyGrid1.ToolTipMode = VisualHint.SmartPropertyGrid.PropertyGrid.ToolTipModes.None;
-            // 
             // splitContainer1
             // 
+            this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
@@ -81,6 +53,7 @@ namespace editor
             // 
             // splitContainer2
             // 
+            this.splitContainer2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
             this.splitContainer2.Name = "splitContainer2";
@@ -88,10 +61,39 @@ namespace editor
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.propertyGrid1);
+            this.splitContainer2.Panel2.Controls.Add(this.property_grid);
             this.splitContainer2.Size = new System.Drawing.Size(338, 596);
             this.splitContainer2.SplitterDistance = 190;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // property_grid
+            // 
+            this.property_grid.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.property_grid.CommentsBackColor = System.Drawing.SystemColors.Control;
+            this.property_grid.CommentsForeColor = System.Drawing.SystemColors.ControlText;
+            this.property_grid.CommentsHeight = 40;
+            this.property_grid.CommentsVisibility = false;
+            this.property_grid.DisplayMode = VisualHint.SmartPropertyGrid.PropertyGrid.DisplayModes.Categorized;
+            this.property_grid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.property_grid.EllipsisMode = VisualHint.SmartPropertyGrid.PropertyGrid.EllipsisModes.EllipsisOnValues;
+            this.property_grid.Font = new System.Drawing.Font("Tahoma", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.World);
+            this.property_grid.GridBackColor = System.Drawing.SystemColors.Window;
+            this.property_grid.GridDisabledForeColor = System.Drawing.SystemColors.GrayText;
+            this.property_grid.GridForeColor = System.Drawing.SystemColors.ControlText;
+            this.property_grid.HighlightedTextColor = System.Drawing.SystemColors.HighlightText;
+            this.property_grid.LabelColumnWidth = 150;
+            this.property_grid.LeftColumnWidth = 16;
+            this.property_grid.Location = new System.Drawing.Point(0, 0);
+            this.property_grid.MultiSelectMode = VisualHint.SmartPropertyGrid.PropertyGrid.MultiSelectModes.None;
+            this.property_grid.Name = "property_grid";
+            this.property_grid.PropertyVerticalMargin = 4;
+            this.property_grid.ReadOnlyVisual = VisualHint.SmartPropertyGrid.PropertyGrid.ReadOnlyVisuals.Disabled;
+            this.property_grid.SelectedBkgColor = System.Drawing.SystemColors.Highlight;
+            this.property_grid.SelectedNotFocusedBkgColor = System.Drawing.SystemColors.ActiveBorder;
+            this.property_grid.Size = new System.Drawing.Size(334, 398);
+            this.property_grid.TabIndex = 0;
+            this.property_grid.ToolbarVisibility = false;
+            this.property_grid.ToolTipMode = VisualHint.SmartPropertyGrid.PropertyGrid.ToolTipModes.None;
             // 
             // editorform
             // 
@@ -111,7 +113,7 @@ namespace editor
 
         #endregion
 
-        editorpropgrid propertyGrid1;
+        editorpropgrid property_grid;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer2;
     }
