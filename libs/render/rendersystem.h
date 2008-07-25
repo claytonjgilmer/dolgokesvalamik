@@ -29,6 +29,15 @@ namespace render
 		unsigned				m_screenwidth;
 		unsigned				m_screenheight;
 		HWND					m_window;
+
+		systemdesc()
+		{
+			m_windowed=true;
+			m_backbuffercount=2;
+			m_screenheight=768;
+			m_screenwidth=1024;
+			m_window=0;
+		}
 	};
 
 	class texture;
