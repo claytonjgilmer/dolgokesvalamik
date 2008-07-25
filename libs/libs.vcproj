@@ -4,6 +4,7 @@
 	Version="8,00"
 	Name="libs"
 	ProjectGUID="{2B939032-FE56-4A52-B30B-3188904F3E67}"
+	RootNamespace="libs"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -651,6 +652,10 @@
 			</File>
 			<File
 				RelativePath=".\render\mesh.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\utils\misc.cpp"
 				>
 			</File>
 			<File

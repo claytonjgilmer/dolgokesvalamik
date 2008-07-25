@@ -2,3 +2,7 @@
 scenemanagement- hgrid
 lights, shadows
 particle-system
+
+
+http://meshula.net/wordpress/?p=172
+http://www.gamasutra.com/view/feature/3683/a_templated_c_attribute_library_.php

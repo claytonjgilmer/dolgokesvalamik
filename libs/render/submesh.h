@@ -21,7 +21,7 @@ namespace render
 
 		void set_shader(shader* i_shader)
 		{
-			if (i_shader==m_shader)
+			if (i_shader==m_shader.get())
 				return;
 
 			m_shader=i_shader;

@@ -15,20 +15,13 @@ namespace editor
         {
             InitializeComponent();
             property_grid.Initialize();
-            property_grid.SelectedObject = this;
+//            property_grid.SelectedObject = this;
+            //            this.Show();
+        }
 
-            libwrapper.game.init(splitContainer1.Panel1.Handle);
-
-            this.Show();
-
-            while (this.Created)
-            {
-                libwrapper.game.update();
-                Application.DoEvents();
-            }
-
-            libwrapper.game.exit();
-
+        public IntPtr get_renderwindow()
+        {
+            return splitContainer1.Panel1.Handle;
         }
 
         ~editorform()

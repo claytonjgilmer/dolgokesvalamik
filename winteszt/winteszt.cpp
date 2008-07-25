@@ -61,11 +61,12 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 				DispatchMessage(&msg);
 			}
 		}
-		update_app();
+
+		if (!g_done)
+			update_app();
 	}
 
 
-	exit_app();
 	return (int) msg.wParam;
 }
 
@@ -188,12 +189,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_DESTROY:
 		g_done=1;
+		exit_app();
 		PostQuitMessage(0);
 		break;
 	case WM_KEYUP:
 		if (wParam==VK_ESCAPE)
 		{
 			g_done=1;
+			exit_app();
 			PostQuitMessage(0);
 			break;
 		}

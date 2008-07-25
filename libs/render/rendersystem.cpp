@@ -109,7 +109,7 @@ namespace render
 
 					for (unsigned txtindex=0; txtindex<sm.m_texturebuf.size(); ++txtindex)
 					{
-						m_device->SetTexture(txtindex,sm.m_texturebuf[txtindex] ? sm.m_texturebuf[txtindex]->m_hwbuffer : NULL);
+						m_device->SetTexture(txtindex,sm.m_texturebuf[txtindex].get() ? sm.m_texturebuf[txtindex].get()->m_hwbuffer : NULL);
 					}
 
 

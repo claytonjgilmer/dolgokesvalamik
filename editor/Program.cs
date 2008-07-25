@@ -16,7 +16,18 @@ namespace editor
             Application.SetCompatibleTextRenderingDefault(false);
 
             editorform form = new editorform();
-//            Application.Run(new editorform());
+//            Application.Run(form);
+            form.Show();
+            libwrapper.game.init(form.get_renderwindow());
+
+
+            while (form.Created)
+            {
+                libwrapper.game.update();
+                Application.DoEvents();
+            }
+
+            libwrapper.game.exit();
         }
     }
 }

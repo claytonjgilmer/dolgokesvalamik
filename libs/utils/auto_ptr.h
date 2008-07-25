@@ -22,11 +22,11 @@ namespace utils
 		const T* operator->() const{
 			return m_ptr;}
 
-		operator T*(){
-			return m_ptr;}
+		T& operator *(){
+			return *m_ptr;}
 
-		operator const T*() const{
-			return m_ptr;}
+		const T& operator*()const{
+			return *m_ptr;}
 
 /*
 		void operator=(auto_ptr& i_other)

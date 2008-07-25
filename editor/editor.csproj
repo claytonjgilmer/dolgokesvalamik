@@ -28,10 +28,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="libwrapper, Version=1.0.3127.42134, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\release\libwrapper.dll</HintPath>
-    </Reference>
     <Reference Include="SmartPropertyGrid, Version=1.4.0.0, Culture=neutral, PublicKeyToken=717018457dd20991, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\SmartPropertyGrid.dll</HintPath>
@@ -77,6 +73,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libwrapper\libwrapper.vcproj">
+      <Project>{9D8428FC-B0F2-48D3-AA01-70124B16B032}</Project>
+      <Name>libwrapper</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

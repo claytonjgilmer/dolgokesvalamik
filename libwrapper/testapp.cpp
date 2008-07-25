@@ -290,9 +290,9 @@ void update_app()
 	g_game.y+=2*dt/10;
 	g_game.z+=3*dt/10;
 
-	render::system::instance()->add_mesh(g_game.m_mesh,mtx);
+	render::system::instance()->add_mesh(g_game.m_mesh.get(),mtx);
 	mtx.t.set(1,0,2.5f);
-	render::system::instance()->add_mesh(g_game.sphere,mtx);
+	render::system::instance()->add_mesh(g_game.sphere.get(),mtx);
 	mtx.set_euler(0,0,0);
 	mtx.t.set(0,0,22.5f);
 	g_game.obj->set_worldposition(mtx);
