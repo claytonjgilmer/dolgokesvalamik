@@ -3,6 +3,12 @@
 
 namespace render
 {
+	DEFINE_OBJECT(object3d,scene::node);
+
+	object3d::object3d()
+	{
+	}
+
 	object3d::object3d(const char* i_name):
 	scene::node(i_name)
 	{

@@ -3,8 +3,21 @@
 
 namespace scene
 {
+DEFINE_OBJECT(node,rootobject);
+
 	node::node(const char* i_name):
-	m_name(i_name),
+	rootobject(i_name),
+	m_localpos(math::mtx4x3::identitymtx()),
+	m_worldpos(math::mtx4x3::identitymtx())
+	{
+		m_parent=NULL;
+		m_child=NULL;
+		m_bro=NULL;
+		m_flags|=nodeflag_valid_worldpos;
+	}
+
+
+	node::node():
 	m_localpos(math::mtx4x3::identitymtx()),
 	m_worldpos(math::mtx4x3::identitymtx())
 	{
@@ -173,13 +186,4 @@ namespace scene
 		return m_worldpos;
 	}
 
-	const ctr::string& node::get_name() const
-	{
-		return m_name;
-	}
-
-	void node::set_name(const char* i_name)
-	{
-		m_name=i_name;
-	}
 }

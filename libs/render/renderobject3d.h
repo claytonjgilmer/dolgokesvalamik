@@ -10,7 +10,9 @@ namespace render
 {
 	class object3d:public scene::node
 	{
+		DECLARE_OBJECT;
 	public:
+		object3d();
 		object3d(const char* i_name);
 		~object3d();
 		void add_mesh(mesh* i_mesh){m_mesh.push_back(i_mesh);}

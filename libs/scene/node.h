@@ -1,6 +1,7 @@
 #ifndef _node_h_
 #define _node_h_
 
+#include "rootobject.h"
 #include "containers/string.h"
 #include "utils/assert.h"
 #include "math/mtx4x3.h"
@@ -10,9 +11,11 @@ namespace scene
 {
 	const unsigned nodeflag_valid_worldpos=(1<<0);
 	
-	class node
+	class node:public rootobject
 	{
+		DECLARE_OBJECT;
 	public:
+		node();
 		node(const char* i_name);
 		virtual ~node();
 
@@ -31,15 +34,13 @@ namespace scene
 		
 		node* get_next(node* i_root=NULL) const;
 
-		const ctr::string& get_name() const;
-		void set_name(const char* i_name);
 		
 	protected:
 		node* m_parent;
 		node* m_child;
 		node* m_bro;
 
-		ctr::string m_name;
+//		ctr::string m_name;
 		math::mtx4x3 m_localpos;
 		math::mtx4x3 m_worldpos;
 		
