@@ -23,8 +23,10 @@ namespace scene
 		ctr::string m_name;
 	};
 
-#define DECLARE_OBJECT \
+#define DECLARE_OBJECT(_object_) \
 	public:\
+	friend class _object_##_metaobject;\
+	friend class prop_binder<_object_>;\
 	virtual int get_typeid() const;\
 	virtual scene::metaobject* get_metaobject() const;\
 	static scene::metaobject* get_class_metaobject();
@@ -35,6 +37,7 @@ namespace scene
 	public:\
 	_object_##_metaobject():scene::metaobject(#_object_,_parent_::get_class_metaobject()){}\
 	scene::rootobject* create() const{return new _object_;}\
+	void bind_properties();\
 	};\
 \
 	_object_##_metaobject g_##_object_##_metaobject;\

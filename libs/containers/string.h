@@ -2,6 +2,7 @@
 #define _string_h_
 
 #include <string.h>
+#include <float.h>
 #include "utils/assert.h"
 #include "utils/misc.h"
 namespace ctr

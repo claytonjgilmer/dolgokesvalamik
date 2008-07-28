@@ -8,9 +8,10 @@ namespace scene
 
 	metaobject::metaobject(const char* i_typename, metaobject* i_parent):
 	m_typename(i_typename),
-	m_typeid(metaobject_manager::get_typeid()),
-	m_parent(i_parent)
+	m_parent(i_parent),
+	m_typeid(metaobject_manager::get_typeid())
 	{
+		metaobject_manager::add_metaobject(this);
 	}
 
 }

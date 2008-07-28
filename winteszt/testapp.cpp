@@ -60,6 +60,25 @@ math::vec2 g_uv[]={V2(0,0),V2(1,0),V2(1,1),V2(0,1),V2(1,0),V2(0,0),V2(0,1),V2(1,
 void init_app(HWND i_hwnd)
 {
 //	render::texture ttt(0,0,0);
+	render::object3d obj("hulyegyerek");
+	scene::metaobject* mo=obj.get_metaobject();
+	math::mtx4x3 mtx;
+	mtx.set_euler(1,2,3);
+	mtx.trans().set(7,8,9);
+	mtx.axisx()*=4;
+	mtx.axisy()*=5;
+	mtx.axisz()*=6;
+	obj.set_localposition(mtx);
+
+	scene::metaobject::property_iterator it;
+
+	for (it=mo->begin();it!=mo->end(); ++it)
+	{
+		scene::property_descriptor pd=(*it);
+
+		utils::PRINT("property name:%s type:%s val:%s\n",pd.get_name(),pd.get_type(),pd.to_string(&obj));
+	}
+
 	file::system::create();
 	file::system::instance()->register_path("shader","c:\\data\\shader\\");
 	file::system::instance()->register_path("texture","c:\\data\\texture\\");

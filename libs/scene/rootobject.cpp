@@ -12,7 +12,13 @@ namespace scene
 		rootobject* create() const{return new rootobject;}
 	};//class
 
+//	BIND_START(rootobject);
+//	BIND_PROPERTY(rootobject,m_name,"name","string");
+//	BIND_END;
+
 	rootobject_metaobject g_rootobject_metaobject;
+	BIND_PROPERTY(rootobject,m_name,"name","string");
+
 
 
 

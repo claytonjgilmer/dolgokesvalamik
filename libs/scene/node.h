@@ -13,7 +13,7 @@ namespace scene
 	
 	class node:public rootobject
 	{
-		DECLARE_OBJECT;
+		DECLARE_OBJECT(node);
 	public:
 		node();
 		node(const char* i_name);

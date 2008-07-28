@@ -238,7 +238,7 @@ namespace math
 	inline void mtx3x3::geteuler(float& o_xangle, float& o_yangle, float& o_zangle) const
 	{
 		float a;
-		o_xangle = -math::asin(axisz().y);
+		o_xangle = math::asin(axisz().y);
 		a = cos( o_xangle );
 
 		if (math::abs(a)>0.0001f) 

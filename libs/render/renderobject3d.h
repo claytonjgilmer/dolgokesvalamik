@@ -10,7 +10,7 @@ namespace render
 {
 	class object3d:public scene::node
 	{
-		DECLARE_OBJECT;
+		DECLARE_OBJECT(object3d);
 	public:
 		object3d();
 		object3d(const char* i_name);
