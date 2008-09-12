@@ -28,6 +28,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libwrapper", "libwrapper\li
 		{2B939032-FE56-4A52-B30B-3188904F3E67} = {2B939032-FE56-4A52-B30B-3188904F3E67}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tool", "tool\tool.vcproj", "{23438239-E3DA-47C6-B274-D59B92B38460}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -89,6 +91,16 @@ Global
 		{9D8428FC-B0F2-48D3-AA01-70124B16B032}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{9D8428FC-B0F2-48D3-AA01-70124B16B032}.Release|Win32.ActiveCfg = Release|Win32
 		{9D8428FC-B0F2-48D3-AA01-70124B16B032}.Release|Win32.Build.0 = Release|Win32
+		{23438239-E3DA-47C6-B274-D59B92B38460}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{23438239-E3DA-47C6-B274-D59B92B38460}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{23438239-E3DA-47C6-B274-D59B92B38460}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{23438239-E3DA-47C6-B274-D59B92B38460}.Debug|Win32.ActiveCfg = Debug|Win32
+		{23438239-E3DA-47C6-B274-D59B92B38460}.Debug|Win32.Build.0 = Debug|Win32
+		{23438239-E3DA-47C6-B274-D59B92B38460}.Release|Any CPU.ActiveCfg = Release|Win32
+		{23438239-E3DA-47C6-B274-D59B92B38460}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{23438239-E3DA-47C6-B274-D59B92B38460}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{23438239-E3DA-47C6-B274-D59B92B38460}.Release|Win32.ActiveCfg = Release|Win32
+		{23438239-E3DA-47C6-B274-D59B92B38460}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
