@@ -322,7 +322,7 @@ namespace math
 		z=i_src1.z+i_time*(i_src2.z-i_src1.z);
 	}
 
-	MLINLINE vec3 scalartriple(vec3 i_v1, vec3 i_v2, vec3 i_v3)
+	MLINLINE float scalartriple(vec3 i_v1, vec3 i_v2, vec3 i_v3)
 	{
 		return dot(i_v1,cross(i_v2,i_v3));
 	}

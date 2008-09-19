@@ -2,6 +2,7 @@
 
 #include "stdafx.h"
 #include "tool.h"
+#include "math/intersection.h"
 
 using namespace tool;
 
