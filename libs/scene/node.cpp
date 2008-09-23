@@ -4,9 +4,7 @@
 namespace scene
 {
 DEFINE_OBJECT(node,rootobject);
-//prop_binder<node> lp("localpos","mtx4x3",(unsigned)offsetof(node,get_localposition()));
-BIND_PROPERTY(node,get_localposition(),"localpos","mtx4x3");
-//BIND_PROPERTY(node,get_localposition(),"localpos","mtx4x3");
+BIND_PROPERTY(node,get_localposition(),"localpos",mtx4x3);
 
 	node::node(const char* i_name):
 	rootobject(i_name),
@@ -187,6 +185,16 @@ BIND_PROPERTY(node,get_localposition(),"localpos","mtx4x3");
 		}
 
 		return m_worldpos;
+	}
+
+	void node::set_flag(unsigned i_flag)
+	{
+		m_flags|=i_flag;
+	}
+
+	void node::clr_flag(unsigned i_flag)
+	{
+		m_flags&=~i_flag;
 	}
 
 }

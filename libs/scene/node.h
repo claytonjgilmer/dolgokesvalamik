@@ -10,6 +10,7 @@
 namespace scene
 {
 	const unsigned nodeflag_valid_worldpos=(1<<0);
+	const unsigned nodeflag_dont_save=(1<<0);
 	
 	class node:public rootobject
 	{
@@ -33,6 +34,9 @@ namespace scene
 		const math::mtx4x3& get_worldposition();
 		
 		node* get_next(node* i_root=NULL) const;
+
+		void set_flag(unsigned i_flag);
+		void clr_flag(unsigned i_flag);
 
 		
 	protected:

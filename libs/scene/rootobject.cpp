@@ -17,7 +17,7 @@ namespace scene
 //	BIND_END;
 
 	rootobject_metaobject g_rootobject_metaobject;
-	BIND_PROPERTY(rootobject,m_name,"name","string");
+	BIND_PROPERTY(rootobject,m_name,"name",string);
 
 
 

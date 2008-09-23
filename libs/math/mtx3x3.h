@@ -33,7 +33,7 @@ namespace math
 		void identity();
 
 		void fromeuler(float i_xangle, float i_yangle, float i_zangle);
-		void geteuler(float& o_xangle, float& o_yangle, float& o_zangle) const;
+		void get_euler(float& o_xangle, float& o_yangle, float& o_zangle) const;
 
 		void transform3x3(vec3& o_dst, const vec3& i_src) const;
 		vec3 transform3x3(const vec3& i_src) const;
@@ -235,7 +235,7 @@ namespace math
 		_31 = cx*sy;			_32 = -sx;		_33 = cx*cy;
 	}
 
-	inline void mtx3x3::geteuler(float& o_xangle, float& o_yangle, float& o_zangle) const
+	inline void mtx3x3::get_euler(float& o_xangle, float& o_yangle, float& o_zangle) const
 	{
 		float a;
 		o_xangle = math::asin(axisz().y);

@@ -14,8 +14,8 @@ namespace render
 	{
 		object3d* obj=m_map.get_data(i_name);
 
-		if (obj)
-			return obj;
+//		if (obj)
+//			return obj->clone();
 
 		ctr::string ext=file::get_extension(i_name);
 		ext.to_upper();
@@ -28,6 +28,16 @@ namespace render
 		if (obj)
 		{
 			m_map.add_data(obj);
+		}
+
+		scene::node* ptr=obj;
+
+		ptr=ptr->get_next(obj);
+
+		while (ptr)
+		{
+			ptr->set_flag(scene::nodeflag_dont_save);
+			ptr=ptr->get_next(obj);
 		}
 
 		return obj;
