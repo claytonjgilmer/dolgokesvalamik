@@ -1,6 +1,7 @@
 #include "sceneloader.h"
 #include "nodefactory.h"
 #include "node.h"
+#include "containers/stringmap.h"
 
 namespace scene
 {
@@ -8,16 +9,24 @@ namespace scene
 	{
 		struct mapelem
 		{
-			node* m_node;
-			ctr::vector<node*> m_child;
-
-			mapelem()
+			const ctr::string& get_name() const
 			{
-				m_node=NULL;
+				return m_name;
 			}
+			ctr::vector<node*> m_child;
+			ctr::string m_name;
+
+			mapelem(const char* i_name):
+			m_name(i_name)
+			{
+			}
+
+			mapelem* Next;
 		};
 
 		ctr::stringmap<mapelem,1024> map;
+		ctr::vector<node*> nodebuf;
+		ctr::vector<node*> root;
 
 		scripting::lua Lua;
 		Lua.InitState((scripting::lua::eLuaLib)(scripting::lua::LL_BASE | scripting::lua::LL_MATH));
@@ -32,9 +41,34 @@ namespace scene
 
 		for (scenetable.Begin(K,V); !scenetable.End(K); scenetable.Next(K,V))
 		{
-			node* scene =load_node(NULL,V);
+			node* n =load_node(NULL,V);
 
-			return scene;
+			scripting::lua::Variable parentvar=V.GetVariable("Parent");
+
+			if (parentvar.IsString())
+			{
+				ctr::string parentname=parentvar.GetString();
+				mapelem* pm=map.get_data(parentname.c_str());
+
+				if (!pm)
+				{
+					pm=new mapelem(parentname.c_str());
+					map.add_data(pm);
+				}
+
+				pm->m_child.push_back(n);
+			}
+			else
+			{
+				root.push_back(n);
+			}
+
+			nodebuf.push_back(n);
+		}
+
+		for (unsigned n=0; n<nodebuf.size(); ++n)
+		{
+			
 		}
 
 		assert(0);
