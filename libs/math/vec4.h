@@ -25,8 +25,8 @@ namespace math
 		vec4 cross(const vec4& i_other) const;
 		
 		float	dot4(const vec4& i_other) const;
-		friend
-		float	dot4(const vec4& i_v1, const vec4& i_v2);
+//		friend
+//		float	dot4(const vec4& i_v1, const vec4& i_v2);
 
 		float	get_squarelength() const;
 		float	get_length() const;

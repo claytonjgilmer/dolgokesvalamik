@@ -197,4 +197,15 @@ BIND_PROPERTY(node,get_localposition(),"localpos",mtx4x3);
 		m_flags&=~i_flag;
 	}
 
+	node* node::get_node_by_name(const char* i_name)
+	{
+		for (node* ptr=this; ptr; ptr=ptr->get_next())
+		{
+			if (ptr->m_name==i_name)
+				return ptr;
+		}
+
+		return NULL;
+	}
+
 }

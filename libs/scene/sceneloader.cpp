@@ -66,8 +66,19 @@ namespace scene
 			nodebuf.push_back(n);
 		}
 
-		for (unsigned n=0; n<nodebuf.size(); ++n)
+		utils::assertion(root.size()==1);
+
+		mapelem** ptr=map.get_buffer();
+
+		for (unsigned n=0; n<1024; ++n)
 		{
+			mapelem* mapptr=ptr[n];
+
+			while (mapptr)
+			{
+				mapptr->get_name();
+				mapptr=mapptr->Next;
+			}
 			
 		}
 

@@ -35,6 +35,8 @@ namespace scene
 		
 		node* get_next(node* i_root=NULL) const;
 
+		node* get_node_by_name(const char* i_name);
+
 		void set_flag(unsigned i_flag);
 		void clr_flag(unsigned i_flag);
 
