@@ -21,7 +21,12 @@ namespace render
 
 		void render();
 
+		virtual void on_load();
+
 		object3d* Next;
+
+		//properties
+		ctr::string m_modelname;
 	protected:
 		ctr::fixedvector<utils::ref_ptr<mesh>,8> m_mesh;
 	};

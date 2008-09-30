@@ -5,6 +5,8 @@
 render::object3d* load_mmod(file::file& i_file);
 namespace render
 {
+	DEFINE_SINGLETON(objectmanager);
+
 	objectmanager::objectmanager(const objectmanagerdesc* i_desc):
 	m_objectgroup(i_desc->m_objectgroup)
 	{
@@ -32,7 +34,7 @@ namespace render
 
 		scene::node* ptr=obj;
 
-		ptr=ptr->get_next(obj);
+	//	ptr=ptr->get_next(obj);
 
 		while (ptr)
 		{

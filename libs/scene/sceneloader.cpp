@@ -43,6 +43,9 @@ namespace scene
 		{
 			node* n =load_node(NULL,V);
 
+			if (!n)
+				continue;
+
 			scripting::lua::Variable parentvar=V.GetVariable("Parent");
 
 			if (parentvar.IsString())
@@ -101,6 +104,8 @@ namespace scene
 			NewNode->get_metaobject()->load_property(NewNode,i_nodetable);
 		else
 			return NULL;
+
+		NewNode->on_load();
 
 		if (i_parent)
 			i_parent->add_child(NewNode);

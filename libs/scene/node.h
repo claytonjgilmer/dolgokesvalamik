@@ -40,6 +40,8 @@ namespace scene
 		void set_flag(unsigned i_flag);
 		void clr_flag(unsigned i_flag);
 
+		virtual void on_load(){}
+
 		
 	protected:
 		node* m_parent;
