@@ -1,7 +1,5 @@
 #define _WIN32_WINNT 0x0501	// Change this to the appropriate value to target other versions of Windows.
-#include "taskmanager.h"
-//#ifndef _WIN32_WINNT		// Allow use of features specific to Windows XP or later.                   
-//#endif						
+#include "taskmanager2.h"
 #include <Windows.h>
 
 namespace threading
@@ -11,16 +9,13 @@ namespace threading
 	unsigned WINAPI poolrun(void* i_param)
 	{
 		taskmanager* tm=(taskmanager*)i_param;
-
 		tm->run();
-
 		return 0;
 	}
 
 	taskmanager::taskmanager(const taskmanagerdesc* i_desc)
 	{
 		m_incompletetasknum=0;
-//		m_taskbuf.reserve(128);
 
 		m_workevent= CreateSemaphore(NULL,0,1000,NULL);
 		m_exitevent= CreateEvent(NULL,TRUE,FALSE,NULL);
@@ -58,9 +53,7 @@ namespace threading
 			SetEvent(m_exitevent);
 
 			for (unsigned n=0; n<m_threadbuf.size(); ++n)
-			{
 				m_threadbuf[n].join();
-			}
 		}
 		CloseHandle(m_exitevent);
 		CloseHandle(m_workevent);
@@ -129,92 +122,35 @@ namespace threading
 			--m_taskbuf[taskindex].m_childnum;
 		}
 
-
 		--m_incompletetasknum;
 		m_taskmutex.unlock();
 	}
 
-	unsigned taskmanager::spawn_task(task* i_task, unsigned i_parentID/* =-1 */, const ctr::fixedvector<unsigned,10>& i_dependency/* =ctr::fixedvector<unsigned>::emptyvector */)
+	void taskmanager::spawn_task(task* i_task)
 	{
 		m_taskmutex.lock();
 
 		unsigned taskindex=m_taskbuf.size();
-//		printf_s("%d. taszk akar spawnolni\n",taskindex);
-		m_taskbuf.resize(taskindex+1);
-
+		m_taskbuf.push_back(taskdescinternal(i_task));
 		taskdescinternal& newtaskdesc=m_taskbuf.back();
 
-		newtaskdesc.m_parenttask=i_parentID;
-		newtaskdesc.m_task=i_task;
-
-		if (i_parentID!=-1)
-			m_taskbuf[i_parentID].m_childnum++;
-		
-		for (unsigned int n=0; n<i_dependency.size();++n)
-		{
-			taskdescinternal& td=m_taskbuf[i_dependency[n]];
-
-			if (td.m_state==TASK_COMPLETED)
-				continue;
-
-			td.m_dependentlist.push_back(taskindex);
-			++newtaskdesc.m_dependencycounter;
-		}
-
-		if (!newtaskdesc.m_dependencycounter)
-		{
-			m_idletask.push(taskindex);
-			newtaskdesc.m_state=TASK_IDLE;
-			ReleaseSemaphore(m_workevent,1,NULL);
-		}
-		else
-		{
-			newtaskdesc.m_state=TASK_DEPENDENT;
-		}
-
+		ReleaseSemaphore(m_workevent,1,NULL);
 		++m_incompletetasknum;
 		i_task->m_taskID=taskindex;
 		m_taskmutex.unlock();
-		return taskindex;
 	}
-	unsigned taskmanager::spawn_task(task* i_task, unsigned i_parentID/* =-1 */, unsigned i_dependency/*=-1*/)
+
+	void taskmanager::spawn_tasks(task** i_tasks, unsigned i_tasknum)
 	{
 		m_taskmutex.lock();
+		m_taskbuf.resize(m_taskbuf.size()+i_tasknum);
 
-		unsigned taskindex=m_taskbuf.size();
-		m_taskbuf.resize(taskindex+1);
-
-		taskdescinternal& newtaskdesc=m_taskbuf.back();
-
-		newtaskdesc.m_parenttask=i_parentID;
-		newtaskdesc.m_task=i_task;
-
-		if (i_parentID!=-1)
-			m_taskbuf[i_parentID].m_childnum++;
-
-		if (i_dependency!=-1)
+		for (unsigned n=0; n<i_tasknum; ++n)
 		{
-			taskdescinternal& td=m_taskbuf[i_dependency];
-
-			if (td.m_state!=TASK_COMPLETED)
-			{
-				td.m_dependentlist.push_back(taskindex);
-				++newtaskdesc.m_dependencycounter;
-			}
+			m_taskbuf.push_back(taskdescinternal(i_tasks[n]));
+			++m_incompletetasknum;
 		}
 
-		if (!newtaskdesc.m_dependencycounter)
-		{
-			m_idletask.push(taskindex);
-			newtaskdesc.m_state=TASK_IDLE;
-			ReleaseSemaphore(m_workevent,1,NULL);
-		}
-		else
-		{
-			newtaskdesc.m_state=TASK_DEPENDENT;
-		}
-
-		++m_incompletetasknum;
 		i_task->m_taskID=taskindex;
 		m_taskmutex.unlock();
 		return taskindex;

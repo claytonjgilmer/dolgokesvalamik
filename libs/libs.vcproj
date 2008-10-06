@@ -459,7 +459,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\threading\taskmanager.h"
+				RelativePath=".\threading\taskmanager2.h"
 				>
 			</File>
 			<File
@@ -723,7 +723,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\threading\taskmanager.cpp"
+				RelativePath=".\threading\taskmanager2.cpp"
 				>
 			</File>
 			<File

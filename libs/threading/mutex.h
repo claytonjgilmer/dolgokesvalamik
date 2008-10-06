@@ -22,6 +22,7 @@ namespace threading
 		~mutex();
 
 		void lock();
+		BOOL try_lock();
 		void unlock();
 	private:
 	

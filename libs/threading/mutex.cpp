@@ -20,25 +20,21 @@ namespace threading
 #endif
 	}
 
+	BOOL mutex::try_lock()
+	{
+#if mutextype==0
+		return (TryEnterCriticalSection(&m_cs));
+#else
+		return (InterlockedCompareExchange(&m_data,1,0));
+#endif
+	}
+
 	void mutex::lock()
 	{
 #if mutextype==0
 		EnterCriticalSection(&m_cs);
 #else
-/*
-		while (true)
-		{
-			int n;
-			for (n=0; n<1000; ++n)
-			{
-				if (!_InterlockedCompareExchange(&m_data,1,0))
-					return;
-			}
-
-			SwitchToThread();
-		}
-*/
-			while (InterlockedCompareExchange(&m_data,1,0));
+		while (InterlockedCompareExchange(&m_data,1,0));
 #endif
 	}
 
