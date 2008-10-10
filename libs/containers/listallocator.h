@@ -70,8 +70,8 @@ namespace ctr
 		~listallocator();
 		basetype* allocate();
 		void deallocate(basetype*);
-		void deallocateplace(basetype*);
-		void deallocateall();
+		void deallocate_place(basetype*);
+		void deallocate_all();
 		basetype* allocate_place();
 		iterator begin()
 		{
@@ -161,11 +161,11 @@ namespace ctr
 	MLINLINE void listallocator<basetype,blocksize>::deallocate(basetype* i_data)
 	{
 		i_data->~basetype();
-		deallocateplace(i_data);
+		deallocate_place(i_data);
 	}
 
 	template <class basetype, int blocksize> 
-	MLINLINE void listallocator<basetype,blocksize>::deallocateplace(basetype* i_data)
+	MLINLINE void listallocator<basetype,blocksize>::deallocate_place(basetype* i_data)
 	{
 		elem* actelem=(elem*)i_data;
 
@@ -179,7 +179,7 @@ namespace ctr
 	}
 
 	template <class basetype, int blocksize> 
-	MLINLINE void listallocator<basetype,blocksize>::deallocateall()
+	MLINLINE void listallocator<basetype,blocksize>::deallocate_all()
 	{
 		if (!m_size)
 			return;

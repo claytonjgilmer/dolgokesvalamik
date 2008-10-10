@@ -7,6 +7,7 @@
 
 namespace utils
 {
+#ifdef _DEBUG
 	inline void assertion(bool i_condition)
 	{
 		if (!i_condition) __asm int 3;
@@ -20,6 +21,14 @@ namespace utils
 			__asm int 3;
 		}
 	}
+#else
+	inline void assertion(bool i_condition)
+	{
+	}
+	inline void assertion(bool i_condition, const char* i_msg)
+	{
+	}
+#endif
 
 }
 #endif//_assert_h_

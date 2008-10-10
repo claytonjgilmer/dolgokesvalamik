@@ -17,19 +17,14 @@ namespace threading
 	{
 		m_incompletetasknum=0;
 
-		m_workevent= CreateSemaphore(NULL,0,1000,NULL);
+		m_workevent= CreateSemaphore(NULL,0,10000,NULL);
 		m_exitevent= CreateEvent(NULL,TRUE,FALSE,NULL);
 
 		for (unsigned n=0; n<REF_COUNT;++n)
 		{
 			m_ref_index.push(n);
 			m_ref_event[n]=CreateEvent(NULL,TRUE,FALSE,NULL);
-#ifdef _DEBUG
-			m_threadid[n]=-100;
-#endif
 		}
-
-		ResetEvent(m_exitevent);
 
 		if (i_desc->m_threadnum)
 			m_threadbuf.resize(i_desc->m_threadnum);
@@ -102,20 +97,16 @@ namespace threading
 
 	void taskmanager::post_process(task* i_task)
 	{
-		m_allocator.deallocate(i_task);
 		m_taskmutex.lock();
 		--m_incompletetasknum;
 		--m_ref_buf[i_task->m_ref_index];
 
 		if (!m_ref_buf[i_task->m_ref_index])
-		{
-#ifdef _DEBUG
-			m_threadid[i_task->m_ref_index]=-100;
-#endif
 			SetEvent(m_ref_event[i_task->m_ref_index]);
-		}
 
 		m_taskmutex.unlock();
+
+		m_allocator.deallocate(i_task);
 	}
 
 	unsigned stack_min_size=INT_MAX;
@@ -171,9 +162,6 @@ namespace threading
 		unsigned s=m_ref_index.size();
 		if (s<stack_min_size)
 			s=stack_min_size;
-
-		utils::assertion(m_threadid[ref_index]==-100);
-		m_threadid[ref_index]=GetCurrentThreadId();
 #endif
 
 		m_ref_buf[ref_index]=i_tasknum;
@@ -185,6 +173,7 @@ namespace threading
 			m_taskbuf.push(i_tasks[n]);
 		}
 		ReleaseSemaphore(m_workevent,i_tasknum,NULL);
+		ResetEvent(m_ref_event[ref_index]);
 		m_taskmutex.unlock();
 
 		for(;;)
@@ -194,7 +183,6 @@ namespace threading
 
 			if (!ret)
 			{
-				ResetEvent(m_ref_event[ref_index]);
 				m_ref_index.push(ref_index);
 				return;
 			}

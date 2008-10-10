@@ -77,7 +77,7 @@ public:
 
 void tasktest()
 {
-	threading::taskmanagerdesc tdesc;
+	threading::taskmanagerdesc tdesc; tdesc.m_threadnum=1;
 	threading::taskmanager::create(&tdesc);
 
 #define buf_size 15000
@@ -121,7 +121,7 @@ void tasktest()
 
 
 	t.reset();
-	threading::taskmanager::instance()->process_buffer(buf,buf2_size,10,proc2(buf_size));
+	threading::taskmanager::instance()->process_buffer(buf,buf2_size,1,proc2(buf_size));
 	t.stop();
 	unsigned tick=t.get_tick();
 

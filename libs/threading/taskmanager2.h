@@ -21,7 +21,7 @@ namespace threading
 	{
 	public:
 		unsigned m_threadnum;
-		taskmanagerdesc(): m_threadnum(3){}
+		taskmanagerdesc(): m_threadnum(1){}
 	};
 
 	class tmimpl;
@@ -70,8 +70,9 @@ namespace threading
 			unsigned start=0;
 			unsigned elemnumpertask=math::Max((unsigned)(i_elemnum/(m_threadbuf.size()+5)),(unsigned)i_grainsize);
 
-			proc_range* tasks[20];
 			unsigned tnum=0;
+			const unsigned n=i_elemnum/elemnumpertask+1;
+			proc_range** tasks=(proc_range**)_alloca(n*sizeof(proc_range*));
 
 			while (start<i_elemnum)
 			{
@@ -81,22 +82,21 @@ namespace threading
 				start+=actnum;
 			}
 
+			utils::assertion(tnum>0 && tnum<=n);
+
 			spawn_tasks((task**)tasks,tnum);
 		}
 
 	private:
-#define REF_COUNT 100
+#define REF_COUNT 1024
 		unsigned m_ref_buf[REF_COUNT];
 		HANDLE	m_ref_event[REF_COUNT];
 
-#ifdef _DEBUG
-		int m_threadid[REF_COUNT];
-#endif//_DEBUG
-		ctr::stack<unsigned,128> m_ref_index;
+		ctr::stack<unsigned,REF_COUNT> m_ref_index;
 		ctr::vector<thread> m_threadbuf;
 		taskallocator m_allocator;
 
-		ctr::queue<task*,128> m_taskbuf;
+		ctr::queue<task*,16384> m_taskbuf;
 		volatile unsigned m_incompletetasknum;
 
 		mutex m_taskmutex;
