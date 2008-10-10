@@ -1,5 +1,5 @@
 #include "task.h"
-#include "taskmanager.h"
+#include "taskmanager2.h"
 
 namespace threading
 {
@@ -9,7 +9,7 @@ namespace threading
 	
 	int task::get_id() const
 	{
-		return m_taskID;
+		return m_ref_index;
 	}
 
 	void* task::operator new(size_t i_sixe)

@@ -3,6 +3,7 @@
 #define _MLLUA_H
 
 #include <list>
+#include "containers/string.h"
 
 extern "C"
 {
@@ -50,7 +51,7 @@ namespace scripting
 			T_THREAD = LUA_TTHREAD,
 		};
 
-		static std::string TypeAsString(eType i_Type);
+		static ctr::string TypeAsString(eType i_Type);
 
 		class Variable;
 
@@ -68,8 +69,8 @@ namespace scripting
 		Variable GetParamTable();
 		int GetTop();
 		void DoBuffer(const char* i_Buffer, size_t i_BufferLength);
-		void DoString(const std::string &i_String);
-		void DoFile(const std::string &i_FileName);
+		void DoString(const ctr::string &i_String);
+		void DoFile(const ctr::string &i_FileName);
 
 		void AddStackRefBase(int i_StackRefBase) { m_StackRefBase += i_StackRefBase; }
 		void RemStackRefBase(int i_StackRefBase) { m_StackRefBase -= i_StackRefBase; }
@@ -136,7 +137,7 @@ namespace scripting
 			 bool IsTable() const;
 			 bool IsFunction() const;
 
-			std::string GetTypeString() const;
+			ctr::string GetTypeString() const;
 
 			// Simple
 			 bool GetBool() const;
@@ -154,7 +155,7 @@ namespace scripting
 			 bool GetBool(bool i_DefBool) const;
 			 float GetFloat(float i_DefFloat) const;
 			 int GetInt(int i_DefInt) const;
-			 std::string GetString(const char *i_DefString) const;
+			 ctr::string GetString(const char *i_DefString) const;
 			 math::vec3 GetVector3(const math::vec3 &i_DefVector3) const;
 
 			void Push() const;
@@ -164,10 +165,10 @@ namespace scripting
 			int OutSize() const;
 
 			 Variable GetVariable(const char *i_KeyString) const;
-			 Variable GetVariable(const std::string &i_KeyString) const;
+			 Variable GetVariable(const ctr::string &i_KeyString) const;
 
 			 Variable operator [](const char *i_KeyString) const;
-			 Variable operator [](const std::string &i_KeyString) const;
+			 Variable operator [](const ctr::string &i_KeyString) const;
 
 			 Variable GetVariable(int i_KeyInt) const;
 			 Variable operator [](int i_KeyInt) const;
@@ -181,7 +182,7 @@ namespace scripting
 			void PushFloat(float i_Float);
 			void PushInt(int i_Int);
 
-			void PushString(const std::string &i_String);
+			void PushString(const ctr::string &i_String);
 
 			Variable PushTable();
 
@@ -189,19 +190,19 @@ namespace scripting
 			void PushBool(int i_KeyInt, bool i_Bool);
 			void PushFloat(int i_KeyInt, float i_Float);
 			void PushInt(int i_KeyInt, int i_Int);
-			void PushString(int i_KeyInt, const std::string &i_String);
+			void PushString(int i_KeyInt, const ctr::string &i_String);
 			void PushPtr(int i_KeyInt, void *i_Ptr);
 			void PushTable(int i_KeyInt);
 			void PushVariable(int i_KeyInt, const Variable &i_Variable);
 
-			void PushNil(const std::string &i_KeyString);
-			void PushBool(const std::string &i_KeyString, bool i_Bool);
-			void PushFloat(const std::string &i_KeyString, float i_Float);
-			void PushInt(const std::string &i_KeyString, int i_Int);
-			void PushString(const std::string &i_KeyString, const std::string &i_String);
-			void PushPtr(const std::string &i_KeyString, void *i_Ptr);
-			void PushTable(const std::string &i_KeyString);
-			void PushVariable(const std::string &i_KeyString, const Variable &i_Variable);
+			void PushNil(const ctr::string &i_KeyString);
+			void PushBool(const ctr::string &i_KeyString, bool i_Bool);
+			void PushFloat(const ctr::string &i_KeyString, float i_Float);
+			void PushInt(const ctr::string &i_KeyString, int i_Int);
+			void PushString(const ctr::string &i_KeyString, const ctr::string &i_String);
+			void PushPtr(const ctr::string &i_KeyString, void *i_Ptr);
+			void PushTable(const ctr::string &i_KeyString);
+			void PushVariable(const ctr::string &i_KeyString, const Variable &i_Variable);
 
 		private:
 			lua			*m_Lua;

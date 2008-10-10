@@ -28,7 +28,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	std::string lua::TypeAsString(eType i_Type)
+	ctr::string lua::TypeAsString(eType i_Type)
 	{
 		switch (i_Type)
 		{
@@ -146,14 +146,14 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::DoString(const std::string &i_String)
+	void lua::DoString(const ctr::string &i_String)
 	{
 		int Ret = lua_dostring(m_LuaState, i_String.c_str());
 		assert(Ret == 0);//(Ret)(i_String).msg("Error: lua::DoString()");
 	}
 
 	//----------------------------------------------------------------------------
-	void lua::DoFile(const std::string &i_FileName)
+	void lua::DoFile(const ctr::string &i_FileName)
 	{
 		file::file File;
 		
@@ -335,7 +335,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	std::string lua::Variable::GetTypeString() const
+	ctr::string lua::Variable::GetTypeString() const
 	{
 		return lua::TypeAsString(GetType());
 	}
@@ -487,7 +487,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	std::string lua::Variable::GetString(const char *i_DefString) const
+	ctr::string lua::Variable::GetString(const char *i_DefString) const
 	{
 		if (IsString())
 			return GetString();
@@ -543,7 +543,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	lua::Variable lua::Variable::GetVariable(const std::string &i_KeyString) const
+	lua::Variable lua::Variable::GetVariable(const ctr::string &i_KeyString) const
 	{
 		return GetVariable(i_KeyString.c_str());
 	}
@@ -566,7 +566,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	lua::Variable lua::Variable::operator [](const std::string &i_KeyString) const
+	lua::Variable lua::Variable::operator [](const ctr::string &i_KeyString) const
 	{
 		return GetVariable(i_KeyString.c_str());
 	}
@@ -641,7 +641,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushString(const std::string &i_String)
+	void lua::Variable::PushString(const ctr::string &i_String)
 	{
 		lua_pushlstring(GetState(),i_String.c_str(),i_String.size());
 	}
@@ -686,7 +686,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushString(int i_KeyInt, const std::string &i_String)
+	void lua::Variable::PushString(int i_KeyInt, const ctr::string &i_String)
 	{
 		lua_pushnumber(GetState(), lua_Number(i_KeyInt));
 		lua_pushlstring(GetState(), i_String.c_str(), i_String.size());
@@ -718,7 +718,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushNil(const std::string &i_KeyString)
+	void lua::Variable::PushNil(const ctr::string &i_KeyString)
 	{
 		lua_pushlstring(GetState(), i_KeyString.c_str(), i_KeyString.size());
 		lua_pushnil(GetState());
@@ -726,7 +726,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushBool(const std::string &i_KeyString, bool i_Bool)
+	void lua::Variable::PushBool(const ctr::string &i_KeyString, bool i_Bool)
 	{
 		lua_pushlstring(GetState(), i_KeyString.c_str(), i_KeyString.size());
 		lua_pushboolean(GetState(), i_Bool);
@@ -734,7 +734,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushFloat(const std::string &i_KeyString, float i_Float)
+	void lua::Variable::PushFloat(const ctr::string &i_KeyString, float i_Float)
 	{
 		lua_pushlstring(GetState(), i_KeyString.c_str(), i_KeyString.size());
 		lua_pushnumber(GetState(), i_Float);
@@ -742,7 +742,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushInt(const std::string &i_KeyString, int i_Int)
+	void lua::Variable::PushInt(const ctr::string &i_KeyString, int i_Int)
 	{
 		lua_pushlstring(GetState(), i_KeyString.c_str(), i_KeyString.size());
 		lua_pushnumber(GetState(), lua_Number(i_Int));
@@ -750,7 +750,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushString(const std::string &i_KeyString, const std::string &i_String)
+	void lua::Variable::PushString(const ctr::string &i_KeyString, const ctr::string &i_String)
 	{
 		lua_pushlstring(GetState(), i_KeyString.c_str(), i_KeyString.size());
 		lua_pushlstring(GetState(), i_String.c_str(), i_String.size());
@@ -758,7 +758,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushPtr(const std::string &i_KeyString, void *i_Ptr)
+	void lua::Variable::PushPtr(const ctr::string &i_KeyString, void *i_Ptr)
 	{
 		lua_pushlstring(GetState(), i_KeyString.c_str(), i_KeyString.size());
 		lua_pushlightuserdata(GetState(), i_Ptr);
@@ -766,7 +766,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushTable(const std::string &i_KeyString)
+	void lua::Variable::PushTable(const ctr::string &i_KeyString)
 	{
 		lua_pushlstring(GetState(), i_KeyString.c_str(), i_KeyString.size());
 		lua_newtable(GetState());
@@ -774,7 +774,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushVariable(const std::string &i_KeyString, const Variable &i_Variable)
+	void lua::Variable::PushVariable(const ctr::string &i_KeyString, const Variable &i_Variable)
 	{
 		lua_pushlstring(GetState(), i_KeyString.c_str(), i_KeyString.size());
 		lua_pushvalue(GetState(), i_Variable.m_StackIndex);

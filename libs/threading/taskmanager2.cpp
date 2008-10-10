@@ -20,6 +20,15 @@ namespace threading
 		m_workevent= CreateSemaphore(NULL,0,1000,NULL);
 		m_exitevent= CreateEvent(NULL,TRUE,FALSE,NULL);
 
+		for (unsigned n=0; n<REF_COUNT;++n)
+		{
+			m_ref_index.push(n);
+			m_ref_event[n]=CreateEvent(NULL,TRUE,FALSE,NULL);
+#ifdef _DEBUG
+			m_threadid[n]=-100;
+#endif
+		}
+
 		ResetEvent(m_exitevent);
 
 		if (i_desc->m_threadnum)
@@ -61,7 +70,7 @@ namespace threading
 
 	void taskmanager::run()
 	{
-		while (true)
+		for(;;)
 		{
 			int exit=wait_for_task_or_exit();
 
@@ -84,9 +93,8 @@ namespace threading
 	task* taskmanager::get_task()
 	{
 		m_taskmutex.lock();
-		task* t=m_taskbuf[m_idletask.front()].m_task;
-		m_taskbuf[m_idletask.front()].m_state=TASK_WORKING;
-		m_idletask.pop();
+		task* t=m_taskbuf.front();
+		m_taskbuf.pop();
 		m_taskmutex.unlock();
 
 		return t;
@@ -95,64 +103,106 @@ namespace threading
 	void taskmanager::post_process(task* i_task)
 	{
 		m_allocator.deallocate(i_task);
-
 		m_taskmutex.lock();
+		--m_incompletetasknum;
+		--m_ref_buf[i_task->m_ref_index];
 
-		unsigned taskindex=i_task->m_taskID;
-		m_taskbuf[taskindex].m_state=TASK_COMPLETED;
-
-		while (true)
+		if (!m_ref_buf[i_task->m_ref_index])
 		{
-			if (m_taskbuf[taskindex].m_childnum)
-				break;
-
-			//ha nincs gyereke, indulhatnak a dependensek
-			for (unsigned int n=0; n<m_taskbuf[taskindex].m_dependentlist.size();++n)
-			{
-				m_idletask.push(m_taskbuf[taskindex].m_dependentlist[n]);
-				m_taskbuf[taskindex].m_state=TASK_IDLE;
-				ReleaseSemaphore(m_workevent,1,NULL);
-			}
-
-			taskindex=m_taskbuf[taskindex].m_parenttask;
-
-			if (taskindex==-1)
-				break;
-
-			--m_taskbuf[taskindex].m_childnum;
+#ifdef _DEBUG
+			m_threadid[i_task->m_ref_index]=-100;
+#endif
+			SetEvent(m_ref_event[i_task->m_ref_index]);
 		}
 
-		--m_incompletetasknum;
 		m_taskmutex.unlock();
 	}
+
+	unsigned stack_min_size=INT_MAX;
+
 
 	void taskmanager::spawn_task(task* i_task)
 	{
-		m_taskmutex.lock();
 
-		unsigned taskindex=m_taskbuf.size();
-		m_taskbuf.push_back(taskdescinternal(i_task));
-		taskdescinternal& newtaskdesc=m_taskbuf.back();
+		unsigned ref_index=m_ref_index.pop();
+
+#ifdef _DEBUG
+		unsigned s=m_ref_index.size();
+		if (s<stack_min_size)
+			s=stack_min_size;
+#endif
+
+		m_taskmutex.lock();
+		m_ref_buf[ref_index]=1;
+
+		i_task->m_ref_index=ref_index;
+		m_taskbuf.push(i_task);
+		++m_incompletetasknum;
+		m_taskmutex.unlock();
 
 		ReleaseSemaphore(m_workevent,1,NULL);
-		++m_incompletetasknum;
-		i_task->m_taskID=taskindex;
-		m_taskmutex.unlock();
+
+
+		for(;;)
+		{
+			const HANDLE waitFor[]={m_ref_event[ref_index],m_workevent};
+			unsigned ret=WaitForMultipleObjects(2,waitFor,FALSE,INFINITE) - WAIT_OBJECT_0;
+
+			if (!ret)
+			{
+				ResetEvent(m_ref_event[ref_index]);
+				m_ref_index.push(ref_index);
+				return;
+			}
+
+			task* t=get_task();
+
+			t->run();
+			post_process(t);
+		}
 	}
 
-	void taskmanager::spawn_tasks(task** i_tasks, unsigned i_tasknum)
+	void taskmanager::spawn_tasks(task* i_tasks[], unsigned i_tasknum)
 	{
 		m_taskmutex.lock();
-		m_taskbuf.resize(m_taskbuf.size()+i_tasknum);
+		unsigned ref_index=m_ref_index.pop();
+
+#ifdef _DEBUG
+		unsigned s=m_ref_index.size();
+		if (s<stack_min_size)
+			s=stack_min_size;
+
+		utils::assertion(m_threadid[ref_index]==-100);
+		m_threadid[ref_index]=GetCurrentThreadId();
+#endif
+
+		m_ref_buf[ref_index]=i_tasknum;
+		m_incompletetasknum+=i_tasknum;
 
 		for (unsigned n=0; n<i_tasknum; ++n)
 		{
-			m_taskbuf.push_back(taskdescinternal(i_tasks[n]));
-			++m_incompletetasknum;
+			i_tasks[n]->m_ref_index=ref_index;
+			m_taskbuf.push(i_tasks[n]);
 		}
-
-		i_task->m_taskID=taskindex;
+		ReleaseSemaphore(m_workevent,i_tasknum,NULL);
 		m_taskmutex.unlock();
-		return taskindex;
+
+		for(;;)
+		{
+			const HANDLE waitFor[]={m_ref_event[ref_index],m_workevent};
+			unsigned ret=WaitForMultipleObjects(2,waitFor,FALSE,INFINITE) - WAIT_OBJECT_0;
+
+			if (!ret)
+			{
+				ResetEvent(m_ref_event[ref_index]);
+				m_ref_index.push(ref_index);
+				return;
+			}
+
+			task* t=get_task();
+
+			t->run();
+			post_process(t);
+		}
 	}
 }

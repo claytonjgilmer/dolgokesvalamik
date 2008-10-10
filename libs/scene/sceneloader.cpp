@@ -96,7 +96,7 @@ namespace scene
 		if (exclude)
 			return NULL;
 
-		std::string TypeName=i_nodetable.GetVariable("Type").GetString("");
+		ctr::string TypeName=i_nodetable.GetVariable("Type").GetString("");
 
 		node* NewNode=(node*)metaobject_manager::create_object(TypeName.c_str());
 

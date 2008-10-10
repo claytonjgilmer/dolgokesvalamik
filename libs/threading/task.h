@@ -17,8 +17,8 @@ namespace threading
 
 			void* operator new(size_t i_sixe);
 
-		private:
-			int m_taskID;
+			unsigned m_ref_index;
+
 #ifdef _DEBUG
 			ctr::string m_name;
 #endif

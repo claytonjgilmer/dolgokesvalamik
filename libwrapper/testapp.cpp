@@ -4,7 +4,7 @@
 
 #include "render/rendersystem.h"
 #include "file/filesystem.h"
-#include "threading/taskmanager.h"
+#include "threading/taskmanager2.h"
 #include "render/shadermanager.h"
 #include "render/texturemanager.h"
 #include "render/submesh.h"

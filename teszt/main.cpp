@@ -9,7 +9,7 @@
 #include "physics/physicssystem.h"
 
 #include "threading/thread.h"
-#include "threading/taskmanager.h"
+#include "threading/taskmanager2.h"
 
 #include "containers/string.h"
 #include "containers/stringmap.h"
@@ -25,63 +25,121 @@
 
 render::object3d* load_mmod(const char* i_filename);
 
-int _cdecl main()
+struct proc
 {
-	int* a=new int[113];
-	return 0;
-#if 0
+	void operator()(int* i_buf, unsigned i_num) const
+	{
+		for (unsigned n=0; n<i_num; ++n)
+		{
+			int sum=10;
+
+			for (int m=0; m<100; ++m)
+			{
+				sum+=m;
+			}
+
+			i_buf[n]+=sum;
+		}
+	}
+};
+
+struct proc2
+{
+	unsigned m_bufsize;
+	proc2(unsigned i_bufsize):m_bufsize(i_bufsize){}
+	void operator()(int* i_buf, unsigned i_num) const
+	{
+		for (unsigned n=0; n<i_num; ++n)
+		{
+			threading::taskmanager::instance()->process_buffer(i_buf+n*m_bufsize,m_bufsize,10,proc());
+		}
+	}
+};
+
+class proc_task:public threading::task
+{
+public:
+	int* m_buf;
+	unsigned m_size;
+
+	proc_task(int* i_buf, unsigned i_size):
+	m_buf(i_buf),
+	m_size(i_size)
+	{
+	}
+
+	void run()
+	{
+		proc p;
+		p(m_buf,m_size);
+	}
+};
+
+void tasktest()
+{
+	threading::taskmanagerdesc tdesc;
+	threading::taskmanager::create(&tdesc);
+
+#define buf_size 15000
+#define buf2_size 100
+
+	int* buf=(int*)malloc(buf_size*buf2_size*sizeof(int));
+
+	memset(buf,0,buf_size*buf2_size*sizeof(int));
+
+	for (int n=0; n<buf2_size; ++n)
+	{
+		proc p;
+		p(buf+n*buf_size,buf_size);
+	}
+
 	utils::timer t;
 
-	const unsigned iternum=100000;
-	const unsigned maxval=1000000;
-
-	unsigned* val=new unsigned[iternum+1];
-	for (unsigned n=0; n<=iternum;++n)
-	{
-		unsigned short r1=rand();
-		unsigned short r2=rand();
-
-		val[n]=(((unsigned)r1) << 16 ) + r2;
-		val[n]%=maxval;
-		++val[n];
-	}
-
-
 	t.reset();
-	for (unsigned n=0; n<iternum; ++n)
+	for (int n=0; n<buf2_size; ++n)
 	{
-		math::gcd(val[n],val[n+1]);
+		proc p;
+		p(buf+n*buf_size,buf_size);
 	}
 	t.stop();
-	printf("1 time:%d\n",t.get_tick());
+	unsigned tick2=t.get_tick();
 
-	t.reset();
-	for (unsigned n=0; n<iternum; ++n)
-	{
-		math::gcd2(val[n],val[n+1]);
-	}
-	t.stop();
-	printf("1 time:%d\n",t.get_tick());
-
-	delete [] val;
-#endif
-	scripting::lua Lua;
-	Lua.InitState((scripting::lua::eLuaLib)(scripting::lua::LL_BASE | scripting::lua::LL_MATH));//| scripting::lua::LL_IO| scripting::lua::LL_STRING));
 
 /*
-	scripting::lua::Variable inittable=Lua.GetGlobalTable().GetVariable("InitParams");
-
-	if (inittable.IsTable())
-	int width=inittable.GetVariable("Width").GetInt(640);
-	else if (inittable.IsNil())
-		strlen("");
+	t.reset();
+	const unsigned tasknum=4;
+	proc_task* task[tasknum];
+	const unsigned egybe=buf_size/tasknum;
+	for (int n=0; n<tasknum; ++n)
+	{
+		task[n]=new proc_task(buf+n*egybe,egybe);
+	}
+	threading::taskmanager::instance()->spawn_tasks((threading::task**)task,tasknum);
+	t.stop();
+	unsigned tick15=t.get_tick();
 */
 
-	for (int n=0; n<4; ++n)
+
+	t.reset();
+	threading::taskmanager::instance()->process_buffer(buf,buf2_size,10,proc2(buf_size));
+	t.stop();
+	unsigned tick=t.get_tick();
+
+
+
+
+//	printf_s(" parallel:%d\n   serial:%d\nparallel2:%d\n",tick,tick2,tick15);
+	printf_s(" parallel:%d\n   serial:%d\n",tick,tick2);
+
+	free(buf);
+	threading::taskmanager::release();
+}
+
+int _cdecl main()
+{
+	for (int n=0; n<1000; ++n)
 	{
-		Lua.DoFile("faszom.lua");
-		system("PAUSE");
-//		while (!_kbhit());
-//		while (_kbhit());
+		printf_s("%d.\n",n+1);
+		tasktest();
 	}
 }

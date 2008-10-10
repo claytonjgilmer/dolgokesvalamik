@@ -9,8 +9,6 @@
 #include "shader.h"
 #include "math/mtx4x4.h"
 
-#include "threading/taskmanager.h"
-
 namespace render
 {
 	DEFINE_SINGLETON(system);
@@ -78,7 +76,7 @@ namespace render
 
 	void system::render()
 	{
-		threading::taskmanager::instance()->spawn_task(new rendertask,-1,-1);
+		threading::taskmanager::instance()->spawn_task(new rendertask);
 	}
 
 	void system::flush_queues()

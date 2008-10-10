@@ -5,11 +5,11 @@ namespace threading
 	mutex::mutex()
 	{
 #if mutextype==0
-		InitializeCriticalSectionAndSpinCount(&m_cs,10000);
+//		InitializeCriticalSectionAndSpinCount(&m_cs,100);
+		InitializeCriticalSection(&m_cs);
 #else
 		m_data=0;
 #endif
-//		InitializeCriticalSection(&m_cs);
 	}
 
 	mutex::~mutex()
@@ -25,7 +25,7 @@ namespace threading
 #if mutextype==0
 		return (TryEnterCriticalSection(&m_cs));
 #else
-		return (InterlockedCompareExchange(&m_data,1,0));
+		return (_InterlockedCompareExchange(&m_data,1,0));
 #endif
 	}
 
@@ -34,7 +34,8 @@ namespace threading
 #if mutextype==0
 		EnterCriticalSection(&m_cs);
 #else
-		while (InterlockedCompareExchange(&m_data,1,0));
+		while (_InterlockedCompareExchange(&m_data,1,0))
+			SwitchToThread();
 #endif
 	}
 
@@ -43,7 +44,7 @@ namespace threading
 #if mutextype==0
 		LeaveCriticalSection(&m_cs);
 #else
-		InterlockedExchange(&m_data,0);
+		_InterlockedExchange(&m_data,0);
 #endif
 	}
 
@@ -62,12 +63,13 @@ namespace threading
 
 	void mutex2::lock()
 	{
-		while (InterlockedCompareExchange(&m_data,1,0));
+		while (_InterlockedCompareExchange(&m_data,1,0))
+			SwitchToThread();
 	}
 
 	void mutex2::unlock()
 	{
-		InterlockedExchange(&m_data,0);
+		_InterlockedExchange(&m_data,0);
 	}
 
 }//namespace threading
