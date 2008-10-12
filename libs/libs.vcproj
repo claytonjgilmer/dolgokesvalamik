@@ -284,11 +284,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\scripting\lualib\lua.h"
+				RelativePath=".\scripting\lua.h"
 				>
 			</File>
 			<File
-				RelativePath=".\scripting\lua.h"
+				RelativePath=".\scripting\lualib\lua.h"
 				>
 			</File>
 			<File
@@ -677,6 +677,10 @@
 			</File>
 			<File
 				RelativePath=".\threading\mutex.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\physics\nbody.cpp"
 				>
 			</File>
 			<File

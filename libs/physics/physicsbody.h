@@ -27,7 +27,7 @@ namespace physics
 
 	class system;
 
-	class body
+	class body_t
 	{
 		friend class system;
 	private:

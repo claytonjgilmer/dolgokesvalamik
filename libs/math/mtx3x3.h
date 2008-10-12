@@ -31,6 +31,7 @@ namespace math
 		const vec3& axis(int i_index) const;
 
 		void identity();
+		void clear();
 
 		void fromeuler(float i_xangle, float i_yangle, float i_zangle);
 		void get_euler(float& o_xangle, float& o_yangle, float& o_zangle) const;
@@ -121,6 +122,11 @@ namespace math
 	{
 		_11=_22=_33=1.0f;
 		_12=_13=_21=_23=_31=_32=0.0f;
+	}
+
+	inline void mtx3x3::clear()
+	{
+		_11=_22=_33=_12=_13=_21=_23=_31=_32=0.0f;
 	}
 
 	inline void mtx3x3::transform3x3(vec3& o_dst, const vec3& i_src) const

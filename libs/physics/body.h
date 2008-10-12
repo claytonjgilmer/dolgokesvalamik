@@ -7,25 +7,36 @@ namespace physics
 
 	struct bodydesc
 	{
-		math::mtx4x3 m_pos;
-		math::vec3 m_vel;
-		math::vec3 m_rotvel;
+		math::mtx4x3 pos;
+		math::vec3 vel;
+		math::vec3 rotvel;
+
+		float		mass;
+		math::mtx3x3 inertia;
+
+		BOOL		isstatic;
 
 		bodydesc()
 		{
-			m_pos.identity();
-			m_vel.clear();
-			m_rotvel.clear();
+			pos.identity();
+			vel.clear();
+			rotvel.clear();
+			mass=1.0f;
+			inertia.identity();
+			isstatic=FALSE;
 		}
 	};
 
-	class body
+	class body_t
 	{
 		friend class system;
 	private:
-		body(){}
-		~body(){}
-		int m_index;
+		body_t()
+		{
+
+		}
+		~body_t(){}
+		int index;
 	};
 }
 #endif

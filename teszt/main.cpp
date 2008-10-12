@@ -135,8 +135,13 @@ void tasktest()
 	threading::taskmanager::release();
 }
 
+#include "physics/nbody.h"
+
 int _cdecl main()
 {
+	{
+		physics::nbody nb;
+	}
 	for (int n=0; n<1000; ++n)
 	{
 		printf_s("%d.\n",n+1);

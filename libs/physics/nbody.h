@@ -1,25 +1,43 @@
 #ifndef _nbody_h_
 #define _nbody_h_
 
+#include "containers/vector.h"
+#include "math/vec3.h"
+#include "math/mtx3x3.h"
+#include "math/mtx4x3.h"
+#include "body.h"
+
 namespace physics
 {
-	template<unsigned N=512> class nbody
+#define NBODY_MIN_CAPACITY 512
+	struct nbody
 	{
-	public:
-		math::mtx4x3	m_pos[N];
-		math::vec3		m_vel[N];
-		math::vec3		m_rotvel[N];
+		math::mtx4x3* pos;
+		math::vec3* vel;
+		math::vec3* rotvel;
 
-		math::vec3		m_force[N];
-		math::vec3		m_torque[N];
+		math::vec3* force;
+		math::vec3* torque;
+		float* invmass;
+		math::mtx3x3* invinertia_rel;
+		math::mtx3x3* invinertia_abs;
 
-		float			m_invmass[N];
-		math::mtx3x3	m_invinertiarel[N];
-		math::mtx3x3	m_invinertiaabs[N];
+		body_t** body;
 
-		float			m_veldamp[N];
-		float			m_rotveldamp[N];
-		body*			m_body[N];
+		unsigned capacity;
+		unsigned size;
+
+		nbody();
+		~nbody();
+
+		void realloc(unsigned i_newcapacity);
+		void add_body(const bodydesc* i_desc, body_t* i_body_array[], unsigned i_bodynum);
+		void release_body(body_t* i_body_array[], unsigned i_bodynum);
+
+		unsigned state_size[100];
+		unsigned state_size_sum;
+		unsigned state_num;
+
 	};
 }
 #endif//_nbody_h_
