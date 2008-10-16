@@ -35,7 +35,8 @@ namespace physics
 		system(const systemdesc* i_desc);
 
 		systemdesc desc;
-		nbody bodystate_array;
+		nbody bodystate_array_dynamic;
+		nbody bodystate_array_static;
 
 		ctr::listallocator<body_t> body_list;
 	};

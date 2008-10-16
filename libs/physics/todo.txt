@@ -1,0 +1,41 @@
+
+testek:
+pos,vel,rotvel,mass,inertia,inertiaabs,forceacc,torqueacc,shapes,joints,contacts
+
+broadphaseobject:boundingbox
+
+kontaktinfo:
+body1,body2,contactpos,contactnormal
+
+shape:
+body, next, prev (egy adott body shape-jei vannak felfuzve)
+
+sphere,box,cylinder,capsule,convex mesh, terrain, polygonsoup
+
+joint:
+body1,body2, prev/nextbody1/2,num_of_jacobian_rows, jacobian_row_array[6];
+
+contactinfo:
+body1,body2, prev/nextbody1/2,num_of_contact, contact_array[4];
+
+
+collision detection:
+broad phase: updatebounding->process->broadpairarray->
+narrow phase: process->updated contactinfoarray->
+
+solver:
+process->constraintforce array->
+
+update:
+process->updated bodystates
+
+testek tombben:
+hozzaadas: tomb vegere kerul
+torles: utolso elem kerul a helyere->az utolso elem indexe megvaltozik
+kell egy fix object, amiben az indexek vannak, amin keresztul el lehet erni a testet
+update-elni csak a dinamikus testeket kell, ezek kulon tombben vannak
+
+kontaktinfok tombben:
+hozzaadas: tomb vegere, kell egy fix object, amiben a tombindex van, ezt az objectet kell linkelni a ket testhez
+torles: kilinkelni a ket objectbol, az utolso tombelem indexe megvaltozik ennek az indexere, es bemasolodik a helyere
+

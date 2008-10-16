@@ -4,6 +4,7 @@
 namespace physics
 {
 	class system;
+	struct constraint_edge;
 
 	struct bodydesc
 	{
@@ -14,7 +15,7 @@ namespace physics
 		float		mass;
 		math::mtx3x3 inertia;
 
-		BOOL		isstatic;
+		BOOL		is_static;
 
 		bodydesc()
 		{
@@ -23,20 +24,15 @@ namespace physics
 			rotvel.clear();
 			mass=1.0f;
 			inertia.identity();
-			isstatic=FALSE;
+			is_static=FALSE;
 		}
 	};
 
-	class body_t
+	struct body_t
 	{
-		friend class system;
-	private:
-		body_t()
-		{
+		int		array_index;
+		bool	is_static;
 
-		}
-		~body_t(){}
-		int index;
 	};
 }
 #endif
