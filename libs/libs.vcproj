@@ -188,6 +188,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\physics\contact.h"
+				>
+			</File>
+			<File
 				RelativePath=".\math\dvec3.h"
 				>
 			</File>
@@ -288,11 +292,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\scripting\lualib\lua.h"
+				RelativePath=".\scripting\lua.h"
 				>
 			</File>
 			<File
-				RelativePath=".\scripting\lua.h"
+				RelativePath=".\scripting\lualib\lua.h"
 				>
 			</File>
 			<File
@@ -535,6 +539,10 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
+			<File
+				RelativePath=".\physics\body.cpp"
+				>
+			</File>
 			<File
 				RelativePath=".\utils\chunkstream.cpp"
 				>

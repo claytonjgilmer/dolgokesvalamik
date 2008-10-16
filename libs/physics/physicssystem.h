@@ -24,21 +24,21 @@ namespace physics
 	public:
 		//body krealas/megszuntetes
 		body_t* create_body(const bodydesc& i_desc);
-		void create_bodies(body_t* & o_body_array[], const bodydesc i_desc[], unsigned i_bodynum);
+		void create_bodies(body_t* o_body_array[], UINT8 i_statics, const bodydesc i_desc[], unsigned i_bodynum);
 		void release_body(body_t*);
 		void release_bodies(body_t* i_body_array[], unsigned i_bodynum);
 
 
 		void simulate(float i_dt);
 
-	private:
+//	private:
 		system(const systemdesc* i_desc);
 
 		systemdesc desc;
-		nbody bodystate_array_dynamic;
-		nbody bodystate_array_static;
+		nbody bodystate_array[2];
 
 		ctr::listallocator<body_t> body_list;
+		ctr::vector<body_t*> killed;
 	};
 }
 #endif//_physicssystem_h_

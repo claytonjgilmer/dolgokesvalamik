@@ -249,22 +249,22 @@ void update_app()
 		speed=3;
 
 	if (ip->KeyDown(KEYCODE_W))
-		g_game.camt+=speed*dt*cammtx.zaxis;
+		g_game.camt+=speed*dt*cammtx.z;
 
 	if (ip->KeyDown(KEYCODE_S))
-		g_game.camt-=speed*dt*cammtx.zaxis;
+		g_game.camt-=speed*dt*cammtx.z;
 
 	if (ip->KeyDown(KEYCODE_A))
-		g_game.camt-=speed*dt*cammtx.xaxis;
+		g_game.camt-=speed*dt*cammtx.x;
 
 	if (ip->KeyDown(KEYCODE_D))
-		g_game.camt+=speed*dt*cammtx.xaxis;
+		g_game.camt+=speed*dt*cammtx.x;
 
 	if (ip->KeyDown(KEYCODE_Q))
-		g_game.camt+=speed*dt*cammtx.yaxis;
+		g_game.camt+=speed*dt*cammtx.y;
 
 	if (ip->KeyDown(KEYCODE_Z))
-		g_game.camt-=speed*dt*cammtx.yaxis;
+		g_game.camt-=speed*dt*cammtx.y;
 
 	int mx=ip->GetMouseX();
 	int my=ip->GetMouseY();

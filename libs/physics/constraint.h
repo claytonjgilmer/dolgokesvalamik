@@ -14,14 +14,16 @@ namespace physics
 
 	struct constraint_t
 	{
-		body_t* body1;
-		body_t* body2;
-
+		body_t* body[2];
 		constraint_edge edge[2];
 
-		constraint_t()
+		constraint_t(body_t* i_body1, body_t* i_body2)
 		{
+			body[0]=i_body1;
+			body[2]=i_body2;
 			edge[0].constraint=edge[1].constraint=this;
+			edge[0].other=i_body2;
+			edge[1].other=i_body1;
 		}
 	};
 

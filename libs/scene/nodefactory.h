@@ -179,17 +179,17 @@ namespace scene
 				float rx,ry,rz;
 				float sx,sy,sz;
 				float tx,ty,tz;
-				sx=mtx.axisx().length();
-				sy=mtx.axisy().length();
-				sz=mtx.axisz().length();
+				sx=mtx.x.length();
+				sy=mtx.y.length();
+				sz=mtx.z.length();
 
 
 				mtx.normalize();
 				mtx.get_euler(rx,ry,rz);
 
-				tx=mtx.trans().x;
-				ty=mtx.trans().y;
-				tz=mtx.trans().z;
+				tx=mtx.t.x;
+				ty=mtx.t.y;
+				tz=mtx.t.z;
 
 				char str[1024];
 				sprintf(str,"%.3f %.3f %.3f %.3f %.3f %.3f %.3f %.3f %.3f",rx,ry,rz,sx,sy,sz,tx,ty,tz);

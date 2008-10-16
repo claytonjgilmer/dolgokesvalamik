@@ -64,10 +64,10 @@ void init_app(HWND i_hwnd)
 	scene::metaobject* mo=obj.get_metaobject();
 	math::mtx4x3 mtx;
 	mtx.set_euler(1,2,3);
-	mtx.trans().set(7,8,9);
-	mtx.axisx()*=4;
-	mtx.axisy()*=5;
-	mtx.axisz()*=6;
+	mtx.t.set(7,8,9);
+	mtx.x*=4;
+	mtx.y*=5;
+	mtx.z*=6;
 	obj.set_localposition(mtx);
 
 	scene::metaobject::property_iterator it;
@@ -277,22 +277,22 @@ void update_app()
 		speed=3;
 
 	if (ip->KeyDown(KEYCODE_W))
-		g_game.camt+=speed*dt*cammtx.zaxis;
+		g_game.camt+=speed*dt*cammtx.z;
 
 	if (ip->KeyDown(KEYCODE_S))
-		g_game.camt-=speed*dt*cammtx.zaxis;
+		g_game.camt-=speed*dt*cammtx.z;
 
 	if (ip->KeyDown(KEYCODE_A))
-		g_game.camt-=speed*dt*cammtx.xaxis;
+		g_game.camt-=speed*dt*cammtx.x;
 
 	if (ip->KeyDown(KEYCODE_D))
-		g_game.camt+=speed*dt*cammtx.xaxis;
+		g_game.camt+=speed*dt*cammtx.x;
 
 	if (ip->KeyDown(KEYCODE_Q))
-		g_game.camt+=speed*dt*cammtx.yaxis;
+		g_game.camt+=speed*dt*cammtx.y;
 
 	if (ip->KeyDown(KEYCODE_Z))
-		g_game.camt-=speed*dt*cammtx.yaxis;
+		g_game.camt-=speed*dt*cammtx.y;
 
 	int mx=ip->GetMouseX();
 	int my=ip->GetMouseY();

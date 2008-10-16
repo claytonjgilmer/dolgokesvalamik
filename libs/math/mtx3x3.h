@@ -13,7 +13,7 @@ namespace math
 	{
 	public:
 		mtx3x3();
-		mtx3x3(const vec3& i_xaxis, const vec3& i_yaxis, const vec3& i_zaxis);
+		mtx3x3(const vec3& i_x, const vec3& i_y, const vec3& i_z);
 
 		void transpose3x3();
 		void transpose3x3(const mtx3x3& i_src);
@@ -21,12 +21,6 @@ namespace math
 		float* operator()();
 		const float* operator()() const;
 
-		vec3& axisx();
-		const vec3& axisx() const;
-		vec3& axisy();
-		const vec3& axisy() const;
-		vec3& axisz();
-		const vec3& axisz() const;
 		vec3& axis(int i_index);
 		const vec3& axis(int i_index) const;
 
@@ -61,7 +55,7 @@ namespace math
 
 			struct  
 			{
-				vec3 xaxis,yaxis,zaxis;
+				vec3 x,y,z;
 			};
 		};
 	}; //class mtx3x3
@@ -70,43 +64,13 @@ namespace math
 	{
 	}
 
-	inline mtx3x3::mtx3x3(const vec3& i_xaxis, const vec3& i_yaxis, const vec3& i_zaxis)
+	inline mtx3x3::mtx3x3(const vec3& i_x, const vec3& i_y, const vec3& i_z)
 	{
-		xaxis=i_xaxis;
-		yaxis=i_yaxis;
-		zaxis=i_zaxis;
+		x=i_x;
+		y=i_y;
+		z=i_z;
 	}
 	
-	inline vec3& mtx3x3::axisx()
-	{
-		return xaxis;
-	}
-
-	inline const vec3& mtx3x3::axisx() const
-	{
-		return xaxis;
-	}
-
-	inline vec3& mtx3x3::axisy()
-	{
-		return yaxis;
-	}
-
-	inline const vec3& mtx3x3::axisy() const
-	{
-		return yaxis;
-	}
-
-	inline vec3& mtx3x3::axisz()
-	{
-		return zaxis;
-	}
-
-	inline const vec3& mtx3x3::axisz() const
-	{
-		return zaxis;
-	}
-
 	inline vec3& mtx3x3::axis(int i_index)
 	{
 		return *(((vec3*)&_11)+i_index);
@@ -148,18 +112,18 @@ namespace math
 
 	inline void mtx3x3::transformtransposed3x3(vec3& o_dst, const vec3& i_src) const
 	{
-		o_dst.x=dot(i_src,xaxis);
-		o_dst.y=dot(i_src,yaxis);
-		o_dst.z=dot(i_src,zaxis);
+		o_dst.x=dot(i_src,x);
+		o_dst.y=dot(i_src,y);
+		o_dst.z=dot(i_src,z);
 	}
 
 	inline vec3 mtx3x3::transformtransposed3x3(const vec3& i_src) const
 	{
 		return vec3
 			(
-			dot(i_src,xaxis),
-			dot(i_src,yaxis),
-			dot(i_src,zaxis)
+			dot(i_src,x),
+			dot(i_src,y),
+			dot(i_src,z)
 			);
 	}
 
@@ -202,9 +166,9 @@ namespace math
 
 	inline void mtx3x3::abs(const mtx3x3& i_src)
 	{
-		axisx().abs(i_src.axisx());
-		axisy().abs(i_src.axisy());
-		axisz().abs(i_src.axisz());
+		this->x.abs(i_src.x);
+		this->y.abs(i_src.y);
+		this->z.abs(i_src.z);
 
 	}
 
@@ -225,9 +189,9 @@ namespace math
 
 	inline void mtx3x3::multiplytransposed3x3(const mtx3x3& i_src1, const mtx3x3& i_src2transposed)
 	{
-		i_src2transposed.transformtransposed3x3(axisx(),i_src1.axisx());
-		i_src2transposed.transformtransposed3x3(axisy(),i_src1.axisy());
-		i_src2transposed.transformtransposed3x3(axisz(),i_src1.axisz());
+		i_src2transposed.transformtransposed3x3(this->x,i_src1.x);
+		i_src2transposed.transformtransposed3x3(this->y,i_src1.y);
+		i_src2transposed.transformtransposed3x3(this->z,i_src1.z);
 	}
 	
 	inline void mtx3x3::fromeuler(float i_xangle, float i_yangle, float i_zangle)
@@ -244,18 +208,18 @@ namespace math
 	inline void mtx3x3::get_euler(float& o_xangle, float& o_yangle, float& o_zangle) const
 	{
 		float a;
-		o_xangle = math::asin(axisz().y);
+		o_xangle = math::asin(this->z.y);
 		a = cos( o_xangle );
 
 		if (math::abs(a)>0.0001f) 
 		{
-			o_zangle=atan2f(axisx().y, axisy().y);
-			o_yangle=atan2f(axisz().x, axisz().z);
+			o_zangle=atan2f(this->x.y, this->y.y);
+			o_yangle=atan2f(this->z.x, this->z.z);
 		}
 		else 
 		{
 			o_zangle=0.0f;
-			o_yangle=atan2f(axisy().x, axisx().x);
+			o_yangle=atan2f(this->y.x, this->x.x);
 		}
 	}
 	

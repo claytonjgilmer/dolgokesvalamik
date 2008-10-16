@@ -1,5 +1,5 @@
 #include "nbody.h"
-#include "constraint.h"
+#include "contact.h"
 
 #ifndef offsetof
 #define offsetof(_s_,_m_) (size_t)(&(((_s_*)0)->_m_))

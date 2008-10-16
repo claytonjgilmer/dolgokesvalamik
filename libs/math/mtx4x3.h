@@ -13,9 +13,6 @@ namespace math
 	class mtx4x3:public mtx3x3
 	{
 	public:
-		vec3& trans();
-		const vec3& trans() const;
-
 		void identity();
 		static mtx4x3 identitymtx();
 
@@ -52,16 +49,6 @@ namespace math
 		};
 	}; //class mtx4x3
 
-	MLINLINE vec3& mtx4x3::trans()
-	{
-		return t;
-	}
-
-	MLINLINE const vec3& mtx4x3::trans() const
-	{
-		return t;
-	}
-
 	MLINLINE void mtx4x3::identity()
 	{
 		mtx3x3::identity();
@@ -85,7 +72,7 @@ namespace math
 //		o_dst[0]=i_src[0]*_11+i_src[1]*_21+i_src[2]*_31+_41;
 //		o_dst[1]=i_src[0]*_12+i_src[1]*_22+i_src[2]*_32+_42;
 //		o_dst[2]=i_src[0]*_13+i_src[1]*_23+i_src[2]*_33+_43;
-		o_dst=t+i_src.x*xaxis+i_src.y*yaxis+i_src.z*zaxis;
+		o_dst=t+i_src.x*x+i_src.y*y+i_src.z*z;
 
 //		o_dst.x=i_src.x*_11;
 //		o_dst.y=i_src.x*_12;
@@ -143,10 +130,10 @@ namespace math
 
 	MLINLINE void mtx4x3::multiplytransposed(const mtx4x3& i_src1, const mtx4x3& i_srctransposed)
 	{
-		axisx()=i_srctransposed.transformtransposed3x3(i_src1.axisx());
-		axisy()=i_srctransposed.transformtransposed3x3(i_src1.axisy());
-		axisz()=i_srctransposed.transformtransposed3x3(i_src1.axisz());
-		trans()=i_srctransposed.transformtransposed(i_src1.trans());
+		this->x=i_srctransposed.transformtransposed3x3(i_src1.x);
+		this->y=i_srctransposed.transformtransposed3x3(i_src1.y);
+		this->z=i_srctransposed.transformtransposed3x3(i_src1.z);
+		this->t=i_srctransposed.transformtransposed(i_src1.t);
 	}
 
 
@@ -176,9 +163,9 @@ namespace math
 
 	MLINLINE void mtx4x3::linearinvert(const mtx4x3& i_src)
 	{
-		xaxis=i_src.xaxis/i_src.xaxis.squarelength();
-		yaxis=i_src.yaxis/i_src.yaxis.squarelength();
-		zaxis=i_src.zaxis/i_src.zaxis.squarelength();
+		x=i_src.x/i_src.x.squarelength();
+		y=i_src.y/i_src.y.squarelength();
+		z=i_src.z/i_src.z.squarelength();
 
 		transpose3x3();
 
@@ -187,26 +174,26 @@ namespace math
 
 	MLINLINE void mtx4x3::normalize()
 	{
-		axisz().normalize();
-		axisx().cross(axisy(),axisz());
-		axisx().normalize();
-		axisy().cross(axisz(),axisx());
+		this->z.normalize();
+		this->x.cross(this->y,this->z);
+		this->x.normalize();
+		this->y.cross(this->z,this->x);
 
 	}
 
 	MLINLINE void mtx4x3::rotate(const mtx4x3& i_src, const vec3& i_axis, float i_angle)
 	{
-		axisz().rotate(i_src.axisz(),i_axis,i_angle);
-		axisy().rotate(i_src.axisy(),i_axis,i_angle);
+		this->z.rotate(i_src.z,i_axis,i_angle);
+		this->y.rotate(i_src.y,i_axis,i_angle);
 		normalize();
 	}
 
 	MLINLINE void mtx4x3::interpolate(const mtx4x3& i_src1, const mtx4x3& i_src2, float i_time)
 	{
-		xaxis.interpolate(i_src1.xaxis, i_src2.xaxis, i_time);
-		yaxis.interpolate(i_src1.yaxis, i_src2.yaxis, i_time);
-		zaxis.interpolate(i_src1.zaxis, i_src2.zaxis, i_time);
-		t.interpolate(i_src1.t, i_src2.t, i_time);
+		this->x.interpolate(i_src1.x, i_src2.x, i_time);
+		this->y.interpolate(i_src1.y, i_src2.y, i_time);
+		this->z.interpolate(i_src1.z, i_src2.z, i_time);
+		this->t.interpolate(i_src1.t, i_src2.t, i_time);
 	}
 
 	MLINLINE void mtx4x3::set_euler(float i_x,float i_y, float i_z)
