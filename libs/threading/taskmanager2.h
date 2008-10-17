@@ -87,8 +87,50 @@ namespace threading
 			spawn_tasks((task**)tasks,tnum);
 		}
 
+		template<class S> void process_buffer(unsigned i_elemnum, unsigned i_grainsize, const S& i_process)
+		{
+			class proc_range:public task
+			{
+			public:
+				proc_range(unsigned i_startindex, unsigned i_num, const S& i_process):
+					  m_startindex(i_startindex),
+					  m_num(i_num),
+					  m_process(i_process)
+						{
+						}
+
+				  void run()
+						{
+							m_process(m_startindex,m_num);
+						}
+
+			private:
+				unsigned m_startindex;
+				unsigned m_num;
+				const S& m_process;
+			};
+
+			unsigned start=0;
+			unsigned elemnumpertask=math::Max((unsigned)(i_elemnum/(m_threadbuf.size()+5)),(unsigned)i_grainsize);
+
+			unsigned tnum=0;
+			const unsigned n=i_elemnum/elemnumpertask+1;
+			proc_range** tasks=(proc_range**)_alloca(n*sizeof(proc_range*));
+
+			while (start<i_elemnum)
+			{
+				unsigned actnum=math::Min(elemnumpertask,i_elemnum-start);
+
+				tasks[tnum++]=new proc_range(start,actnum,i_process);
+				start+=actnum;
+			}
+
+			utils::assertion(tnum>0 && tnum<=n);
+
+			spawn_tasks((task**)tasks,tnum);
+		}
 	private:
-#define REF_COUNT 1024
+#define REF_COUNT 32
 		unsigned m_ref_buf[REF_COUNT];
 		HANDLE	m_ref_event[REF_COUNT];
 

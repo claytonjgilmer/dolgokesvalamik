@@ -139,7 +139,15 @@ void tasktest()
 	threading::taskmanager::release();
 }
 
-#include "physics/nbody.h"
+#include "physics/physicssystem.h"
+
+void physicstest()
+{
+	physics::systemdesc pd;
+	physics::system::create(&pd);
+
+	physics::system::release();
+}
 
 int _cdecl main()
 {

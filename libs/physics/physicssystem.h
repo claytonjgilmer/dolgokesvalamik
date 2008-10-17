@@ -11,13 +11,13 @@ namespace physics
 {
 	struct systemdesc
 	{
-		float gravity;
+		math::vec3 gravity;
 		float timestep;
 		uint8 maxsubstepcount;
 
 		systemdesc()
 		{
-			gravity=-10;
+			gravity.set(0,-10,0);
 			timestep=0.01f;
 			maxsubstepcount=10;
 		}

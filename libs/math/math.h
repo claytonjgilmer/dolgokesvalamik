@@ -2,6 +2,7 @@
 #define _math_h_
 
 #include <math.h>
+#include <stdlib.h>
 #include "utils\misc.h"
 
 typedef unsigned __int64 uint64;
@@ -268,6 +269,12 @@ namespace math
 		}
 
 		return a1 ? a1 : a2;
+	}
+
+
+	MLINLINE float random(float i_min, float i_max)
+	{
+		return (float)rand()/(float)RAND_MAX*(i_max-i_min)+i_min;
 	}
 
 }

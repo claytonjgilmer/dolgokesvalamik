@@ -41,6 +41,7 @@ namespace physics
 
 	void nbody::realloc(unsigned i_newcapacity)
 	{
+		this->capacity=i_newcapacity;
 		char* newbuf=(char*)malloc(this->state_size_sum*i_newcapacity);
 
 		if (size)
@@ -48,27 +49,25 @@ namespace physics
 			unsigned act_offset=0;
 			for (unsigned n=0; n<this->state_num; ++n)
 			{
-				act_offset+=this->state_size[n]*this->capacity;
 				void* srcaddress=(void*)*(((char*)this)+4*n);
 				memcpy(newbuf+act_offset,srcaddress,size*this->state_size[n]);
+				act_offset+=this->state_size[n]*this->capacity;
 			}
 		}
 
+		unsigned act_offset=0;
 		for (unsigned n=0; n<state_num; ++n)
 		{
 			void* &srcaddress=(void*&)*(((char*)this)+4*n);
-			srcaddress=newbuf+4*n;
+			srcaddress=newbuf+act_offset;
+			act_offset+=this->state_size[n]*this->capacity;
 		}
-
-		this->capacity=i_newcapacity;
 	}
 
 	void nbody::add_body(const bodydesc i_desc[], body_t* i_body_array[], unsigned i_bodynum)
 	{
 		if (size+i_bodynum>capacity)
 			realloc(nextpoweroftwo(size+i_bodynum));
-
-		size+=i_bodynum;
 
 		for (unsigned n=0,index=size; n<i_bodynum;++n,++index)
 		{
@@ -92,7 +91,9 @@ namespace physics
 			this->torque[index].clear();
 			this->body[index]=i_body_array[n];
 		}
-		
+
+		size+=i_bodynum;
+
 	}
 
 	void nbody::release_body(body_t* i_body_array[], unsigned i_bodynum)

@@ -13,6 +13,7 @@
 #include "render/renderobject3d.h"
 #include "utils/auto_ptr.h"
 #include "input/inputsystem.h"
+#include "physics/physicssystem.h"
 
 void generate_sphere(math::vec3 o_pos[],int& o_numvertices,short o_indices[],int& o_numfaces,float i_radius, int i_depth);
 render::object3d* load_mmod(const char* i_filename);
@@ -29,12 +30,15 @@ struct game
 	math::vec3 light_dir;
 	render::object3d* obj;
 	render::object3d* sky;
+#define BODY_NUM 500
+#define ROOM_SIZE 10
+	physics::body_t* phb[BODY_NUM];
 	bool inited;
 
 	game()
 	{
 		camz=camy=camx=0;
-		camt.set(0,20,0);
+		camt.set(0,0,-10);
 		inited=false;
 	}
 } g_game;
@@ -49,7 +53,7 @@ void change_screen_size(unsigned i_newwidth, unsigned i_newheight)
 
 RECT g_rect;
 unsigned g_time;
-HWND g_hwnd;
+//HWND g_hwnd;
 
 #define V math::vec3
 #define V2 math::vec2
@@ -59,31 +63,12 @@ math::vec2 g_uv[]={V2(0,0),V2(1,0),V2(1,1),V2(0,1),V2(1,0),V2(0,0),V2(0,1),V2(1,
 
 void init_app(HWND i_hwnd)
 {
-//	render::texture ttt(0,0,0);
-	render::object3d obj("hulyegyerek");
-	scene::metaobject* mo=obj.get_metaobject();
-	math::mtx4x3 mtx;
-	mtx.set_euler(1,2,3);
-	mtx.t.set(7,8,9);
-	mtx.x*=4;
-	mtx.y*=5;
-	mtx.z*=6;
-	obj.set_localposition(mtx);
-
-	scene::metaobject::property_iterator it;
-
-	for (it=mo->begin();it!=mo->end(); ++it)
-	{
-		scene::property_descriptor pd=(*it);
-
-		utils::PRINT("property name:%s type:%s val:%s\n",pd.get_name(),pd.get_type(),pd.to_string(&obj));
-	}
-
 	file::system::create();
 	file::system::instance()->register_path("shader","c:\\data\\shader\\");
 	file::system::instance()->register_path("texture","c:\\data\\texture\\");
 
 	threading::taskmanagerdesc tdesc;
+	tdesc.m_threadnum=3;
 	threading::taskmanager::create(&tdesc);
 
 	render::shadermanagerdesc shaderdesc("shader");
@@ -94,6 +79,9 @@ void init_app(HWND i_hwnd)
 
 	render::texturemanagerdesc textdesc("texture");
 	render::texturemanager::create(&textdesc);
+
+	physics::systemdesc pd;
+	physics::system::create(&pd);
 
 	render::systemdesc renderdesc;
 	renderdesc.m_backbuffercount=2;
@@ -106,7 +94,7 @@ void init_app(HWND i_hwnd)
 
 	render::system::create(&renderdesc);
 
-	g_game.obj=	load_mmod("c:/data/model/test.mmod");
+	g_game.obj=	load_mmod("c:/data/model/box.mmod");
 	g_game.sky= load_mmod("c:/data/model/skyBOX.MMOD");
 
 	for (unsigned n=0; n<g_game.sky->get_meshnum();++n)
@@ -126,7 +114,7 @@ void init_app(HWND i_hwnd)
 
 	::GetWindowRect(i_hwnd,&g_rect);
 	g_time=timeGetTime();
-	g_hwnd=i_hwnd;
+//	g_hwnd=i_hwnd;
 
 //	math::mtx4x4 mtx; mtx.set_projectionmatrix(tan(math::degreetorad(45)),g_game.m_aspect,1,10000);
 
@@ -182,7 +170,7 @@ void init_app(HWND i_hwnd)
 
 
 //	render::texture* txt=render::texturemanager::instance()->get_texture("teszt.jpg");
-	render::texture* txt=render::texturemanager::instance()->get_texture("white.bmp");
+	render::texture* txt=render::texturemanager::instance()->get_texture("simaszurke.tga");
 	ts.m_texturebuf.push_back(txt);
 
 	g_game.x=g_game.y=g_game.z=0;
@@ -229,6 +217,29 @@ void init_app(HWND i_hwnd)
 //	render::texture* txt=render::texturemanager::instance()->get_texture("white.bmp");
 	sts.m_texturebuf.push_back(txt);
 
+
+	physics::bodydesc bd;
+	bd.mass=1;
+	bd.inertia.identity();
+	bd.is_static=physics::BODYSTATE_DYNAMIC;
+
+
+	for (unsigned n=0; n<BODY_NUM;++n)
+	{
+		float x=math::random(-ROOM_SIZE,ROOM_SIZE);
+		float y=math::random(-ROOM_SIZE,ROOM_SIZE);
+		float z=math::random(-ROOM_SIZE,ROOM_SIZE);
+		bd.pos.t.set(x,y,z);
+		x=math::random(-3,3);
+		y=math::random(-3,3);
+		z=math::random(-3,3);
+		bd.vel.set(x,y,z);
+		bd.rotvel.set(x/3,y/3,z/3);
+
+		g_game.phb[n]=physics::system::instance()->create_body(bd);
+	}
+
+
 	g_game.inited=true;
 }
 
@@ -244,7 +255,7 @@ void update_app()
 {
 	threading::taskmanager::instance()->flush();
 	unsigned acttime=::timeGetTime();
-	unsigned deltatime=acttime-g_time;
+	unsigned deltatime=min(acttime-g_time,100);
 	g_time=acttime;
 	sumtime+=deltatime;
 	float dt=(float)deltatime/1000.0f;
@@ -255,14 +266,7 @@ void update_app()
 		sumtime-=33;
 	}
 
-
-	if (sumtime>33 && 0)
-	{
-		sumtime-=33;
-		unsigned width=abs(g_rect.left-g_rect.right);
-		unsigned heigth=abs(g_rect.bottom-g_rect.top);
-		::MoveWindow(g_hwnd,g_rect.left+(unsigned)(100*sin(acttime/1000.0)),g_rect.top,width,heigth,TRUE);
-	}
+	physics::system::instance()->simulate(dt);
 
 	input::system* ip=input::system::instance();
 
@@ -318,6 +322,49 @@ void update_app()
 	g_game.y+=2*dt/10;
 	g_game.z+=3*dt/10;
 
+	for (unsigned n=0; n<BODY_NUM;++n)
+	{
+		math::mtx4x3 pos=g_game.phb[n]->get_pos();
+		math::vec3 vel=g_game.phb[n]->get_vel();
+
+		if (pos.t.x<-ROOM_SIZE)
+		{
+			pos.t.x=-ROOM_SIZE;
+			vel.x=math::abs(vel.x);
+		}
+		if (pos.t.y<-ROOM_SIZE)
+		{
+			pos.t.y=-ROOM_SIZE;
+			vel.y=math::abs(vel.y);
+		}
+		if (pos.t.z<-ROOM_SIZE)
+		{
+			pos.t.z=-ROOM_SIZE;
+			vel.z=math::abs(vel.z);
+		}
+
+		if (pos.t.x>ROOM_SIZE)
+		{
+			pos.t.x=ROOM_SIZE;
+			vel.x=-math::abs(vel.x);
+		}
+		if (pos.t.y>ROOM_SIZE)
+		{
+			pos.t.y=ROOM_SIZE;
+			vel.y=-math::abs(vel.y);
+		}
+		if (pos.t.z>ROOM_SIZE)
+		{
+			pos.t.z=ROOM_SIZE;
+			vel.z=-math::abs(vel.z);
+		}
+
+		g_game.phb[n]->set_pos(pos);
+		g_game.phb[n]->set_vel(vel);
+
+		render::system::instance()->add_mesh(g_game.m_mesh.get(),pos);
+	}
+
 	render::system::instance()->add_mesh(g_game.m_mesh.get(),mtx);
 	mtx.t.set(1,0,2.5f);
 	render::system::instance()->add_mesh(g_game.sphere.get(),mtx);
@@ -326,14 +373,7 @@ void update_app()
 	g_game.obj->set_worldposition(mtx);
 	g_game.obj->render();
 
-//	math::mtx4x3 skymtx=g_game.sky->get_worldposition();
-//	skymtx.normalize();
-//	skymtx.axisx()*=0.01f;
-//	skymtx.axisy()*=0.01f;
-//	skymtx.axisz()*=0.01f;
-//	g_game.sky->set_worldposition(skymtx);
 	g_game.sky->render();
-//	render::system::instance()->add_mesh(g_game.obj->get_mesh(),mtx);
 	render::system::instance()->render();
 }
 
@@ -349,6 +389,7 @@ void exit_app()
 	render::texturemanager::release();
 	input::system::release();
 	render::system::release();
+	physics::system::release();
 }
 
 void generate_tetrahedron(math::vec3 o_pos[],float i_radius)
