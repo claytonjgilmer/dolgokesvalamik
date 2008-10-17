@@ -68,6 +68,8 @@ namespace physics
 		if (size+i_bodynum>capacity)
 			realloc(nextpoweroftwo(size+i_bodynum));
 
+		size+=i_bodynum;
+
 		for (unsigned n=0,index=size; n<i_bodynum;++n,++index)
 		{
 			i_body_array[n]->array_index=index;
@@ -91,6 +93,25 @@ namespace physics
 			this->body[index]=i_body_array[n];
 		}
 		
+	}
+
+	void nbody::release_body(body_t* i_body_array[], unsigned i_bodynum)
+	{
+		for (uint32 n=0; n<i_bodynum; ++n)
+		{
+			--this->size;
+			UINT16 index=i_body_array[n]->array_index;
+
+			this->pos[index]=this->pos[this->size];
+			this->vel[index]=this->vel[this->size];
+			this->rotvel[index]=this->rotvel[this->size];
+			this->force[index]=this->force[this->size];
+			this->torque[index]=this->torque[this->size];
+			this->invmass[index]=this->invmass[this->size];
+			this->invinertia_rel[index]=this->invinertia_rel[this->size];//ugy gondolom az abszolut inerciat nem kell masolni, mert menet kozben nem torlunk
+			this->body[index]=this->body[this->size];
+			this->body[index]->array_index=index;
+		}
 	}
 
 }//namespace

@@ -8,6 +8,12 @@ namespace physics
 	class system;
 	struct constraint_edge;
 
+	enum bodystate
+	{
+		BODYSTATE_DYNAMIC,
+		BODYSTATE_STATIC
+	};
+
 	struct bodydesc
 	{
 		math::mtx4x3	pos;
@@ -17,7 +23,7 @@ namespace physics
 		float			mass;
 		math::mtx3x3	inertia;
 
-		uint8			is_static;
+		bodystate		is_static;
 
 		bodydesc()
 		{
@@ -26,7 +32,7 @@ namespace physics
 			rotvel.clear();
 			mass=1.0f;
 			inertia.identity();
-			is_static=0;
+			is_static=BODYSTATE_DYNAMIC;
 		}
 	};
 
@@ -43,7 +49,7 @@ namespace physics
 
 
 		uint16 array_index;
-		uint8  is_static;
+		bodystate  is_static;
 		constraint_edge* contacts;
 		constraint_edge* joints;
 

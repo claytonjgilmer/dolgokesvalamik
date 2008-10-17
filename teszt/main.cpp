@@ -79,6 +79,9 @@ void tasktest()
 {
 	threading::taskmanagerdesc tdesc; tdesc.m_threadnum=1;
 	threading::taskmanager::create(&tdesc);
+	physics::systemdesc pd;
+
+	physics::system::create(&pd);
 
 #define buf_size 15000
 #define buf2_size 100
@@ -132,6 +135,7 @@ void tasktest()
 	printf_s(" parallel:%d\n   serial:%d\n",tick,tick2);
 
 	free(buf);
+	physics::system::release();
 	threading::taskmanager::release();
 }
 
