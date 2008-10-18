@@ -432,6 +432,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\render\shape.h"
+				>
+			</File>
+			<File
 				RelativePath=".\utils\singleton.h"
 				>
 			</File>

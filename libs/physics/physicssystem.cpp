@@ -6,7 +6,7 @@ namespace physics
 	DEFINE_SINGLETON(system);
 
 
-//#define PARALLEL_PROCESSING
+#define PARALLEL_PROCESSING
 
 
 	system::system(const systemdesc* i_desc):

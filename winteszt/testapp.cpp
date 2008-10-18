@@ -64,8 +64,8 @@ math::vec2 g_uv[]={V2(0,0),V2(1,0),V2(1,1),V2(0,1),V2(1,0),V2(0,0),V2(0,1),V2(1,
 void init_app(HWND i_hwnd)
 {
 	file::system::create();
-	file::system::instance()->register_path("shader","c:\\data\\shader\\");
-	file::system::instance()->register_path("texture","c:\\data\\texture\\");
+	file::system::instance()->register_path("shader","shader\\");
+	file::system::instance()->register_path("texture","texture\\");
 
 	threading::taskmanagerdesc tdesc;
 	tdesc.m_threadnum=3;
@@ -94,8 +94,8 @@ void init_app(HWND i_hwnd)
 
 	render::system::create(&renderdesc);
 
-	g_game.obj=	load_mmod("c:/data/model/box.mmod");
-	g_game.sky= load_mmod("c:/data/model/skyBOX.MMOD");
+	g_game.obj=	load_mmod("model/box.mmod");
+	g_game.sky= load_mmod("model/skyBOX.MMOD");
 
 	for (unsigned n=0; n<g_game.sky->get_meshnum();++n)
 	{
