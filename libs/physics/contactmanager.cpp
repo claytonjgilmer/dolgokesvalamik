@@ -45,6 +45,21 @@ namespace physics
 
 	void contactmanager::erase_contact(contact_t* i_contact)
 	{
+		if (i_contact->next)
+			i_contact->next->prev=i_contact->prev;
 
+		if (i_contact->prev)
+		{
+			i_contact->prev->next=i_contact->next;
+		}
+		else //ha nincs elozoje, akkor o az elso a hashtablaban
+		{
+			uint32 key=((uint32)i_contact->body[0]) ^ ((uint32)i_contact->body[0]);
+			uint32 index=get_hashindex(key);
+
+			this->contact_hash[index]=system::instance()->cm.contact_hash[index]->next;
+		}
+
+		contact_list.deallocate(i_contact);
 	}
 }//namespace

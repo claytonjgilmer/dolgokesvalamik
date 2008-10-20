@@ -172,6 +172,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\physics\broadphaseobject.h"
+				>
+			</File>
+			<File
 				RelativePath=".\utils\chunkstream.h"
 				>
 			</File>
@@ -209,6 +213,10 @@
 			</File>
 			<File
 				RelativePath=".\containers\fixedvector.h"
+				>
+			</File>
+			<File
+				RelativePath=".\physics\hgridbroadphase.h"
 				>
 			</File>
 			<File
@@ -561,6 +569,10 @@
 			</File>
 			<File
 				RelativePath=".\file\filesystem.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\physics\hgridbroadphase.cpp"
 				>
 			</File>
 			<File
