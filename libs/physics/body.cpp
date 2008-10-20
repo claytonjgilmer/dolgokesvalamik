@@ -4,6 +4,18 @@
 
 namespace physics
 {
+	body_t::body_t()
+	{
+		this->contacts=NULL;
+		this->joints=NULL;
+	}
+
+	body_t::~body_t()
+	{
+		while (this->contacts)
+			system::instance()->cm.erase_contact((contact_t*)this->contacts->constraint);
+	}
+
 	const math::mtx4x3& body_t::get_pos() const
 	{
 		utils::assertion(array_index!=-1);
@@ -40,6 +52,8 @@ namespace physics
 		utils::assertion(array_index!=-1);
 		system::instance()->bodystate_array[is_static].rotvel[array_index]=i_rotvel;
 	}
+
+
 
 
 

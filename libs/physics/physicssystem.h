@@ -6,6 +6,7 @@
 #include "math/mtx4x3.h"
 #include "physics/body.h"
 #include "nbody.h"
+#include "contactmanager.h"
 
 namespace physics
 {
@@ -25,10 +26,9 @@ namespace physics
 
 
 
-	class system
+	struct system
 	{
 		DECLARE_SINGLETON_DESC(system,systemdesc);
-	public:
 		//body krealas/megszuntetes
 		body_t* create_body(const bodydesc& i_desc);
 		void create_bodies(body_t* o_body_array[], bodystate i_state, const bodydesc i_desc[], unsigned i_bodynum);
@@ -36,9 +36,20 @@ namespace physics
 		void release_bodies(body_t* i_body_array[], bodystate i_state, unsigned i_bodynum);
 
 
+		//eztet kell hivni
 		void simulate(float i_dt);
 
-//	private:
+
+
+
+
+
+
+
+
+
+
+
 		system(const systemdesc* i_desc);
 		void update_inertia();
 		void update_bodies(float i_dt);
@@ -48,6 +59,8 @@ namespace physics
 
 		ctr::listallocator<body_t> body_list;
 		ctr::vector<body_t*> killed[2];
+
+		contactmanager cm;
 	};
 }
 #endif//_physicssystem_h_

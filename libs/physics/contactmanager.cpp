@@ -37,7 +37,7 @@ namespace physics
 				this->contact_hash[index]->prev=ptr;
 
 			this->contact_hash[index]=ptr;
-			this->contact_array.push_back(ptr);
+//			this->contact_array.push_back(ptr);
 		}
 
 		return ptr;

@@ -16,7 +16,7 @@ namespace physics
 
 
 		ctr::listallocator<contact_t> contact_list;
-		ctr::vector<contact_t*> contact_array;
+//		ctr::vector<contact_t*> contact_array;
 		contact_t* contact_hash[hashtable_size];
 	};
 }

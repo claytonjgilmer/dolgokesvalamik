@@ -169,8 +169,23 @@ struct probastruct2
 	}
 };
 
+struct ps
+{
+	math::mtx4x3 mtx;
+	math::vec3 src;
+	math::vec3 dst;
+
+	ps()
+	{
+		mtx.identity();
+		src.clear();
+	}
+};
+
 in* g_p;
 math::vec3* out;
+
+in** g_p2;
 
 void proba()
 {
@@ -178,49 +193,90 @@ void proba()
 	utils::timer t;
 
 #define szam 1000
-#define szam2 10000
+#define szam2 1000
 
-	unsigned tick1,tick2,tick3;
+	unsigned tick1=0,tick2=0,tick3=0;
+
+	{
+		g_p2=new in*[1000];
+		for (int n=0; n<1000;++n)
+			g_p2[n]=(in*)malloc(math::random(1,5000)*sizeof(in));
+	}
 	
-	g_p=new in[szam];
-	out=new math::vec3[szam];
-	t.reset();
-
 	for (unsigned m=0; m<szam2;++m)
-	for (unsigned n=0; n<szam;++n)
-		g_p[n].mtx.transform(out[n],g_p[n].src);
-
-	t.stop();
-	tick1=t.get_tick();
-	delete [] g_p;
-	delete [] out;
-
-	probastruct2 head;
-
-	for (unsigned n=0; n<szam;++n)
 	{
-		probastruct2* uj=new probastruct2;
-		uj->next=head.next;
-		
-		head.next=uj;
+		{
+			ps** p;
+			ps* p2=new ps[szam];
+
+			p=new ps*[szam];
+
+			for (int n=0; n<szam; ++n)
+//				p[n]=new ps;
+				p[n]=p2+szam-1-n;
+
+			t.reset();
+			for (int n=0; n<szam; ++n)
+				p[n]->mtx.transform(p[n]->dst,p[n]->src);
+
+			t.stop();
+			tick3+=t.get_tick();
+
+//			for (int n=0; n<szam; ++n)
+//				delete p[n];
+
+			delete p2;
+
+			delete [] p;
+		}
+		{
+			probastruct2 head;
+
+			for (unsigned n=0; n<szam;++n)
+			{
+				probastruct2* uj=new probastruct2;
+				uj->next=head.next;
+
+				head.next=uj;
+			}
+
+			t.reset();
+
+			for (probastruct2* ptr=head.next; ptr; ptr=ptr->next)
+				ptr->mtx.transform(ptr->dst,ptr->src);
+
+			t.stop();
+			tick2+=t.get_tick();
+
+			for (probastruct2* ptr=head.next; ptr;)
+			{
+				probastruct2* act=ptr; ptr=ptr->next;
+				delete act;
+			}
+		}
+		{
+			g_p=new in[szam];
+			out=new math::vec3[szam];
+			t.reset();
+
+			for (unsigned n=0; n<szam;++n)
+				g_p[n].mtx.transform(out[n],g_p[n].src);
+
+			t.stop();
+			tick1+=t.get_tick();
+			delete [] g_p;
+			delete [] out;
+		}
 	}
 
-	t.reset();
+	printf_s("tomb :%d\nlista:%d\nlist2:%d\n",tick1,tick2,tick3);
 
-	for (unsigned n=0; n<szam2;++n)
-	for (probastruct2* ptr=head.next; ptr; ptr=ptr->next)
-		ptr->mtx.transform(ptr->dst,ptr->src);
-
-	t.stop();
-	tick2=t.get_tick();
-
-	for (probastruct2* ptr=head.next; ptr;)
 	{
-		probastruct2* act=ptr; ptr=ptr->next;
-		delete act;
-	}
+		for (int n=0; n<1000;++n)
+			delete [] g_p2[n];
 
-	printf_s("tomb :%d\nlista:%d\n",tick1,tick2);
+		delete [] g_p2;
+	}
 
 
 }

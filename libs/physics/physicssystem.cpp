@@ -16,7 +16,7 @@ namespace physics
 
 	body_t* system::create_body(const bodydesc& i_desc)
 	{
-		body_t* b=body_list.allocate_place();
+		body_t* b=body_list.allocate();
 		b->is_static=i_desc.is_static;
 
 		bodystate_array[i_desc.is_static].add_body(&i_desc,&b,1);

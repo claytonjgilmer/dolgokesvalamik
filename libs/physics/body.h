@@ -47,6 +47,8 @@ namespace physics
 		void set_rotvel(const math::vec3& i_rotvel);
 
 
+		body_t();
+		~body_t();
 
 		uint16 array_index;
 		bodystate  is_static;

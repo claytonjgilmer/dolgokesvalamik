@@ -20,6 +20,7 @@ namespace physics
 		contact_t(body_t* i_body1, body_t* i_body2):
 		constraint_t(i_body1,i_body2)
 		{
+			//befuzzuk a ket test kontakt-listajaba
 			this->edge[0].prev=0;
 			this->edge[0].next=this->body[0]->contacts;
 			if (this->body[0]->contacts)
@@ -33,6 +34,28 @@ namespace physics
 			this->body[1]->contacts=this->edge+1;
 
 			this->contactnum=0;
+		}
+
+		~contact_t()
+		{
+			//kifuzzuk a ket test kontakt-listajabol
+			if (this->edge[0].prev)
+				this->edge[0].prev->next=this->edge[0].next;
+
+			if (this->edge[0].prev)
+				this->edge[0].prev->next=this->edge[0].next;
+
+			if (this->body[0]->contacts=this->edge+0)
+				this->body[0]->contacts=this->body[0]->contacts->next;
+
+			if (this->edge[1].prev)
+				this->edge[1].prev->next=this->edge[1].next;
+
+			if (this->edge[1].prev)
+				this->edge[1].prev->next=this->edge[1].next;
+
+			if (this->body[1]->contacts=this->edge+1)
+				this->body[1]->contacts=this->body[1]->contacts->next;
 		}
 	};
 }//namespace
