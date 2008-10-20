@@ -59,7 +59,7 @@ unsigned g_time;
 #define V2 math::vec2
 
 math::vec3 g_pos[]={V(-1,-1,-1),V(1,-1,-1),V(1,1,-1),V(-1,1,-1),V(-1,-1,1),V(1,-1,1),V(1,1,1),V(-1,1,1)};
-math::vec2 g_uv[]={V2(0,0),V2(1,0),V2(1,1),V2(0,1),V2(1,0),V2(0,0),V2(0,1),V2(1,1)};
+math::vec2 g_uv[]={V2(0,0),V2(1,0),V2(1,1),V2(0,1),V2(1,1),V2(0,1),V2(0,0),V2(1,0)};
 
 void init_app(HWND i_hwnd)
 {
@@ -170,7 +170,7 @@ void init_app(HWND i_hwnd)
 
 
 //	render::texture* txt=render::texturemanager::instance()->get_texture("teszt.jpg");
-	render::texture* txt=render::texturemanager::instance()->get_texture("simaszurke.tga");
+	render::texture* txt=render::texturemanager::instance()->get_texture("structures_malayhouse.dds");
 	ts.m_texturebuf.push_back(txt);
 
 	g_game.x=g_game.y=g_game.z=0;

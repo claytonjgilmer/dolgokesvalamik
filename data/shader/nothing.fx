@@ -62,7 +62,6 @@ VS_OUTPUT myvs( VS_INPUT IN )
 PS_OUTPUT myps( VS_OUTPUT IN )
 {
     PS_OUTPUT OUT;
-    
 	OUT.color = tex2D( Sampler, IN.texture0 );
     return OUT;
 }

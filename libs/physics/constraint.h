@@ -3,6 +3,7 @@
 
 namespace physics
 {
+	struct body_t;
 	struct constraint_t;
 	struct constraint_edge
 	{

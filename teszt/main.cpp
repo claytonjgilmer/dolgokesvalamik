@@ -141,19 +141,94 @@ void tasktest()
 
 #include "physics/physicssystem.h"
 
-void physicstest()
+struct in
 {
-	physics::systemdesc pd;
-	physics::system::create(&pd);
+	math::mtx4x3 mtx;
+	math::vec3 src;
 
-	physics::system::release();
+	in()
+	{
+		mtx.identity();
+		src.clear();
+	}
+};
+
+struct probastruct2
+{
+	math::mtx4x3 mtx;
+	math::vec3 src;
+	math::vec3 dst;
+
+	probastruct2* next;
+
+	probastruct2()
+	{
+		mtx.identity();
+		src.clear();
+		next=0;
+	}
+};
+
+in* g_p;
+math::vec3* out;
+
+void proba()
+{
+
+	utils::timer t;
+
+#define szam 1000
+#define szam2 10000
+
+	unsigned tick1,tick2,tick3;
+	
+	g_p=new in[szam];
+	out=new math::vec3[szam];
+	t.reset();
+
+	for (unsigned m=0; m<szam2;++m)
+	for (unsigned n=0; n<szam;++n)
+		g_p[n].mtx.transform(out[n],g_p[n].src);
+
+	t.stop();
+	tick1=t.get_tick();
+	delete [] g_p;
+	delete [] out;
+
+	probastruct2 head;
+
+	for (unsigned n=0; n<szam;++n)
+	{
+		probastruct2* uj=new probastruct2;
+		uj->next=head.next;
+		
+		head.next=uj;
+	}
+
+	t.reset();
+
+	for (unsigned n=0; n<szam2;++n)
+	for (probastruct2* ptr=head.next; ptr; ptr=ptr->next)
+		ptr->mtx.transform(ptr->dst,ptr->src);
+
+	t.stop();
+	tick2=t.get_tick();
+
+	for (probastruct2* ptr=head.next; ptr;)
+	{
+		probastruct2* act=ptr; ptr=ptr->next;
+		delete act;
+	}
+
+	printf_s("tomb :%d\nlista:%d\n",tick1,tick2);
+
+
 }
 
 int _cdecl main()
 {
-	{
-		physics::nbody nb;
-	}
+	proba();
+	return 0;
 	for (int n=0; n<1000; ++n)
 	{
 		printf_s("%d.\n",n+1);
