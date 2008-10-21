@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <windows.h>
 #include <MMSystem.h>
-#include "physics/physicssystem.h"
+#include "physics/system/physicssystem.h"
 
 #include "threading/thread.h"
 #include "threading/taskmanager2.h"
@@ -138,8 +138,6 @@ void tasktest()
 	physics::system::release();
 	threading::taskmanager::release();
 }
-
-#include "physics/physicssystem.h"
 
 struct in
 {

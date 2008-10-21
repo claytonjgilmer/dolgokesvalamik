@@ -5,7 +5,7 @@
 
 namespace physics
 {
-	class system;
+	struct system;
 	struct constraint_edge;
 
 	enum bodystate

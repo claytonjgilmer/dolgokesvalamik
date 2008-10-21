@@ -48,8 +48,7 @@ const unsigned NUM_BUCKETS=16384;
 		void update() ;
 
 		int get_broadphasepairnum() const ;
-		broadphasepair* get_firstpair();
-		broadphasepair* get_nextpair(broadphasepair*);
+		broadphasepair* get_pairs();
 
 //	protected:
 		void add_object_to_hgrid(hgridobject *obj);

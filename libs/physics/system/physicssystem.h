@@ -4,9 +4,9 @@
 #include "utils/singleton.h"
 #include "containers/listallocator.h"
 #include "math/mtx4x3.h"
-#include "physics/body.h"
+#include "body.h"
 #include "nbody.h"
-#include "contactmanager.h"
+#include "physics/collision/system/contactmanager.h"
 
 namespace physics
 {
@@ -28,7 +28,6 @@ namespace physics
 
 	struct system
 	{
-		DECLARE_SINGLETON_DESC(system,systemdesc);
 		//body krealas/megszuntetes
 		body_t* create_body(const bodydesc& i_desc);
 		void create_bodies(body_t* o_body_array[], bodystate i_state, const bodydesc i_desc[], unsigned i_bodynum);
@@ -61,6 +60,7 @@ namespace physics
 		ctr::vector<body_t*> killed[2];
 
 		contactmanager cm;
+		DECLARE_SINGLETON_DESC(system,systemdesc);
 	};
 }
 #endif//_physicssystem_h_

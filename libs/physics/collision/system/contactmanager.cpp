@@ -1,4 +1,5 @@
 #include "contactmanager.h"
+#include "physics/system/physicssystem.h"
 
 namespace physics
 {

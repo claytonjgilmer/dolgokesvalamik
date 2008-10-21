@@ -2,7 +2,7 @@
 #ifndef _MLLUA_H
 #define _MLLUA_H
 
-#include <list>
+//#include <list>
 #include "containers/string.h"
 
 extern "C"
@@ -86,7 +86,8 @@ namespace scripting
 		int				m_InitStackTop;
 		int				m_StackRefBase;
 
-		typedef std::list<Variable *> VariablePtrList;
+//		typedef std::list<Variable *> VariablePtrList;
+		typedef ctr::vector<Variable *> VariablePtrList;
 		typedef ctr::vector<VariablePtrList> VariablePtrListVector;
 
 		VariablePtrListVector	m_StackRef;

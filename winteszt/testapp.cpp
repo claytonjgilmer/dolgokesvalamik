@@ -13,7 +13,7 @@
 #include "render/renderobject3d.h"
 #include "utils/auto_ptr.h"
 #include "input/inputsystem.h"
-#include "physics/physicssystem.h"
+#include "physics/system/physicssystem.h"
 
 void generate_sphere(math::vec3 o_pos[],int& o_numvertices,short o_indices[],int& o_numfaces,float i_radius, int i_depth);
 render::object3d* load_mmod(const char* i_filename);
@@ -31,7 +31,7 @@ struct game
 	render::object3d* obj;
 	render::object3d* sky;
 #define BODY_NUM 500
-#define ROOM_SIZE 10
+#define ROOM_SIZE 10.0f
 	physics::body_t* phb[BODY_NUM];
 	bool inited;
 
@@ -230,9 +230,9 @@ void init_app(HWND i_hwnd)
 		float y=math::random(-ROOM_SIZE,ROOM_SIZE);
 		float z=math::random(-ROOM_SIZE,ROOM_SIZE);
 		bd.pos.t.set(x,y,z);
-		x=math::random(-3,3);
-		y=math::random(-3,3);
-		z=math::random(-3,3);
+		x=math::random(-3.0f,3.0f);
+		y=math::random(-3.0f,3.0f);
+		z=math::random(-3.0f,3.0f);
 		bd.vel.set(x,y,z);
 		bd.rotvel.set(x/3,y/3,z/3);
 

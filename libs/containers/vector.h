@@ -41,6 +41,7 @@ namespace ctr
 		void insert(iterator i_where, const basetype& i_val);
 		void resize(unsigned i_newsize);
 		void clear();
+		void remove(const basetype& i_elem);
 		void erase(iterator i_where);
 		void eraseunordered(iterator i_where);
 		unsigned size() const;
@@ -288,6 +289,23 @@ namespace ctr
 	MLINLINE void vector<basetype>::erase(iterator i_where)
 	{
 		for (iterator it=i_where; it!=end()-1; ++it)
+			*it=*(it+1);
+
+		back().~basetype();
+		--m_size;
+	}
+
+	template<class basetype>
+	MLINLINE void vector<basetype>::remove(const basetype& i_elem)
+	{
+		iterator it;
+		for (it=begin(); it!=end(); ++it)
+		{
+			if (*it==i_elem)
+				break;
+		}
+
+		for (; it<end()-1; ++it)
 			*it=*(it+1);
 
 		back().~basetype();

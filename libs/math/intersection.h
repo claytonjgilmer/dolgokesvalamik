@@ -261,5 +261,18 @@ namespace math
 		o_t=t/d;
 		return 1;
 	}
+
+	uint32 aabb_aabb_intersect(math::aabb i_box1, math::aabb i_box2)
+	{
+		for (int n=0; n<3; ++n)
+		{
+			if (i_box1.min[n]>i_box2.max[n])
+				return 0;
+			if (i_box2.min[n]>i_box1.max[n])
+				return 0;
+		}
+
+		return 1;
+	}
 }
 #endif//_intersection_h_

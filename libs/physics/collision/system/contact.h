@@ -3,7 +3,7 @@
 
 #include "constraint.h"
 #include "math/vec3.h"
-#include "body.h"
+#include "physics/system/body.h"
 
 #define MAX_CONTACTNUM_PER_BODYPAIR 4
 
