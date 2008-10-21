@@ -168,11 +168,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\physics\body.h"
+				RelativePath=".\physics\system\body.h"
 				>
 			</File>
 			<File
-				RelativePath=".\physics\broadphaseobject.h"
+				RelativePath=".\physics\collision\broadphase\broadphaseobject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\physics\collision\broadphase\broadphasepair.h"
 				>
 			</File>
 			<File
@@ -180,7 +184,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\physics\collisionsystem.h"
+				RelativePath=".\physics\collision\system\collisionsystem.h"
 				>
 			</File>
 			<File
@@ -188,15 +192,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\physics\constraint.h"
+				RelativePath=".\physics\collision\system\constraint.h"
 				>
 			</File>
 			<File
-				RelativePath=".\physics\contact.h"
+				RelativePath=".\physics\collision\system\contact.h"
 				>
 			</File>
 			<File
-				RelativePath=".\physics\contactmanager.h"
+				RelativePath=".\physics\collision\system\contactmanager.h"
 				>
 			</File>
 			<File
@@ -216,7 +220,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\physics\hgridbroadphase.h"
+				RelativePath=".\physics\collision\broadphase\hgridbroadphase.h"
 				>
 			</File>
 			<File
@@ -356,7 +360,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\physics\nbody.h"
+				RelativePath=".\physics\system\nbody.h"
 				>
 			</File>
 			<File
@@ -372,11 +376,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\physics\physicsbody.h"
-				>
-			</File>
-			<File
-				RelativePath=".\physics\physicssystem.h"
+				RelativePath=".\physics\system\physicssystem.h"
 				>
 			</File>
 			<File
@@ -556,7 +556,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\physics\body.cpp"
+				RelativePath=".\physics\system\body.cpp"
 				>
 			</File>
 			<File
@@ -564,7 +564,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\physics\contactmanager.cpp"
+				RelativePath=".\physics\collision\system\contactmanager.cpp"
 				>
 			</File>
 			<File
@@ -572,7 +572,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\physics\hgridbroadphase.cpp"
+				RelativePath=".\physics\collision\broadphase\hgridbroadphase.cpp"
 				>
 			</File>
 			<File
@@ -716,7 +716,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\physics\nbody.cpp"
+				RelativePath=".\physics\system\nbody.cpp"
 				>
 			</File>
 			<File
@@ -732,7 +732,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\physics\physicssystem.cpp"
+				RelativePath=".\physics\system\physicssystem.cpp"
 				>
 			</File>
 			<File

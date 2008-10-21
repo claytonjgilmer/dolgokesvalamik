@@ -1,146 +1,92 @@
-#include "stdafx.h"
 #include "hgridbroadphase.h"
 
-namespace Dyn
+namespace physics
 {
-	hgridobject::hgridobject(void* i_userdata, const aabb& i_bounding, bool i_static):
-	BroadPhaseObject(i_UserData,i_Bounding,i_Static)
+	hgridobject::hgridobject(void* i_userdata, const math::aabb& i_bounding, uint32 i_static):
+	broadphaseobject(i_userdata,i_bounding,i_static)
 	{
-		m_Pos=i_Bounding.GetCenter();
-		m_Radius=i_Bounding.GetExtent().MaxElem();
+		this->pos=i_bounding.get_center();
+		math::vec3 extent=i_bounding.get_extent();
+		this->radius=math::Max(extent.x,math::Max(extent.y,extent.z));
 	}
 
-	HGridBroadPhase::HGridBroadPhase()
+	hgridbroadphase::hgridbroadphase()
 	{
-#if 0
-		m_ObjectsAtLevel.resize(HGRID_MAX_LEVELS);
-		m_CellSize.resize(HGRID_MAX_LEVELS);
-		m_ObjectBucket.resize(HGRID_MAX_LEVELS);
-		m_TimeStamp.resize(HGRID_MAX_LEVELS);
-#endif
-
 		float size=MIN_CELL_SIZE;
 		for (int n=0; n<HGRID_MAX_LEVELS;++n)
 		{
-#if 0
-			m_ObjectBucket[n].resize(NUM_BUCKETS);
-			m_TimeStamp[n].resize(NUM_BUCKETS);
-#endif
-
 			size*=CELL_TO_CELL_RATIO;
 
-#ifdef SOA
-			m_ObjectsAtLevel[n]=0;
-			m_CellSize[n]=size;
+			objects_at_level[n]=0;
+			cell_size[n]=size;
 
 			for (int m=0; m<NUM_BUCKETS;++m)
 			{
-				m_ObjectBucket[n][m]=NULL;
-				m_TimeStamp[n][m]=0;
+				object_bucket[n][m]=NULL;
+				time_stamp[n][m]=0;
 			}
-#else
-			m_Layer[n].m_CellSize=size;
-			m_Layer[n].m_ObjectsAtLevel=0;
-
-			for (int m=0; m<NUM_BUCKETS;++m)
-			{
-				m_Layer[n].m_ObjectBucket[m]=NULL;
-				m_Layer[n].m_TimeStamp[m]=0;
-			}
-#endif
-
 		}
 
-		m_OccupiedLevelsMask=0;
-		m_Tick=0;
+		occupied_levels_mask=0;
+		tick=0;
 	}
 
-	void HGridBroadPhase::AddObjectToHGrid(HGridObject *obj)
+	void hgridbroadphase::add_object_to_hgrid(hgridobject *obj)
 	{
 		int level;
-		float diameter = 2.0f * obj->m_Radius;
+		float diameter = 2.0f * obj->radius;
 
-#ifdef SOA
-		for (level = 0; m_CellSize[level]* SPHERE_TO_CELL_RATIO < diameter; level++);
+		for (level = 0; cell_size[level]* SPHERE_TO_CELL_RATIO < diameter; level++);
 
-		DYNASSERT(level < HGRID_MAX_LEVELS);
+		utils::assertion(level < HGRID_MAX_LEVELS);
 
-		float size=m_CellSize[level];
-		int bucket = ComputeHashBucketIndex((int)(obj->m_Pos.x /	 size), (int)(obj->m_Pos.y / size), (int)(obj->m_Pos.z / size));
-		obj->m_Bucket= bucket;
-		obj->m_Level = level;
-		obj->m_NextObject = m_ObjectBucket[level][bucket];
-		m_ObjectBucket[level][bucket] = obj;
-		m_ObjectsAtLevel[level]++;
-#else
-		for (level = 0; m_Layer[level].m_CellSize* SPHERE_TO_CELL_RATIO < diameter; level++);
-
-		DYNASSERT(level < HGRID_MAX_LEVELS);
-
-		float size=m_Layer[level].m_CellSize;
-		int bucket = ComputeHashBucketIndex((int)(obj->m_Pos.x /	 size), (int)(obj->m_Pos.y / size), (int)(obj->m_Pos.z / size));
-		obj->m_Bucket= bucket;
-		obj->m_Level = level;
-
-		obj->m_NextObject = m_Layer[level].m_ObjectBucket[bucket];
-		m_Layer[level].m_ObjectBucket[bucket] = obj;
-
-		m_Layer[level].m_ObjectsAtLevel++;
-#endif
-		m_OccupiedLevelsMask |= (1 << level);
+		float size=cell_size[level];
+		int bucket = compute_hash_bucket_index((int)(obj->pos.x /	 size), (int)(obj->pos.y / size), (int)(obj->pos.z / size));
+		obj->bucket= bucket;
+		obj->level = level;
+		obj->next_object= this->object_bucket[level][bucket];
+		this->object_bucket[level][bucket] = obj;
+		this->objects_at_level[level]++;
+		this->occupied_levels_mask |= (1 << level);
 	}
 
-	void HGridBroadPhase::RemoveObjectFromHGrid(HGridObject *obj)
+	void hgridbroadphase::remove_object_from_hgrid(hgridobject *obj)
 	{
-#ifdef SOA
-		int level=obj->m_Level;
-		if (--m_ObjectsAtLevel[level] == 0)
-			m_OccupiedLevelsMask &= ~(1 << level);
+		int level=obj->level;
+		if (--this->objects_at_level[level] == 0)
+			this->occupied_levels_mask &= ~(1 << level);
 
-		int bucket= obj->m_Bucket;
-		HGridObject *p = m_ObjectBucket[level][bucket];
-
-		if (p == obj)
-		{
-			m_ObjectBucket[level][bucket] = obj->m_NextObject;
-			return;
-		}
-#else
-		if (--m_Layer[obj->m_Level].m_ObjectsAtLevel == 0)
-			m_OccupiedLevelsMask &= ~(1 << obj->m_Level);
-
-		int bucket= obj->m_Bucket;
-
-		HGridObject *p = m_Layer[obj->m_Level].m_ObjectBucket[bucket];
+		int bucket= obj->bucket;
+		hgridobject *p = this->object_bucket[level][bucket];
 
 		if (p == obj)
 		{
-			m_Layer[obj->m_Level].m_ObjectBucket[bucket] = obj->m_NextObject;
+			this->object_bucket[level][bucket] = obj->next_object;
 			return;
 		}
-#endif
+
 		while (p)
 		{
-			HGridObject*q = p;
-			p = p->m_NextObject;
+			hgridobject*q = p;
+			p = p->next_object;
 
 			if (p == obj)
 			{
-				q->m_NextObject= p->m_NextObject;
+				q->next_object= p->next_object;
 				return;
 			}
 		}
 
-		DYNASSERT(0);
+		utils::assertion(0);
 	}
 
 
-	void HGridBroadPhase::CheckObjAgainstGrid(HGridObject* obj) //csak teljes teszt eseten hasznalhato
+	void hgridbroadphase::check_obj_against_grid(hgridobject* obj) //csak teljes teszt eseten hasznalhato
 	{
-		const int startLevel = obj->m_Level;
-		int loccupiedLevelsMask = this->m_OccupiedLevelsMask >> startLevel;
-		const Vector3 pos = obj->m_Pos;
-		const Vector3 halfextent=obj->BoundingWorld().GetExtent();
+		const int startLevel = obj->level;
+		int loccupiedLevelsMask = this->occupied_levels_mask>> startLevel;
+		const math::vec3 pos = obj->pos;
+		const math::vec3 halfextent=obj->bounding_world.get_extent();
 
 		for (int level = startLevel; level < HGRID_MAX_LEVELS && loccupiedLevelsMask; loccupiedLevelsMask >>= 1, level++)
 		{
