@@ -80,7 +80,7 @@ static int pushresult (lua_State *L, int i, const char *filename) {
       lua_pushfstring(L, "%s: %s", filename, strerror(errno));
     else
       lua_pushfstring(L, "%s", strerror(errno));
-    lua_pushnumber(L, errno);
+    lua_pushnumber(L, (lua_Number)errno);
     return 3;
   }
 }
@@ -473,7 +473,7 @@ static int f_seek (lua_State *L) {
   if (op)
     return pushresult(L, 0, NULL);  /* error */
   else {
-    lua_pushnumber(L, ftell(f));
+    lua_pushnumber(L, (lua_Number)ftell(f));
     return 1;
   }
 }
@@ -537,7 +537,7 @@ static void createmeta (lua_State *L) {
 */
 
 static int io_execute (lua_State *L) {
-  lua_pushnumber(L, system(luaL_checkstring(L, 1)));
+  lua_pushnumber(L, (lua_Number)system(luaL_checkstring(L, 1)));
   return 1;
 }
 
@@ -591,7 +591,7 @@ static int io_clock (lua_State *L) {
 
 static void setfield (lua_State *L, const char *key, int value) {
   lua_pushstring(L, key);
-  lua_pushnumber(L, value);
+  lua_pushnumber(L, (lua_Number)value);
   lua_rawset(L, -3);
 }
 
@@ -666,7 +666,7 @@ static int io_date (lua_State *L) {
 
 static int io_time (lua_State *L) {
   if (lua_isnoneornil(L, 1))  /* called without args? */
-    lua_pushnumber(L, time(NULL));  /* return current time */
+    lua_pushnumber(L, (lua_Number)time(NULL));  /* return current time */
   else {
     time_t t;
     struct tm ts;
@@ -683,14 +683,14 @@ static int io_time (lua_State *L) {
     if (t == (time_t)(-1))
       lua_pushnil(L);
     else
-      lua_pushnumber(L, t);
+      lua_pushnumber(L, (lua_Number)t);
   }
   return 1;
 }
 
 
 static int io_difftime (lua_State *L) {
-  lua_pushnumber(L, difftime((time_t)(luaL_checknumber(L, 1)),
+  lua_pushnumber(L, (lua_Number)difftime((time_t)(luaL_checknumber(L, 1)),
                              (time_t)(luaL_optnumber(L, 2, 0))));
   return 1;
 }

@@ -7,6 +7,8 @@
 #include "body.h"
 #include "nbody.h"
 #include "physics/collision/system/contactmanager.h"
+#include "physics/collision/shapes/shape.h"
+#include "physics/collision/shapeintersection/shapeintersection.h"
 
 namespace physics
 {
@@ -25,6 +27,7 @@ namespace physics
 	};
 
 
+	typedef int (*intersectfn)(shape* i_sph1, const math::mtx4x3& i_body1_mtx, shape* i_sph2, const math::mtx4x3& i_body2_mtx, math::vec3 o_contact_array[][2], math::vec3& o_normal, uint32& o_contact_num);
 
 	struct system
 	{
@@ -60,6 +63,10 @@ namespace physics
 		ctr::vector<body_t*> killed[2];
 
 		contactmanager cm;
+		intersectfn intersect_fn[shape_type_num][shape_type_num];
+
+
+
 		DECLARE_SINGLETON_DESC(system,systemdesc);
 	};
 }

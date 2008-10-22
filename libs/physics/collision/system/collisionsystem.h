@@ -1,3 +1,4 @@
+/*
 namespace colli
 {
 	class shape
@@ -20,7 +21,7 @@ namespace colli
 
 	};
 
-	enum
+	enum shape_type
 	{
 		shapetype_sphere,
 		shapetype_num
@@ -36,3 +37,4 @@ namespace colli
 		system();
 	};
 }
+*/

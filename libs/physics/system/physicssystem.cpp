@@ -12,6 +12,8 @@ namespace physics
 	system::system(const systemdesc* i_desc):
 	desc(*i_desc)
 	{
+		ZeroMemory(intersect_fn,sizeof(intersect_fn));
+		intersect_fn[shape_type_sphere][shape_type_sphere]=&test_sphere_sphere_intersect;
 	}
 
 	body_t* system::create_body(const bodydesc& i_desc)
