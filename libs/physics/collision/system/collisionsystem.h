@@ -1,5 +1,5 @@
 /*
-namespace colli
+//namespace colli
 {
 	class shape
 	{

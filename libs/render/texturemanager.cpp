@@ -3,8 +3,6 @@
 #include "file/filesystem.h"
 #include "render/rendersystem.h"
 
-namespace render
-{
 	DEFINE_SINGLETON(texturemanager);
 
 	texturemanager::texturemanager(const texturemanagerdesc* i_desc):
@@ -19,8 +17,8 @@ namespace render
 		if (t)
 			return t;
 
-		file::file texturefile;
-		file::system::instance()->open_file(texturefile,m_texturegroup.c_str(),i_texturename,"rb");
+		file texturefile;
+		filesystem::ptr()->open_file(texturefile,m_texturegroup.c_str(),i_texturename,"rb");
 
 		if (texturefile.opened())
 		{
@@ -35,7 +33,7 @@ namespace render
 		}
 		else
 		{
-			utils::PRINT("a %s textura nincsen meg!\n",i_texturename);
+			PRINT("a %s textura nincsen meg!\n",i_texturename);
 		}
 		return t;
 	}
@@ -44,4 +42,3 @@ namespace render
 	{
 		m_map.remove_data(t->get_name().c_str());
 	}
-}

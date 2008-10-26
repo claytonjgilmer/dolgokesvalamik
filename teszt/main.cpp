@@ -23,7 +23,7 @@
 
 #include "containers/poolalloc.h"
 
-render::object3d* load_mmod(const char* i_filename);
+object3d* load_mmod(const char* i_filename);
 
 struct proc
 {
@@ -51,12 +51,12 @@ struct proc2
 	{
 		for (unsigned n=0; n<i_num; ++n)
 		{
-			threading::taskmanager::instance()->process_buffer(i_buf+n*m_bufsize,m_bufsize,10,proc());
+			taskmanager::ptr()->process_buffer(i_buf+n*m_bufsize,m_bufsize,10,proc());
 		}
 	}
 };
 
-class proc_task:public threading::task
+class proc_task:public task
 {
 public:
 	int* m_buf;
@@ -77,11 +77,11 @@ public:
 
 void tasktest()
 {
-	threading::taskmanagerdesc tdesc; tdesc.m_threadnum=1;
-	threading::taskmanager::create(&tdesc);
-	physics::systemdesc pd;
+	taskmanagerdesc tdesc; tdesc.m_threadnum=1;
+	taskmanager::create(&tdesc);
+	physicssystemdesc pd;
 
-	physics::system::create(&pd);
+	physicssystem::create(&pd);
 
 #define buf_size 15000
 #define buf2_size 100
@@ -96,7 +96,7 @@ void tasktest()
 		p(buf+n*buf_size,buf_size);
 	}
 
-	utils::timer t;
+	timer t;
 
 	t.reset();
 	for (int n=0; n<buf2_size; ++n)
@@ -117,14 +117,14 @@ void tasktest()
 	{
 		task[n]=new proc_task(buf+n*egybe,egybe);
 	}
-	threading::taskmanager::instance()->spawn_tasks((threading::task**)task,tasknum);
+	taskmanager::instance()->spawn_tasks((task**)task,tasknum);
 	t.stop();
 	unsigned tick15=t.get_tick();
 */
 
 
 	t.reset();
-	threading::taskmanager::instance()->process_buffer(buf,buf2_size,1,proc2(buf_size));
+	taskmanager::ptr()->process_buffer(buf,buf2_size,1,proc2(buf_size));
 	t.stop();
 	unsigned tick=t.get_tick();
 
@@ -135,14 +135,14 @@ void tasktest()
 	printf_s(" parallel:%d\n   serial:%d\n",tick,tick2);
 
 	free(buf);
-	physics::system::release();
-	threading::taskmanager::release();
+	physicssystem::release();
+	taskmanager::release();
 }
 
 struct in
 {
-	math::mtx4x3 mtx;
-	math::vec3 src;
+	mtx4x3 mtx;
+	vec3 src;
 
 	in()
 	{
@@ -153,9 +153,9 @@ struct in
 
 struct probastruct2
 {
-	math::mtx4x3 mtx;
-	math::vec3 src;
-	math::vec3 dst;
+	mtx4x3 mtx;
+	vec3 src;
+	vec3 dst;
 
 	probastruct2* next;
 
@@ -169,9 +169,9 @@ struct probastruct2
 
 struct ps
 {
-	math::mtx4x3 mtx;
-	math::vec3 src;
-	math::vec3 dst;
+	mtx4x3 mtx;
+	vec3 src;
+	vec3 dst;
 
 	ps()
 	{
@@ -181,14 +181,14 @@ struct ps
 };
 
 in* g_p;
-math::vec3* out;
+vec3* out;
 
 in** g_p2;
 
 void proba()
 {
 
-	utils::timer t;
+	timer t;
 
 #define szam 1000
 #define szam2 1000
@@ -198,7 +198,7 @@ void proba()
 	{
 		g_p2=new in*[1000];
 		for (int n=0; n<1000;++n)
-			g_p2[n]=(in*)malloc(math::random(1,5000)*sizeof(in));
+			g_p2[n]=(in*)malloc(random(1,5000)*sizeof(in));
 	}
 	
 	for (unsigned m=0; m<szam2;++m)
@@ -254,7 +254,7 @@ void proba()
 		}
 		{
 			g_p=new in[szam];
-			out=new math::vec3[szam];
+			out=new vec3[szam];
 			t.reset();
 
 			for (unsigned n=0; n<szam;++n)

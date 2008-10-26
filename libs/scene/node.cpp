@@ -1,15 +1,13 @@
 #include "node.h"
 #include "containers/vector.h"
 
-namespace scene
-{
 DEFINE_OBJECT(node,rootobject);
 BIND_PROPERTY(node,get_localposition(),"localpos",mtx4x3);
 
 	node::node(const char* i_name):
 	rootobject(i_name),
-	m_localpos(math::mtx4x3::identitymtx()),
-	m_worldpos(math::mtx4x3::identitymtx())
+	m_localpos(mtx4x3::identitymtx()),
+	m_worldpos(mtx4x3::identitymtx())
 	{
 		m_parent=NULL;
 		m_child=NULL;
@@ -19,8 +17,8 @@ BIND_PROPERTY(node,get_localposition(),"localpos",mtx4x3);
 
 
 	node::node():
-	m_localpos(math::mtx4x3::identitymtx()),
-	m_worldpos(math::mtx4x3::identitymtx())
+	m_localpos(mtx4x3::identitymtx()),
+	m_worldpos(mtx4x3::identitymtx())
 	{
 		m_parent=NULL;
 		m_child=NULL;
@@ -33,7 +31,7 @@ BIND_PROPERTY(node,get_localposition(),"localpos",mtx4x3);
 		if (m_parent)
 			m_parent->remove_child(this);
 
-		ctr::vector<node*> subh;
+		vector<node*> subh;
 
 
 
@@ -82,7 +80,7 @@ BIND_PROPERTY(node,get_localposition(),"localpos",mtx4x3);
 
 	void node::remove_child(node* i_child)
 	{
-		utils::assertion(i_child->get_parent()==this,"nonono!");
+		assertion(i_child->get_parent()==this,"nonono!");
 
 
 		node* ptr=m_child;
@@ -121,7 +119,7 @@ BIND_PROPERTY(node,get_localposition(),"localpos",mtx4x3);
 		return NULL;
 	}
 	
-	void node::set_localposition(const math::mtx4x3& i_mtx)
+	void node::set_localposition(const mtx4x3& i_mtx)
 	{
 		m_localpos=i_mtx;
 		
@@ -136,17 +134,17 @@ BIND_PROPERTY(node,get_localposition(),"localpos",mtx4x3);
 			ptr=ptr->get_next(this);
 		}
 	}
-	const math::mtx4x3& node::get_localposition() const
+	const mtx4x3& node::get_localposition() const
 	{
 		//localpos mindig valid;
 		return m_localpos;
 	}
 
-	void node::set_worldposition(const math::mtx4x3& i_mtx)
+	void node::set_worldposition(const mtx4x3& i_mtx)
 	{
 		m_worldpos=i_mtx;
 
-		math::mtx4x3 parentinvworld;
+		mtx4x3 parentinvworld;
 		if (m_parent)
 			parentinvworld.invert(m_parent->get_worldposition());
 		else
@@ -166,7 +164,7 @@ BIND_PROPERTY(node,get_localposition(),"localpos",mtx4x3);
 		}
 	}
 
-	const math::mtx4x3& node::get_worldposition()
+	const mtx4x3& node::get_worldposition()
 	{
 		node* buf[128];
 		int bufsize=0;
@@ -207,5 +205,3 @@ BIND_PROPERTY(node,get_localposition(),"localpos",mtx4x3);
 
 		return NULL;
 	}
-
-}

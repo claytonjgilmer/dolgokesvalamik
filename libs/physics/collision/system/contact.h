@@ -7,12 +7,10 @@
 
 #define MAX_CONTACTNUM_PER_BODYPAIR 4
 
-namespace physics
-{
 	struct contact_t:public constraint_t
 	{
-		math::vec3 relpos[2][MAX_CONTACTNUM_PER_BODYPAIR];
-		math::vec3 normal;
+		vec3 relpos[2][MAX_CONTACTNUM_PER_BODYPAIR];
+		vec3 normal;
 		contact_t* prev,*next;
 
 		char contactnum;
@@ -58,5 +56,4 @@ namespace physics
 				this->body[1]->contacts=this->body[1]->contacts->next;
 		}
 	};
-}//namespace
 #endif//_contact_h_

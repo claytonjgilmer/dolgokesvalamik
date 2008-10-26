@@ -1,8 +1,6 @@
 #include "timer.h"
 #include <Windows.h>
 
-namespace utils
-{
 	long long freqinit()
 	{
 		LARGE_INTEGER freq;
@@ -39,4 +37,3 @@ namespace utils
 	{
 		return float(double(stop_tick-start_tick)/freqd);
 	}
-}

@@ -3,8 +3,6 @@
 #include <Windows.h>
 #include <stdio.h>
 
-namespace utils
-{
 	void PRINT(const char* msg,...)
 	{
 		char str[256];
@@ -14,4 +12,3 @@ namespace utils
 		vsprintf_s(str,msg,args);
 		OutputDebugStringA(str);
 	}
-}

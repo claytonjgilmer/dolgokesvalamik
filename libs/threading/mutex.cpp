@@ -1,7 +1,5 @@
 #include "mutex.h"
 
-namespace threading
-{
 	mutex::mutex()
 	{
 #if mutextype==0
@@ -71,5 +69,3 @@ namespace threading
 	{
 		_InterlockedExchange(&m_data,0);
 	}
-
-}//namespace threading

@@ -6,9 +6,7 @@
 #include "utils/auto_ptr.h"
 #include "containers/fixedvector.h"
 
-namespace render
-{
-	class object3d:public scene::node
+	class object3d:public node
 	{
 		DECLARE_OBJECT(object3d);
 	public:
@@ -26,9 +24,8 @@ namespace render
 		object3d* Next;
 
 		//properties
-		ctr::string m_modelname;
+		string m_modelname;
 	protected:
-		ctr::fixedvector<utils::ref_ptr<mesh>,8> m_mesh;
+		fixedvector<ref_ptr<mesh>,8> m_mesh;
 	};
-}
 #endif//_renderobject3d_h_

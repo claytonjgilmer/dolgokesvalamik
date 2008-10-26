@@ -23,8 +23,8 @@ class MChunkStream
 public:
 	friend class MChunkHandle;
 
-//	MChunkStream(const ctr::string& filename);
-	MChunkStream(file::file& i_file);
+//	MChunkStream(const string& filename);
+	MChunkStream(file& i_file);
 	~MChunkStream();
 
 	/// read the top chunk from the file
@@ -41,13 +41,13 @@ protected:
 	char ReadChar(unsigned& ucs);
 	unsigned ReadUnsigned(unsigned& ucs);
 	short ReadShort(unsigned& ucs);
-	ctr::string ReadString(unsigned& ucs);
+	string ReadString(unsigned& ucs);
 	void Skip(unsigned size);
 
-	ctr::vector<ctr::string> mStack;
+	vector<string> mStack;
 
 //	std::ifstream m_Istream;
-	file::file& m_file;
+	file& m_file;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -61,7 +61,7 @@ class MChunkHandle
 
 	MChunkStream* mStream;
 	MChunkHandle* mParent;
-	ctr::string mName;
+	string mName;
 	int mDepth;
 	unsigned mTotalSize;
 	unsigned mSizeLeft;
@@ -71,8 +71,8 @@ public:
 	MChunkHandle(MChunkHandle* p);
 
 	MChunkHandle(MChunkStream* s);
-	MChunkHandle(MChunkStream* s, const ctr::string& name);
-	MChunkHandle(MChunkStream* s, const ctr::string& name, unsigned size);
+	MChunkHandle(MChunkStream* s, const string& name);
+	MChunkHandle(MChunkStream* s, const string& name, unsigned size);
 
 	MChunkHandle(const MChunkHandle& c); // undefined
 	MChunkHandle& operator= (const MChunkHandle& c); // undefined
@@ -99,7 +99,7 @@ public:
 	short ReadShort();
 
 	/// read a string from the current chunk
-	ctr::string ReadString();
+	string ReadString();
 
 	/// start reading a sub-chunk inside the current chunk
 	MChunk GetChunk();
@@ -108,7 +108,7 @@ public:
 	//--------------------------------------------------------------------------------
 
 	/// end of chunk
-	bool eof() const { return mSizeLeft == 0; }
+	int eof() const { return mSizeLeft == 0; }
 
 	/// close the chunk so it can be reused
 	void Close();
@@ -120,7 +120,7 @@ public:
 	void Skip();
 
 	/// close the chunk so it can be reused
-	const ctr::string& GetName() const { return mName; }
+	const string& GetName() const { return mName; }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -160,7 +160,7 @@ public:
 	short ReadShort();
 
 	/// read a string from the current chunk
-	ctr::string ReadString();
+	string ReadString();
 
 	/// start reading a sub-chunk inside the current chunk
 	MChunk GetChunk();
@@ -178,16 +178,16 @@ public:
 	MChunk& operator>> (unsigned& u);
 
 	/// read a string from the current chunk
-	MChunk& operator>> (ctr::string& s);
+	MChunk& operator>> (string& s);
 
 	/// returns true at the end of the chunk
-	bool operator! () const { return !ptr || ptr->eof(); }
+	int operator! () const { return !ptr || ptr->eof(); }
 
 	/// returns the status of the chunk
-	operator bool () const { return ptr && !ptr->eof(); }
+	operator int () const { return ptr && !ptr->eof(); }
 
 	/// end of chunk
-	bool eof() const { return ptr->eof(); }
+	int eof() const { return ptr->eof(); }
 
 	/// close the chunk so it can be reused
 	void Close();
@@ -199,7 +199,7 @@ public:
 	void Skip();
 
 	/// close the chunk so it can be reused
-	const ctr::string& GetName() const { return ptr->GetName(); }
+	const string& GetName() const { return ptr->GetName(); }
 
 	int GetSizeLeft() const { return ptr->mSizeLeft; }
 

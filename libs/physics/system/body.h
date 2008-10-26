@@ -3,10 +3,10 @@
 
 #include "math/mtx4x3.h"
 
-namespace physics
-{
-	struct system;
+	struct physicssystem;
 	struct constraint_edge;
+	struct shape_t;
+	struct shape_desc;
 
 	enum bodystate
 	{
@@ -16,12 +16,12 @@ namespace physics
 
 	struct bodydesc
 	{
-		math::mtx4x3	pos;
-		math::vec3		vel;
-		math::vec3		rotvel;
+		mtx4x3	pos;
+		vec3		vel;
+		vec3		rotvel;
 
 		float			mass;
-		math::mtx3x3	inertia;
+		mtx3x3	inertia;
 
 		bodystate		is_static;
 
@@ -38,13 +38,16 @@ namespace physics
 
 	struct body_t
 	{
-		const math::mtx4x3& get_pos() const;
-		const math::vec3& get_vel() const;
-		const math::vec3& get_rotvel() const;
+		const mtx4x3& get_pos() const;
+		const vec3& get_vel() const;
+		const vec3& get_rotvel() const;
 
-		void set_pos(const math::mtx4x3& i_pos);
-		void set_vel(const math::vec3& i_vel);
-		void set_rotvel(const math::vec3& i_rotvel);
+		void set_pos(const mtx4x3& i_pos);
+		void set_vel(const vec3& i_vel);
+		void set_rotvel(const vec3& i_rotvel);
+
+		shape_t* add_shape(const shape_desc& i_desc);
+		void release_shape(shape_t* i_shape);
 
 
 		body_t();
@@ -54,7 +57,7 @@ namespace physics
 		bodystate  is_static;
 		constraint_edge* contacts;
 		constraint_edge* joints;
+		shape_t* shapes;
 
 	};
-}
 #endif

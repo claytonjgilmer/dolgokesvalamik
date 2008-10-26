@@ -1,8 +1,6 @@
 #ifndef _auto_ptr_h_
 #define _auto_ptr_h_
 
-namespace utils
-{
 	template <typename T>
 	class auto_ptr
 	{
@@ -45,5 +43,4 @@ namespace utils
 		}
 		T* m_ptr;
 	};
-}
 #endif//_auto_ptr_h_

@@ -4,8 +4,7 @@
 #include <new.h>
 #include "utils/misc.h"
 #include "utils/assert.h"
-namespace ctr
-{
+
 	template <class basetype>
 	class vector
 	{
@@ -45,7 +44,7 @@ namespace ctr
 		void erase(iterator i_where);
 		void eraseunordered(iterator i_where);
 		unsigned size() const;
-		bool empty() const;
+		int empty() const;
 		void reserve(unsigned i_capacity);
 
 #if 1//ndef _DEBUG
@@ -132,28 +131,28 @@ namespace ctr
 	template<class basetype>
 	MLINLINE typename vector<basetype>::iterator vector<basetype>::begin()
 	{
-		utils::assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
+		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
 		return m_buf;
 	}
 
 	template<class basetype>
 	MLINLINE typename vector<basetype>::const_iterator vector<basetype>::begin() const
 	{
-		utils::assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
+		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
 		return m_buf;
 	}
 
 	template<class basetype>
 	MLINLINE typename vector<basetype>::iterator vector<basetype>::end()
 	{
-		utils::assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
+		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
 		return m_buf+m_size;
 	}
 
 	template<class basetype>
 	MLINLINE typename vector<basetype>::const_iterator vector<basetype>::end() const
 	{
-		utils::assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
+		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
 		return m_buf+m_size;
 	}
 
@@ -170,8 +169,8 @@ namespace ctr
 	template <class basetype>
 	MLINLINE void vector<basetype>::pop_back()
 	{
-		utils::assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
-		utils::assertion(m_size>0,"vector<basetype>::size() <=0!!!");
+		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
+		assertion(m_size>0,"vector<basetype>::size() <=0!!!");
 		m_buf[--m_size].~basetype();
 	}
 
@@ -216,32 +215,32 @@ namespace ctr
 	template<class basetype>
 	MLINLINE basetype& vector<basetype>::back()
 	{
-		utils::assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
-		utils::assertion(m_size>0,"vector<basetype>::size() <=0!!!");
+		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
+		assertion(m_size>0,"vector<basetype>::size() <=0!!!");
 		return m_buf[m_size-1];
 	}
 
 	template<class basetype>
 	MLINLINE const basetype& vector<basetype>::back() const
 	{
-		utils::assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
-		utils::assertion(m_size>0,"vector<basetype>::size() <=0!!!");
+		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
+		assertion(m_size>0,"vector<basetype>::size() <=0!!!");
 		return m_buf[m_size-1];
 	}
 
 	template<class basetype>
 	MLINLINE basetype& vector<basetype>::front()
 	{
-		utils::assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
-		utils::assertion(m_size>0,"vector<basetype>::size() <=0!!!");
+		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
+		assertion(m_size>0,"vector<basetype>::size() <=0!!!");
 		return m_buf[0];
 	}
 
 	template<class basetype>
 	MLINLINE const basetype& vector<basetype>::front() const
 	{
-		utils::assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
-		utils::assertion(m_size>0,"vector<basetype>::size() <=0!!!");
+		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
+		assertion(m_size>0,"vector<basetype>::size() <=0!!!");
 		return m_buf[0];
 	}
 
@@ -252,7 +251,7 @@ namespace ctr
 	}
 
 	template<class basetype>
-	MLINLINE bool vector<basetype>::empty() const
+	MLINLINE int vector<basetype>::empty() const
 	{
 		return m_size==0;
 	}
@@ -351,14 +350,14 @@ namespace ctr
 	template<class basetype>
 	MLINLINE basetype& vector<basetype>::operator[](unsigned i_index)
 	{
-		utils::assertion(i_index<m_size,"vector<basetype>::size() <=i_index!!!");
+		assertion(i_index<m_size,"vector<basetype>::size() <=i_index!!!");
 		return m_buf[i_index];
 	}
 
 	template<class basetype>
 	MLINLINE const basetype& vector<basetype>::operator[](unsigned i_index) const
 	{
-		utils::assertion(i_index<m_size,"vector<basetype>::size() <=i_index!!!");
+		assertion(i_index<m_size,"vector<basetype>::size() <=i_index!!!");
 		return m_buf[i_index];
 	}
 #else
@@ -424,5 +423,4 @@ namespace ctr
 
 		m_buf=(basetype*)newbuf;
 	}
-}//namespace ctr
 #endif//_vector_h_

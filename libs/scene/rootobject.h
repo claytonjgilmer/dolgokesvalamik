@@ -4,8 +4,6 @@
 #include "containers/string.h"
 #include "nodefactory.h"
 
-namespace scene
-{
 	class metaobject;
 
 	class rootobject
@@ -17,10 +15,10 @@ namespace scene
 		virtual metaobject* get_metaobject() const;
 		static metaobject* get_class_metaobject();
 
-		const ctr::string& get_name() const;
+		const string& get_name() const;
 		void set_name(const char* i_name);
 
-		ctr::string m_name;
+		string m_name;
 	};
 
 #define DECLARE_OBJECT(_object_) \
@@ -28,15 +26,15 @@ namespace scene
 	friend class _object_##_metaobject;\
 	friend class prop_binder<_object_>;\
 	virtual int get_typeid() const;\
-	virtual scene::metaobject* get_metaobject() const;\
-	static scene::metaobject* get_class_metaobject();
+	virtual metaobject* get_metaobject() const;\
+	static metaobject* get_class_metaobject();
 
 #define  DEFINE_OBJECT(_object_,_parent_)\
-	class _object_##_metaobject:public scene::metaobject\
+	class _object_##_metaobject:public metaobject\
 	{\
 	public:\
-	_object_##_metaobject():scene::metaobject(#_object_,_parent_::get_class_metaobject()){}\
-	scene::rootobject* create() const{return new _object_;}\
+	_object_##_metaobject():metaobject(#_object_,_parent_::get_class_metaobject()){}\
+	rootobject* create() const{return new _object_;}\
 	void bind_properties();\
 	};\
 \
@@ -47,17 +45,13 @@ namespace scene
 		return g_##_object_##_metaobject.get_typeid();\
 	}\
 \
-	scene::metaobject* _object_::get_metaobject() const\
+	metaobject* _object_::get_metaobject() const\
 	{\
 		return &g_##_object_##_metaobject;\
 	}\
 \
-	scene::metaobject* _object_::get_class_metaobject()\
+	metaobject* _object_::get_class_metaobject()\
 	{\
 		return &g_##_object_##_metaobject;\
 	}
-
-
-
-}//namespace
 #endif//_rootobject_h_

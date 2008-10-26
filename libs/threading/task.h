@@ -4,8 +4,6 @@
 #include "containers/string.h"
 #include "containers/vector.h"
 
-namespace threading
-{
 	class taskmanager;
 	class task
 	{
@@ -20,8 +18,7 @@ namespace threading
 			unsigned m_ref_index;
 
 #ifdef _DEBUG
-			ctr::string m_name;
+			string m_name;
 #endif
 	};
-};
 #endif//_task_h_

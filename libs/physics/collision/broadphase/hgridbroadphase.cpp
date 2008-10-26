@@ -1,14 +1,14 @@
 #include "hgridbroadphase.h"
 #include "math/intersection.h"
+#include "threading/taskmanager2.h"
+#include "physics/system/physicssystem.h"
 
-namespace physics
-{
-	hgridobject::hgridobject(void* i_userdata, const math::aabb& i_bounding, uint32 i_static):
+	hgridobject::hgridobject(void* i_userdata, const aabb& i_bounding, uint32 i_static):
 	broadphaseobject(i_userdata,i_bounding,i_static)
 	{
 		this->pos=i_bounding.get_center();
-		math::vec3 extent=i_bounding.get_extent();
-		this->radius=math::Max(extent.x,math::Max(extent.y,extent.z));
+		vec3 extent=i_bounding.get_extent();
+		this->radius=Max(extent.x,Max(extent.y,extent.z));
 	}
 
 	hgridbroadphase::hgridbroadphase()
@@ -19,7 +19,7 @@ namespace physics
 			size*=CELL_TO_CELL_RATIO;
 
 			objects_at_level[n]=0;
-			cell_size[n]=size;
+			oo_cell_size[n]=1/size;
 
 			for (int m=0; m<NUM_BUCKETS;++m)
 			{
@@ -30,6 +30,7 @@ namespace physics
 
 		occupied_levels_mask=0;
 		tick=0;
+		pair_num=0;
 	}
 
 	void hgridbroadphase::add_object_to_hgrid(hgridobject *obj)
@@ -37,15 +38,20 @@ namespace physics
 		int level;
 		float diameter = 2.0f * obj->radius;
 
-		for (level = 0; cell_size[level]* SPHERE_TO_CELL_RATIO < diameter; level++);
+		for (level = 0; SPHERE_TO_CELL_RATIO < diameter*this->oo_cell_size[level]; level++);
 
-		utils::assertion(level < HGRID_MAX_LEVELS);
+		assertion(level < HGRID_MAX_LEVELS);
 
-		float size=cell_size[level];
-		int bucket = compute_hash_bucket_index((int)(obj->pos.x /	 size), (int)(obj->pos.y / size), (int)(obj->pos.z / size));
+		const float oosize=this->oo_cell_size[level];
+		int bucket = compute_hash_bucket_index((int)(obj->pos.x *oosize), (int)(obj->pos.y *oosize), (int)(obj->pos.z *oosize));
 		obj->bucket= bucket;
 		obj->level = level;
 		obj->next_object= this->object_bucket[level][bucket];
+		obj->prev_object=NULL;
+
+		if (this->object_bucket[level][bucket])
+			this->object_bucket[level][bucket]->prev_object=obj;
+
 		this->object_bucket[level][bucket] = obj;
 		this->objects_at_level[level]++;
 		this->occupied_levels_mask |= (1 << level);
@@ -58,13 +64,15 @@ namespace physics
 			this->occupied_levels_mask &= ~(1 << level);
 
 		int bucket= obj->bucket;
-		hgridobject *p = this->object_bucket[level][bucket];
+		if (obj->next_object) obj->next_object->prev_object=obj->prev_object;
+		if (obj->prev_object) obj->prev_object->next_object=obj->next_object;
 
-		if (p == obj)
-		{
+		if (this->object_bucket[level][bucket] == obj)
 			this->object_bucket[level][bucket] = obj->next_object;
-			return;
-		}
+
+		return;
+/*
+		hgridobject *p = this->object_bucket[level][bucket];
 
 		while (p)
 		{
@@ -77,8 +85,8 @@ namespace physics
 				return;
 			}
 		}
-
-		utils::assertion(0);
+*/
+		assertion(0);
 	}
 
 
@@ -86,15 +94,16 @@ namespace physics
 	{
 		const int startLevel = obj->level;
 		int loccupiedLevelsMask = this->occupied_levels_mask>> startLevel;
-		const math::vec3 pos = obj->pos;
-		const math::vec3 halfextent=obj->bounding_world.get_extent();
+		const vec3 pos = obj->pos;
+		const vec3 halfextent=obj->bounding_world.get_extent();
 
 		for (int level = startLevel; level < HGRID_MAX_LEVELS && loccupiedLevelsMask; loccupiedLevelsMask >>= 1, level++)
 		{
 			if ((loccupiedLevelsMask & 1) == 0)
 				continue;
 
-			float ooSize = 1.0f / this->cell_size[level];
+			const float ooSize = this->oo_cell_size[level];
+//			float ooSize = 1.0f / this->cell_size[level];
 
 			const int xs = (int)((pos.x-halfextent.x)*ooSize-SPHERE_TO_CELL_RATIO);
 			const int ys = (int)((pos.y-halfextent.y)*ooSize-SPHERE_TO_CELL_RATIO);
@@ -115,8 +124,13 @@ namespace physics
 						{
 							if (level!=startLevel || p <obj)
 							{
-								if (math::aabb_aabb_intersect(obj->bounding_world,p->bounding_world))
-									this->pair_array.push_back(broadphasepair(obj,p));
+								if (aabb_aabb_intersect(obj->bounding_world,p->bounding_world))
+								{
+//									this->checkobj_mutex.lock();
+									LONG index=_InterlockedIncrement(&pair_num);
+									new (this->pair_array+index-1) broadphasepair(obj,p);
+//									this->checkobj_mutex.unlock();
+								}
 							}
 							p = p->next_object;
 						}
@@ -131,8 +145,8 @@ namespace physics
 		obj->pos=obj->bounding_world.get_center();
 
 		const int level=obj->level;
-		float size= this->cell_size[level];
-		int bucket = compute_hash_bucket_index((int)(obj->pos.x / size), (int)(obj->pos.y / size), (int)(obj->pos.z / size));
+		const float oosize= this->oo_cell_size[level];
+		int bucket = compute_hash_bucket_index((int)(obj->pos.x *oosize), (int)(obj->pos.y *oosize), (int)(obj->pos.z *oosize));
 
 		if (bucket==obj->bucket)
 			return;
@@ -141,6 +155,11 @@ namespace physics
 		obj->bucket= bucket;
 
 		obj->next_object = this->object_bucket[level][bucket];
+		obj->prev_object=NULL;
+
+		if (this->object_bucket[level][bucket])
+			this->object_bucket[level][bucket]->prev_object=obj;
+
 		this->object_bucket[level][bucket] = obj;
 
 		this->objects_at_level[level]++;
@@ -148,7 +167,7 @@ namespace physics
 	}
 
 
-	broadphaseobject* hgridbroadphase::create_object(void* i_userdata, const math::aabb& i_bounding, uint32 i_static)
+	broadphaseobject* hgridbroadphase::create_object(void* i_userdata, const aabb& i_bounding, uint32 i_static)
 	{
 		hgridobject* newobj= i_static ? this->static_list.allocate_place() : this->dynamic_list.allocate_place();
 		new (newobj) hgridobject(i_userdata,i_bounding,i_static);
@@ -173,15 +192,55 @@ namespace physics
 
 	void hgridbroadphase::update()
 	{
-		this->pair_array.clear();
+		this->pair_num=0;
 
-		ctr::listallocator<hgridobject>::iterator it;
+		listallocator<hgridobject>::iterator it;
 
-		for (it=this->dynamic_list.begin(); it!=this->dynamic_list.end(); ++it)
-			this->move_object(*it);
+		if (!physicssystem::ptr()->parallel_processing)
+		{
+			for (it=this->dynamic_list.begin(); it!=this->dynamic_list.end(); ++it)
+				this->move_object(*it);
 
-		for (it=this->dynamic_list.begin(); it!=this->dynamic_list.end(); ++it)
-			this->check_obj_against_grid(*it);
+			for (it=this->dynamic_list.begin(); it!=this->dynamic_list.end(); ++it)
+				this->check_obj_against_grid(*it);
+		}
+		else
+		{
+			struct hgrid_update_process
+			{
+				hgrid_update_process(hgridbroadphase* i_broadphase,hgridobject** i_buf):
+				broad_phase(i_broadphase),
+				buf(i_buf)
+				{
+				}
+
+				void operator()(unsigned i_start,unsigned i_num) const
+				{
+					uint32 end=i_start+i_num;
+					for (uint32 n=i_start; n<end; ++n)
+					{
+						broad_phase->check_obj_against_grid(buf[n]);
+					}
+				}
+
+				hgridbroadphase* broad_phase;
+				hgridobject** buf;
+			};
+
+
+			const unsigned obj_count=this->dynamic_list.size();
+			hgridobject** obj_array=(hgridobject**)_alloca(obj_count*sizeof(hgridobject*));
+
+			listallocator<hgridobject>::iterator it=this->dynamic_list.begin();
+
+			for (unsigned n=0; n<obj_count;++n,++it)
+			{
+				obj_array[n]=*it;
+				this->move_object(obj_array[n]);
+			}
+
+			taskmanager::ptr()->process_buffer(obj_count,10,hgrid_update_process(this,obj_array));
+		}
 	}
 
 	void hgridbroadphase::update_object(broadphaseobject* i_object)
@@ -192,12 +251,12 @@ namespace physics
 
 	int hgridbroadphase::get_broadphasepairnum() const
 	{
-		return (int)this->pair_array.size();
+		return (int)this->pair_num;
 	}
 
 	broadphasepair* hgridbroadphase::get_pairs()
 	{
-		return &this->pair_array[0];
+		return this->pair_array;
 	}
 
 #if 0
@@ -252,4 +311,3 @@ namespace physics
 		}
 	}
 #endif
-}//namespace  physics

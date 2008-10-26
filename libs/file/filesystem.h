@@ -7,11 +7,9 @@
 #include "file/file.h"
 #include "utils/singleton.h"
 
-namespace file
-{
-	class system
+	class filesystem
 	{
-		DECLARE_SINGLETON(system);
+		DECLARE_SINGLETON(filesystem);
 	public:
 
 		void register_path(const char* i_group,const char* i_path);
@@ -30,19 +28,19 @@ namespace file
 				int a=0;
 			}
 
-			const ctr::tstring<16>& get_name() const {return m_name;}
+			const tstring<16>& get_name() const {return m_name;}
 
-			ctr::tstring<16> m_name; //group
+			tstring<16> m_name; //group
 			groupstruct* Next;
-			ctr::vector<ctr::tstring<64>> m_pathbuf;
+			vector<tstring<64>> m_pathbuf;
 		} ;
 
-		ctr::stringmap<groupstruct,128> m_pathmap;
-		ctr::listallocator<groupstruct> m_groupbuf;
+		stringmap<groupstruct,128> m_pathmap;
+		listallocator<groupstruct> m_groupbuf;
 	};
 
 
-	MLINLINE void system::register_path(const char* i_group,const char* i_path)
+	MLINLINE void filesystem::register_path(const char* i_group,const char* i_path)
 	{
 		groupstruct* group=m_pathmap.get_data(i_group);
 
@@ -55,7 +53,7 @@ namespace file
 		group->m_pathbuf.push_back(i_path);
 	}
 
-	MLINLINE void system::unregister_path(const char* i_group, const char* i_path)
+	MLINLINE void filesystem::unregister_path(const char* i_group, const char* i_path)
 	{
 		groupstruct* group=m_pathmap.get_data(i_group);
 
@@ -78,7 +76,7 @@ namespace file
 		}
 	}
 
-	MLINLINE void system::open_file(file& o_file, const char* i_group, const char* i_filename, const char* i_mode) const
+	MLINLINE void filesystem::open_file(file& o_file, const char* i_group, const char* i_filename, const char* i_mode) const
 	{
 		groupstruct* group=m_pathmap.get_data(i_group);
 
@@ -93,5 +91,4 @@ namespace file
 				return;
 		}
 	}
-}
 #endif//_filesystem_h_

@@ -16,8 +16,6 @@ typedef short int16;
 typedef char int8;
 
 
-namespace math
-{
 	union floattounsigned
 	{
 		float f;
@@ -71,7 +69,7 @@ namespace math
 	{
 		return 0.5f*pi();
 	}
-
+/*
 	MLINLINE float sin(float i_value)
 	{
 		return sinf(i_value);
@@ -111,6 +109,7 @@ namespace math
 	{
 		return powf(i_value,i_power);
 	}
+*/
 
 	template<class t> t sqr(t i_value)
 	{
@@ -281,6 +280,4 @@ namespace math
 	{
 		return (rand())*(i_max-i_min)/RAND_MAX+i_min;
 	}
-
-}
 #endif// _math_h_

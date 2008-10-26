@@ -6,12 +6,10 @@
 #include "containers/stringmap.h"
 #include "render/shader.h"
 
-namespace render
-{
 	class shadermanagerdesc
 	{
 	public:
-		ctr::string m_shadergroup;
+		string m_shadergroup;
 
 		shadermanagerdesc(const char* i_shadergroup):
 		m_shadergroup(i_shadergroup)
@@ -28,8 +26,7 @@ namespace render
 		void reload_shaders();
 
 	private:
-		ctr::string m_shadergroup;
-		ctr::stringmap<shader> m_map;
+		string m_shadergroup;
+		stringmap<shader> m_map;
 	};
-}
 #endif//_shadermanager_h_

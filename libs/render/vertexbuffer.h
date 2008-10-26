@@ -5,15 +5,12 @@
 #include "vertexelements.h"
 #include "containers/vector.h"
 
-namespace render
-{
-	class system;
 	class vertexbuffer
 	{
-		friend class system;
+		friend class rendersystem;
 	public:
-		vertexbuffer(unsigned i_vertexnum, const ctr::vector<vertexelem>& i_vertexelements);
-		vertexbuffer(unsigned i_vertexnum, const ctr::vector<vertexelem>& i_vertexelements, unsigned i_vertexsize);
+		vertexbuffer(unsigned i_vertexnum, const vector<vertexelem>& i_vertexelements);
+		vertexbuffer(unsigned i_vertexnum, const vector<vertexelem>& i_vertexelements, unsigned i_vertexsize);
 		~vertexbuffer();
 		void* lock()
 		{
@@ -31,10 +28,9 @@ namespace render
 		unsigned m_vertexsize;
 
 #ifdef _DEBUG
-		const ctr::vector<vertexelem> m_vertexelems;
+		const vector<vertexelem> m_vertexelems;
 #endif
 
 
 	};
-}
 #endif//_vertexbuffer_h_

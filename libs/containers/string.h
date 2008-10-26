@@ -5,8 +5,7 @@
 #include <float.h>
 #include "utils/assert.h"
 #include "utils/misc.h"
-namespace ctr
-{
+
 	template <unsigned TSTRING_MIN_CAPACITY=16>
 	class tstring
 	{
@@ -26,13 +25,13 @@ namespace ctr
 		unsigned capacity() const;
 
 		tstring substring(unsigned i_pos, unsigned i_length) const;
-		bool match(unsigned i_pos, const char* i_str) const;
+		int match(unsigned i_pos, const char* i_str) const;
 
 		unsigned find(const char* i_substring) const;
 
-		template <unsigned MINCAP2> bool operator==(const tstring<MINCAP2>& i_str) const;
-		bool operator==(const char* i_str) const;
-		bool operator!=(const char* i_str) const;
+		template <unsigned MINCAP2> int operator==(const tstring<MINCAP2>& i_str) const;
+		int operator==(const char* i_str) const;
+		int operator!=(const char* i_str) const;
 		char operator[](unsigned i_index) const;
 
 		tstring& operator+=(const char* i_str);
@@ -127,7 +126,7 @@ namespace ctr
 	template <unsigned TSTRING_MIN_CAPACITY>
 	MLINLINE tstring<TSTRING_MIN_CAPACITY>::tstring(const char* i_str)
 	{
-		utils::assertion(i_str!=NULL,"ctr::tstringnek nem illik nullpointert atadni");
+		assertion(i_str!=NULL,"tstringnek nem illik nullpointert atadni");
 
 		unsigned len=(unsigned)strlen(i_str);
 
@@ -196,19 +195,19 @@ namespace ctr
 
 	template <unsigned TSTRING_MIN_CAPACITY>
 	template <unsigned MINCAP2> 
-	MLINLINE bool tstring<TSTRING_MIN_CAPACITY>::operator ==(const tstring<MINCAP2>& i_str) const
+	MLINLINE int tstring<TSTRING_MIN_CAPACITY>::operator ==(const tstring<MINCAP2>& i_str) const
 	{
 		return !strcmp(m_buf,i_str.c_str());
 	}
 
 	template <unsigned TSTRING_MIN_CAPACITY>
-	MLINLINE bool tstring<TSTRING_MIN_CAPACITY>::operator ==(const char* i_str) const
+	MLINLINE int tstring<TSTRING_MIN_CAPACITY>::operator ==(const char* i_str) const
 	{
 		return !strcmp(m_buf,i_str);
 	}
 
 	template <unsigned TSTRING_MIN_CAPACITY>
-	MLINLINE bool tstring<TSTRING_MIN_CAPACITY>::operator !=(const char* i_str) const
+	MLINLINE int tstring<TSTRING_MIN_CAPACITY>::operator !=(const char* i_str) const
 	{
 		return strcmp(m_buf,i_str)!=0;
 	}
@@ -297,7 +296,7 @@ namespace ctr
 	template<unsigned  TSTRING_MIN_CAPACITY>
 	MLINLINE tstring<TSTRING_MIN_CAPACITY> tstring<TSTRING_MIN_CAPACITY>::substring(unsigned i_pos, unsigned i_length) const
 	{
-		utils::assertion(i_pos+i_length<=m_length,"nem jau");
+		assertion(i_pos+i_length<=m_length,"nem jau");
 		tstring res;
 		if (i_length+1>res.m_capacity)
 			res.grow(i_length);
@@ -324,9 +323,9 @@ namespace ctr
 	}
 
 	template<unsigned  TSTRING_MIN_CAPACITY>
-	MLINLINE bool tstring<TSTRING_MIN_CAPACITY>::match(unsigned i_pos, const char* i_str) const
+	MLINLINE int tstring<TSTRING_MIN_CAPACITY>::match(unsigned i_pos, const char* i_str) const
 	{
-		utils::assertion(i_pos<=m_length);
+		assertion(i_pos<=m_length);
 
 		int i=0;
 
@@ -336,5 +335,4 @@ namespace ctr
 	}
 
 	typedef tstring<16> string;
-}
 #endif//_string_h_

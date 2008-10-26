@@ -3,8 +3,6 @@
 
 #include <d3d9.h>
 
-namespace render
-{
 	class state
 	{
 	public:
@@ -17,5 +15,4 @@ namespace render
 		{
 		}
 	};
-}
 #endif//_renderstate_h_

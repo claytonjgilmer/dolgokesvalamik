@@ -5,14 +5,12 @@
 #include <stdio.h>
 #include <Windows.h>
 
-namespace utils
-{
 #ifdef _DEBUG
-	inline void assertion(bool i_condition)
+	inline void assertion(int i_condition)
 	{
 		if (!i_condition) __asm int 3;
 	}
-	inline void assertion(bool i_condition, const char* i_msg)
+	inline void assertion(int i_condition, const char* i_msg)
 	{
 		if (!i_condition)
 		{
@@ -22,13 +20,11 @@ namespace utils
 		}
 	}
 #else
-	inline void assertion(bool i_condition)
+	inline void assertion(int i_condition)
 	{
 	}
-	inline void assertion(bool i_condition, const char* i_msg)
+	inline void assertion(int i_condition, const char* i_msg)
 	{
 	}
 #endif
-
-}
 #endif//_assert_h_

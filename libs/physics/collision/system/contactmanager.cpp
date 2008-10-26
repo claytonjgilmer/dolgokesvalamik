@@ -1,8 +1,6 @@
 #include "contactmanager.h"
 #include "physics/system/physicssystem.h"
 
-namespace physics
-{
 	contactmanager::contactmanager()
 	{
 		ZeroMemory(this->contact_hash,sizeof(this->contact_hash));
@@ -16,7 +14,7 @@ namespace physics
 	contact_t* contactmanager::get_contact(body_t* i_body1, body_t* i_body2)
 	{
 		if (i_body1>i_body2)
-			math::swap(i_body1,i_body2);
+			swap(i_body1,i_body2);
 
 
 		uint32 key=((uint32)i_body1) ^ ((uint32)i_body2);
@@ -29,6 +27,7 @@ namespace physics
 
 		if (!ptr)
 		{
+			cm.lock();
 			ptr=this->contact_list.allocate_place();
 			new (ptr) contact_t(i_body1,i_body2);
 
@@ -38,6 +37,7 @@ namespace physics
 				this->contact_hash[index]->prev=ptr;
 
 			this->contact_hash[index]=ptr;
+			cm.unlock();
 //			this->contact_array.push_back(ptr);
 		}
 
@@ -58,9 +58,8 @@ namespace physics
 			uint32 key=((uint32)i_contact->body[0]) ^ ((uint32)i_contact->body[0]);
 			uint32 index=get_hashindex(key);
 
-			this->contact_hash[index]=system::instance()->cm.contact_hash[index]->next;
+			this->contact_hash[index]=physicssystem::ptr()->cm.contact_hash[index]->next;
 		}
 
 		contact_list.deallocate(i_contact);
 	}
-}//namespace

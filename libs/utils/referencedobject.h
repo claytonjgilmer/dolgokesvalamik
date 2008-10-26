@@ -5,9 +5,6 @@
 #include "utils/misc.h"
 #include "utils/assert.h"
 
-namespace utils
-{
-
 	class referencedobject
 	{
 		template <class T> friend class ref_ptr;
@@ -17,7 +14,7 @@ namespace utils
 		referencedobject();
 		virtual ~referencedobject()
 		{
-			utils::assertion(m_refcount==0,"referencedobject refcountja nem nulla!");
+			assertion(m_refcount==0,"referencedobject refcountja nem nulla!");
 		}
 
 	private:
@@ -45,5 +42,4 @@ namespace utils
 	{
 		--m_refcount;
 	}
-}
 #endif//_referencedobject_h_

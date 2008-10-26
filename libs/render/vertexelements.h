@@ -1,8 +1,6 @@
 #ifndef _vertexelements_h_
 #define _vertexelements_h_
 
-namespace render
-{
 	typedef enum 
 	{
 		vertexelement_position,
@@ -23,5 +21,4 @@ namespace render
 
 		vertexelem(vertexelemtype i_type,unsigned i_size): m_elemtype(i_type),m_elemsize(i_size){}
 	};
-}
 #endif//_vertexelements_h_

@@ -2,8 +2,6 @@
 #define _dvec3_h_
 
 
-namespace math
-{
 	class dvec3
 	{
 	public:
@@ -326,6 +324,4 @@ namespace math
 		y=i_src1.y+i_time*(i_src2.y-i_src1.y);
 		z=i_src1.z+i_time*(i_src2.z-i_src1.z);
 	}
-
-}//namespace math
 #endif//_dvec3_h_

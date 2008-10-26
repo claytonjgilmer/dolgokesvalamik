@@ -4,9 +4,7 @@
 #include "utils/misc.h"
 #include "containers/string.h"
 
-namespace utils
-{
-	MLINLINE unsigned int RSHash(const ctr::string& str)
+	MLINLINE unsigned int RSHash(const string& str)
 	{
 		unsigned int b    = 378551;
 		unsigned int a    = 63689;
@@ -23,7 +21,7 @@ namespace utils
 	/* End Of RS Hash  */
 
 
-	MLINLINE unsigned int JSHash(const ctr::string& str)
+	MLINLINE unsigned int JSHash(const string& str)
 	{
 		unsigned int hash = 1315423911;
 
@@ -37,7 +35,7 @@ namespace utils
 	/* End Of JS Hash  */
 
 
-	MLINLINE unsigned int PJWHash(const ctr::string& str)
+	MLINLINE unsigned int PJWHash(const string& str)
 	{
 		const unsigned int BitsInUnsignedInt = (unsigned int)(sizeof(unsigned int) * 8);
 		const unsigned int ThreeQuarters     = (unsigned int)((BitsInUnsignedInt  * 3) / 4);
@@ -62,7 +60,7 @@ namespace utils
 	/* End Of  P. J. Weinberger Hash  */
 
 
-	MLINLINE unsigned int ELFHash(const ctr::string& str)
+	MLINLINE unsigned int ELFHash(const string& str)
 	{
 		unsigned int hash = 0;
 		unsigned int x    = 0;
@@ -82,7 +80,7 @@ namespace utils
 	/* End Of ELF Hash  */
 
 
-	MLINLINE unsigned int BKDRHash(const ctr::string& str)
+	MLINLINE unsigned int BKDRHash(const string& str)
 	{
 		unsigned int seed = 131; // 31 131 1313 13131 131313 etc..
 		unsigned int hash = 0;
@@ -97,7 +95,7 @@ namespace utils
 	/* End Of BKDR Hash  */
 
 
-	MLINLINE unsigned int SDBMHash(const ctr::string& str)
+	MLINLINE unsigned int SDBMHash(const string& str)
 	{
 		unsigned int hash = 0;
 
@@ -111,7 +109,7 @@ namespace utils
 	/* End Of SDBM Hash  */
 
 
-	MLINLINE unsigned int DJBHash(const ctr::string& str)
+	MLINLINE unsigned int DJBHash(const string& str)
 	{
 		unsigned int hash = 5381;
 
@@ -125,7 +123,7 @@ namespace utils
 	/* End Of DJB Hash  */
 
 
-	MLINLINE unsigned int DEKHash(const ctr::string& str)
+	MLINLINE unsigned int DEKHash(const string& str)
 	{
 		unsigned int hash = static_cast<unsigned int>(str.size());
 
@@ -139,7 +137,7 @@ namespace utils
 	/* End Of DEK Hash  */
 
 
-	MLINLINE unsigned int BPHash(const ctr::string& str)
+	MLINLINE unsigned int BPHash(const string& str)
 	{
 		unsigned int hash = 0;
 		for(unsigned i = 0; i < str.size(); i++)
@@ -152,7 +150,7 @@ namespace utils
 	/* End Of BP Hash  */
 
 
-	MLINLINE unsigned int FNVHash(const ctr::string& str)
+	MLINLINE unsigned int FNVHash(const string& str)
 	{
 		const unsigned int fnv_prime = 0x811C9DC5;
 		unsigned int hash = 0;
@@ -167,7 +165,7 @@ namespace utils
 	/* End Of FNV Hash  */
 
 
-	MLINLINE unsigned int APHash(const ctr::string& str)
+	MLINLINE unsigned int APHash(const string& str)
 	{
 		unsigned int hash = 0xAAAAAAAA;
 
@@ -182,7 +180,7 @@ namespace utils
 	/* End Of AP Hash  */
 
 
-	MLINLINE unsigned Hash (ctr::string const& s)
+	MLINLINE unsigned Hash (string const& s)
 	{
 		unsigned int const shift = 6;
 		unsigned const mask = ~0U << (32 - shift);
@@ -195,5 +193,4 @@ namespace utils
 
 		return result;
 	}
-}
 #endif//_stringhash_h_

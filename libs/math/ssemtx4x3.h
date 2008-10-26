@@ -3,8 +3,6 @@
 
 #include "ssevec3.h"
 
-namespace math
-{
 	_declspec(align (16)) class ssemtx4x3
 	{
 	public:
@@ -39,5 +37,4 @@ namespace math
 	{
 		i_dst=i_src*xaxis+i_src*yaxis+i_src*zaxis+trans;
 	}
-}//namespace math
 #endif//_ssemtx4x3_h_

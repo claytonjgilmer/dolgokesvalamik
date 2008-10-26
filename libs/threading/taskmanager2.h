@@ -11,8 +11,6 @@
 #include "math/math.h"
 #include "utils/singleton.h"
 
-namespace threading
-{
 /************************************************************************/
 /*                taskmanager                                           */
 /************************************************************************/
@@ -68,7 +66,7 @@ namespace threading
 			};
 
 			unsigned start=0;
-			unsigned elemnumpertask=math::Max((unsigned)(i_elemnum/(m_threadbuf.size()+5)),(unsigned)i_grainsize);
+			unsigned elemnumpertask=Max((unsigned)(i_elemnum/(m_threadbuf.size()+5)),(unsigned)i_grainsize);
 
 			unsigned tnum=0;
 			const unsigned n=i_elemnum/elemnumpertask+1;
@@ -76,13 +74,13 @@ namespace threading
 
 			while (start<i_elemnum)
 			{
-				unsigned actnum=math::Min(elemnumpertask,i_elemnum-start);
+				unsigned actnum=Min(elemnumpertask,i_elemnum-start);
 
 				tasks[tnum++]=new proc_range(i_buf+start,actnum,i_process);
 				start+=actnum;
 			}
 
-			utils::assertion(tnum>0 && tnum<=n);
+			assertion(tnum>0 && tnum<=n);
 
 			spawn_tasks((task**)tasks,tnum);
 		}
@@ -111,7 +109,7 @@ namespace threading
 			};
 
 			unsigned start=0;
-			unsigned elemnumpertask=math::Max((unsigned)(i_elemnum/(m_threadbuf.size()+5)),(unsigned)i_grainsize);
+			unsigned elemnumpertask=Max((unsigned)(i_elemnum/(m_threadbuf.size()+5)),(unsigned)i_grainsize);
 
 			unsigned tnum=0;
 			const unsigned n=i_elemnum/elemnumpertask+1;
@@ -119,13 +117,13 @@ namespace threading
 
 			while (start<i_elemnum)
 			{
-				unsigned actnum=math::Min(elemnumpertask,i_elemnum-start);
+				unsigned actnum=Min(elemnumpertask,i_elemnum-start);
 
 				tasks[tnum++]=new proc_range(start,actnum,i_process);
 				start+=actnum;
 			}
 
-			utils::assertion(tnum>0 && tnum<=n);
+			assertion(tnum>0 && tnum<=n);
 
 			spawn_tasks((task**)tasks,tnum);
 		}
@@ -134,11 +132,11 @@ namespace threading
 		unsigned m_ref_buf[REF_COUNT];
 		HANDLE	m_ref_event[REF_COUNT];
 
-		ctr::stack<unsigned,REF_COUNT> m_ref_index;
-		ctr::vector<thread> m_threadbuf;
+		stack<unsigned,REF_COUNT> m_ref_index;
+		vector<thread> m_threadbuf;
 		taskallocator m_allocator;
 
-		ctr::queue<task*,16384> m_taskbuf;
+		queue<task*,16384> m_taskbuf;
 		volatile unsigned m_incompletetasknum;
 
 		mutex m_taskmutex;
@@ -152,5 +150,4 @@ namespace threading
 		task* get_task();
 		void post_process(task* i_task);
 	};
-}
 #endif//_taskmanager2_h_

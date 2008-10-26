@@ -1,8 +1,6 @@
 #include "mesh.h"
 #include "rendersystem.h"
 
-namespace render
-{
 	mesh::mesh(const char* i_name):resource(i_name)
 	{
 	}
@@ -20,4 +18,3 @@ namespace render
 	{
 		m_vb=i_vb;
 	}
-}

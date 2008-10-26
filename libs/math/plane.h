@@ -1,8 +1,6 @@
 #ifndef _plane_h_
 #define _plane_h_
 
-namespace math
-{
 	class plane
 	{
 	public:
@@ -44,6 +42,4 @@ namespace math
 	{
 		return i_point.dot(normal)+dist;
 	}
-
-}
 #endif//_plane_h_

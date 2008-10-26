@@ -9,16 +9,15 @@
 #include "physics/collision/system/contactmanager.h"
 #include "physics/collision/shapes/shape.h"
 #include "physics/collision/shapeintersection/shapeintersection.h"
+#include "physics/collision/broadphase/hgridbroadphase.h"
 
-namespace physics
-{
-	struct systemdesc
+	struct physicssystemdesc
 	{
-		math::vec3 gravity;
+		vec3 gravity;
 		float timestep;
 		uint8 maxsubstepcount;
 
-		systemdesc()
+		physicssystemdesc()
 		{
 			gravity.set(0,-10,0);
 			timestep=0.01f;
@@ -27,9 +26,9 @@ namespace physics
 	};
 
 
-	typedef int (*intersectfn)(shape* i_sph1, const math::mtx4x3& i_body1_mtx, shape* i_sph2, const math::mtx4x3& i_body2_mtx, math::vec3 o_contact_array[][2], math::vec3& o_normal, uint32& o_contact_num);
+	typedef int (*intersectfn)(shape_t* i_sph1, const mtx4x3& i_body1_mtx, shape_t* i_sph2, const mtx4x3& i_body2_mtx, vec3 o_contact_array[][2], vec3& o_normal, uint32& o_contact_num);
 
-	struct system
+	struct physicssystem
 	{
 		//body krealas/megszuntetes
 		body_t* create_body(const bodydesc& i_desc);
@@ -46,28 +45,20 @@ namespace physics
 
 
 
+		physicssystem(const physicssystemdesc* i_desc);
 
-
-
-
-
-
-		system(const systemdesc* i_desc);
-		void update_inertia();
-		void update_bodies(float i_dt);
-
-		systemdesc desc;
+		physicssystemdesc desc;
 		nbody bodystate_array[2];
 
-		ctr::listallocator<body_t> body_list;
-		ctr::vector<body_t*> killed[2];
+		listallocator<body_t> body_list;
+		vector<body_t*> killed[2];
 
 		contactmanager cm;
 		intersectfn intersect_fn[shape_type_num][shape_type_num];
+		hgridbroadphase broad_phase;
 
+		uint32 parallel_processing;
 
-
-		DECLARE_SINGLETON_DESC(system,systemdesc);
+		DECLARE_SINGLETON_DESC(physicssystem,physicssystemdesc);
 	};
-}
 #endif//_physicssystem_h_

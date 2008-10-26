@@ -3,8 +3,6 @@
 
 #include "vec3.h"
 
-namespace math
-{
 	int line_quad_intersect(vec3& o_pos, vec3 i_s1, vec3 i_s2, vec3 i_q1, vec3 i_q2, vec3 i_q3, vec3 i_q4)
 	{
 		vec3 psegment = i_s2 - i_s1;
@@ -262,7 +260,7 @@ namespace math
 		return 1;
 	}
 
-	uint32 aabb_aabb_intersect(math::aabb i_box1, math::aabb i_box2)
+	uint32 aabb_aabb_intersect(aabb i_box1, aabb i_box2)
 	{
 		for (int n=0; n<3; ++n)
 		{
@@ -274,5 +272,4 @@ namespace math
 
 		return 1;
 	}
-}
 #endif//_intersection_h_

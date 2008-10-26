@@ -3,8 +3,6 @@
 
 #include "vec3.h"
 
-namespace math
-{
 	//////////////////////////////////////////////////////////////////////////
 	//			mtx3x3
 	//////////////////////////////////////////////////////////////////////////
@@ -18,8 +16,8 @@ namespace math
 		void transpose3x3();
 		void transpose3x3(const mtx3x3& i_src);
 
-		float* operator()();
-		const float* operator()() const;
+		operator float* ();
+		operator const float* () const;
 
 		vec3& axis(int i_index);
 		const vec3& axis(int i_index) const;
@@ -71,6 +69,16 @@ namespace math
 		z=i_z;
 	}
 	
+	inline mtx3x3::operator float* ()
+	{
+		return &_11;
+	}
+
+	inline mtx3x3::operator const float* () const
+	{
+		return &_11;
+	}
+
 	inline vec3& mtx3x3::axis(int i_index)
 	{
 		return *(((vec3*)&_11)+i_index);
@@ -208,10 +216,10 @@ namespace math
 	inline void mtx3x3::get_euler(float& o_xangle, float& o_yangle, float& o_zangle) const
 	{
 		float a;
-		o_xangle = math::asin(this->z.y);
+		o_xangle = asin(this->z.y);
 		a = cos( o_xangle );
 
-		if (math::abs(a)>0.0001f) 
+		if (::abs(a)>0.0001f) 
 		{
 			o_zangle=atan2f(this->x.y, this->y.y);
 			o_yangle=atan2f(this->z.x, this->z.z);
@@ -222,7 +230,4 @@ namespace math
 			o_yangle=atan2f(this->y.x, this->x.x);
 		}
 	}
-	
-
-}// namespace math
 #endif//_mtx3x3_h_

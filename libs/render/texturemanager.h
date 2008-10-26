@@ -6,8 +6,6 @@
 #include "containers/stringmap.h"
 #include "render/texture.h"
 
-namespace render
-{
 	class texturemanagerdesc
 	{
 	public:
@@ -16,7 +14,7 @@ namespace render
 		{
 		}
 
-		ctr::string m_texturegroup;
+		string m_texturegroup;
 	};
 	class texturemanager
 	{
@@ -27,8 +25,7 @@ namespace render
 		void erase_texture(texture*);
 
 	private:
-		ctr::string m_texturegroup;
-		ctr::stringmap<texture> m_map;
+		string m_texturegroup;
+		stringmap<texture> m_map;
 	};
-}
 #endif//_texturemanager_h_

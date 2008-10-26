@@ -7,13 +7,11 @@
 //#define BUFFERED_MOUSE
 
 
-namespace input
-{
 	//////////////////////////////////////////////////////////////////////////
-	//	system
+	//	inputsystem
 	//////////////////////////////////////////////////////////////////////////
 
-	DEFINE_SINGLETON(system);
+	DEFINE_SINGLETON(inputsystem);
 	
 	LPDIRECTINPUT8			g_lpDI=NULL;
 	LPDIRECTINPUTDEVICE8	g_lpKeyboardDevice=NULL;
@@ -24,7 +22,7 @@ namespace input
 	{
 		HRESULT hr;
 
-		system* ip=(system*)pContext;
+		inputsystem* ip=(inputsystem*)pContext;
 
 		hr = g_lpDI->CreateDevice( pdidInstance->guidInstance, &ip->m_JoyStruct[ip->m_JoystickNum].g_lpJoyDevice, NULL );
 
@@ -38,7 +36,7 @@ namespace input
 	//egy joy alkatreszeinek enumeralasa
 	BOOL CALLBACK EnumObjectsCallback( const DIDEVICEOBJECTINSTANCE* pdidoi,void* tmp )
 	{
-		system* ip=(system*)tmp;
+		inputsystem* ip=(inputsystem*)tmp;
 		int joyindex=ip->m_JoystickNum-1;
 
 		static int nSliderCount = 0;  // Number of returned slider controls
@@ -86,8 +84,8 @@ namespace input
 
 
 
-	//system konstruktor
-	system::system(const inputinitparams* i_params)
+	//inputsystem konstruktor
+	inputsystem::inputsystem(const inputinitparams* i_params)
 	{
 		memset(m_KeyboardState,0,256);
 		memset(m_PrevKeyboardState,0,256);
@@ -99,8 +97,8 @@ namespace input
 		Init(*i_params);
 	}
 
-	//system destruktor
-	system::~system()
+	//inputsystem destruktor
+	inputsystem::~inputsystem()
 	{
 		if (g_lpKeyboardDevice)
 		{
@@ -128,7 +126,7 @@ namespace input
 
 
 	//keyboard inicialilzalasa
-	void system::InitKeyboard(HWND i_Hwnd)
+	void inputsystem::InitKeyboard(HWND i_Hwnd)
 	{
 		//keyboard
 		g_lpDI->CreateDevice(GUID_SysKeyboard, &g_lpKeyboardDevice, NULL);
@@ -143,7 +141,7 @@ namespace input
 	}
 
 	//eger inicializalasa
-	void system::InitMouse(HWND i_Hwnd)
+	void inputsystem::InitMouse(HWND i_Hwnd)
 	{
 		//mouse
 		g_lpDI->CreateDevice(GUID_SysMouse, &g_lpMouseDevice, NULL);
@@ -180,7 +178,7 @@ namespace input
 
 
 	//joystickok inicializalasa
-	void system::InitJoys(HWND i_Hwnd)
+	void inputsystem::InitJoys(HWND i_Hwnd)
 	{
 		//Joysticks
 		if ( !FAILED( g_lpDI->EnumDevices(	DI8DEVCLASS_GAMECTRL, 
@@ -203,8 +201,8 @@ namespace input
 	}
 
 
-	//system inicializalasa
-	void system::Init(const inputinitparams& i_Params)
+	//inputsystem inicializalasa
+	void inputsystem::Init(const inputinitparams& i_Params)
 	{
 		DirectInput8Create(GetModuleHandle(NULL), DIRECTINPUT_VERSION, 
 			IID_IDirectInput8, (void**)&g_lpDI, NULL);
@@ -217,7 +215,7 @@ namespace input
 		m_Inited=true;
 	}
 
-	void system::Clear()
+	void inputsystem::Clear()
 	{
 		UpdateKeyboard();
 		UpdateMouse();
@@ -231,7 +229,7 @@ namespace input
 
 
 	//billentyuzet lekerdezese
-	void system::UpdateKeyboard()
+	void inputsystem::UpdateKeyboard()
 	{
 		//keyboard
 		if (g_lpKeyboardDevice)
@@ -266,7 +264,7 @@ namespace input
 
 	//eger lekerdezese
 	unsigned maxelemnum=0;
-	void system::UpdateMouse()
+	void inputsystem::UpdateMouse()
 	{
 		//mouse
 		if (g_lpMouseDevice)
@@ -356,7 +354,7 @@ namespace input
 	}
 
 	//joyok lekerdezese
-	void system::UpdateJoys()
+	void inputsystem::UpdateJoys()
 	{
 		for (unsigned n=0; n<m_JoystickNum; ++n)
 		{
@@ -385,10 +383,9 @@ namespace input
 		}
 	}
 
-	void system::Update()
+	void inputsystem::Update()
 	{
 		UpdateKeyboard();
 		UpdateMouse();
 //		UpdateJoys();
 	}
-}

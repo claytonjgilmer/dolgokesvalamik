@@ -4,11 +4,6 @@
 #define offsetof(_s_,_m_) (size_t)(&(((_s_*)0)->_m_))
 #endif
 
-namespace physics
-{
-	using namespace math;
-
-
 #define DECLARE_STATE(_name_,_type_)	state_size[state_num]=sizeof(_type_); \
 										state_size_sum+=sizeof(_type_); \
 										state_num++
@@ -48,7 +43,8 @@ namespace physics
 			unsigned act_offset=0;
 			for (unsigned n=0; n<this->state_num; ++n)
 			{
-				void* srcaddress=(void*)*(((char*)this)+4*n);
+//				void* srcaddress=(void*)*(((char*)this)+4*n);
+				void* srcaddress=*(((void**)this)+n);
 				memcpy(newbuf+act_offset,srcaddress,size*this->state_size[n]);
 				act_offset+=this->state_size[n]*this->capacity;
 			}
@@ -113,5 +109,3 @@ namespace physics
 			this->body[index]->array_index=index;
 		}
 	}
-
-}//namespace

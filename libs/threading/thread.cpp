@@ -1,8 +1,6 @@
 #include <process.h>
 #include "thread.h"
 
-namespace threading
-{
 #define MS_VC_EXCEPTION 0x406D1388
 #pragma pack(push,8)
 	typedef struct //tagTHREADNAME_INFO
@@ -14,7 +12,7 @@ namespace threading
 	} threadname_info;
 #pragma pack(pop)
 
-	void setthreadname( unsigned i_threadID, const ctr::string& i_threadname)
+	void setthreadname( unsigned i_threadID, const string& i_threadname)
 	{
 		Sleep(1);
 		threadname_info info;
@@ -32,7 +30,7 @@ namespace threading
 		}
 	}
 	
-	thread::thread(const ctr::string& i_name):
+	thread::thread(const string& i_name):
 	m_name(i_name)
 	{
 	}
@@ -55,11 +53,9 @@ namespace threading
 		return m_id;
 	}
 
-	void thread::set_name(const ctr::string& i_name)
+	void thread::set_name(const string& i_name)
 	{
 		m_name=i_name;
 		if (m_name.size())
 			setthreadname(m_id,i_name);
 	}
-
-}

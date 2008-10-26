@@ -1,8 +1,6 @@
 #ifndef _vec2i_h_
 #define _vec2i_h_
 
-namespace math
-{
 	class vec2i
 	{
 	public:
@@ -19,5 +17,4 @@ namespace math
 			y=i_y;
 		}
 	};
-}
 #endif//_vec2i_h_

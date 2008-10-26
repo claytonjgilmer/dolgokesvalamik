@@ -5,8 +5,6 @@
 #include "texture.h"
 #include "containers/vector.h"
 
-namespace render
-{
 	struct submesh
 	{
 		submesh():m_numparams(0)
@@ -30,7 +28,7 @@ namespace render
 
 		void bind_param(const char* i_name, void* i_addr, unsigned i_size)
 		{
-			utils::assertion(m_numparams<20,"tul sok a shader parametere");
+			assertion(m_numparams<20,"tul sok a shader parametere");
 
 			m_paramvec[m_numparams].m_name=i_name;
 			m_paramvec[m_numparams].m_addr=i_addr;
@@ -50,12 +48,12 @@ namespace render
 
 		unsigned m_firstvertex, m_numvertices, m_firstindex,m_numindices;
 
-		ctr::vector<utils::ref_ptr<texture>> m_texturebuf;
-		utils::ref_ptr<shader> m_shader;
+		vector<ref_ptr<texture>> m_texturebuf;
+		ref_ptr<shader> m_shader;
 
 		struct param
 		{
-			ctr::string m_name;
+			string m_name;
 			void* m_addr;
 			unsigned m_size;
 		};
@@ -63,5 +61,4 @@ namespace render
 		param m_paramvec[40];
 		unsigned m_numparams;
 	};
-}
 #endif//_submesh_h_

@@ -1,13 +1,13 @@
 #ifndef _broadphasepair_h_
 #define _broadphasepair_h_
 
-namespace physics
-{
+#pragma  warning(disable:4351)
+
 	struct broadphaseobject;
 
 	struct broadphasepair
 	{
-	public:
+		broadphasepair():object(){}
 		broadphasepair(broadphaseobject* i_object1,broadphaseobject* i_object2):
 		object()
 		{
@@ -18,5 +18,4 @@ namespace physics
 		broadphaseobject*	const object[2];
 
 	};//broadphasepair
-}
 #endif//_broadphasepair_h_

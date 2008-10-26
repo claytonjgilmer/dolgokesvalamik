@@ -4,8 +4,6 @@
 #include "mtx4x3.h"
 #include "vec4.h"
 
-namespace math
-{
 	struct mtx4x4
 	{
 		mtx4x4();
@@ -168,5 +166,4 @@ namespace math
 		m[14] *= fInvDet;
 		m[15] *= fInvDet;
 	}
-}
 #endif//_mtx4x4_h_

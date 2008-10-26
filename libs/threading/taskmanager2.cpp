@@ -2,8 +2,6 @@
 #include "taskmanager2.h"
 #include <Windows.h>
 
-namespace threading
-{
 	DEFINE_SINGLETON(taskmanager);
 
 	unsigned WINAPI poolrun(void* i_param)
@@ -34,7 +32,7 @@ namespace threading
 			m_threadbuf[n].start(&poolrun,this);
 
 			char str[256]; sprintf(str,"working thread #%d",n+1);
-			m_threadbuf[n].set_name(ctr::string(str));
+			m_threadbuf[n].set_name(string(str));
 		}
 
 	}
@@ -193,4 +191,3 @@ namespace threading
 			post_process(t);
 		}
 	}
-}

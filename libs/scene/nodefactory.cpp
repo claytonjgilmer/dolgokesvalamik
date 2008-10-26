@@ -1,7 +1,5 @@
 #include "nodefactory.h"
 
-namespace scene
-{
 	metaobject* metaobject_manager::m_metaobjectlist=NULL;
 	int metaobject_manager::m_type_count=0;
 
@@ -13,5 +11,3 @@ namespace scene
 	{
 		metaobject_manager::add_metaobject(this);
 	}
-
-}

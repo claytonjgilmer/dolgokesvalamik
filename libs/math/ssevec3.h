@@ -4,8 +4,6 @@
 #include <xmmintrin.h>
 #include <assert.h>
 
-namespace math
-{
 	_declspec(align (16)) class ssevec3
 	{
 	public:
@@ -97,5 +95,4 @@ namespace math
 */
 		__m128	vec;
 	}; //class ssevec3
-} //namespace math
 #endif//_ssevec3_h_

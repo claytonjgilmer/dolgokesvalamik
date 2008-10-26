@@ -4,23 +4,20 @@
 #include "referencedobject.h"
 #include "containers/string.h"
 
-namespace utils
-{
 	class resource:public referencedobject
 	{
 	public:
-		resource(const ctr::string& i_name):
+		resource(const string& i_name):
 		  m_name(i_name)
 		{
 
 		}
 
-	const ctr::string& get_name(){return m_name;}
+	const string& get_name(){return m_name;}
 	protected:
 		~resource(){}
 	private:
-		ctr::string m_name;
+		string m_name;
 
 	};
-}
 #endif//_resource_h_

@@ -9,9 +9,7 @@
 #include "utils/resource.h"
 #include "utils/auto_ptr.h"
 
-namespace render
-{
-	class mesh:public utils::resource
+	class mesh:public resource
 	{
 	public:
 		mesh(const char* i_name);
@@ -19,12 +17,11 @@ namespace render
 		void set_vertexbuffer(vertexbuffer* i_vb);
 		void set_indexbuffer(indexbuffer* i_ib);
 
-		utils::auto_ptr<vertexbuffer> m_vb;
-		utils::auto_ptr<indexbuffer> m_ib;
+		auto_ptr<vertexbuffer> m_vb;
+		auto_ptr<indexbuffer> m_ib;
 
-		ctr::vector<submesh> m_submeshbuf;
+		vector<submesh> m_submeshbuf;
 	private:
 		~mesh();
 	};
-}
 #endif//_mesh_h_

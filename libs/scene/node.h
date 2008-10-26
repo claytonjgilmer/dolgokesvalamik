@@ -7,8 +7,6 @@
 #include "math/mtx4x3.h"
 #include "prop/property.h"
 
-namespace scene
-{
 	const unsigned nodeflag_valid_worldpos=(1<<0);
 	const unsigned nodeflag_dont_save=(1<<0);
 	
@@ -27,11 +25,11 @@ namespace scene
 		void add_child(node* i_child);
 		void remove_child(node* i_child);
 
-		void set_localposition(const math::mtx4x3&);
-		const math::mtx4x3& get_localposition() const;
+		void set_localposition(const mtx4x3&);
+		const mtx4x3& get_localposition() const;
 		
-		void set_worldposition(const math::mtx4x3&);
-		const math::mtx4x3& get_worldposition();
+		void set_worldposition(const mtx4x3&);
+		const mtx4x3& get_worldposition();
 		
 		node* get_next(node* i_root=NULL) const;
 
@@ -48,11 +46,10 @@ namespace scene
 		node* m_child;
 		node* m_bro;
 
-//		ctr::string m_name;
-		math::mtx4x3 m_localpos;
-		math::mtx4x3 m_worldpos;
+//		string m_name;
+		mtx4x3 m_localpos;
+		mtx4x3 m_worldpos;
 		
 		unsigned m_flags;
 	};
-}
 #endif//_node_h_

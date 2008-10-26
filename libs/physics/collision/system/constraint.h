@@ -1,8 +1,6 @@
 #ifndef _constraint_h_
 #define _constraint_h_
 
-namespace physics
-{
 	struct body_t;
 	struct constraint_t;
 	struct constraint_edge
@@ -27,6 +25,4 @@ namespace physics
 			edge[1].other=i_body1;
 		}
 	};
-
-}
 #endif//_constraint_h_

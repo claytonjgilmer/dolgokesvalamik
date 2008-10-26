@@ -3,9 +3,6 @@
 
 #include "vector.h"
 
-namespace ctr
-{
-
 	template <class basetype, int blocksize=128> class listallocator //blocksize kettohatvany!
 	{
 	protected:
@@ -52,12 +49,12 @@ namespace ctr
 				m_elem=m_elem->m_prev;
 			}
 
-			bool operator==(const iterator& i_other) const
+			int operator==(const iterator& i_other) const
 			{
 				return m_elem==i_other.m_elem;
 			}
 
-			bool operator!=(const iterator& i_other) const
+			int operator!=(const iterator& i_other) const
 			{
 				return m_elem!=i_other.m_elem;
 			}
@@ -268,6 +265,4 @@ namespace ctr
 		before->m_prev->m_next=e;
 		before->m_prev=e;
 	}
-
-} //namespace ctr
 #endif//_listallocator_h_

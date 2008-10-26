@@ -6,20 +6,17 @@
 #include "containers/vector.h"
 #include "containers/string.h"
 
-namespace render
-{
 	struct queueelem
 	{
 		queueelem(){}
-		queueelem(mesh* i_mesh, const math::mtx4x3& i_mtx):m_mesh(i_mesh),m_mtx(i_mtx){}
+		queueelem(mesh* i_mesh, const mtx4x3& i_mtx):m_mesh(i_mesh),m_mtx(i_mtx){}
 		mesh*	m_mesh;
-		math::mtx4x3	m_mtx;
+		mtx4x3	m_mtx;
 	};
 
-	struct queue
+	struct renderqueue
 	{
-		ctr::vector<queueelem> m_buf;
-		ctr::string m_name;
+		vector<queueelem> m_buf;
+		string m_name;
 	};
-}
 #endif//_renderqueue_h_

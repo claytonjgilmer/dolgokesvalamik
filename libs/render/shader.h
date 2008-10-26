@@ -4,9 +4,7 @@
 #include <d3dx9.h>
 #include "utils/resource.h"
 
-namespace render
-{
-	class shader:public utils::resource
+	class shader:public resource
 	{
 	public:
 		shader(const void* i_buf, unsigned i_bufsize, const char* i_name);
@@ -17,5 +15,4 @@ namespace render
 	private:
 		~shader();
 	};
-}
 #endif//_shader_h_

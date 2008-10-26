@@ -3,8 +3,6 @@
 #include "file/filesystem.h"
 #include "render/rendersystem.h"
 
-namespace render
-{
 	DEFINE_SINGLETON(shadermanager);
 
 	shadermanager::shadermanager(const shadermanagerdesc* i_desc):
@@ -19,8 +17,8 @@ namespace render
 		if (t)
 			return t;
 
-		file::file shaderfile;
-		file::system::instance()->open_file(shaderfile,m_shadergroup.c_str(),i_shadername,"rb");
+		file shaderfile;
+		filesystem::ptr()->open_file(shaderfile,m_shadergroup.c_str(),i_shadername,"rb");
 
 		if (shaderfile.opened())
 		{
@@ -50,8 +48,8 @@ namespace render
 
 			while (ptr)
 			{
-				file::file shaderfile;
-				file::system::instance()->open_file(shaderfile,m_shadergroup.c_str(),ptr->get_name().c_str(),"rb");
+				file shaderfile;
+				filesystem::ptr()->open_file(shaderfile,m_shadergroup.c_str(),ptr->get_name().c_str(),"rb");
 
 				if (shaderfile.opened())
 				{
@@ -67,4 +65,3 @@ namespace render
 			}
 		}
 	}
-}

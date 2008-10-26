@@ -4,9 +4,8 @@
 #include "broadphaseobject.h"
 #include "broadphasepair.h"
 #include "containers/listallocator.h"
+#include "threading/mutex.h"
 
-namespace physics
-{
 #define SOA
 const unsigned NUM_BUCKETS=16384;
 
@@ -22,15 +21,16 @@ const unsigned NUM_BUCKETS=16384;
 	struct hgridobject:public broadphaseobject
 	{
 	public:
-		hgridobject(void* i_userdata, const math::aabb& i_boundingworld, uint32 i_is_static);
+		hgridobject(void* i_userdata, const aabb& i_boundingworld, uint32 i_is_static);
 		hgridobject* next_object;
-		math::vec3 pos;
+		hgridobject* prev_object;
+		vec3 pos;
 		float radius;
 		int bucket;
 		int level;
 	};
 
-	const float SPHERE_TO_CELL_RATIO = 0.2f;
+	const float SPHERE_TO_CELL_RATIO = 0.5f;
 
 	const float CELL_TO_CELL_RATIO = 1.5f;
 
@@ -41,7 +41,7 @@ const unsigned NUM_BUCKETS=16384;
 	struct hgridbroadphase
 	{
 		hgridbroadphase();
-		broadphaseobject* create_object(void* i_userdata, const math::aabb& i_bounding, uint32 i_static);
+		broadphaseobject* create_object(void* i_userdata, const aabb& i_bounding, uint32 i_static);
 		void release_object(broadphaseobject*);
 		void update_object(broadphaseobject*);
 
@@ -50,7 +50,6 @@ const unsigned NUM_BUCKETS=16384;
 		int get_broadphasepairnum() const ;
 		broadphasepair* get_pairs();
 
-//	protected:
 		void add_object_to_hgrid(hgridobject *obj);
 		void remove_object_from_hgrid(hgridobject *obj);
 		void check_obj_against_grid(hgridobject *obj);//csak teljes teszt eseten hasznalhato
@@ -60,17 +59,19 @@ const unsigned NUM_BUCKETS=16384;
 		unsigned occupied_levels_mask;
 
 		int objects_at_level[HGRID_MAX_LEVELS];
-		float cell_size[HGRID_MAX_LEVELS];
+		float oo_cell_size[HGRID_MAX_LEVELS];
 		hgridobject* object_bucket[HGRID_MAX_LEVELS][NUM_BUCKETS];
 		int time_stamp[HGRID_MAX_LEVELS][NUM_BUCKETS];
 
 		int tick;
 
-		ctr::listallocator<hgridobject> static_list;
-		ctr::listallocator<hgridobject> dynamic_list;
+		listallocator<hgridobject> static_list;
+		listallocator<hgridobject> dynamic_list;
 
-		ctr::vector<broadphasepair> pair_array;
+//		vector<broadphasepair> pair_array;
+		broadphasepair pair_array[65536];
+		LONG pair_num;
+		mutex hgrid_mutex;
 
 	};
-}
 #endif//_hgridbroadphase_h_

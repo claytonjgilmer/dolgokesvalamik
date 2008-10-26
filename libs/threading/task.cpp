@@ -1,8 +1,6 @@
 #include "task.h"
 #include "taskmanager2.h"
 
-namespace threading
-{
 	task::task()
 	{
 	}
@@ -14,7 +12,5 @@ namespace threading
 
 	void* task::operator new(size_t i_sixe)
 	{
-		return threading::taskmanager::instance()->get_allocator().allocate();
+		return taskmanager::ptr()->get_allocator().allocate();
 	}
-
-}

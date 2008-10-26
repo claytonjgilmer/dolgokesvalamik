@@ -2,11 +2,6 @@
 #include "rendersystem.h"
 
 
-
-
-namespace render
-{
-
 	D3DVERTEXELEMENT9 g_decl[vertexelement_num+1]=
 	{
 		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
@@ -18,7 +13,7 @@ namespace render
 		D3DDECL_END()
 	};
 
-	vertexbuffer::vertexbuffer(unsigned i_vertexnum, const ctr::vector<vertexelem>& i_vertexelements)
+	vertexbuffer::vertexbuffer(unsigned i_vertexnum, const vector<vertexelem>& i_vertexelements)
 #ifdef _DEBUG
 		:m_vertexelems(i_vertexelements)
 #endif
@@ -28,7 +23,7 @@ namespace render
 
 		unsigned siz=0;
 
-		ctr::fixedvector<D3DVERTEXELEMENT9,20> decl;
+		fixedvector<D3DVERTEXELEMENT9,20> decl;
 
 		for (unsigned n=0; n<i_vertexelements.size(); ++n)
 		{
@@ -43,12 +38,12 @@ namespace render
 
 		decl.push_back(g_decl[vertexelement_num]);
 
-		system::instance()->device()->CreateVertexBuffer(i_vertexnum*siz,D3DUSAGE_WRITEONLY,0,D3DPOOL_DEFAULT,&m_hwbuffer,NULL);
-		system::instance()->device()->CreateVertexDeclaration(&decl[0],&m_decl);
+		rendersystem::ptr()->device()->CreateVertexBuffer(i_vertexnum*siz,D3DUSAGE_WRITEONLY,0,D3DPOOL_DEFAULT,&m_hwbuffer,NULL);
+		rendersystem::ptr()->device()->CreateVertexDeclaration(&decl[0],&m_decl);
 		m_vertexsize=siz;
 	}
 
-	vertexbuffer::vertexbuffer(unsigned i_vertexnum, const ctr::vector<vertexelem>& i_vertexelements,unsigned i_vertexsize)
+	vertexbuffer::vertexbuffer(unsigned i_vertexnum, const vector<vertexelem>& i_vertexelements,unsigned i_vertexsize)
 #ifdef _DEBUG
 		:m_vertexelems(i_vertexelements)
 #endif
@@ -58,7 +53,7 @@ namespace render
 
 		unsigned siz=0;
 
-		ctr::fixedvector<D3DVERTEXELEMENT9,20> decl;
+		fixedvector<D3DVERTEXELEMENT9,20> decl;
 
 		for (unsigned n=0; n<i_vertexelements.size(); ++n)
 		{
@@ -73,8 +68,8 @@ namespace render
 
 		decl.push_back(g_decl[vertexelement_num]);
 
-		system::instance()->device()->CreateVertexBuffer(i_vertexnum*i_vertexsize,D3DUSAGE_WRITEONLY,0,D3DPOOL_DEFAULT,&m_hwbuffer,NULL);
-		system::instance()->device()->CreateVertexDeclaration(&decl[0],&m_decl);
+		rendersystem::ptr()->device()->CreateVertexBuffer(i_vertexnum*i_vertexsize,D3DUSAGE_WRITEONLY,0,D3DPOOL_DEFAULT,&m_hwbuffer,NULL);
+		rendersystem::ptr()->device()->CreateVertexDeclaration(&decl[0],&m_decl);
 		m_vertexsize=i_vertexsize;
 	}
 
@@ -83,4 +78,3 @@ namespace render
 		m_hwbuffer->Release();
 		m_decl->Release();
 	}
-}

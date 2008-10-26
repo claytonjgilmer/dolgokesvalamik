@@ -3,8 +3,6 @@
 
 #include "mtx3x3.h"
 
-namespace math
-{
 
 	//////////////////////////////////////////////////////////////////////////
 	//			mtx4x3
@@ -206,6 +204,4 @@ namespace math
 		_21 = -cz*sx*sy-sz*cy;	_22 = cz*cx;	_23 = sz*sy-cz*sx*cy;
 		_31 = cx*sy;			_32 = sx;		_33 = cx*cy;
 	}
-
-}// namespace math
 #endif//_mtx4x3_h_

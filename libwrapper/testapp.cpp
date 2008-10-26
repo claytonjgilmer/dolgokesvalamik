@@ -14,22 +14,22 @@
 #include "utils/auto_ptr.h"
 #include "input/inputsystem.h"
 
-void generate_sphere(math::vec3 o_pos[],int& o_numvertices,short o_indices[],int& o_numfaces,float i_radius, int i_depth);
-render::object3d* load_mmod(const char* i_filename);
+void generate_sphere(vec3 o_pos[],int& o_numvertices,short o_indices[],int& o_numfaces,float i_radius, int i_depth);
+object3d* load_mmod(const char* i_filename);
 struct game
 {
-	utils::ref_ptr<render::mesh> m_mesh;
-	utils::ref_ptr<render::mesh> sphere;
-//	math::mtx4x3 m_mtx;
+	ref_ptr<mesh> m_mesh;
+	ref_ptr<mesh> sphere;
+//	mtx4x3 m_mtx;
 
 	float x,y,z;
 	float camx,camy,camz;
-	math::vec3 camt;
+	vec3 camt;
 	float m_aspect;
-	math::vec3 light_dir;
-	render::object3d* obj;
-	render::object3d* sky;
-	bool inited;
+	vec3 light_dir;
+	object3d* obj;
+	object3d* sky;
+	int inited;
 
 	game()
 	{
@@ -51,32 +51,32 @@ RECT g_rect;
 unsigned g_time;
 HWND g_hwnd;
 
-#define V math::vec3
-#define V2 math::vec2
+#define V vec3
+#define V2 vec2
 
-math::vec3 g_pos[]={V(-1,-1,-1),V(1,-1,-1),V(1,1,-1),V(-1,1,-1),V(-1,-1,1),V(1,-1,1),V(1,1,1),V(-1,1,1)};
-math::vec2 g_uv[]={V2(0,0),V2(1,0),V2(1,1),V2(0,1),V2(1,0),V2(0,0),V2(0,1),V2(1,1)};
+vec3 g_pos[]={V(-1,-1,-1),V(1,-1,-1),V(1,1,-1),V(-1,1,-1),V(-1,-1,1),V(1,-1,1),V(1,1,1),V(-1,1,1)};
+vec2 g_uv[]={V2(0,0),V2(1,0),V2(1,1),V2(0,1),V2(1,0),V2(0,0),V2(0,1),V2(1,1)};
 
 void init_app(HWND i_hwnd)
 {
-//	render::texture ttt(0,0,0);
-	file::system::create();
-	file::system::instance()->register_path("shader","c:\\data\\shader\\");
-	file::system::instance()->register_path("texture","c:\\data\\texture\\");
+//	texture ttt(0,0,0);
+	filesystem::create();
+	filesystem::ptr()->register_path("shader","c:\\data\\shader\\");
+	filesystem::ptr()->register_path("texture","c:\\data\\texture\\");
 
-	threading::taskmanagerdesc tdesc;
-	threading::taskmanager::create(&tdesc);
+	taskmanagerdesc tdesc;
+	taskmanager::create(&tdesc);
 
-	render::shadermanagerdesc shaderdesc("shader");
-	render::shadermanager::create(&shaderdesc);
+	shadermanagerdesc shaderdesc("shader");
+	shadermanager::create(&shaderdesc);
 
-	input::inputinitparams params; params.m_Window=i_hwnd;
-	input::system::create(&params);
+	inputinitparams params; params.m_Window=i_hwnd;
+	inputsystem::create(&params);
 
-	render::texturemanagerdesc textdesc("texture");
-	render::texturemanager::create(&textdesc);
+	texturemanagerdesc textdesc("texture");
+	texturemanager::create(&textdesc);
 
-	render::systemdesc renderdesc;
+	rendersystemdesc renderdesc;
 	renderdesc.m_backbuffercount=2;
 	RECT rect;
 	GetClientRect(i_hwnd,&rect);
@@ -85,20 +85,20 @@ void init_app(HWND i_hwnd)
 	renderdesc.m_window=i_hwnd;
 	renderdesc.m_windowed=true;
 
-	render::system::create(&renderdesc);
+	rendersystem::create(&renderdesc);
 
 	g_game.obj=	load_mmod("c:/data/model/test.mmod");
 	g_game.sky= load_mmod("c:/data/model/skyBOX.MMOD");
 
 	for (unsigned n=0; n<g_game.sky->get_meshnum();++n)
 	{
-		render::mesh* m=g_game.sky->get_mesh(n);
+		mesh* m=g_game.sky->get_mesh(n);
 
 		for (unsigned k=0; k<m->m_submeshbuf.size(); ++k)
 		{
-			render::submesh& sm=m->m_submeshbuf[k];
+			submesh& sm=m->m_submeshbuf[k];
 
-			sm.set_shader(render::shadermanager::instance()->get_shader("nothing.fx"));
+			sm.set_shader(shadermanager::ptr()->get_shader("nothing.fx"));
 		}
 	}
 
@@ -109,28 +109,28 @@ void init_app(HWND i_hwnd)
 	g_time=timeGetTime();
 	g_hwnd=i_hwnd;
 
-//	math::mtx4x4 mtx; mtx.set_projectionmatrix(tan(math::degreetorad(45)),g_game.m_aspect,1,10000);
+//	mtx4x4 mtx; mtx.set_projectionmatrix(tan(degreetorad(45)),g_game.m_aspect,1,10000);
 
-	render::mesh* mesh=new render::mesh("fucka");
+	mesh* m=new mesh("fucka");
 
-	ctr::vector<render::vertexelem> ve;
+	vector<vertexelem> ve;
 
-	ve.push_back(render::vertexelem(render::vertexelement_position,3));
-	ve.push_back(render::vertexelem(render::vertexelement_normal,3));
-	ve.push_back(render::vertexelem(render::vertexelement_uv,2));
+	ve.push_back(vertexelem(vertexelement_position,3));
+	ve.push_back(vertexelem(vertexelement_normal,3));
+	ve.push_back(vertexelem(vertexelement_uv,2));
 
-	mesh->m_vb=new render::vertexbuffer(8,ve);
-	mesh->m_ib=new render::indexbuffer(3*12);
+	m->m_vb=new vertexbuffer(8,ve);
+	m->m_ib=new indexbuffer(3*12);
 
 	class vertex_t
 	{
 	public:
-		math::vec3 pos;
-		math::vec3 normal;
-		math::vec2 uv;
+		vec3 pos;
+		vec3 normal;
+		vec2 uv;
 	};
 
-	vertex_t* vb=(vertex_t*)mesh->m_vb->lock();
+	vertex_t* vb=(vertex_t*)m->m_vb->lock();
 
 	for (int n=0; n<8; ++n)
 	{
@@ -140,46 +140,46 @@ void init_app(HWND i_hwnd)
 	}
 
 
-	mesh->m_vb->unlock();
+	m->m_vb->unlock();
 
-	unsigned short* ib=(unsigned short*)mesh->m_ib->lock();
+	unsigned short* ib=(unsigned short*)m->m_ib->lock();
 
 	const unsigned short buf[]={0,1,2,0,2,3,1,5,6,1,6,2,2,6,7,2,7,3,4,0,3,4,3,7,5,4,7,5,7,6,1,0,4,1,4,5};
 
 	memcpy(ib,buf,36*sizeof(short));
 
-	mesh->m_ib->unlock();
+	m->m_ib->unlock();
 
 
-	mesh->m_submeshbuf.resize(1);
-	render::submesh& ts=mesh->m_submeshbuf.back();
+	m->m_submeshbuf.resize(1);
+	submesh& ts=m->m_submeshbuf.back();
 	ts.m_firstindex=0;
 	ts.m_numindices=36;
 	ts.m_firstvertex=0;
 	ts.m_numvertices=8;
 
-	ts.set_shader(render::shadermanager::instance()->get_shader("posnormuv.fx"));
+	ts.set_shader(shadermanager::ptr()->get_shader("posnormuv.fx"));
 	ts.bind_param("light_dir",&g_game.light_dir,3*sizeof(float));
 
 
-//	render::texture* txt=render::texturemanager::instance()->get_texture("teszt.jpg");
-	render::texture* txt=render::texturemanager::instance()->get_texture("white.bmp");
+//	texture* txt=texturemanager::instance()->get_texture("teszt.jpg");
+	texture* txt=texturemanager::ptr()->get_texture("white.bmp");
 	ts.m_texturebuf.push_back(txt);
 
 	g_game.x=g_game.y=g_game.z=0;
 
-	g_game.m_mesh=mesh;
+	g_game.m_mesh=m;
 
 
-	math::vec3 pos[15000];
+	vec3 pos[15000];
 	int posnum;
 	short index[16384];
 	int indexnum;
 
 	generate_sphere(pos,posnum,index,indexnum,0.1f,5);
-	g_game.sphere=new render::mesh("sphere");
-	g_game.sphere->m_vb=new render::vertexbuffer(posnum,ve);
-	g_game.sphere->m_ib=new render::indexbuffer(indexnum*3);
+	g_game.sphere=new mesh("sphere");
+	g_game.sphere->m_vb=new vertexbuffer(posnum,ve);
+	g_game.sphere->m_ib=new indexbuffer(indexnum*3);
 	vb=(vertex_t*)g_game.sphere->m_vb->lock();
 
 	for (int n=0; n<posnum; ++n)
@@ -196,18 +196,18 @@ void init_app(HWND i_hwnd)
 	g_game.sphere->m_ib->unlock();
 
 	g_game.sphere->m_submeshbuf.resize(1);
-	render::submesh& sts=g_game.sphere->m_submeshbuf.back();
+	submesh& sts=g_game.sphere->m_submeshbuf.back();
 	sts.m_firstindex=0;
 	sts.m_numindices=indexnum*3;
 	sts.m_firstvertex=0;
 	sts.m_numvertices=posnum;
 
-	sts.set_shader(render::shadermanager::instance()->get_shader("posnormuv.fx"));
+	sts.set_shader(shadermanager::ptr()->get_shader("posnormuv.fx"));
 	sts.bind_param("light_dir",&g_game.light_dir,3*sizeof(float));
 
 
-	//	render::texture* txt=render::texturemanager::instance()->get_texture("teszt.jpg");
-//	render::texture* txt=render::texturemanager::instance()->get_texture("white.bmp");
+	//	texture* txt=texturemanager::instance()->get_texture("teszt.jpg");
+//	texture* txt=texturemanager::instance()->get_texture("white.bmp");
 	sts.m_texturebuf.push_back(txt);
 
 	g_game.inited=true;
@@ -223,7 +223,7 @@ unsigned sumtime=0;
 
 void update_app()
 {
-	threading::taskmanager::instance()->flush();
+	taskmanager::ptr()->flush();
 	unsigned acttime=::timeGetTime();
 	unsigned deltatime=acttime-g_time;
 	g_time=acttime;
@@ -232,13 +232,13 @@ void update_app()
 
 	if (sumtime>33)
 	{
-		input::system::instance()->Update();
+		inputsystem::ptr()->Update();
 		sumtime-=33;
 	}
 
-	input::system* ip=input::system::instance();
+	inputsystem* ip=inputsystem::ptr();
 
-	math::mtx4x3 cammtx=math::mtx4x3::identitymtx();
+	mtx4x3 cammtx=mtx4x3::identitymtx();
 	cammtx.set_euler(g_game.camx,g_game.camy,g_game.camz);
 
 	float speed;
@@ -275,55 +275,55 @@ void update_app()
 
 	cammtx.t=g_game.camt;
 
-	math::mtx4x3 viewmtx; viewmtx.linearinvert(cammtx);
+	mtx4x3 viewmtx; viewmtx.linearinvert(cammtx);
 
-	render::system::instance()->set_projection_params(math::degreetorad(60),g_game.m_aspect,0.3f,10000,(math::mtx4x4)viewmtx);
+	rendersystem::ptr()->set_projection_params(degreetorad(60),g_game.m_aspect,0.3f,10000,(mtx4x4)viewmtx);
 
-	math::mtx4x3 mtx;
+	mtx4x3 mtx;
 	mtx.set_euler(g_game.x,g_game.y,g_game.z);
 	mtx.t.set(-1,0,2.5f);
 
-	g_game.obj->get_worldposition().transformtransposed3x3(g_game.light_dir,math::vec3(1,1,0));
+	g_game.obj->get_worldposition().transformtransposed3x3(g_game.light_dir,vec3(1,1,0));
 	g_game.light_dir.normalize();
 
 	g_game.x+=dt/10;
 	g_game.y+=2*dt/10;
 	g_game.z+=3*dt/10;
 
-	render::system::instance()->add_mesh(g_game.m_mesh.get(),mtx);
+	rendersystem::ptr()->add_mesh(g_game.m_mesh.get(),mtx);
 	mtx.t.set(1,0,2.5f);
-	render::system::instance()->add_mesh(g_game.sphere.get(),mtx);
+	rendersystem::ptr()->add_mesh(g_game.sphere.get(),mtx);
 	mtx.set_euler(0,0,0);
 	mtx.t.set(0,0,22.5f);
 	g_game.obj->set_worldposition(mtx);
 	g_game.obj->render();
 
-//	math::mtx4x3 skymtx=g_game.sky->get_worldposition();
+//	mtx4x3 skymtx=g_game.sky->get_worldposition();
 //	skymtx.normalize();
 //	skymtx.axisx()*=0.01f;
 //	skymtx.axisy()*=0.01f;
 //	skymtx.axisz()*=0.01f;
 //	g_game.sky->set_worldposition(skymtx);
 	g_game.sky->render();
-//	render::system::instance()->add_mesh(g_game.obj->get_mesh(),mtx);
-	render::system::instance()->render();
+//	rendersystem::instance()->add_mesh(g_game.obj->get_mesh(),mtx);
+	rendersystem::ptr()->render();
 }
 
 void exit_app()
 {
-	file::system::release();
-	threading::taskmanager::release();
+	filesystem::release();
+	taskmanager::release();
 	g_game.m_mesh=NULL;
 	g_game.sphere=NULL;
 	delete g_game.obj;
 	delete g_game.sky;
-	render::shadermanager::release();
-	render::texturemanager::release();
-	input::system::release();
-	render::system::release();
+	shadermanager::release();
+	texturemanager::release();
+	inputsystem::release();
+	rendersystem::release();
 }
 
-void generate_tetrahedron(math::vec3 o_pos[],float i_radius)
+void generate_tetrahedron(vec3 o_pos[],float i_radius)
 {
 	float Pi = 3.141592653589793238462643383279502884197f;
 
@@ -344,7 +344,7 @@ void generate_tetrahedron(math::vec3 o_pos[],float i_radius)
 	}
 }
 
-void generate_sphere(math::vec3 o_pos[],int& o_numvertices,short o_indices[],int& o_numfaces,float i_radius, int i_depth)
+void generate_sphere(vec3 o_pos[],int& o_numvertices,short o_indices[],int& o_numfaces,float i_radius, int i_depth)
 {
 	generate_tetrahedron(o_pos,i_radius);
 
@@ -390,5 +390,5 @@ void generate_sphere(math::vec3 o_pos[],int& o_numvertices,short o_indices[],int
 void reload_shaders()
 {
 	if (g_game.inited)
-		render::shadermanager::instance()->reload_shaders();
+		shadermanager::ptr()->reload_shaders();
 }

@@ -1,8 +1,6 @@
 #ifndef _timer_h_
 #define _timer_h_
 
-namespace utils
-{
 	struct timer
 	{
 		void reset();
@@ -18,5 +16,4 @@ namespace utils
 		static long long freq;
 		static double freqd;
 	};
-}
 #endif//_timer_h_

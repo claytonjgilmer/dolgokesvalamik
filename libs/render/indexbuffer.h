@@ -3,12 +3,10 @@
 
 #include <d3d9.h>
 
-namespace render
-{
 	class indexbuffer
 	{
 	public:
-		indexbuffer(unsigned i_indexnum, bool i_32bit=false);
+		indexbuffer(unsigned i_indexnum, int i_32bit=false);
 		~indexbuffer();
 		void* lock()
 		{
@@ -26,5 +24,4 @@ namespace render
 		IDirect3DIndexBuffer9* m_hwbuffer;
 		const int m_indexsize;
 	};
-}
 #endif//_indexbuffer_h_

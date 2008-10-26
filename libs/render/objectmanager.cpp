@@ -2,9 +2,7 @@
 #include "file/file.h"
 #include "file/filesystem.h"
 
-render::object3d* load_mmod(file::file& i_file);
-namespace render
-{
+object3d* load_mmod(file& i_file);
 	DEFINE_SINGLETON(objectmanager);
 
 	objectmanager::objectmanager(const objectmanagerdesc* i_desc):
@@ -19,7 +17,7 @@ namespace render
 //		if (obj)
 //			return obj->clone();
 
-		ctr::string ext=file::get_extension(i_name);
+		string ext=get_extension(i_name);
 		ext.to_upper();
 
 		if (ext=="MMOD")
@@ -32,13 +30,13 @@ namespace render
 			m_map.add_data(obj);
 		}
 
-		scene::node* ptr=obj;
+		node* ptr=obj;
 
 	//	ptr=ptr->get_next(obj);
 
 		while (ptr)
 		{
-			ptr->set_flag(scene::nodeflag_dont_save);
+			ptr->set_flag(nodeflag_dont_save);
 			ptr=ptr->get_next(obj);
 		}
 
@@ -48,8 +46,8 @@ namespace render
 
 	object3d* objectmanager::load_mmod_file(const char* i_name)
 	{
-		file::file objfile;
-		file::system::instance()->open_file(objfile,i_name,m_objectgroup.c_str(),"rb");
+		file objfile;
+		filesystem::ptr()->open_file(objfile,i_name,m_objectgroup.c_str(),"rb");
 
 		if (objfile.opened())
 		{
@@ -64,4 +62,3 @@ namespace render
 
 		return NULL;
 	}
-}

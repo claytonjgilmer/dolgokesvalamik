@@ -6,42 +6,40 @@
 #include "utils/singleton.h"
 #include "utils/assert.h"
 
-namespace input
-{
 	class inputinitparams
 	{
 	public:
 		HWND	m_Window;
 	};
-	class system
+	class inputsystem
 	{
 		friend 	BOOL CALLBACK EnumJoysticksCallback( const DIDEVICEINSTANCE* pdidInstance,void* pContext );
 		friend	BOOL CALLBACK EnumObjectsCallback( const DIDEVICEOBJECTINSTANCE* pdidoi,void* tmp );
 
-		DECLARE_SINGLETON_DESC(system,inputinitparams)
+		DECLARE_SINGLETON_DESC(inputsystem,inputinitparams)
 
 	public:
-		system(const inputinitparams* i_params);
-		~system();
+		inputsystem(const inputinitparams* i_params);
+		~inputsystem();
 		void Init(const inputinitparams& i_Params);
 		void Update();
 		void Clear();
 
 		int KeyDown(int i_Key)
 		{
-			utils::assertion(i_Key>=0 && i_Key<256);
+			assertion(i_Key>=0 && i_Key<256);
 			return (m_KeyboardState[i_Key]);
 		}
 
 		int KeyPressed(int i_Key)
 		{
-			utils::assertion(i_Key>=0 && i_Key<256);
+			assertion(i_Key>=0 && i_Key<256);
 			return m_KeyboardState[i_Key] && !m_PrevKeyboardState[i_Key];
 		}
 
 		int KeyReleased(int i_Key)
 		{
-			utils::assertion(i_Key>=0 && i_Key<256);
+			assertion(i_Key>=0 && i_Key<256);
 			return !m_KeyboardState[i_Key] && m_PrevKeyboardState[i_Key];
 		}
 
@@ -59,19 +57,19 @@ namespace input
 		}
 		int MouseButtonDown(int i_Btn)
 		{
-			utils::assertion (i_Btn>=0 && i_Btn<8);
+			assertion (i_Btn>=0 && i_Btn<8);
 			return (m_MouseState.rgbButtons[i_Btn]);
 		}
 
 		int MouseButtonPressed(int i_Btn)
 		{
-			utils::assertion (i_Btn>=0 && i_Btn<8);
+			assertion (i_Btn>=0 && i_Btn<8);
 			return (m_MouseState.rgbButtons[i_Btn] && !m_PrevMouseState.rgbButtons[i_Btn]);
 		}
 
 		int MouseButtonReleased(int i_Btn)
 		{
-			utils::assertion (i_Btn>=0 && i_Btn<8);
+			assertion (i_Btn>=0 && i_Btn<8);
 			return (!m_MouseState.rgbButtons[i_Btn] & m_PrevMouseState.rgbButtons[i_Btn]);
 		}
 
@@ -93,24 +91,24 @@ namespace input
 
 		int JoyButtonDown(int i_JoyIndex, int i_Btn)
 		{
-			utils::assertion(i_JoyIndex>=0 && i_JoyIndex<4);
-			utils::assertion(i_Btn>=0 && i_Btn<128);
+			assertion(i_JoyIndex>=0 && i_JoyIndex<4);
+			assertion(i_Btn>=0 && i_Btn<128);
 
 			return m_JoyStruct[i_JoyIndex].m_JoyState.rgbButtons[i_Btn];
 		}
 
 		int JoyButtonPressed(int i_JoyIndex, int i_Btn)
 		{
-			utils::assertion(i_JoyIndex>=0 && i_JoyIndex<4);
-			utils::assertion(i_Btn>=0 && i_Btn<128);
+			assertion(i_JoyIndex>=0 && i_JoyIndex<4);
+			assertion(i_Btn>=0 && i_Btn<128);
 
 			return m_JoyStruct[i_JoyIndex].m_JoyState.rgbButtons[i_Btn] & (m_JoyStruct[i_JoyIndex].m_PrevJoyState.rgbButtons[i_Btn] ^ 1);
 		}
 
 		int JoyButtonReleased(int i_JoyIndex, int i_Btn)
 		{
-			utils::assertion(i_JoyIndex>=0 && i_JoyIndex<4);
-			utils::assertion(i_Btn>=0 && i_Btn<128);
+			assertion(i_JoyIndex>=0 && i_JoyIndex<4);
+			assertion(i_Btn>=0 && i_Btn<128);
 
 			return m_JoyStruct[i_JoyIndex].m_PrevJoyState.rgbButtons[i_Btn] & (m_JoyStruct[i_JoyIndex].m_JoyState.rgbButtons[i_Btn] ^ 1);
 		}
@@ -122,7 +120,7 @@ namespace input
 		}
 */
 
-		bool Inited()
+		int Inited()
 		{
 			return m_Inited;
 		}
@@ -161,7 +159,7 @@ namespace input
 		unsigned	m_JoystickNum;
 
 
-		bool m_Inited;
+		int m_Inited;
 
 		void			InitKeyboard(HWND i_Hwnd);
 		void			InitMouse(HWND i_Hwnd);
@@ -171,8 +169,6 @@ namespace input
 		void			UpdateMouse();
 		void			UpdateJoys();
 	};
-}
-
 
 #define KEYCODE_ESCAPE          0x01
 #define KEYCODE_1               0x02
@@ -306,9 +302,9 @@ namespace input
 #define KEYCODE_LWIN            0xDB    /* Left Windows key */
 #define KEYCODE_RWIN            0xDC    /* Right Windows key */
 #define KEYCODE_APPS            0xDD    /* AppMenu key */
-#define KEYCODE_POWER           0xDE    /* System Power */
-#define KEYCODE_SLEEP           0xDF    /* System Sleep */
-#define KEYCODE_WAKE            0xE3    /* System Wake */
+#define KEYCODE_POWER           0xDE    /* inputsystem Power */
+#define KEYCODE_SLEEP           0xDF    /* inputsystem Sleep */
+#define KEYCODE_WAKE            0xE3    /* inputsystem Wake */
 #define KEYCODE_WEBSEARCH       0xE5    /* Web Search */
 #define KEYCODE_WEBFAVORITES    0xE6    /* Web Favorites */
 #define KEYCODE_WEBREFRESH      0xE7    /* Web Refresh */

@@ -16,8 +16,6 @@
 
 #define mutextype 0
 
-namespace threading
-{
 	class mutex
 	{
 	public:
@@ -56,5 +54,4 @@ namespace threading
 		blocklocker(mutex& i_lock):lock(i_lock){lock.lock();}
 		~blocklocker(){lock.unlock();}
 	};
-} //namespace threading
 #endif//_MUTEX_H_

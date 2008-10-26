@@ -5,8 +5,6 @@
 
 //#define MLINLINE
 
-namespace math
-{
 	class vec3
 	{
 	public:
@@ -119,7 +117,7 @@ namespace math
 
 	MLINLINE vec3 vec3::cross(const vec3& i_other) const
 	{
-		return math::cross(*this,i_other);
+		return ::cross(*this,i_other);
 	}
 
 	MLINLINE float	vec3::dot(const vec3& i_other) const
@@ -326,6 +324,4 @@ namespace math
 	{
 		return dot(i_v1,cross(i_v2,i_v3));
 	}
-
-}//namespace math
 #endif//_vec3_h_

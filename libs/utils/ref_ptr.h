@@ -4,8 +4,6 @@
 #include "referencedobject.h"
 #include "utils/misc.h"
 
-namespace utils
-{
 	template <class REF>
 	class ref_ptr
 	{
@@ -73,7 +71,7 @@ namespace utils
 		m_ptr=i_object;
 
 		if (m_ptr)
-			((utils::referencedobject*)m_ptr)->add_ref();
+			((referencedobject*)m_ptr)->add_ref();
 	}
 
 	template <class REF>
@@ -101,7 +99,7 @@ namespace utils
 			m_ptr->remove_ref();
 
 			if (!m_ptr->m_refcount)
-				delete (utils::referencedobject*)m_ptr;
+				delete (referencedobject*)m_ptr;
 		}
 
 		m_ptr=i_object;
@@ -130,10 +128,9 @@ namespace utils
 			m_ptr->remove_ref();
 
 			if (!m_ptr->get_ref())
-				delete ((utils::referencedobject*)m_ptr);
+				delete ((referencedobject*)m_ptr);
 
 			m_ptr=NULL;
 		}
 	}
-}
 #endif//_ref_ptr_h_

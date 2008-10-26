@@ -1,8 +1,6 @@
 #ifndef _vec2_h_
 #define _vec2_h_
 
-namespace math
-{
 	class vec2
 	{
 	public:
@@ -62,5 +60,4 @@ namespace math
 			y/=l;
 		}
 	};
-}
 #endif//_vec2_h_

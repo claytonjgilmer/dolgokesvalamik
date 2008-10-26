@@ -4,11 +4,9 @@
 #include "utils/resource.h"
 #include <d3d9.h>
 
-namespace render
-{
-	class texture:public utils::resource
+	class texture:public resource
 	{
-//		friend class utils::ref_ptr<texture>;
+//		friend class ref_ptr<texture>;
 	public:
 		texture* Next;
 		texture(const void* i_buf, unsigned i_size, const char* i_name);
@@ -17,6 +15,4 @@ namespace render
 	private:
 		~texture();
 	};
-
-}
 #endif//_texture_h_

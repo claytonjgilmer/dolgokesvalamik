@@ -1,7 +1,3 @@
 #include "filesystem.h"
 
-namespace file
-{
-	DEFINE_SINGLETON(system);
-
-}
+	DEFINE_SINGLETON(filesystem);

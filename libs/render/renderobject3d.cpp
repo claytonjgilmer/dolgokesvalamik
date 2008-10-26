@@ -3,9 +3,7 @@
 #include "objectmanager.h"
 //#include "scene/nodefactory.h"
 
-namespace render
-{
-	DEFINE_OBJECT(object3d,scene::node);
+	DEFINE_OBJECT(object3d,node);
 	BIND_PROPERTY(object3d,m_modelname,"modelname",string);
 
 	object3d::object3d()
@@ -13,7 +11,7 @@ namespace render
 	}
 
 	object3d::object3d(const char* i_name):
-	scene::node(i_name)
+	node(i_name)
 	{
 	}
 	
@@ -28,7 +26,7 @@ namespace render
 		while (ptr)
 		{
 			for (unsigned n=0; n<ptr->m_mesh.size(); ++n)
-				system::instance()->add_mesh(ptr->m_mesh[n].get(),ptr->get_worldposition());
+				rendersystem::ptr()->add_mesh(ptr->m_mesh[n].get(),ptr->get_worldposition());
 
 			ptr=(object3d*)ptr->get_next();
 		}
@@ -38,12 +36,8 @@ namespace render
 	{
 		if (m_modelname!="")
 		{
-			object3d* obj=objectmanager::instance()->get_object(m_modelname.c_str());
+			object3d* obj=objectmanager::ptr()->get_object(m_modelname.c_str());
 			if (obj)
 				add_child(obj);
 		}
 	}
-	
-	
-	
-}

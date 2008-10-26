@@ -11,8 +11,6 @@
 
 
 
-namespace scene
-{
 	class  rootobject;
 
 	enum proptype
@@ -48,42 +46,42 @@ namespace scene
 
 		int get_int(rootobject* i_object) const
 		{
-			utils::assertion(m_type==prop_int);
+			assertion(m_type==prop_int);
 
 			return (int&)(*((char*)(i_object)+m_offset));
 		}
 
 		float get_float(rootobject* i_object) const
 		{
-			utils::assertion(m_type==prop_float);
+			assertion(m_type==prop_float);
 
 			return (float&)(*((char*)(i_object)+m_offset));
 		}
 
-		math::vec3 get_vec3(rootobject* i_object) const
+		vec3 get_vec3(rootobject* i_object) const
 		{
-			utils::assertion(m_type==prop_vec3);
+			assertion(m_type==prop_vec3);
 
-			return (math::vec3&)(*((char*)(i_object)+m_offset));
+			return (vec3&)(*((char*)(i_object)+m_offset));
 		}
 
-		math::mtx4x3 get_mtx4x3(rootobject* i_object) const
+		mtx4x3 get_mtx4x3(rootobject* i_object) const
 		{
-			utils::assertion(m_type==prop_mtx4x3);
+			assertion(m_type==prop_mtx4x3);
 
-			return (math::mtx4x3&)(*((char*)(i_object)+m_offset));
+			return (mtx4x3&)(*((char*)(i_object)+m_offset));
 		}
 
-		ctr::string get_string(rootobject* i_object) const
+		string get_string(rootobject* i_object) const
 		{
-			utils::assertion(m_type==prop_string);
+			assertion(m_type==prop_string);
 
-			return (ctr::string&)(*((char*)(i_object)+m_offset));
+			return (string&)(*((char*)(i_object)+m_offset));
 		}
 
-		void load_value(rootobject* i_object, scripting::lua::Variable& i_table)
+		void load_value(rootobject* i_object, lua::Variable& i_table)
 		{
-			scripting::lua::Variable var=i_table.GetVariable(m_name);
+			lua::Variable var=i_table.GetVariable(m_name);
 
 			switch (m_type)
 			{
@@ -97,7 +95,7 @@ namespace scene
 
 		}
 
-		ctr::string to_string(rootobject* i_obj);
+		string to_string(rootobject* i_obj);
 
 	private:
 		const char* m_name;
@@ -128,7 +126,7 @@ namespace scene
 			return m_typeid;
 		}
 
-		bool isa(int i_typeid) const
+		int isa(int i_typeid) const
 		{
 			const metaobject* ptr=this;
 
@@ -158,7 +156,7 @@ namespace scene
 			m_proparray.push_back(property_descriptor(i_name,i_type,i_offset));
 		}
 
-		void load_property(rootobject* i_object, scripting::lua::Variable& i_table)
+		void load_property(rootobject* i_object, lua::Variable& i_table)
 		{
 			for (unsigned n=0; n<m_proparray.size(); ++n)
 				m_proparray[n].load_value(i_object,i_table);
@@ -167,15 +165,15 @@ namespace scene
 				m_parent->load_property(i_object,i_table);
 		}
 
-		static ctr::string to_string(rootobject* i_object, proptype i_type,void* i_data)
+		static string to_string(rootobject* i_object, proptype i_type,void* i_data)
 		{
 			switch (i_type)
 			{
 			case prop_string:
-				return ctr::string(*(ctr::string*)i_data);
+				return string(*(string*)i_data);
 			case prop_mtx4x3:
 			{
-				math::mtx4x3 mtx((*(math::mtx4x3*)i_data));
+				mtx4x3 mtx((*(mtx4x3*)i_data));
 				float rx,ry,rz;
 				float sx,sy,sz;
 				float tx,ty,tz;
@@ -215,8 +213,8 @@ namespace scene
 			property_iterator():m_ptr(0),m_index(0){}
 			property_iterator(metaobject* i_ptr,unsigned i_index):m_ptr(i_ptr),m_index(i_index){}
 
-			bool operator==(const property_iterator& i_other) const{return (m_ptr==i_other.m_ptr && m_index==i_other.m_index);}
-			bool operator!=(const property_iterator& i_other) const{return (m_ptr!=i_other.m_ptr || m_index!=i_other.m_index);}
+			int operator==(const property_iterator& i_other) const{return (m_ptr==i_other.m_ptr && m_index==i_other.m_index);}
+			int operator!=(const property_iterator& i_other) const{return (m_ptr!=i_other.m_ptr || m_index!=i_other.m_index);}
 			void operator++(){++m_index; while (m_ptr && m_index>=m_ptr->get_propertycount()){m_index=0; m_ptr=m_ptr->get_parent();}}
 //			property_descriptor* operator->(){return m_ptr->get_property(m_index);}
 			const property_descriptor* operator->() const {return m_ptr->get_property(m_index);}
@@ -245,10 +243,10 @@ namespace scene
 		const char* m_typename;
 		int m_typeid;
 		metaobject* m_parent;
-		ctr::vector<property_descriptor> m_proparray;
+		vector<property_descriptor> m_proparray;
 	};
 
-	MLINLINE ctr::string property_descriptor::to_string(rootobject* i_obj)
+	MLINLINE string property_descriptor::to_string(rootobject* i_obj)
 	{
 		return metaobject::to_string(i_obj,m_type,(void*)(((char*)i_obj)+m_offset));
 	}
@@ -295,25 +293,24 @@ namespace scene
 				}
 			}
 
-			utils::assertion(0);
+			assertion(0);
 			return NULL;
 		}
 
 		static metaobject* m_metaobjectlist;
 		static int m_type_count;
 	};//class
-}//namespace
 
 template<class T> class prop_binder
 {
 public:
-	prop_binder(const char* i_name, scene::proptype i_type, unsigned i_offset)
+	prop_binder(const char* i_name, proptype i_type, unsigned i_offset)
 	{
 		T::get_class_metaobject()->add_property(i_name,i_type,i_offset);
 	}
 };
 #define VAR_NAME(_neve_,_hol_,_hol2_) _neve_##_hol_##_hol2_
-#define BIND_PROPERTY(_object_,_variable_,_name_,_type_) prop_binder<_object_> VAR_NAME(g_##_object_, __FILE__,__LINE__)(_name_,scene::prop_##_type_,(unsigned)offsetof(_object_,_variable_))
+#define BIND_PROPERTY(_object_,_variable_,_name_,_type_) prop_binder<_object_> VAR_NAME(g_##_object_, __FILE__,__LINE__)(_name_,prop_##_type_,(unsigned)offsetof(_object_,_variable_))
 
 
 #endif//_nodefactory_h_

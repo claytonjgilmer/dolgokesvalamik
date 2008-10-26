@@ -2,13 +2,11 @@
 #include "rendersystem.h"
 #include "texturemanager.h"
 
-namespace render
-{
 	texture::texture(const void* i_buf, unsigned i_size, const char* i_name):
 		resource(i_name)
 	{
 		Next=NULL;
-		D3DXCreateTextureFromFileInMemory(system::instance()->device(),i_buf,i_size,&m_hwbuffer);
+		D3DXCreateTextureFromFileInMemory(rendersystem::ptr()->device(),i_buf,i_size,&m_hwbuffer);
 	}
 
 	texture::~texture()
@@ -16,6 +14,5 @@ namespace render
 		if (m_hwbuffer)
 			m_hwbuffer->Release();
 
-		texturemanager::instance()->erase_texture(this);
+		texturemanager::ptr()->erase_texture(this);
 	}
-}

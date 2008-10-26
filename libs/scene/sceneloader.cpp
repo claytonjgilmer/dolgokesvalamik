@@ -3,18 +3,16 @@
 #include "node.h"
 #include "containers/stringmap.h"
 
-namespace scene
-{
 	node* sceneloader::load_scene(const char* i_scenename)
 	{
 		struct mapelem
 		{
-			const ctr::string& get_name() const
+			const string& get_name() const
 			{
 				return m_name;
 			}
-			ctr::vector<node*> m_child;
-			ctr::string m_name;
+			vector<node*> m_child;
+			string m_name;
 
 			mapelem(const char* i_name):
 			m_name(i_name)
@@ -24,20 +22,20 @@ namespace scene
 			mapelem* Next;
 		};
 
-		ctr::stringmap<mapelem,1024> map;
-		ctr::vector<node*> nodebuf;
-		ctr::vector<node*> root;
+		stringmap<mapelem,1024> map;
+		vector<node*> nodebuf;
+		vector<node*> root;
 
-		scripting::lua Lua;
-		Lua.InitState((scripting::lua::eLuaLib)(scripting::lua::LL_BASE | scripting::lua::LL_MATH));
+		lua Lua;
+		Lua.InitState((lua::eLuaLib)(lua::LL_BASE | lua::LL_MATH));
 
 		Lua.DoFile(i_scenename);
 
-		scripting::lua::Variable scenetable=Lua.GetGlobalTable().GetVariable("Scene");
+		lua::Variable scenetable=Lua.GetGlobalTable().GetVariable("Scene");
 
 		assert(scenetable.IsTable());
 
-		scripting::lua::Variable K,V;
+		lua::Variable K,V;
 
 		for (scenetable.Begin(K,V); !scenetable.End(K); scenetable.Next(K,V))
 		{
@@ -46,11 +44,11 @@ namespace scene
 			if (!n)
 				continue;
 
-			scripting::lua::Variable parentvar=V.GetVariable("Parent");
+			lua::Variable parentvar=V.GetVariable("Parent");
 
 			if (parentvar.IsString())
 			{
-				ctr::string parentname=parentvar.GetString();
+				string parentname=parentvar.GetString();
 				mapelem* pm=map.get_data(parentname.c_str());
 
 				if (!pm)
@@ -69,7 +67,7 @@ namespace scene
 			nodebuf.push_back(n);
 		}
 
-		utils::assertion(root.size()==1);
+		assertion(root.size()==1);
 
 		mapelem** ptr=map.get_buffer();
 
@@ -89,14 +87,14 @@ namespace scene
 		return NULL;
 	}
 
-	node* sceneloader::load_node(node* i_parent,scripting::lua::Variable& i_nodetable)
+	node* sceneloader::load_node(node* i_parent,lua::Variable& i_nodetable)
 	{
-		bool exclude=i_nodetable.GetVariable("Exclude").GetBool(false);
+		int exclude=i_nodetable.GetVariable("Exclude").GetBool(false);
 
 		if (exclude)
 			return NULL;
 
-		ctr::string TypeName=i_nodetable.GetVariable("Type").GetString("");
+		string TypeName=i_nodetable.GetVariable("Type").GetString("");
 
 		node* NewNode=(node*)metaobject_manager::create_object(TypeName.c_str());
 
@@ -110,10 +108,10 @@ namespace scene
 		if (i_parent)
 			i_parent->add_child(NewNode);
 
-		scripting::lua::Variable childtable=i_nodetable.GetVariable("Child");
+		lua::Variable childtable=i_nodetable.GetVariable("Child");
 		if (childtable.IsTable())
 		{
-			scripting::lua::Variable K,V;
+			lua::Variable K,V;
 			for (childtable.Begin(K,V); !childtable.End(K); childtable.Next(K,V))
 			{
 				load_node(NewNode,V);
@@ -122,4 +120,3 @@ namespace scene
 
 		return NewNode;
 	}
-}

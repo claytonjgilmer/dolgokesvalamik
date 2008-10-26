@@ -3,8 +3,6 @@
 
 #include "utils/assert.h"
 
-namespace ctr
-{
 	template<class T, unsigned bufsize>
 	class stack
 	{
@@ -25,9 +23,9 @@ namespace ctr
 
 		void push(const T& i_elem)
 		{
-//			threading::blocklocker b(m_mutex);
+//			blocklocker b(m_mutex);
 			m_mutex.lock();
-			utils::assertion(m_elemcount<=bufsize);
+			assertion(m_elemcount<=bufsize);
 			m_buf[m_elemcount]=i_elem;
 			++m_elemcount;
 			m_mutex.unlock();
@@ -36,9 +34,9 @@ namespace ctr
 		T pop()
 		{
 			m_mutex.lock();
-//			threading::blocklocker b(m_mutex);
+//			blocklocker b(m_mutex);
 			--m_elemcount;
-			utils::assertion(m_elemcount>=0);
+			assertion(m_elemcount>=0);
 			T ret=m_buf[m_elemcount];
 			m_mutex.unlock();
 			return ret;
@@ -52,7 +50,6 @@ namespace ctr
 	private:
 		T m_buf[bufsize];
 		long m_elemcount;
-		threading::mutex m_mutex;
+		mutex m_mutex;
 	};
-}
 #endif//_stack_h_

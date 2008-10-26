@@ -3,8 +3,6 @@
 
 #include "math/vec2.h"
 
-namespace prop
-{
 	/*
 	mi az ami kell
 	ez alapjan inicializalodik fel az objektum
@@ -17,9 +15,9 @@ namespace prop
 	{
 		int* m_intvalue;
 		float* m_floatvalue;
-		ctr::string* m_stringvalue;
-		math::vec3* m_vec3value;
-		math::vec2* m_vec2value;
+		string* m_stringvalue;
+		vec3* m_vec3value;
+		vec2* m_vec2value;
 		
 	};
 
@@ -30,12 +28,11 @@ namespace prop
 
 		_define_prop_(int,m_intvalue)
 		_define_prop_(float,m_floatvalue)
-		_define_prop_(ctr::string,m_stringvalue)
-		_define_prop_(math::vec3,m_vec3value)
-		_define_prop_(math::vec2,m_vec2value)
+		_define_prop_(string,m_stringvalue)
+		_define_prop_(vec3,m_vec3value)
+		_define_prop_(vec2,m_vec2value)
 
 	};
 */
-}
 
 #endif//_property_h_

@@ -5,8 +5,6 @@
 
 //ezt azert at kellene gondolni
 
-namespace math
-{
 	class vec4
 	{
 	public:
@@ -114,7 +112,7 @@ namespace math
 
 	MLINLINE vec4 vec4::cross(const vec4& i_other) const
 	{
-		return math::cross(*this,i_other);
+		return ::cross(*this,i_other);
 	}
 
 	MLINLINE float	vec4::dot4(const vec4& i_other) const
@@ -265,6 +263,4 @@ namespace math
 		y=i_src1.y+i_time*(i_src2.y-i_src1.y);
 		z=i_src1.z+i_time*(i_src2.z-i_src1.z);
 	}
-
-}//namespace math
 #endif//_vec4_h_

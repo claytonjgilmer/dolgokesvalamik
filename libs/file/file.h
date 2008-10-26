@@ -5,8 +5,6 @@
 #include "containers/string.h"
 #include <sys/stat.h>
 
-namespace file
-{
 	class file
 	{
 	public:
@@ -16,7 +14,7 @@ namespace file
 		void open(const char* i_name, const char* i_attributes);
 		void close();
 
-		bool read_line(ctr::string& o_line) const;
+		int read_line(string& o_line) const;
 		void write_line(const char* i_line) const;
 		unsigned read_bytes(char* o_bytes, unsigned i_numbytes) const;
 		void write_bytes(const char* i_bytes, unsigned i_numbytes) const;
@@ -25,12 +23,12 @@ namespace file
 
 		unsigned size() const;
 
-		bool opened() const;
+		int opened() const;
 	private:
 		file(const file&);
 		void operator=(const file&);
 		FILE* m_handle;
-		ctr::string m_name;
+		string m_name;
 		unsigned m_size;
 	};
 
@@ -79,7 +77,7 @@ namespace file
 			fclose(m_handle);
 	}
 
-	MLINLINE bool file::read_line(ctr::string& o_line) const
+	MLINLINE int file::read_line(string& o_line) const
 	{
 		char line[16384];
 
@@ -123,7 +121,7 @@ namespace file
 		fwrite(i_bytes,1,i_numbytes,m_handle);
 	}
 
-	MLINLINE bool file::opened() const
+	MLINLINE int file::opened() const
 	{
 		return m_handle!=NULL;
 	}
@@ -139,7 +137,7 @@ namespace file
 	}
 
 
-	MLINLINE ctr::string get_extension(const char* i_filename)
+	MLINLINE string get_extension(const char* i_filename)
 	{
 		const char* tmp=i_filename;
 		unsigned len=(unsigned)strlen(i_filename);
@@ -153,12 +151,9 @@ namespace file
 		}
 
 		if (!len)
-			return ctr::string("");
+			return string("");
 
-		return ctr::string(tmp+len);
+		return string(tmp+len);
 	}
-
-
-}
 
 #endif//_file_h_

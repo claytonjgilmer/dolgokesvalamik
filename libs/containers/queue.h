@@ -3,8 +3,6 @@
 
 #include "utils/assert.h"
 
-namespace ctr
-{
 	template<typename basetype, unsigned bufsize> //bufsize kettohatvany!!!
 	class queue
 	{
@@ -66,7 +64,7 @@ namespace ctr
 	template<class basetype, unsigned bufsize>
 	MLINLINE void queue<basetype,bufsize>::pop()
 	{
-		utils::assertion(m_first!=m_end);
+		assertion(m_first!=m_end);
 		((basetype*)m_buf)[m_first].~basetype();
 		m_first=(m_first+1)&(bufsize-1);
 	}
@@ -74,15 +72,14 @@ namespace ctr
 	template<class basetype,unsigned bufsize>
 	MLINLINE basetype& queue<basetype,bufsize>::front()
 	{
-		utils::assertion(m_first!=m_end);
+		assertion(m_first!=m_end);
 		return ((basetype*)m_buf)[m_first];
 	}
 
 	template<class basetype,unsigned bufsize>
 	MLINLINE const basetype& queue<basetype,bufsize>::front() const
 	{
-		utils::assertion(m_first!=m_end);
+		assertion(m_first!=m_end);
 		return ((basetype*)m_buf)[m_first];
 	}
-}
 #endif//_dynqueue_h_

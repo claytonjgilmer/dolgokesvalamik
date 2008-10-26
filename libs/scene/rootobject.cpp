@@ -2,9 +2,6 @@
 #include "nodefactory.h"
 
 
-namespace scene
-{
-
 	class rootobject_metaobject:public metaobject
 	{
 		public:
@@ -37,7 +34,7 @@ namespace scene
 
 //	DEFINE_OBJECT(rootobject,NULL);
 
-	const ctr::string& rootobject::get_name() const
+	const string& rootobject::get_name() const
 	{
 		return m_name;
 	}
@@ -46,5 +43,3 @@ namespace scene
 	{
 		m_name=i_name;
 	}
-
-}//namespace

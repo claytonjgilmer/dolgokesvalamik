@@ -7,20 +7,18 @@
 #include "math/mtx4x3.h"
 #include "body.h"
 
-namespace physics
-{
 #define NBODY_MIN_CAPACITY 512
 	struct nbody
 	{
-		math::mtx4x3* pos;
-		math::vec3* vel;
-		math::vec3* rotvel;
+		mtx4x3* pos;
+		vec3* vel;
+		vec3* rotvel;
 
-		math::vec3* force;
-		math::vec3* torque;
+		vec3* force;
+		vec3* torque;
 		float* invmass;
-		math::mtx3x3* invinertia_rel;
-		math::mtx3x3* invinertia_abs;
+		mtx3x3* invinertia_rel;
+		mtx3x3* invinertia_abs;
 
 		body_t** body;
 
@@ -41,5 +39,4 @@ namespace physics
 
 		void realloc(unsigned i_newcapacity);
 	};
-}
 #endif//_nbody_h_

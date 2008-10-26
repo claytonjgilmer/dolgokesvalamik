@@ -1,9 +1,6 @@
 #include "lua.h"
 #include "file/filesystem.h"
 
-namespace scripting
-{
-
 	//--------------------------------------------------------------------------
 	lua::lua() :
 		m_OwnState(false),
@@ -27,14 +24,15 @@ namespace scripting
 		TermState();
 	}
 
+/*
 	//--------------------------------------------------------------------------
-	ctr::string lua::TypeAsString(eType i_Type)
+	string lua::TypeAsString(eType i_Type)
 	{
 		switch (i_Type)
 		{
 			case T_NONE: return "none";
 			case T_NIL: return "nil";
-			case T_BOOL: return "bool";
+			case T_BOOL: return "int";
 			case T_LIGHTUSERDATA: return "lightuserdata";
 			case T_NUMBER: return "number";
 			case T_STRING: return "string";
@@ -45,7 +43,7 @@ namespace scripting
 		}
 		return "unknown";
 	}
-
+*/
 	//--------------------------------------------------------------------------
 	static int lua_panic(lua_State *L)
 	{
@@ -146,16 +144,16 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::DoString(const ctr::string &i_String)
+	void lua::DoString(const string &i_String)
 	{
 		int Ret = lua_dostring(m_LuaState, i_String.c_str());
 		assert(Ret == 0);//(Ret)(i_String).msg("Error: lua::DoString()");
 	}
 
 	//----------------------------------------------------------------------------
-	void lua::DoFile(const ctr::string &i_FileName)
+	void lua::DoFile(const string &i_FileName)
 	{
-		file::file File;
+		file File;
 		
 		File.open(i_FileName.c_str(), "rb");
 
@@ -195,7 +193,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::RemoveStackRef(Variable *i_Variable, int i_StackIndex, bool i_RemoveStackValue)
+	void lua::RemoveStackRef(Variable *i_Variable, int i_StackIndex, int i_RemoveStackValue)
 	{
 		if (!i_Variable->m_Created)
 			return;
@@ -251,7 +249,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	lua::Variable::Variable(lua *i_Lua, eStackType i_StackType, int i_StackIndex, bool i_Created, const VariableName& i_Name) :
+	lua::Variable::Variable(lua *i_Lua, eStackType i_StackType, int i_StackIndex, int i_Created, const VariableName& i_Name) :
 		m_Lua(i_Lua),
 		m_StackType(i_StackType),
 		m_StackIndex(i_StackIndex),
@@ -285,7 +283,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::Init(lua *i_Lua, eStackType i_StackType, int i_StackIndex, bool i_Created, const VariableName& i_Name)
+	void lua::Variable::Init(lua *i_Lua, eStackType i_StackType, int i_StackIndex, int i_Created, const VariableName& i_Name)
 	{
 		assert(!Valid());
 		m_Lua = i_Lua;
@@ -303,7 +301,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	bool lua::Variable::Valid() const
+	int lua::Variable::Valid() const
 	{
 		return m_StackType != ST_INVALID;
 	}
@@ -315,7 +313,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::Invalidate(bool i_RemoveStackValue)
+	void lua::Variable::Invalidate(int i_RemoveStackValue)
 	{
 		if (Valid())
 		{
@@ -334,32 +332,33 @@ namespace scripting
 		return T_TABLE;
 	}
 
+/*
 	//--------------------------------------------------------------------------
-	ctr::string lua::Variable::GetTypeString() const
+	string lua::Variable::GetTypeString() const
 	{
 		return lua::TypeAsString(GetType());
 	}
-
+*/
 	//--------------------------------------------------------------------------
-	bool lua::Variable::IsNil() const
+	int lua::Variable::IsNil() const
 	{
 		return GetType() == T_NIL;
 	}
 
 	//--------------------------------------------------------------------------
-	bool lua::Variable::IsBool() const
+	int lua::Variable::IsBool() const
 	{
 		return GetType() == T_BOOL;
 	}
 
 	//--------------------------------------------------------------------------
-	bool lua::Variable::IsFloat() const
+	int lua::Variable::IsFloat() const
 	{
 		return GetType() == T_NUMBER;
 	}
 
 	//--------------------------------------------------------------------------
-	bool lua::Variable::IsInt() const
+	int lua::Variable::IsInt() const
 	{
 		if (!IsFloat())
 			return false;
@@ -368,37 +367,37 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	bool lua::Variable::IsString() const
+	int lua::Variable::IsString() const
 	{
 		return GetType() == T_STRING;
 	}
 
 	//--------------------------------------------------------------------------
-	bool lua::Variable::IsString(const char *i_Str) const
+	int lua::Variable::IsString(const char *i_Str) const
 	{
 		return GetType() == T_STRING && strcmp(lua_tostring(GetState(), m_StackIndex),i_Str)==0;
 	}
 
 	//--------------------------------------------------------------------------
-	bool lua::Variable::IsPtr() const
+	int lua::Variable::IsPtr() const
 	{
 		return GetType() == T_LIGHTUSERDATA;
 	}
 
 	//--------------------------------------------------------------------------
-	bool lua::Variable::IsTable() const
+	int lua::Variable::IsTable() const
 	{
 		return GetType() == T_TABLE;
 	}
 
 	//--------------------------------------------------------------------------
-	bool lua::Variable::IsFunction() const
+	int lua::Variable::IsFunction() const
 	{
 		return GetType() == T_FUNCTION;
 	}
 
 	//--------------------------------------------------------------------------
-	bool lua::Variable::GetBool() const
+	int lua::Variable::GetBool() const
 	{
 		return !!lua_toboolean(GetState(), m_StackIndex);
 	}
@@ -434,9 +433,9 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	math::vec3 lua::Variable::GetVector3() const
+	vec3 lua::Variable::GetVector3() const
 	{
-		math::vec3 V;
+		vec3 V;
 		V.x = GetVariable(1).GetFloat();
 		V.y = GetVariable(2).GetFloat();
 		V.z = GetVariable(3).GetFloat();
@@ -460,7 +459,7 @@ namespace scripting
 	//----------------------------------------------------------------------------
 
 	//--------------------------------------------------------------------------
-	bool lua::Variable::GetBool(bool i_DefBool) const
+	int lua::Variable::GetBool(int i_DefBool) const
 	{
 		if (IsBool())
 			return GetBool();
@@ -487,7 +486,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	ctr::string lua::Variable::GetString(const char *i_DefString) const
+	string lua::Variable::GetString(const char *i_DefString) const
 	{
 		if (IsString())
 			return GetString();
@@ -496,7 +495,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	math::vec3 lua::Variable::GetVector3(const math::vec3 &i_DefVector3) const
+	vec3 lua::Variable::GetVector3(const vec3 &i_DefVector3) const
 	{
 		if (IsTable())
 			return GetVector3();
@@ -543,7 +542,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	lua::Variable lua::Variable::GetVariable(const ctr::string &i_KeyString) const
+	lua::Variable lua::Variable::GetVariable(const string &i_KeyString) const
 	{
 		return GetVariable(i_KeyString.c_str());
 	}
@@ -566,7 +565,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	lua::Variable lua::Variable::operator [](const ctr::string &i_KeyString) const
+	lua::Variable lua::Variable::operator [](const string &i_KeyString) const
 	{
 		return GetVariable(i_KeyString.c_str());
 	}
@@ -591,7 +590,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	bool lua::Variable::End(Variable &i_Key)
+	int lua::Variable::End(Variable &i_Key)
 	{
 		return !i_Key.Valid();
 	}
@@ -623,7 +622,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushBool(bool i_Bool)
+	void lua::Variable::PushBool(int i_Bool)
 	{
 		lua_pushboolean(GetState(),i_Bool?1:0);
 	}
@@ -641,7 +640,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushString(const ctr::string &i_String)
+	void lua::Variable::PushString(const string &i_String)
 	{
 		lua_pushlstring(GetState(),i_String.c_str(),i_String.size());
 	}
@@ -662,7 +661,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushBool(int i_KeyInt, bool i_Bool)
+	void lua::Variable::PushBool(int i_KeyInt, int i_Bool)
 	{
 		lua_pushnumber(GetState(), lua_Number(i_KeyInt));
 		lua_pushboolean(GetState(), i_Bool);
@@ -686,7 +685,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushString(int i_KeyInt, const ctr::string &i_String)
+	void lua::Variable::PushString(int i_KeyInt, const string &i_String)
 	{
 		lua_pushnumber(GetState(), lua_Number(i_KeyInt));
 		lua_pushlstring(GetState(), i_String.c_str(), i_String.size());
@@ -718,7 +717,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushNil(const ctr::string &i_KeyString)
+	void lua::Variable::PushNil(const string &i_KeyString)
 	{
 		lua_pushlstring(GetState(), i_KeyString.c_str(), i_KeyString.size());
 		lua_pushnil(GetState());
@@ -726,7 +725,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushBool(const ctr::string &i_KeyString, bool i_Bool)
+	void lua::Variable::PushBool(const string &i_KeyString, int i_Bool)
 	{
 		lua_pushlstring(GetState(), i_KeyString.c_str(), i_KeyString.size());
 		lua_pushboolean(GetState(), i_Bool);
@@ -734,7 +733,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushFloat(const ctr::string &i_KeyString, float i_Float)
+	void lua::Variable::PushFloat(const string &i_KeyString, float i_Float)
 	{
 		lua_pushlstring(GetState(), i_KeyString.c_str(), i_KeyString.size());
 		lua_pushnumber(GetState(), i_Float);
@@ -742,7 +741,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushInt(const ctr::string &i_KeyString, int i_Int)
+	void lua::Variable::PushInt(const string &i_KeyString, int i_Int)
 	{
 		lua_pushlstring(GetState(), i_KeyString.c_str(), i_KeyString.size());
 		lua_pushnumber(GetState(), lua_Number(i_Int));
@@ -750,7 +749,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushString(const ctr::string &i_KeyString, const ctr::string &i_String)
+	void lua::Variable::PushString(const string &i_KeyString, const string &i_String)
 	{
 		lua_pushlstring(GetState(), i_KeyString.c_str(), i_KeyString.size());
 		lua_pushlstring(GetState(), i_String.c_str(), i_String.size());
@@ -758,7 +757,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushPtr(const ctr::string &i_KeyString, void *i_Ptr)
+	void lua::Variable::PushPtr(const string &i_KeyString, void *i_Ptr)
 	{
 		lua_pushlstring(GetState(), i_KeyString.c_str(), i_KeyString.size());
 		lua_pushlightuserdata(GetState(), i_Ptr);
@@ -766,7 +765,7 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushTable(const ctr::string &i_KeyString)
+	void lua::Variable::PushTable(const string &i_KeyString)
 	{
 		lua_pushlstring(GetState(), i_KeyString.c_str(), i_KeyString.size());
 		lua_newtable(GetState());
@@ -774,11 +773,9 @@ namespace scripting
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushVariable(const ctr::string &i_KeyString, const Variable &i_Variable)
+	void lua::Variable::PushVariable(const string &i_KeyString, const Variable &i_Variable)
 	{
 		lua_pushlstring(GetState(), i_KeyString.c_str(), i_KeyString.size());
 		lua_pushvalue(GetState(), i_Variable.m_StackIndex);
 		lua_settable(GetState(), m_StackIndex);
 	}
-
-}

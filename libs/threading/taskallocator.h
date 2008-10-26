@@ -5,8 +5,6 @@
 #include "containers/listallocator.h"
 
 
-namespace threading
-{
 	class taskallocator
 	{
 	public:
@@ -27,20 +25,18 @@ namespace threading
 		}
 	private:
 		class tplaceholder{char c[256];};
-		ctr::listallocator<tplaceholder> m_taskalloc;
+		listallocator<tplaceholder> m_taskalloc;
 		mutex m;
 	};
 
-}
-
-inline void* operator new(size_t i_size, threading::taskallocator& i_alloc)
+inline void* operator new(size_t i_size, taskallocator& i_alloc)
 {
 	assert(i_size<=256);
 
 	return i_alloc.allocate();
 }
 
-inline void operator delete(void* i_task, threading::taskallocator& i_alloc)
+inline void operator delete(void* i_task, taskallocator& i_alloc)
 {
 	i_alloc.deallocate(i_task);
 }

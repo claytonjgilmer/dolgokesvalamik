@@ -7,8 +7,6 @@
 //extern int szamlalo;
 //extern int maxkeynum;
 
-namespace ctr
-{
 	struct stringmapstat
 	{
 		float m_avg;
@@ -31,7 +29,7 @@ namespace ctr
 	};
 
 
-#define hashfn utils::BKDRHash
+#define hashfn BKDRHash
 
 	template<class T, unsigned bufsize>
 	MLINLINE stringmap<T,bufsize>::stringmap()
@@ -68,7 +66,7 @@ namespace ctr
 	template<class T, unsigned bufsize>
 	MLINLINE void stringmap<T,bufsize>::remove_data(const char* i_name)
 	{
-		unsigned hashkey=hashfn(ctr::string(i_name)) & (bufsize-1);
+		unsigned hashkey=hashfn(string(i_name)) & (bufsize-1);
 //		unsigned hashkey=hashfn(i_name) % bufsize;
 
 		T* ptr=m_buf[hashkey];
@@ -94,7 +92,7 @@ namespace ctr
 	template<class T, unsigned bufsize>
 	MLINLINE T* stringmap<T,bufsize>::get_data(const char* i_name) const
 	{
-		unsigned hashkey=hashfn(ctr::string(i_name)) & (bufsize-1);
+		unsigned hashkey=hashfn(string(i_name)) & (bufsize-1);
 //		unsigned hashkey=hashfn(i_name) % bufsize;
 
 		T* ptr=m_buf[hashkey];
@@ -144,5 +142,4 @@ namespace ctr
 		stat.m_avg/=(float)count;
 		return stat;
 	}
-}
 #endif//_stringmap_h_

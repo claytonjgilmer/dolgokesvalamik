@@ -18,9 +18,9 @@ int all_vertexcount=0;
 
 
 ////////////////////////////////////////////////////////////////////////////////
-typedef ctr::vector<unsigned short> IndexArray;
-typedef ctr::vector<ctr::string> StringArray;
-typedef ctr::vector<float> FloatArray;
+typedef vector<unsigned short> IndexArray;
+typedef vector<string> StringArray;
+typedef vector<float> FloatArray;
 
 
 struct SubsetInfo
@@ -30,7 +30,7 @@ struct SubsetInfo
 	int indexStart;
 	int indexNum;
 	StringArray textureNames;
-	ctr::string shaderName;
+	string shaderName;
 	int vertexstreamidx;
 };
 
@@ -73,7 +73,7 @@ public:
 		return m_FloatPerVertices;
 	}
 
-	void SetMVF(const ctr::string& str)
+	void SetMVF(const string& str)
 	{
 		m_MVF = str;
 		m_MVF.to_lower();
@@ -205,7 +205,7 @@ public:
 			m_MVF="pf43nf43uf42uf41.mvfm";
 	}
 
-	const ctr::string& GetMVF() const
+	const string& GetMVF() const
 	{
 		return m_MVF;
 	}
@@ -232,7 +232,7 @@ public:
 
 protected:
 	int			m_FloatPerVertices;
-	ctr::string		m_MVF;
+	string		m_MVF;
 	FloatArray	m_Vertices;
 	unsigned m_VertexCount;
 };
@@ -244,14 +244,14 @@ struct HItem
 		parent=-1;
 		mesh=-1;
 	}
-	ctr::string name;
+	string name;
 	int parent;
 	int mesh;
-	math::mtx4x4 mtx;
+	mtx4x4 mtx;
 
-	render::object3d* generate_object()
+	object3d* generate_object()
 	{
-		render::object3d* res=new render::object3d(name.c_str());
+		object3d* res=new object3d(name.c_str());
 		res->set_localposition(mtx);
 
 		return res;
@@ -271,7 +271,7 @@ public:
 		ismesh=false;
 	}
 
-	bool ismesh;
+	int ismesh;
 
 	void PrintVertexStreamChunk(MChunk& chunk);
 	void PrintIndicesChunk(MChunk& chunk);
@@ -280,8 +280,8 @@ public:
 	void PrintSubsetChunk(MChunk& chunk);
 	void PrintLODPhasesChunk(MChunk &subchunk);
 
-	ctr::fixedvector<render::mesh*,8> generate_mesh();
-	ctr::vector<render::vertexelem> createdecl(ctr::string i_filename);
+	fixedvector<mesh*,8> generate_mesh();
+	vector<vertexelem> createdecl(string i_filename);
 
 /*
 	void ClearStreams()
@@ -295,9 +295,9 @@ public:
 		return	m_Indices;
 	}
 
-	ctr::vector<unsigned>& Get32bitIndexArray(){return m_32bitIndices;}
+	vector<unsigned>& Get32bitIndexArray(){return m_32bitIndices;}
 
-	bool& Is32bit(){return m_32bit;}
+	int& Is32bit(){return m_32bit;}
 
 	void AddSubSetInfo(const SubsetInfo& i_Subset)
 	{
@@ -355,56 +355,56 @@ public:
 
 
 //protected:
-	typedef ctr::vector<SubsetInfo> SubsetArray;
-	typedef ctr::vector<LODInfo> LODArray;
-	typedef ctr::vector<Stream_t> StreamArray;
+	typedef vector<SubsetInfo> SubsetArray;
+	typedef vector<LODInfo> LODArray;
+	typedef vector<Stream_t> StreamArray;
 
 	SubsetArray	m_SubSet;
 	LODArray	m_LOD;
 
 	StreamArray	m_Streams;
 	IndexArray	m_Indices;
-	ctr::vector<unsigned> m_32bitIndices;
-	bool m_32bit;
+	vector<unsigned> m_32bitIndices;
+	int m_32bit;
 
 	int			m_RefCount;
 
-	math::vec3 m_sphere_center;
+	vec3 m_sphere_center;
 	float m_sphere_radius;
-	math::vec3 m_box_min;
-	math::vec3 m_box_max;
+	vec3 m_box_min;
+	vec3 m_box_max;
 };
 
 
 
-ctr::vector<MeshLODInfo> gMeshLODInfoArray;
-ctr::vector<HItem> gHItemArray;
+vector<MeshLODInfo> gMeshLODInfoArray;
+vector<HItem> gHItemArray;
 
-ctr::vector<render::vertexelem> MeshLODInfo::createdecl(ctr::string i_filename)
+vector<vertexelem> MeshLODInfo::createdecl(string i_filename)
 {
-	ctr::vector<render::vertexelem> ret;
+	vector<vertexelem> ret;
 
 	struct sMappingV
 	{
-		ctr::string	Name;
-		render::vertexelemtype	Value;
+		string	Name;
+		vertexelemtype	Value;
 	};
 
 	struct sMapping
 	{
-		ctr::string	Name;
+		string	Name;
 		unsigned 	Value;
 	};
 	static sMappingV usages[] =
 	{
-		"p", render::vertexelement_position,
-		"w", render::vertexelement_unused,
-		"i", render::vertexelement_unused,
-		"n", render::vertexelement_normal,
-		"u", render::vertexelement_uv,
-		"t", render::vertexelement_tangent,
-		"b", render::vertexelement_binormal,
-		"c", render::vertexelement_color,
+		"p", vertexelement_position,
+		"w", vertexelement_unused,
+		"i", vertexelement_unused,
+		"n", vertexelement_normal,
+		"u", vertexelement_uv,
+		"t", vertexelement_tangent,
+		"b", vertexelement_binormal,
+		"c", vertexelement_color,
 	};
 	static int usageCount = sizeof(usages) / sizeof(usages[0]);
 	static sMapping types[] =
@@ -430,12 +430,12 @@ ctr::vector<render::vertexelem> MeshLODInfo::createdecl(ctr::string i_filename)
 	static int typeCount = sizeof(types) / sizeof(types[0]);
 
 	unsigned i = 0;
-	bool error = false;
+	int error = false;
 
 	while (i < i_filename.size() && i_filename[i] != '.')
 	{
-		render::vertexelemtype usage;
-		bool found = false;
+		vertexelemtype usage;
+		int found = false;
 		for (int j = 0 ; j < usageCount ; ++j)
 		{
 			if (i_filename.match(i, usages[j].Name.c_str()))
@@ -449,7 +449,7 @@ ctr::vector<render::vertexelem> MeshLODInfo::createdecl(ctr::string i_filename)
 		}
 		if (!found)
 		{
-			utils::assertion(0,"hibas vertexformatnev");
+			assertion(0,"hibas vertexformatnev");
 			error = true;
 			break;
 		}
@@ -469,12 +469,12 @@ ctr::vector<render::vertexelem> MeshLODInfo::createdecl(ctr::string i_filename)
 		}
 		if (!found)
 		{
-			utils::assertion(0,"hibas vertexformatnev");
+			assertion(0,"hibas vertexformatnev");
 			error = true;
 			break;
 		}
 
-		ret.push_back(render::vertexelem(usage,type));
+		ret.push_back(vertexelem(usage,type));
 //		Format->AddElement((eDeclType)type, (eDeclUsage)usage);
 	}
 
@@ -482,38 +482,38 @@ ctr::vector<render::vertexelem> MeshLODInfo::createdecl(ctr::string i_filename)
 	return ret;
 }
 
-ctr::fixedvector<render::mesh*,8> MeshLODInfo::generate_mesh()
+fixedvector<mesh*,8> MeshLODInfo::generate_mesh()
 {
-	utils::assertion(m_Streams.size()>0,"0 a vertexbufferek szama!");
-	ctr::fixedvector<render::mesh*,8> res;
+	assertion(m_Streams.size()>0,"0 a vertexbufferek szama!");
+	fixedvector<mesh*,8> res;
 	for (unsigned streamindex=0; streamindex<m_Streams.size(); ++streamindex)
 	{
-		render::mesh* mesh=new render::mesh("mesh");
-		res.push_back(mesh);
+		mesh* m=new mesh("mesh");
+		res.push_back(m);
 
 		if (m_32bit)
 		{
-			mesh->m_ib=new render::indexbuffer(m_32bitIndices.size(),true);
-			int* ib=(int*)mesh->m_ib->lock();
+			m->m_ib=new indexbuffer(m_32bitIndices.size(),true);
+			int* ib=(int*)m->m_ib->lock();
 
 			memcpy(ib,m_32bitIndices,m_32bitIndices.size()*sizeof(int));
 		}
 		else
 		{
-			mesh->m_ib=new render::indexbuffer(m_Indices.size(),false);
-			unsigned short* ib=(unsigned short*)mesh->m_ib->lock();
+			m->m_ib=new indexbuffer(m_Indices.size(),false);
+			unsigned short* ib=(unsigned short*)m->m_ib->lock();
 			memcpy(ib,m_Indices,m_Indices.size()*sizeof(short));
-			mesh->m_ib->unlock();
+			m->m_ib->unlock();
 		}
 
 
 
 		{
-			ctr::vector<render::vertexelem> vdecl=createdecl(m_Streams[streamindex].GetMVF());
-			mesh->m_vb=new render::vertexbuffer(m_Streams[streamindex].GetVertexCount(),vdecl,m_Streams[streamindex].GetFloatPerVertices()*sizeof(float));
-			void* vb=mesh->m_vb->lock();
+			vector<vertexelem> vdecl=createdecl(m_Streams[streamindex].GetMVF());
+			m->m_vb=new vertexbuffer(m_Streams[streamindex].GetVertexCount(),vdecl,m_Streams[streamindex].GetFloatPerVertices()*sizeof(float));
+			void* vb=m->m_vb->lock();
 			memcpy(vb,m_Streams[streamindex].GetVertices(),m_Streams[streamindex].GetVertexCount()*m_Streams[streamindex].GetFloatPerVertices()*sizeof(float));
-			mesh->m_vb->unlock();
+			m->m_vb->unlock();
 		}
 
 		int startsubset,endsubset;
@@ -533,16 +533,16 @@ ctr::fixedvector<render::mesh*,8> MeshLODInfo::generate_mesh()
 			if (m_SubSet[n].vertexstreamidx!=streamindex)
 				continue;
 
-			mesh->m_submeshbuf.push_back(render::submesh());
-			render::submesh& sm=mesh->m_submeshbuf.back();
-			sm.set_shader(render::shadermanager::instance()->get_shader("posnormuv.fx"));
+			m->m_submeshbuf.push_back(submesh());
+			submesh& sm=m->m_submeshbuf.back();
+			sm.set_shader(shadermanager::ptr()->get_shader("posnormuv.fx"));
 			sm.m_firstindex=m_SubSet[n].indexStart;
 			sm.m_numindices=m_SubSet[n].indexNum*3;
 			sm.m_firstvertex=m_SubSet[n].vertexStart;
 			sm.m_numvertices=m_SubSet[n].vertexNum;
 			for (unsigned m=0; m<m_SubSet[n].textureNames.size(); ++m)
 			{
-				sm.m_texturebuf.push_back(render::texturemanager::instance()->get_texture(m_SubSet[n].textureNames[m].c_str()));
+				sm.m_texturebuf.push_back(texturemanager::ptr()->get_texture(m_SubSet[n].textureNames[m].c_str()));
 			}
 		}
 	}
@@ -551,9 +551,9 @@ ctr::fixedvector<render::mesh*,8> MeshLODInfo::generate_mesh()
 }
 
 //float g_sphere_radius;
-//math::vec3 g_sphere_center;
+//vec3 g_sphere_center;
 
-//math::vec3 g_box_min,g_box_max;
+//vec3 g_box_min,g_box_max;
 
 //FloatArray gPrintedFloatArray;
 
@@ -566,7 +566,7 @@ enum {
 
 //int gLODStatisticsMode;
 
-ctr::vector<ctr::string> gResourceTypeNames;
+vector<string> gResourceTypeNames;
 
 const float	gStepZ = 0.1f; // in meter
 float gWaveSternAvgZ;
@@ -587,12 +587,12 @@ inline float Limit(float x, float a, float b)
 	return x;
 }
 
-inline bool InInterval(float x, float a, float b)
+inline int InInterval(float x, float a, float b)
 {
 	return a<=x && x<=b;
 }
 
-inline bool InIntervalSafe(float x, float a, float b)
+inline int InIntervalSafe(float x, float a, float b)
 {
 	if (a <= b)
 		return InInterval(x, a, b);
@@ -610,7 +610,7 @@ int Inc3(int i)
 
 
 
-bool GetFullPathName(const ctr::string& directory, const ctr::string& fName, ctr::string& fFullName)
+int GetFullPathName(const string& directory, const string& fName, string& fFullName)
 {
 	WIN32_FIND_DATA FindData;
 	HANDLE Handle = FindFirstFile((directory + '*').c_str() , &FindData );
@@ -675,7 +675,7 @@ void MeshLODInfo::PrintVertexStreamChunk(MChunk& chunk)
 {
 	int vertexcount = chunk.ReadInt();
 	all_vertexcount+=vertexcount;
-	ctr::string strVF = chunk.ReadString();
+	string strVF = chunk.ReadString();
 	unsigned sizeleft = chunk.GetSizeLeft();
 
 	unsigned vertexsize = sizeleft/vertexcount;
@@ -717,7 +717,7 @@ void MeshLODInfo::PrintIndicesChunk(MChunk& chunk)
 		else
 		{
 			m_32bitIndices.resize(indexCnt);
-			ctr::vector<unsigned>::iterator iti = m_32bitIndices.begin();
+			vector<unsigned>::iterator iti = m_32bitIndices.begin();
 			for (int i=0; i<indexCnt; ++i)
 			{
 				unsigned sh = (unsigned)chunk.ReadUnsigned();
@@ -764,7 +764,7 @@ void MeshLODInfo::PrintSubsetChunk(MChunk& chunk)
 		}
 		else if (subchunk.GetName() == "Texture")
 		{
-			ctr::string str = subchunk.ReadString();
+			string str = subchunk.ReadString();
 			subset.textureNames.push_back(str);
 			subchunk.Skip();
 		}
@@ -884,8 +884,8 @@ void PrintMeshChunk(MChunk& chunk)
 
 void PrintNodeChunk(MChunk& chunk)
 {
-	ctr::string nodetypename=chunk.ReadString();
-	ctr::string nodename=chunk.ReadString();
+	string nodetypename=chunk.ReadString();
+	string nodename=chunk.ReadString();
 	int nodeindex=chunk.ReadInt();
 
 	while (chunk)
@@ -947,12 +947,12 @@ void PrintAnimationChannelsChunk(MChunk& chunk)
 
 		if (subchunk.GetName() == "AnimationGroupName")
 		{
-			ctr::string animationgroupname;
+			string animationgroupname;
 			subchunk >> animationgroupname;
 		}
 		else if (subchunk.GetName() == "ChannelAnimation")
 		{
-			ctr::string chanName;
+			string chanName;
 			subchunk >> chanName;
 
 			subchunk.Skip();
@@ -970,7 +970,7 @@ void PrintResourceChunk(MChunk& chunk)
 	while (chunk)
 	{
 		MChunk subchunk = chunk.GetChunk();
-		const ctr::string& subchunkname=subchunk.GetName();
+		const string& subchunkname=subchunk.GetName();
 
 		gResourceTypeNames.push_back(subchunk.GetName());
 
@@ -1004,10 +1004,10 @@ void PrintResourceChunk(MChunk& chunk)
 
 void PrintHierarchyItemChunk(MChunk& chunk)
 {
-	bool isRootItem = true;
-	bool isOK = false;
-	ctr::string name;
-	ctr::vector<ctr::string> itemResTypeNames;
+	int isRootItem = true;
+	int isOK = false;
+	string name;
+	vector<string> itemResTypeNames;
 
 
 	gHItemArray.push_back(HItem());
@@ -1016,7 +1016,7 @@ void PrintHierarchyItemChunk(MChunk& chunk)
 	while (chunk)
 	{
 		MChunk subchunk = chunk.GetChunk();
-		const ctr::string& subchunkname=subchunk.GetName();
+		const string& subchunkname=subchunk.GetName();
 
 		if (subchunkname == "Parent")
 		{
@@ -1055,7 +1055,7 @@ void PrintHierarchyItemChunk(MChunk& chunk)
 			int index;
 			subchunk >> index;
 
-			const ctr::string& resTypeName = gResourceTypeNames[index];
+			const string& resTypeName = gResourceTypeNames[index];
 			itemResTypeNames.push_back(resTypeName);
 
 			if (resTypeName == "Mesh" || 
@@ -1123,7 +1123,7 @@ static float LODErrToDist(float lodErr, float mulRad, float centerZ)
 
 
 
-render::object3d* load_mmod(file::file& i_file)
+object3d* load_mmod(file& i_file)
 {
 	gMeshLODInfoArray.clear();
 	gHItemArray.clear();
@@ -1136,7 +1136,7 @@ render::object3d* load_mmod(file::file& i_file)
 	while (chunk)
 	{
 		MChunk subchunk = chunk.GetChunk();
-		const ctr::string& subchunkname=subchunk.GetName();
+		const string& subchunkname=subchunk.GetName();
 
 /*
 		if (subchunk.GetName() == "BoundingSphere")
@@ -1163,19 +1163,19 @@ render::object3d* load_mmod(file::file& i_file)
 		}
 	}
 
-	ctr::vector<ctr::fixedvector<render::mesh*,8>> meshbuf;
+	vector<fixedvector<mesh*,8>> meshbuf;
 
 	for (unsigned n=0; n<gMeshLODInfoArray.size();++n)
 	{
-		ctr::fixedvector<render::mesh*,8> mesh;
+		fixedvector<mesh*,8> mesh;
 		if (gMeshLODInfoArray[n].ismesh)
 			mesh=gMeshLODInfoArray[n].generate_mesh();
 
 		meshbuf.push_back(mesh);
 	}
 
-	ctr::vector<render::object3d*> objbuf;
-	render::object3d* root=NULL;
+	vector<object3d*> objbuf;
+	object3d* root=NULL;
 
 	unsigned parentnum=0;
 
@@ -1195,11 +1195,11 @@ render::object3d* load_mmod(file::file& i_file)
 		}
 	}
 
-	utils::assertion(parentnum>0,"nincs parentitem?");
+	assertion(parentnum>0,"nincs parentitem?");
 
 	if (parentnum>1)
 	{
-		root=new render::object3d("rootitem");
+		root=new object3d("rootitem");
 	}
 
 	for (unsigned n=0; n<gHItemArray.size(); ++n)
@@ -1215,9 +1215,9 @@ render::object3d* load_mmod(file::file& i_file)
 	return root;
 }
 
-render::object3d* load_mmod(const char* i_filename)
+object3d* load_mmod(const char* i_filename)
 {
-	file::file f(i_filename,"rb");
+	file f(i_filename,"rb");
 
 	return load_mmod(f);
 }
