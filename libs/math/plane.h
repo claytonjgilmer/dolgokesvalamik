@@ -5,14 +5,14 @@
 	{
 	public:
 		plane();
-		plane(const vector3& i_normal, float i_dist);
+		plane(const vec3& i_normal, float i_dist);
 
-		void set(const vector3& i_normal, float i_dist);
-		void set(const vector3& i_point, const vector3& i_normal);
+		void set(const vec3& i_normal, float i_dist);
+		void set(const vec3& i_point, const vec3& i_normal);
 
-		float getdistance(const vector3& i_point) const;
+		float get_distance(const vec3& i_point) const;
 
-		vector3 normal;
+		vec3 normal;
 		float dist;
 	};
 
@@ -20,25 +20,25 @@
 	{
 	}
 
-	MLINLINE plane::plane(const vector3& i_normal, float i_dist)
+	MLINLINE plane::plane(const vec3& i_normal, float i_dist)
 	{
 		normal=i_normal;
 		dist=i_dist;
 	}
 
-	MLINLINE void plane::set(const vector3& i_normal, float i_dist)
+	MLINLINE void plane::set(const vec3& i_normal, float i_dist)
 	{
 		normal=i_normal;
 		dist=i_dist;
 	}
 
-	MLINLINE void plane::set(const vector3& i_point, const vector3& i_normal)
+	MLINLINE void plane::set(const vec3& i_point, const vec3& i_normal)
 	{
 		normal=i_normal;
 		dist=-i_point.dot(normal);
 	}
 
-	MLINLINE float plane::getdistance(const vector3& i_point) const
+	MLINLINE float plane::getdistance(const vec3& i_point) const
 	{
 		return i_point.dot(normal)+dist;
 	}

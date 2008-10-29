@@ -127,8 +127,8 @@
 								if (aabb_aabb_intersect(obj->bounding_world,p->bounding_world))
 								{
 //									this->checkobj_mutex.lock();
-									LONG index=_InterlockedIncrement(&pair_num);
-									new (this->pair_array+index-1) broadphasepair(obj,p);
+									LONG index=_InterlockedExchangeAdd(&pair_num,1);
+									new (this->pair_array+index) broadphasepair(obj,p);
 //									this->checkobj_mutex.unlock();
 								}
 							}
