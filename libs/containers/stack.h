@@ -24,22 +24,24 @@
 		void push(const T& i_elem)
 		{
 //			blocklocker b(m_mutex);
-			m_mutex.lock();
-			assertion(m_elemcount<=bufsize);
-			m_buf[m_elemcount]=i_elem;
-			++m_elemcount;
-			m_mutex.unlock();
+//			m_mutex.lock();
+			int index=_InterlockedExchangeAdd(&m_elemcount,1);
+			assertion(index<bufsize);
+			m_buf[index]=i_elem;
+//			++m_elemcount;
+//			m_mutex.unlock();
 		}
 
 		T pop()
 		{
-			m_mutex.lock();
+//			m_mutex.lock();
 //			blocklocker b(m_mutex);
-			--m_elemcount;
-			assertion(m_elemcount>=0);
-			T ret=m_buf[m_elemcount];
-			m_mutex.unlock();
-			return ret;
+//			--m_elemcount;
+			int index=_InterlockedDecrement(&m_elemcount);
+			assertion(index>=0);
+			return m_buf[index];
+//			m_mutex.unlock();
+//			return ret;
 		}
 
 		unsigned size() const

@@ -2,23 +2,19 @@
 #define _task_h_
 
 #include "containers/string.h"
-#include "containers/vector.h"
 
-	class taskmanager;
-	class task
+	struct task_t
 	{
-		friend class taskmanager;
-		public:
-			task();
-			virtual void run() =0;
-			int get_id() const;
+		task_t();
+		virtual void run() =0;
+		int get_id() const;
 
-			void* operator new(size_t i_sixe);
+		void* operator new(size_t i_size);
 
-			unsigned m_ref_index;
+		unsigned m_ref_index;
 
 #ifdef _DEBUG
-			string m_name;
+		string m_name;
 #endif
 	};
 #endif//_task_h_

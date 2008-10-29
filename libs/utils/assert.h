@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <Windows.h>
 
-#ifdef _DEBUG
+#ifdef NEED_ASSERT
 	inline void assertion(int i_condition)
 	{
 		if (!i_condition) __asm int 3;

@@ -81,7 +81,7 @@
 		return m_device;
 	}
 
-	class rendertask:public task
+	class rendertask:public task_t
 	{
 	public:
 		void run()

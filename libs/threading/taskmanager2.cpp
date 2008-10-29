@@ -1,6 +1,6 @@
 #define _WIN32_WINNT 0x0501	// Change this to the appropriate value to target other versions of Windows.
-#include "taskmanager2.h"
 #include <Windows.h>
+#include "taskmanager2.h"
 
 	DEFINE_SINGLETON(taskmanager);
 
@@ -70,7 +70,7 @@
 			if (exit)
 				return;
 
-			task* t=get_task();
+			task_t* t=get_task();
 
 			t->run();
 			post_process(t);
@@ -83,51 +83,57 @@
 		return WaitForMultipleObjects(2,waitFor,FALSE,INFINITE) - WAIT_OBJECT_0;
 	}
 
-	task* taskmanager::get_task()
+	task_t* taskmanager::get_task()
 	{
-		m_taskmutex.lock();
-		task* t=m_taskbuf.front();
-		m_taskbuf.pop();
-		m_taskmutex.unlock();
+//		m_taskmutex.lock();
+		task_t* t=m_taskbuf.threadsafe_pop();
+//		m_taskbuf.pop();
+//		m_taskmutex.unlock();
 
 		return t;
 	}
 
-	void taskmanager::post_process(task* i_task)
+	void taskmanager::post_process(task_t* i_task)
 	{
-		m_taskmutex.lock();
-		--m_incompletetasknum;
-		--m_ref_buf[i_task->m_ref_index];
+//		m_taskmutex.lock();
+//		--m_incompletetasknum;
+		_InterlockedDecrement((long*)&m_incompletetasknum);
+		_InterlockedDecrement((long*)(m_ref_buf+i_task->m_ref_index));
+
+//		--m_ref_buf[i_task->m_ref_index];
 
 		if (!m_ref_buf[i_task->m_ref_index])
 			SetEvent(m_ref_event[i_task->m_ref_index]);
 
-		m_taskmutex.unlock();
+//		m_taskmutex.unlock();
 
 		m_allocator.deallocate(i_task);
 	}
 
-	unsigned stack_min_size=INT_MAX;
 
-
-	void taskmanager::spawn_task(task* i_task)
+#ifdef _DEBUG
+	static long g_check=0;
+#endif
+	void taskmanager::spawn_task(task_t* i_task)
 	{
 
 		unsigned ref_index=m_ref_index.pop();
 
+//		m_taskmutex.lock();
 #ifdef _DEBUG
-		unsigned s=m_ref_index.size();
-		if (s<stack_min_size)
-			s=stack_min_size;
+		int lcheck=_InterlockedIncrement(&g_check);
+		assertion(lcheck==1);
 #endif
-
-		m_taskmutex.lock();
 		m_ref_buf[ref_index]=1;
 
 		i_task->m_ref_index=ref_index;
-		m_taskbuf.push(i_task);
-		++m_incompletetasknum;
-		m_taskmutex.unlock();
+		m_taskbuf.threadsafe_push(i_task);
+		_InterlockedIncrement((long*)&m_incompletetasknum);
+//		++m_incompletetasknum;
+//		m_taskmutex.unlock();
+#ifdef _DEBUG
+		_InterlockedDecrement(&g_check);
+#endif
 
 		ReleaseSemaphore(m_workevent,1,NULL);
 
@@ -144,35 +150,29 @@
 				return;
 			}
 
-			task* t=get_task();
+			task_t* t=get_task();
 
 			t->run();
 			post_process(t);
 		}
 	}
 
-	void taskmanager::spawn_tasks(task* i_tasks[], unsigned i_tasknum)
+	void taskmanager::spawn_tasks(task_t* i_tasks[], unsigned i_tasknum)
 	{
-		m_taskmutex.lock();
+//		m_taskmutex.lock();
 		unsigned ref_index=m_ref_index.pop();
 
-#ifdef _DEBUG
-		unsigned s=m_ref_index.size();
-		if (s<stack_min_size)
-			s=stack_min_size;
-#endif
-
 		m_ref_buf[ref_index]=i_tasknum;
-		m_incompletetasknum+=i_tasknum;
+		_InterlockedExchangeAdd((long*)&m_incompletetasknum,i_tasknum);
+//		m_incompletetasknum+=i_tasknum;
 
 		for (unsigned n=0; n<i_tasknum; ++n)
 		{
 			i_tasks[n]->m_ref_index=ref_index;
-			m_taskbuf.push(i_tasks[n]);
+			m_taskbuf.threadsafe_push(i_tasks[n]);
 		}
 		ReleaseSemaphore(m_workevent,i_tasknum,NULL);
-		ResetEvent(m_ref_event[ref_index]);
-		m_taskmutex.unlock();
+//		m_taskmutex.unlock();
 
 		for(;;)
 		{
@@ -181,11 +181,12 @@
 
 			if (!ret)
 			{
+				ResetEvent(m_ref_event[ref_index]);
 				m_ref_index.push(ref_index);
 				return;
 			}
 
-			task* t=get_task();
+			task_t* t=get_task();
 
 			t->run();
 			post_process(t);

@@ -73,7 +73,7 @@ void init_app(HWND i_hwnd)
 	filesystem::ptr()->register_path("texture","texture\\");
 
 	taskmanagerdesc tdesc;
-	tdesc.m_threadnum=3;
+	tdesc.m_threadnum=15;
 	taskmanager::create(&tdesc);
 
 	shadermanagerdesc shaderdesc("shader");

@@ -56,7 +56,7 @@ struct proc2
 	}
 };
 
-class proc_task:public task
+class proc_task:public task_t
 {
 public:
 	int* m_buf;

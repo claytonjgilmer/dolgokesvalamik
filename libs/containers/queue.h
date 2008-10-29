@@ -10,7 +10,9 @@
 		queue();
 		~queue();
 		void push(const basetype&);
+		void threadsafe_push(const basetype&);
 		void pop();
+		basetype threadsafe_pop();
 		basetype& front();
 		const basetype& front() const;
 		void clear();
@@ -47,6 +49,7 @@
 		m_first=m_end=0;
 	}
 
+/*
 	template<class basetype, unsigned bufsize>
 	MLINLINE unsigned queue<basetype,bufsize>::size() const
 	{
@@ -68,7 +71,28 @@
 		((basetype*)m_buf)[m_first].~basetype();
 		m_first=(m_first+1)&(bufsize-1);
 	}
+*/
+	template<class basetype, unsigned bufsize>
+	MLINLINE void queue<basetype,bufsize>::threadsafe_push(const basetype& i_elem)
+	{
+		int index=_InterlockedExchangeAdd((long*)&m_end,1) & (bufsize-1);
+		basetype* buf=(basetype*)m_buf;
+		new (buf+index) basetype(i_elem);
+//		m_end=(m_end+1)&(bufsize-1);
+	}
 
+	template<class basetype, unsigned bufsize>
+	MLINLINE basetype queue<basetype,bufsize>::threadsafe_pop()
+	{
+		assertion(m_first!=m_end);
+//		int index=_InterlockedIncrement((long*)&m_first);
+//		--index;
+		int index=_InterlockedExchangeAdd((long*)&m_first,1);
+//		--index;
+		index&=(bufsize-1);
+		return ((basetype*)m_buf)[index];
+	}
+/*
 	template<class basetype,unsigned bufsize>
 	MLINLINE basetype& queue<basetype,bufsize>::front()
 	{
@@ -82,4 +106,5 @@
 		assertion(m_first!=m_end);
 		return ((basetype*)m_buf)[m_first];
 	}
+*/
 #endif//_dynqueue_h_

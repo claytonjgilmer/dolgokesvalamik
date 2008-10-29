@@ -33,8 +33,8 @@
 		~taskmanager();
 		void flush();
 		void exit();
-		void spawn_task(task* i_task);
-		void spawn_tasks(task* i_tasks[], unsigned i_tasknum);
+		void spawn_task(task_t* i_task);
+		void spawn_tasks(task_t* i_tasks[], unsigned i_tasknum);
 
 
 		taskallocator& get_allocator()
@@ -44,7 +44,7 @@
 
 		template<class T,class S> void process_buffer(T* i_buf, unsigned i_elemnum, unsigned i_grainsize, const S& i_process)
 		{
-			class proc_range:public task
+			class proc_range:public task_t
 			{
 			public:
 				proc_range(T* i_buf, unsigned i_num, const S& i_process):
@@ -82,12 +82,12 @@
 
 			assertion(tnum>0 && tnum<=n);
 
-			spawn_tasks((task**)tasks,tnum);
+			spawn_tasks((task_t**)tasks,tnum);
 		}
 
 		template<class S> void process_buffer(unsigned i_elemnum, unsigned i_grainsize, const S& i_process)
 		{
-			class proc_range:public task
+			class proc_range:public task_t
 			{
 			public:
 				proc_range(unsigned i_startindex, unsigned i_num, const S& i_process):
@@ -125,7 +125,7 @@
 
 			assertion(tnum>0 && tnum<=n);
 
-			spawn_tasks((task**)tasks,tnum);
+			spawn_tasks((task_t**)tasks,tnum);
 		}
 	private:
 #define REF_COUNT 32
@@ -136,10 +136,10 @@
 		vector<thread> m_threadbuf;
 		taskallocator m_allocator;
 
-		queue<task*,16384> m_taskbuf;
+		queue<task_t*,16384> m_taskbuf;
 		volatile unsigned m_incompletetasknum;
 
-		mutex m_taskmutex;
+//		mutex m_taskmutex;
 
 		HANDLE m_workevent;
 		HANDLE m_exitevent;
@@ -147,7 +147,7 @@
 
 		void run();
 		int wait_for_task_or_exit();
-		task* get_task();
-		void post_process(task* i_task);
+		task_t* get_task();
+		void post_process(task_t* i_task);
 	};
 #endif//_taskmanager2_h_

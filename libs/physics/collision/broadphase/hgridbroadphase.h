@@ -6,7 +6,6 @@
 #include "containers/listallocator.h"
 #include "threading/mutex.h"
 
-#define SOA
 const unsigned NUM_BUCKETS=16384;
 
 	// Computes hash bucket index in range [0, NUM_BUCKETS-1]
@@ -15,7 +14,7 @@ const unsigned NUM_BUCKETS=16384;
 		const unsigned h1 = 0x8da6b343; // Large multiplicative constants;
 		const unsigned h2 = 0xd8163841; // here arbitrarily chosen primes
 		const unsigned h3 = 0xcb1ab31f;
-		return unsigned (h1 * x + h2 * y + h3 * z) % NUM_BUCKETS;
+		return unsigned (h1 * x + h2 * y + h3 * z) & (NUM_BUCKETS-1);
 	}
 
 	struct hgridobject:public broadphaseobject

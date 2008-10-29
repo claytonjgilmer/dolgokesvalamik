@@ -244,7 +244,7 @@ typedef char int8;
 	template <int n> MLINLINE int logn(){return 1+logn<(n >> 1)>();}
 	template<> MLINLINE int logn<1>(){return 0;}
 
-	MLINLINE unsigned gcd(unsigned a1, unsigned a2)
+	MLINLINE unsigned greatest_common_divisor(unsigned a1, unsigned a2)
 	{
 		while (a1!=a2)
 		{
@@ -257,7 +257,7 @@ typedef char int8;
 		return a1;
 	}
 
-	MLINLINE unsigned gcd2(unsigned a1, unsigned a2)
+	MLINLINE unsigned greatest_common_divisor2(unsigned a1, unsigned a2)
 	{
 		while (a1 && a2)
 		{
@@ -268,6 +268,26 @@ typedef char int8;
 		}
 
 		return a1 ? a1 : a2;
+	}
+
+	MLINLINE unsigned least_common_multiple(unsigned a1, unsigned a2)
+	{
+		return a1*a2/greatest_common_divisor(a1,a2);
+	}
+
+	MLINLINE unsigned least_common_multiple2(unsigned a1, unsigned a2)
+	{
+		return a1*a2/greatest_common_divisor2(a1,a2);
+	}
+
+	MLINLINE unsigned least_common_multiple3(unsigned a1, unsigned a2)
+	{
+		unsigned k1=a1,k2=a2;
+
+		while (k1!=k2)
+			if (k1<k2) k1+=a1; else k2+=a2;
+
+		return k1;
 	}
 
 
