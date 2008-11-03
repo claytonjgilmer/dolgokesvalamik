@@ -30,6 +30,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libwrapper", "libwrapper\li
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tool", "tool\tool.vcproj", "{23438239-E3DA-47C6-B274-D59B92B38460}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CudaTest", "CudaTest\CudaTest.vcproj", "{909624FE-BF5B-490B-8C35-2EA3E2487690}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +103,16 @@ Global
 		{23438239-E3DA-47C6-B274-D59B92B38460}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{23438239-E3DA-47C6-B274-D59B92B38460}.Release|Win32.ActiveCfg = Release|Win32
 		{23438239-E3DA-47C6-B274-D59B92B38460}.Release|Win32.Build.0 = Release|Win32
+		{909624FE-BF5B-490B-8C35-2EA3E2487690}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{909624FE-BF5B-490B-8C35-2EA3E2487690}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{909624FE-BF5B-490B-8C35-2EA3E2487690}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{909624FE-BF5B-490B-8C35-2EA3E2487690}.Debug|Win32.ActiveCfg = Debug|Win32
+		{909624FE-BF5B-490B-8C35-2EA3E2487690}.Debug|Win32.Build.0 = Debug|Win32
+		{909624FE-BF5B-490B-8C35-2EA3E2487690}.Release|Any CPU.ActiveCfg = Release|Win32
+		{909624FE-BF5B-490B-8C35-2EA3E2487690}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{909624FE-BF5B-490B-8C35-2EA3E2487690}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{909624FE-BF5B-490B-8C35-2EA3E2487690}.Release|Win32.ActiveCfg = Release|Win32
+		{909624FE-BF5B-490B-8C35-2EA3E2487690}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
