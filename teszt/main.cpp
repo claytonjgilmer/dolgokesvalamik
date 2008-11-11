@@ -1,3 +1,4 @@
+#include "math/sorting.h"
 #include "math/vec3.h"
 #include "math/math.h"
 #include "math/ssemtx4x3.h"
@@ -279,8 +280,190 @@ void proba()
 
 }
 
+int _cdecl compareq(const void * a,const void * b)
+{
+	return (int)(*(float*)b-*(float*)a);
+}
+
+int compare(float a,float b)
+{
+	return a>b;
+}
+
+struct stdcomp
+{
+	bool operator()(float a,float b) const
+	{
+		return a<b;
+	}
+};
+
+int compare2(float a,float b)
+{
+	return a<b;
+}
+
+unsigned get_radix_key(float f)
+{
+	return FloatToUnsigned(f);
+}
+
+
+
+#include <algorithm>
+
+void sorttest()
+{
+	const int elem_count=2000;
+	float* array=new float[elem_count];
+	float* arraystd=new float[elem_count];
+	float* arrayquick=new float[elem_count];
+	float* tmparray=new float[elem_count];
+
+	for (int n=0; n<elem_count; ++n)
+		tmparray[n]=0;
+//		tmparray[n]=(float)random(0,100000);
+//		tmparray[n]=float(elem_count-n);
+//		tmparray[n]=float(n);
+
+	memcpy(array,tmparray,elem_count*sizeof(float));
+
+	timer t;
+
+	t.reset();
+	qsort(array,elem_count,sizeof(float),&compareq);
+	t.stop();
+	unsigned tickqqq=t.get_tick();
+	memcpy(array,tmparray,elem_count*sizeof(float));
+
+	t.reset();
+	quicksortfloat(array,0,elem_count-1);
+	t.stop();
+	unsigned tickq3=t.get_tick();
+
+	memcpy(array,tmparray,elem_count*sizeof(float));
+	t.reset();
+	std::sort(array,array+elem_count,&compare);
+	t.stop();
+	unsigned tickstd=t.get_tick();
+
+	memcpy(arraystd,tmparray,elem_count*sizeof(float));
+	t.reset();
+	std::sort(arraystd,arraystd+elem_count,stdcomp());
+	t.stop();
+	unsigned tickstd2=t.get_tick();
+
+	memcpy(array,tmparray,elem_count*sizeof(float));
+
+	t.reset();
+	q_sort<float ,&compare>(array,0,elem_count-1);
+	t.stop();
+	unsigned tickquick=t.get_tick();
+
+	memcpy(arrayquick,tmparray,elem_count*sizeof(float));
+	t.reset();
+//	q_sort_rec<float ,&compare>(arrayquick,0,elem_count-1);
+	qf(arrayquick,0,elem_count-1);
+	t.stop();
+	unsigned tickquickrec=t.get_tick();
+
+	int eredmeny=memcmp(arraystd,arrayquick,elem_count*sizeof(float));
+
+	printf_s("eredmeny:%d\n",eredmeny);
+
+	memcpy(array,tmparray,elem_count*sizeof(float));
+	t.reset();
+	insertion_sort<float,&compare>(array,elem_count);
+	t.stop();
+	unsigned tickins=t.get_tick();
+
+	memcpy(array,tmparray,elem_count*sizeof(float));
+	t.reset();
+	merge_sort<float,&compare>(array,elem_count);
+	t.stop();
+	unsigned tickmer=t.get_tick();
+
+	memcpy(array,tmparray,elem_count*sizeof(float));
+	t.reset();
+	radixsort<float,&get_radix_key>(array,elem_count);
+	t.stop();
+	unsigned tickrad=t.get_tick();
+
+	printf_s("qqq:%d\nstd:%d\nst2:%d\nqui:%d\nrec:%d\nq3 :%d\nins:%d\nmer:%d\nrad:%d\n",tickqqq,tickstd,tickstd2,tickquick,tickquickrec,tickq3,tickins,tickmer,tickrad);
+}
+
+uint32 sort_key;
+
+
+
+//timer
+typedef struct timer_t
+{
+	long long start;
+	long long stop;
+} timer_t;
+
+long long timer_get_act_tick()
+{
+	LARGE_INTEGER counter;
+	QueryPerformanceCounter(&counter);
+	return counter.QuadPart;
+}
+
+void timer_start(timer_t* t)
+{
+	t->start=timer_get_act_tick();
+}
+
+void timer_stop(timer_t* t)
+{
+	t->stop=timer_get_act_tick();
+}
+
+unsigned timer_get_tick(timer_t* t)
+{
+	return (unsigned)(t->stop-t->start);
+}
+
+
+void sorttest2()
+{
+	timer_t t;
+#define buff_size 2000
+	//#define print_buf
+	int buf[buff_size];
+	int n;
+
+	for (n=0; n<buff_size; ++n)
+		//			buf[n]=buf_size-n;
+//		buf[n]=0;
+		buf[n]=rand();
+
+#ifdef print_buf
+	for (n=0; n<buff_size; ++n)
+		printf("%d, ",buf[n]);
+
+	printf("\n");
+#endif
+
+	timer_start(&t);
+	std::sort(buf,buf+buff_size);
+	timer_stop(&t);
+
+	printf("%d elem sortolasa:%d\n",buff_size,timer_get_tick(&t));
+
+#ifdef print_buf
+	for (n=0; n<buff_size; ++n)
+		printf("%d, ",buf[n]);
+
+	printf("\n");
+#endif
+}
+
 int _cdecl main()
 {
+	sorttest2();
+	return 0;
 	proba();
 	return 0;
 	for (int n=0; n<1000; ++n)

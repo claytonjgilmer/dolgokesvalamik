@@ -300,4 +300,21 @@ typedef char int8;
 	{
 		return (rand())*(i_max-i_min)/RAND_MAX+i_min;
 	}
+
+	MLINLINE float med3(float a1,float a2,float a3)
+	{
+		if (a1<a2)
+		{
+			if (a2<a3) return a2; //a1-a2-a3
+			if (a1<a3) return a3;//a1-a3-a2
+
+			return a1; //a3-a1-a2;
+		}
+		else
+		{
+			if (a1<a3) return a1; //a2-a1-a3;
+			if (a2<a3) return a3; //a2-a3-a1;
+			return a2; //a3-a2-a1
+		}
+	}
 #endif// _math_h_
