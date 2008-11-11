@@ -1,10 +1,10 @@
 #ifndef _thread_h_
 #define _thread_h_
 
-#include <windows.h> 
+#include <windows.h>
 #include "containers\string.h"
 	typedef unsigned (WINAPI *threadfunc)(void*);
-	
+
 	class thread
 	{
 	public:
@@ -19,3 +19,4 @@
 		unsigned m_id;
 	};
 #endif//_thread_h_
+

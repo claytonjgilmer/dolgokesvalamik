@@ -19,7 +19,7 @@
 		stringmap();
 		unsigned add_data(T* i_data);
 		void remove_data(const char* i_name);
-		T* get_data(const char* i_name) const; 
+		T* get_data(const char* i_name) const;
 
 		stringmapstat statistics() const;
 		T** get_buffer(){return m_buf;}

@@ -32,7 +32,8 @@
 
 			tstring<16> m_name; //group
 			groupstruct* Next;
-			vector<tstring<64>> m_pathbuf;
+			typedef tstring<64> tstring_64;
+			vector<tstring_64> m_pathbuf;
 		} ;
 
 		stringmap<groupstruct,128> m_pathmap;

@@ -424,3 +424,5 @@
 		m_buf=(basetype*)newbuf;
 	}
 #endif//_vector_h_
+
+

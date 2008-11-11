@@ -75,7 +75,7 @@
 	template<class basetype, unsigned bufsize>
 	MLINLINE void queue<basetype,bufsize>::threadsafe_push(const basetype& i_elem)
 	{
-		int index=_InterlockedExchangeAdd((long*)&m_end,1) & (bufsize-1);
+		int index=InterlockedExchangeAdd((long*)&m_end,1) & (bufsize-1);
 		basetype* buf=(basetype*)m_buf;
 		new (buf+index) basetype(i_elem);
 //		m_end=(m_end+1)&(bufsize-1);
@@ -87,7 +87,7 @@
 		assertion(m_first!=m_end);
 //		int index=_InterlockedIncrement((long*)&m_first);
 //		--index;
-		int index=_InterlockedExchangeAdd((long*)&m_first,1);
+		int index=InterlockedExchangeAdd((long*)&m_first,1);
 //		--index;
 		index&=(bufsize-1);
 		return ((basetype*)m_buf)[index];

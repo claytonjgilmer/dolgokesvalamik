@@ -97,8 +97,8 @@
 	{
 //		m_taskmutex.lock();
 //		--m_incompletetasknum;
-		_InterlockedDecrement((long*)&m_incompletetasknum);
-		_InterlockedDecrement((long*)(m_ref_buf+i_task->m_ref_index));
+		InterlockedDecrement((long*)&m_incompletetasknum);
+		InterlockedDecrement((long*)(m_ref_buf+i_task->m_ref_index));
 
 //		--m_ref_buf[i_task->m_ref_index];
 
@@ -128,7 +128,7 @@
 
 		i_task->m_ref_index=ref_index;
 		m_taskbuf.threadsafe_push(i_task);
-		_InterlockedIncrement((long*)&m_incompletetasknum);
+		InterlockedIncrement((long*)&m_incompletetasknum);
 //		++m_incompletetasknum;
 //		m_taskmutex.unlock();
 #ifdef _DEBUG
@@ -163,7 +163,7 @@
 		unsigned ref_index=m_ref_index.pop();
 
 		m_ref_buf[ref_index]=i_tasknum;
-		_InterlockedExchangeAdd((long*)&m_incompletetasknum,i_tasknum);
+		InterlockedExchangeAdd((long*)&m_incompletetasknum,i_tasknum);
 //		m_incompletetasknum+=i_tasknum;
 
 		for (unsigned n=0; n<i_tasknum; ++n)

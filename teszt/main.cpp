@@ -1,7 +1,6 @@
 #include "math/sorting.h"
 #include "math/vec3.h"
 #include "math/math.h"
-#include "math/ssemtx4x3.h"
 #include "containers/listallocator.h"
 #include <conio.h>
 #include <stdio.h>
@@ -132,8 +131,8 @@ void tasktest()
 
 
 
-//	printf_s(" parallel:%d\n   serial:%d\nparallel2:%d\n",tick,tick2,tick15);
-	printf_s(" parallel:%d\n   serial:%d\n",tick,tick2);
+//	printf(" parallel:%d\n   serial:%d\nparallel2:%d\n",tick,tick2,tick15);
+	printf(" parallel:%d\n   serial:%d\n",tick,tick2);
 
 	free(buf);
 	physicssystem::release();
@@ -201,7 +200,7 @@ void proba()
 		for (int n=0; n<1000;++n)
 			g_p2[n]=(in*)malloc(random(1,5000)*sizeof(in));
 	}
-	
+
 	for (unsigned m=0; m<szam2;++m)
 	{
 		{
@@ -268,7 +267,7 @@ void proba()
 		}
 	}
 
-	printf_s("tomb :%d\nlista:%d\nlist2:%d\n",tick1,tick2,tick3);
+	printf("tomb :%d\nlista:%d\nlist2:%d\n",tick1,tick2,tick3);
 
 	{
 		for (int n=0; n<1000;++n)
@@ -369,7 +368,7 @@ void sorttest()
 
 	int eredmeny=memcmp(arraystd,arrayquick,elem_count*sizeof(float));
 
-	printf_s("eredmeny:%d\n",eredmeny);
+	printf("eredmeny:%d\n",eredmeny);
 
 	memcpy(array,tmparray,elem_count*sizeof(float));
 	t.reset();
@@ -389,7 +388,7 @@ void sorttest()
 	t.stop();
 	unsigned tickrad=t.get_tick();
 
-	printf_s("qqq:%d\nstd:%d\nst2:%d\nqui:%d\nrec:%d\nq3 :%d\nins:%d\nmer:%d\nrad:%d\n",tickqqq,tickstd,tickstd2,tickquick,tickquickrec,tickq3,tickins,tickmer,tickrad);
+	printf("qqq:%d\nstd:%d\nst2:%d\nqui:%d\nrec:%d\nq3 :%d\nins:%d\nmer:%d\nrad:%d\n",tickqqq,tickstd,tickstd2,tickquick,tickquickrec,tickq3,tickins,tickmer,tickrad);
 }
 
 uint32 sort_key;
@@ -460,15 +459,21 @@ void sorttest2()
 #endif
 }
 
+vec3 x,y;
+
 int _cdecl main()
 {
+	vec3 a1,a2; a1.set(1,2,3),a2.set(4,5,6);
+	x=a1+a2;
+	y=x;
+	x=add(a1,a2);
 	sorttest2();
 	return 0;
 	proba();
 	return 0;
 	for (int n=0; n<1000; ++n)
 	{
-		printf_s("%d.\n",n+1);
+		printf("%d.\n",n+1);
 		tasktest();
 	}
 }

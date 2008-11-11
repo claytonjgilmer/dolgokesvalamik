@@ -43,7 +43,7 @@
 
 			float w = scalartriple(psegment, pq1, pq4);
 
-			if (w < 0.0f) 
+			if (w < 0.0f)
 				return 0;
 
 			v = -v;
@@ -108,7 +108,7 @@
 		float c = dd * k - md * md;
 		float t;
 
-		if (abs(a) < 0.00001f)
+		if (fabsf(a) < 0.00001f)
 		{
 			if (c > 0.0f)
 				return 0;
@@ -176,7 +176,7 @@
 		float c = dd * k - md * md;
 		float t;
 
-		if (abs(a) < 0.00001f)
+		if (fabsf(a) < 0.00001f)
 		{
 			if (c > 0.0f)
 				return 0;

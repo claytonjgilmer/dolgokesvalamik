@@ -1,6 +1,7 @@
 #ifndef _taskmanager2_h_
 #define _taskmanager2_h_
 
+#include <malloc.h>
 #include "mutex.h"
 #include "thread.h"
 #include "task.h"
@@ -70,7 +71,7 @@
 
 			unsigned tnum=0;
 			const unsigned n=i_elemnum/elemnumpertask+1;
-			proc_range** tasks=(proc_range**)_alloca(n*sizeof(proc_range*));
+			proc_range** tasks=(proc_range**)alloca(n*sizeof(proc_range*));
 
 			while (start<i_elemnum)
 			{
@@ -85,7 +86,7 @@
 			spawn_tasks((task_t**)tasks,tnum);
 		}
 
-		template<class S> void process_buffer(unsigned i_elemnum, unsigned i_grainsize, const S& i_process)
+		template<typename S> void process_buffer(unsigned i_elemnum, unsigned i_grainsize, S i_process)
 		{
 			class proc_range:public task_t
 			{
@@ -113,7 +114,7 @@
 
 			unsigned tnum=0;
 			const unsigned n=i_elemnum/elemnumpertask+1;
-			proc_range** tasks=(proc_range**)_alloca(n*sizeof(proc_range*));
+			proc_range** tasks=(proc_range**)alloca(n*sizeof(proc_range*));
 
 			while (start<i_elemnum)
 			{

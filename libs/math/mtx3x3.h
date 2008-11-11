@@ -51,7 +51,7 @@
 				float	_31,_32,_33;
 			};
 
-			struct  
+			struct
 			{
 				vec3 x,y,z;
 			};
@@ -68,7 +68,7 @@
 		y=i_y;
 		z=i_z;
 	}
-	
+
 	inline mtx3x3::operator float* ()
 	{
 		return &_11;
@@ -110,12 +110,14 @@
 
 	inline vec3 mtx3x3::transform3x3(const vec3& i_src) const
 	{
-		return vec3
+	    vec3 t;
+	    t.set
 			(
 			i_src.x*_11+i_src.y*_21+i_src.z*_31,
 			i_src.x*_12+i_src.y*_22+i_src.z*_32,
 			i_src.x*_13+i_src.y*_23+i_src.z*_33
 			);
+        return t;
 	}
 
 	inline void mtx3x3::transformtransposed3x3(vec3& o_dst, const vec3& i_src) const
@@ -127,12 +129,14 @@
 
 	inline vec3 mtx3x3::transformtransposed3x3(const vec3& i_src) const
 	{
-		return vec3
+	    vec3 t; t.set
 			(
 			dot(i_src,x),
 			dot(i_src,y),
 			dot(i_src,z)
 			);
+
+        return t;
 	}
 
 	inline void mtx3x3::transpose3x3()
@@ -201,7 +205,7 @@
 		i_src2transposed.transformtransposed3x3(this->y,i_src1.y);
 		i_src2transposed.transformtransposed3x3(this->z,i_src1.z);
 	}
-	
+
 	inline void mtx3x3::fromeuler(float i_xangle, float i_yangle, float i_zangle)
 	{
 		float sx=(sin(i_xangle)), cx=(cos(i_xangle));
@@ -219,12 +223,12 @@
 		o_xangle = asin(this->z.y);
 		a = cos( o_xangle );
 
-		if (::abs(a)>0.0001f) 
+		if (fabsf(a)>0.0001f)
 		{
 			o_zangle=atan2f(this->x.y, this->y.y);
 			o_yangle=atan2f(this->z.x, this->z.z);
 		}
-		else 
+		else
 		{
 			o_zangle=0.0f;
 			o_yangle=atan2f(this->y.x, this->x.x);

@@ -21,3 +21,4 @@
 									_TYPE_* _TYPE_::m_instance=NULL;
 
 #endif//_singleton_h_
+

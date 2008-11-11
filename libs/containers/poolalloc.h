@@ -17,7 +17,7 @@
 		void erase(unsigned i_index);
 
 	protected:
-		vector<fixedvector<T,poolsize>> m_poolbuf;
+		vector<fixedvector<T,poolsize> > m_poolbuf;
 	private:
 		poolalloc(const poolalloc& i_other){}
 		void operator=(const poolalloc& i_other){}

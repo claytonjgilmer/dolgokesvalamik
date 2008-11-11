@@ -8,7 +8,11 @@
 #ifdef NEED_ASSERT
 	inline void assertion(int i_condition)
 	{
-		if (!i_condition) __asm int 3;
+		if (!i_condition)
+		{
+			__asm int 3;
+//			__asm (  "int 3");
+		}
 	}
 	inline void assertion(int i_condition, const char* i_msg)
 	{
@@ -17,6 +21,7 @@
 			OutputDebugString(i_msg);
 			OutputDebugString("\n");
 			__asm int 3;
+//			__asm (  "int 3");
 		}
 	}
 #else

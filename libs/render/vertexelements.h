@@ -1,7 +1,7 @@
 #ifndef _vertexelements_h_
 #define _vertexelements_h_
 
-	typedef enum 
+	typedef enum
 	{
 		vertexelement_position,
 		vertexelement_normal,

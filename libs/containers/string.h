@@ -1,7 +1,8 @@
 #ifndef _string_h_
 #define _string_h_
 
-#include <string.h>
+//#include <string.h>
+#include <ctype.h>
 #include <float.h>
 #include "utils/assert.h"
 #include "utils/misc.h"
@@ -194,7 +195,7 @@
 	}
 
 	template <unsigned TSTRING_MIN_CAPACITY>
-	template <unsigned MINCAP2> 
+	template <unsigned MINCAP2>
 	MLINLINE int tstring<TSTRING_MIN_CAPACITY>::operator ==(const tstring<MINCAP2>& i_str) const
 	{
 		return !strcmp(m_buf,i_str.c_str());
@@ -251,7 +252,8 @@
 	MLINLINE tstring<TSTRING_MIN_CAPACITY>& tstring<TSTRING_MIN_CAPACITY>::operator+=(float i_num)
 	{
 		char strtmp[16];
-		_ftoa(i_num,strtmp,10);
+		sprintf(strtmp,"%f",i_num);
+//		_ftoa(i_num,strtmp,10);
 		return *this+=strtmp;
 	}
 

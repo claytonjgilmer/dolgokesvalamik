@@ -21,7 +21,7 @@
 			objects_at_level[n]=0;
 			oo_cell_size[n]=1/size;
 
-			for (int m=0; m<NUM_BUCKETS;++m)
+			for (uint32 m=0; m<NUM_BUCKETS;++m)
 			{
 				object_bucket[n][m]=NULL;
 				time_stamp[n][m]=0;
@@ -127,7 +127,7 @@
 								if (aabb_aabb_intersect(obj->bounding_world,p->bounding_world))
 								{
 //									this->checkobj_mutex.lock();
-									LONG index=_InterlockedExchangeAdd(&pair_num,1);
+									LONG index=InterlockedExchangeAdd(&pair_num,1);
 									new (this->pair_array+index) broadphasepair(obj,p);
 //									this->checkobj_mutex.unlock();
 								}
@@ -186,8 +186,31 @@
 			this->static_list.deallocate(obj);
 		else
 			this->dynamic_list.deallocate(obj);
-			
+
 	}
+
+
+    class hgrid_update_process
+    {
+        public:
+        hgrid_update_process(hgridbroadphase* i_broadphase,hgridobject** i_buf):
+        broad_phase(i_broadphase),
+        buf(i_buf)
+        {
+        }
+
+        void operator()(unsigned i_start,unsigned i_num) const
+        {
+            uint32 end=i_start+i_num;
+            for (uint32 n=i_start; n<end; ++n)
+            {
+                broad_phase->check_obj_against_grid(buf[n]);
+            }
+        }
+
+        hgridbroadphase* broad_phase;
+        hgridobject** buf;
+    };
 
 
 	void hgridbroadphase::update()
@@ -206,29 +229,7 @@
 		}
 		else
 		{
-			struct hgrid_update_process
-			{
-				hgrid_update_process(hgridbroadphase* i_broadphase,hgridobject** i_buf):
-				broad_phase(i_broadphase),
-				buf(i_buf)
-				{
-				}
-
-				void operator()(unsigned i_start,unsigned i_num) const
-				{
-					uint32 end=i_start+i_num;
-					for (uint32 n=i_start; n<end; ++n)
-					{
-						broad_phase->check_obj_against_grid(buf[n]);
-					}
-				}
-
-				hgridbroadphase* broad_phase;
-				hgridobject** buf;
-			};
-
-
-			const unsigned obj_count=this->dynamic_list.size();
+			unsigned obj_count=this->dynamic_list.size();
 			hgridobject** obj_array=(hgridobject**)_alloca(obj_count*sizeof(hgridobject*));
 
 			listallocator<hgridobject>::iterator it=this->dynamic_list.begin();

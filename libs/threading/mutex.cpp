@@ -42,7 +42,7 @@
 #if mutextype==0
 		LeaveCriticalSection(&m_cs);
 #else
-		_InterlockedExchange(&m_data,0);
+		InterlockedExchange(&m_data,0);
 #endif
 	}
 
@@ -61,11 +61,11 @@
 
 	void mutex2::lock()
 	{
-		while (_InterlockedCompareExchange(&m_data,1,0))
+		while (InterlockedCompareExchange(&m_data,1,0))
 			SwitchToThread();
 	}
 
 	void mutex2::unlock()
 	{
-		_InterlockedExchange(&m_data,0);
+		InterlockedExchange(&m_data,0);
 	}

@@ -54,7 +54,7 @@ HWND g_hwnd;
 #define V vec3
 #define V2 vec2
 
-vec3 g_pos[]={V(-1,-1,-1),V(1,-1,-1),V(1,1,-1),V(-1,1,-1),V(-1,-1,1),V(1,-1,1),V(1,1,1),V(-1,1,1)};
+vec3 g_pos[12];//={V(-1,-1,-1),V(1,-1,-1),V(1,1,-1),V(-1,1,-1),V(-1,-1,1),V(1,-1,1),V(1,1,1),V(-1,1,1)};
 vec2 g_uv[]={V2(0,0),V2(1,0),V2(1,1),V2(0,1),V2(1,0),V2(0,0),V2(0,1),V2(1,1)};
 
 void init_app(HWND i_hwnd)
@@ -283,7 +283,8 @@ void update_app()
 	mtx.set_euler(g_game.x,g_game.y,g_game.z);
 	mtx.t.set(-1,0,2.5f);
 
-	g_game.obj->get_worldposition().transformtransposed3x3(g_game.light_dir,vec3(1,1,0));
+	vec3 light_dir; light_dir.set(1,1,0);
+	g_game.obj->get_worldposition().transformtransposed3x3(g_game.light_dir,light_dir);
 	g_game.light_dir.normalize();
 
 	g_game.x+=dt/10;

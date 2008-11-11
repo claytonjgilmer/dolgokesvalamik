@@ -63,8 +63,9 @@
 			radius(i_desc.radius)
 		{
 			this->type=shape_type_sphere;
-			bounding.min=center-vec3(radius,radius,radius);
-			bounding.max=center+vec3(radius,radius,radius);
+			vec3 radvec; radvec.set(radius,radius,radius);
+			bounding.min=center-radvec;
+			bounding.max=center+radvec;
 		}
 	};
 
@@ -100,7 +101,7 @@
 
 			for (unsigned n=0; n<9;++n)
 			{
-				absmtx[n]=abs(this->pos[n]);
+				absmtx[n]=fabsf(this->pos[n]);
 			}
 
 			vec3 newextent;

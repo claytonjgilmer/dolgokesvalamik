@@ -32,15 +32,15 @@
 		void rotate(const mtx4x3& i_src, const vec3& i_axis, float i_angle);
 
 		void set_euler(float i_x,float i_y, float i_z);
-		
+
 		union
 		{
-			struct  
+			struct
 			{
 				float	_41,_42,_43;
 			};
 
-			struct  
+			struct
 			{
 				vec3 t;
 			};
@@ -88,13 +88,14 @@
 
 	MLINLINE vec3 mtx4x3::transform(const vec3& i_src) const
 	{
-		return vec3
+	    vec3 t;
+		t.set
 		(
 		i_src.x*_11+i_src.y*_21+i_src.z*_31+_41,
 		i_src.x*_12+i_src.y*_22+i_src.z*_32+_42,
 		i_src.x*_13+i_src.y*_23+i_src.z*_33+_43
 		);
-
+        return t;
 	}
 
 	MLINLINE void mtx4x3::transformtransposed(vec3& o_dst, const vec3& i_src) const

@@ -8,9 +8,6 @@
 	class vec3
 	{
 	public:
-		vec3();
-		vec3(float i_xcoord, float i_ycoord, float i_zcoord);
-
 		float&	operator[](int i_index);
 		const float& operator[](int i_index) const;
 
@@ -18,10 +15,10 @@
 		void	set(float i_xcoord, float i_ycoord, float i_zcoord);
 
 		void	cross(const vec3& i_src1, const vec3& i_src2);
-		friend 
+		friend
 		vec3 cross(const vec3& i_src1, const vec3& i_src2);
 		vec3 cross(const vec3& i_other) const;
-		
+
 		float	dot(const vec3& i_other) const;
 		friend
 		float	dot(const vec3& i_v1, const vec3& i_v2);
@@ -64,17 +61,6 @@
 		float x,y,z;
 	};//vec3
 
-	MLINLINE vec3::vec3()
-	{
-	}
-
-	MLINLINE vec3::vec3(float i_xcoord, float i_ycoord, float i_zcoord)
-	{
-		x=i_xcoord;
-		y=i_ycoord;
-		z=i_zcoord;
-	}
-
 	MLINLINE float& vec3::operator[](int i_index)
 	{
 		return *(&x+i_index);
@@ -108,11 +94,14 @@
 
 	MLINLINE vec3 cross(const vec3& i_src1, const vec3& i_src2)
 	{
-		return vec3(
+	    vec3 c;
+	    c.set(
 			i_src1.y*i_src2.z-i_src1.z*i_src2.y,
 			i_src1.z*i_src2.x-i_src1.x*i_src2.z,
 			i_src1.x*i_src2.y-i_src1.y*i_src2.x
-			);
+		);
+
+		return c;
 	}
 
 	MLINLINE vec3 vec3::cross(const vec3& i_other) const
@@ -169,12 +158,16 @@
 
 	MLINLINE vec3	vec3::operator+(const vec3& i_other) const
 	{
-		return vec3(x+i_other.x,y+i_other.y,z+i_other.z);
+	    vec3 a;
+	    a.set(x+i_other.x,y+i_other.y,z+i_other.z);
+	    return a;
 	}
 
 	MLINLINE vec3	vec3::operator-(const vec3& i_other) const
 	{
-		return vec3(x-i_other.x,y-i_other.y,z-i_other.z);
+	    vec3 d;
+	    d.set(x-i_other.x,y-i_other.y,z-i_other.z);
+	    return d;
 	}
 
 	MLINLINE void	vec3::operator+=(const vec3& i_other)
@@ -193,12 +186,15 @@
 
 	MLINLINE vec3	vec3::operator*(float i_scalar) const
 	{
-		return vec3(x*i_scalar,y*i_scalar,z*i_scalar);
+	    vec3 m; m.set(x*i_scalar,y*i_scalar,z*i_scalar);
+	    return m;
 	}
 
 	MLINLINE vec3	vec3::operator/(float i_scalar) const
 	{
-		return vec3(x/i_scalar,y/i_scalar,z/i_scalar);
+	    vec3 d;
+	    d.set(x/i_scalar,y/i_scalar,z/i_scalar);
+	    return d;
 	}
 
 	MLINLINE vec3 operator*(float i_scalar, const vec3& i_vector)
@@ -222,7 +218,7 @@
 
 	MLINLINE vec3	vec3::operator-() const
 	{
-		return vec3(-x,-y,-z);
+	    vec3 n; n.set(-x,-y,-z); return n;
 	}
 
 	MLINLINE void vec3::abs(const vec3& i_src)
@@ -323,5 +319,15 @@
 	MLINLINE float scalartriple(vec3 i_v1, vec3 i_v2, vec3 i_v3)
 	{
 		return dot(i_v1,cross(i_v2,i_v3));
+	}
+
+	MLINLINE vec3 add(const vec3& v1, const vec3& v2)
+	{
+		vec3 sum;
+		sum.x=v1.x+v2.x;
+		sum.y=v1.y+v2.y;
+		sum.z=v1.z+v2.z;
+
+		return sum;
 	}
 #endif//_vec3_h_

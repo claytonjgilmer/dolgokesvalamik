@@ -4,6 +4,7 @@
 #include "shader.h"
 #include "texture.h"
 #include "containers/vector.h"
+#include "utils/ref_ptr.h"
 
 	struct submesh
 	{
@@ -48,7 +49,7 @@
 
 		unsigned m_firstvertex, m_numvertices, m_firstindex,m_numindices;
 
-		vector<ref_ptr<texture>> m_texturebuf;
+		vector<ref_ptr<texture> > m_texturebuf;
 		ref_ptr<shader> m_shader;
 
 		struct param

@@ -37,7 +37,7 @@ void q_sort(T numbers[], int left, int right)
 				left++;
 
 
-			std::swap(numbers[left],numbers[right]);
+			swap(numbers[left],numbers[right]);
 			left++;
 			right--;
 		}
@@ -64,7 +64,7 @@ void q_sort(T numbers[], int left, int right)
 
 void qf(float a[], int l, int r)
 {
-	int i = l-1, j = r, p = l-1, q = r; 
+	int i = l-1, j = r, p = l-1, q = r;
 	float v = a[r];
 //	float v = a[(l+r)/2];
 
@@ -128,8 +128,8 @@ void quicksortfloat(float a[], int lo, int hi)
 	float x=med3(a[lo],a[hi],a[(lo+hi)/2]);
 
 	do
-	{    
-		while (a[i]<x) i++; 
+	{
+		while (a[i]<x) i++;
 		while (a[j]>x) j--;
 		if (i<=j)
 		{

@@ -18,7 +18,7 @@
 		string* m_stringvalue;
 		vec3* m_vec3value;
 		vec2* m_vec2value;
-		
+
 	};
 
 #define _define_prop_(_type_,_val_) const _type_& get_##_type_() const{return *m_val.##_val_;} void set(const _type_& i_val){*m_val.##_val_=i_val; Callbacks();}

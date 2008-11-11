@@ -1,10 +1,11 @@
 #ifndef _referencedobject_h_
 #define _referencedobject_h_
 
-#include "utils/ref_ptr.h"
+//#include "utils/ref_ptr.h"
 #include "utils/misc.h"
 #include "utils/assert.h"
 
+    template <class T> class ref_ptr;
 	class referencedobject
 	{
 		template <class T> friend class ref_ptr;

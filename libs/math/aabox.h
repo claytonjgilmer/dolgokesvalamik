@@ -33,7 +33,7 @@
 
 		for (unsigned n=0; n<9;++n)
 		{
-			absmtx[n]=abs(i_mtx[n]);
+			absmtx[n]=fabsf(i_mtx[n]);
 		}
 		vec3 newextent;
 		absmtx.transform3x3(newextent,extent);
@@ -44,3 +44,5 @@
 		return dst;
 	}
 #endif//_aabox_h_
+
+

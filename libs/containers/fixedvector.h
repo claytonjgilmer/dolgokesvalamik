@@ -32,7 +32,7 @@
 		{
 			for (unsigned int n=0; n<m_size;++n)
 				TBuf[n].~T();
-			
+
 			m_size=i_other.m_size;
 
 			for (unsigned n=0; n<m_size; ++n)

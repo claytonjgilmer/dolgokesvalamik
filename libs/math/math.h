@@ -3,7 +3,7 @@
 
 #include <math.h>
 #include <stdlib.h>
-#include "utils\misc.h"
+#include "..\utils\misc.h"
 
 typedef unsigned __int64 uint64;
 typedef unsigned uint32;
@@ -158,6 +158,7 @@ typedef char int8;
 		return i_value>0.0 ? 1.0 : -1.0;
 	}
 
+/*
 	MLINLINE void swap(int& io_value1, int& io_value2)
 	{
 		io_value1^=io_value2;
@@ -169,7 +170,7 @@ typedef char int8;
 	{
 		swap((int&)io_value1,(int&)io_value2);
 	}
-
+*/
 	template<class t>
 	MLINLINE void swap(t& io_value1, t& io_value2)
 	{
@@ -181,7 +182,7 @@ typedef char int8;
 	template<class t>
 	MLINLINE void sort(t& id0, t& id1)
 	{
-		if(id0>id1)	std::swap(id0, id1);
+		if(id0>id1)	swap(id0, id1);
 	}
 
 
