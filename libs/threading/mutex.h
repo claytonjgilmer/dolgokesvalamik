@@ -30,7 +30,7 @@
 #if mutextype==0
 		CRITICAL_SECTION m_cs;
 #else
-		volatile long m_data;
+		long m_data;
 #endif
 	};
 
@@ -45,7 +45,7 @@
 		void lock();
 		void unlock();
 	private:
-		volatile long m_data;
+		long m_data;
 	};
 
 	struct blocklocker

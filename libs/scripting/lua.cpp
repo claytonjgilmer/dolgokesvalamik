@@ -82,7 +82,7 @@
 			luaopen_debug(m_LuaState);
 
 		m_InitStackTop = lua_gettop(m_LuaState);
-		
+
 		RegisterFunctions();
 	}
 
@@ -154,7 +154,7 @@
 	void lua::DoFile(const string &i_FileName)
 	{
 		file File;
-		
+
 		File.open(i_FileName.c_str(), "rb");
 
 		if (!File.opened())
@@ -187,7 +187,7 @@
 			m_StackRef.resize(StackRefIndex+1);
 		}
 
-		assert(unsigned int(StackRefIndex) < m_StackRef.size());
+		assert((unsigned int)(StackRefIndex) < m_StackRef.size());
 
 		m_StackRef[StackRefIndex].push_back(i_Variable);
 	}
@@ -198,10 +198,10 @@
 		if (!i_Variable->m_Created)
 			return;
 		int StackRefIndex = m_StackRefBase + i_StackIndex;
-		assert(unsigned int(StackRefIndex) > 0 && unsigned int(StackRefIndex) < m_StackRef.size());
+		assert((unsigned int)(StackRefIndex) > 0 && (unsigned int)(StackRefIndex) < m_StackRef.size());
 		VariablePtrList::iterator place;
 		for(place = m_StackRef[StackRefIndex].begin();place != m_StackRef[StackRefIndex].end();place++)
-			if(*place==i_Variable) 
+			if(*place==i_Variable)
 				break;
 		assert(place!=m_StackRef[StackRefIndex].end());
 		m_StackRef[StackRefIndex].remove(i_Variable);
@@ -215,7 +215,7 @@
 				else
 					lua_remove(m_LuaState, i_StackIndex);
 			}
-			if (StackRefIndex == m_StackRef.size()-1)
+			if (StackRefIndex == (int)m_StackRef.size()-1)
 			{
 				m_StackRef.pop_back();
 			}
@@ -577,7 +577,7 @@
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::Begin(Variable &i_Key, Variable &i_Value) 
+	void lua::Variable::Begin(Variable &i_Key, Variable &i_Value)
 	{
 		i_Value.Invalidate();
 		i_Key.Invalidate();
@@ -596,7 +596,7 @@
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::Next(Variable &i_Key,  Variable &i_Value) 
+	void lua::Variable::Next(Variable &i_Key,  Variable &i_Value)
 	{
 		i_Value.Invalidate();
 		if (i_Key.m_StackIndex == lua_gettop(GetState()))

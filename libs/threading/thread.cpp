@@ -20,21 +20,23 @@
 		info.m_name=i_threadname.c_str();
 		info.m_threadid=i_threadID;
 		info.m_flags=0;
-
-		__try
+//			RaiseException( MS_VC_EXCEPTION, 0, sizeof(info)/sizeof(ULONG_PTR), (ULONG_PTR*)&info );
+/*
+		try
 		{
 			RaiseException( MS_VC_EXCEPTION, 0, sizeof(info)/sizeof(ULONG_PTR), (ULONG_PTR*)&info );
 		}
 		__except(EXCEPTION_EXECUTE_HANDLER)
 		{
 		}
+*/
 	}
-	
+
 	thread::thread(const string& i_name):
 	m_name(i_name)
 	{
 	}
-	
+
 	void thread::start(threadfunc i_func, void* i_data)
 	{
 				m_handle=(HANDLE)_beginthreadex( NULL, 0, i_func, i_data, 0, &m_id);

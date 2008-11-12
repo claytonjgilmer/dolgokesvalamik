@@ -9,6 +9,7 @@
 		char* args;
 
 		args=(char*)&msg+sizeof(msg);
-		vsprintf_s(str,msg,args);
+		vsprintf(str,msg,args);
+//		vsprintf_s(str,msg,args);
 		OutputDebugStringA(str);
 	}

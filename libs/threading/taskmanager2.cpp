@@ -121,7 +121,7 @@
 
 //		m_taskmutex.lock();
 #ifdef _DEBUG
-		int lcheck=_InterlockedIncrement(&g_check);
+		int lcheck=InterlockedIncrement(&g_check);
 		assertion(lcheck==1);
 #endif
 		m_ref_buf[ref_index]=1;
@@ -132,7 +132,7 @@
 //		++m_incompletetasknum;
 //		m_taskmutex.unlock();
 #ifdef _DEBUG
-		_InterlockedDecrement(&g_check);
+		InterlockedDecrement(&g_check);
 #endif
 
 		ReleaseSemaphore(m_workevent,1,NULL);

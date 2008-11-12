@@ -681,7 +681,7 @@ void MeshLODInfo::PrintVertexStreamChunk(MChunk& chunk)
 	unsigned vertexsize = sizeleft/vertexcount;
 	assert(vertexsize * vertexcount == sizeleft);
 
-	AddStream();	
+	AddStream();
 	GetLastStream().SetFloatPerVertices(vertexsize / 4);
 	GetLastStream().SetMVF(strVF);
 	GetLastStream().SetVertexCount((unsigned)vertexcount);
@@ -909,7 +909,7 @@ void PrintSceneChunk(MChunk& top_chunk)
 		MChunk chunk = top_chunk.GetChunk();
 		if (chunk.GetName() == "Node" && Version >= 3)
 		{
-			while (chunk) 
+			while (chunk)
 			{
 				MChunk subchunk = chunk.GetChunk();
 				if (subchunk.GetName() == "Hierarchy")
@@ -1045,10 +1045,10 @@ void PrintHierarchyItemChunk(MChunk& chunk)
 			if ((int)gMeshLODInfoArray.size()>index && gMeshLODInfoArray[index].ismesh)
 				item.mesh=index;
 		}
-		else if (	subchunkname == "Resource" || 
-			subchunkname == "mesh" || 
-			subchunkname == "GeomMesh" || 
-			subchunkname  == "ConvexObject" || 
+		else if (	subchunkname == "Resource" ||
+			subchunkname == "mesh" ||
+			subchunkname == "GeomMesh" ||
+			subchunkname  == "ConvexObject" ||
 			subchunkname == "Aux" ||
 			subchunkname == "Note" )
 		{
@@ -1058,8 +1058,8 @@ void PrintHierarchyItemChunk(MChunk& chunk)
 			const string& resTypeName = gResourceTypeNames[index];
 			itemResTypeNames.push_back(resTypeName);
 
-			if (resTypeName == "Mesh" || 
-				resTypeName == "SkinedMesh" || 
+			if (resTypeName == "Mesh" ||
+				resTypeName == "SkinedMesh" ||
 				resTypeName == "Bone" ||
 				resTypeName == "AnimationChannels")
 			{
@@ -1163,7 +1163,7 @@ object3d* load_mmod(file& i_file)
 		}
 	}
 
-	vector<fixedvector<mesh*,8>> meshbuf;
+	vector<fixedvector<mesh*,8> > meshbuf;
 
 	for (unsigned n=0; n<gMeshLODInfoArray.size();++n)
 	{

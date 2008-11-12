@@ -26,7 +26,7 @@
 //			blocklocker b(m_mutex);
 //			m_mutex.lock();
 			int index=InterlockedExchangeAdd(&m_elemcount,1);
-			assertion(index<bufsize);
+			assertion(index<(int)bufsize);
 			m_buf[index]=i_elem;
 //			++m_elemcount;
 //			m_mutex.unlock();

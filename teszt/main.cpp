@@ -313,7 +313,7 @@ unsigned get_radix_key(float f)
 
 void sorttest()
 {
-	const int elem_count=2000;
+	const int elem_count=20000;
 	float* array=new float[elem_count];
 	float* arraystd=new float[elem_count];
 	float* arrayquick=new float[elem_count];
@@ -428,7 +428,7 @@ unsigned timer_get_tick(timer_t* t)
 void sorttest2()
 {
 	timer_t t;
-#define buff_size 2000
+#define buff_size 20000
 	//#define print_buf
 	int buf[buff_size];
 	int n;

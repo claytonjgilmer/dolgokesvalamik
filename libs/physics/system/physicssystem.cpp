@@ -108,10 +108,6 @@
 		}
 	}
 
-	void update_bodies(physicssystem* i_system, float i_dt)
-	{
-		if (i_system->parallel_processing)
-		{
 			struct update_process
 			{
 				update_process(nbody* i_b,float i_dt,vec3 i_gravity):
@@ -145,6 +141,10 @@
 			float dt;
 			vec3 gravity;
 			};
+	void update_bodies(physicssystem* i_system, float i_dt)
+	{
+		if (i_system->parallel_processing)
+		{
 			nbody* b=i_system->bodystate_array+BODYSTATE_DYNAMIC;
 			taskmanager::ptr()->process_buffer(b->size,10,update_process(b,i_dt,i_system->desc.gravity));
 		}
@@ -169,12 +169,6 @@
 		}
 	}
 
-	void update_inertia(physicssystem* i_system)
-	{
-		nbody* b=i_system->bodystate_array+BODYSTATE_DYNAMIC;
-
-		if (i_system->parallel_processing)
-		{
 			struct inertia_process
 			{
 				inertia_process(nbody* i_b):
@@ -196,6 +190,12 @@
 				nbody* b;
 			};
 
+	void update_inertia(physicssystem* i_system)
+	{
+		nbody* b=i_system->bodystate_array+BODYSTATE_DYNAMIC;
+
+		if (i_system->parallel_processing)
+		{
 			taskmanager::ptr()->process_buffer(b->size,10,inertia_process(b));
 		}
 		else

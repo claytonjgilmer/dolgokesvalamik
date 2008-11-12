@@ -6,7 +6,7 @@
 static void Assert(int condition, const char* message = "Unspecified exception")
 {
 	if (!condition)
-		__asm int 3
+		__asm ("int $3");
 }
 
 
@@ -160,7 +160,7 @@ MChunk::MChunk()
 	ptr=NULL;
 }
 
-MChunk::MChunk(MChunkHandle* c) : 
+MChunk::MChunk(MChunkHandle* c) :
 ptr(c)
 {
 }
@@ -351,7 +351,7 @@ void MChunkStream::PushChunk(MChunkHandle* chk)
 void MChunkStream::PopChunk(MChunkHandle* chk)
 {
 	string last = mStack.back();
-	Assert(mStack.size() == chk->mDepth + 1 && last == chk->GetName(), 
+	Assert(mStack.size() == chk->mDepth + 1 && last == chk->GetName(),
 		"Hierarchy error during chunk reading. Forgot to close chunk?");
 	mStack.pop_back();
 }

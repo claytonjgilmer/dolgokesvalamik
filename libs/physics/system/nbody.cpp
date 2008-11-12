@@ -96,7 +96,7 @@
 		for (uint32 n=0; n<i_bodynum; ++n)
 		{
 			--this->size;
-			UINT16 index=i_body_array[n]->array_index;
+			uint16 index=i_body_array[n]->array_index;
 
 			this->pos[index]=this->pos[this->size];
 			this->vel[index]=this->vel[this->size];

@@ -2,7 +2,7 @@
 #include "containers/vector.h"
 
 DEFINE_OBJECT(node,rootobject);
-BIND_PROPERTY(node,get_localposition(),"localpos",mtx4x3);
+BIND_PROPERTY(node,m_localpos,"localpos",mtx4x3);
 
 	node::node(const char* i_name):
 	rootobject(i_name),
@@ -100,34 +100,34 @@ BIND_PROPERTY(node,get_localposition(),"localpos",mtx4x3);
 		i_child->m_parent=NULL;
 		i_child->m_bro=NULL;
 	}
-	
+
 	node* node::get_next(node* i_root) const
 	{
 		if (m_child)
 			return m_child;
-			
+
 		const node* ptr=this;
-		
+
 		while (ptr!=i_root)
 		{
 			if (ptr->m_bro)
 				return ptr->m_bro;
-				
+
 			ptr=ptr->m_parent;
 		}
-		
+
 		return NULL;
 	}
-	
+
 	void node::set_localposition(const mtx4x3& i_mtx)
 	{
 		m_localpos=i_mtx;
-		
+
 		//ennek a node-nak es a childnode-oknak ilyenkor invalidalodik a worldmatrixa
 		m_flags&=~nodeflag_valid_worldpos;
-		
+
 		node* ptr=this;
-		
+
 		while (ptr)
 		{
 			ptr->m_flags&=~nodeflag_valid_worldpos;
@@ -156,7 +156,7 @@ BIND_PROPERTY(node,get_localposition(),"localpos",mtx4x3);
 
 		node* ptr=this;
 		ptr=ptr->get_next(this);
-		
+
 		while (ptr)
 		{
 			ptr->m_flags&=~nodeflag_valid_worldpos;

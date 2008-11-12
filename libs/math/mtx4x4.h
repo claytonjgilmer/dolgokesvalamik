@@ -37,7 +37,7 @@
 				float _41,_42,_43,_44;
 			};
 
-			struct 
+			struct
 			{
 				vec4 x,y,z,t;
 			};
@@ -102,10 +102,10 @@
 
 	MLINLINE void mtx4x4::transform_transposed(vec4& o_dst, const vec4& i_src) const
 	{
-		o_dst.x=x.dot4(i_src);
-		o_dst.y=y.dot4(i_src);
-		o_dst.z=z.dot4(i_src);
-		o_dst.w=t.dot4(i_src);
+		o_dst.x=dot4(x,i_src);
+		o_dst.y=dot4(y,i_src);
+		o_dst.z=dot4(z,i_src);
+		o_dst.w=dot4(t,i_src);
 	}
 
 	MLINLINE void mtx4x4::transpose()

@@ -3,25 +3,25 @@
 #include "node.h"
 #include "containers/stringmap.h"
 
+    struct mapelem
+    {
+        const string& get_name() const
+        {
+            return m_name;
+        }
+        vector<node*> m_child;
+        string m_name;
+
+        mapelem(const char* i_name):
+        m_name(i_name)
+        {
+        }
+
+        mapelem* Next;
+    };
+
 	node* sceneloader::load_scene(const char* i_scenename)
 	{
-		struct mapelem
-		{
-			const string& get_name() const
-			{
-				return m_name;
-			}
-			vector<node*> m_child;
-			string m_name;
-
-			mapelem(const char* i_name):
-			m_name(i_name)
-			{
-			}
-
-			mapelem* Next;
-		};
-
 		stringmap<mapelem,1024> map;
 		vector<node*> nodebuf;
 		vector<node*> root;
@@ -80,7 +80,7 @@
 				mapptr->get_name();
 				mapptr=mapptr->Next;
 			}
-			
+
 		}
 
 		assert(0);

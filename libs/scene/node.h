@@ -9,7 +9,7 @@
 
 	const unsigned nodeflag_valid_worldpos=(1<<0);
 	const unsigned nodeflag_dont_save=(1<<0);
-	
+
 	class node:public rootobject
 	{
 		DECLARE_OBJECT(node);
@@ -27,10 +27,10 @@
 
 		void set_localposition(const mtx4x3&);
 		const mtx4x3& get_localposition() const;
-		
+
 		void set_worldposition(const mtx4x3&);
 		const mtx4x3& get_worldposition();
-		
+
 		node* get_next(node* i_root=NULL) const;
 
 		node* get_node_by_name(const char* i_name);
@@ -40,8 +40,8 @@
 
 		virtual void on_load(){}
 
-		
-	protected:
+
+//	protected:
 		node* m_parent;
 		node* m_child;
 		node* m_bro;
@@ -49,7 +49,7 @@
 //		string m_name;
 		mtx4x3 m_localpos;
 		mtx4x3 m_worldpos;
-		
+
 		unsigned m_flags;
 	};
 #endif//_node_h_

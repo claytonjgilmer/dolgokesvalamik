@@ -3,7 +3,7 @@
 
 typedef struct _TGAColMapSpec
 {
-	_TGAColMapSpec() 
+	_TGAColMapSpec()
 	{
 		 firstentry = 0;
 		 length = 256;
@@ -48,7 +48,7 @@ typedef struct _TGAFileHeader
 	//  9: Run-length encoded, color-mapped image
 	// 10: Run-length encoded, true color image
 	// 11: Run-length encoded, black and white image
-	TGAColMapSpec colmapspec;  
+	TGAColMapSpec colmapspec;
 	TGAImgSpec    imagespec;
 
 }TGAHeader;
