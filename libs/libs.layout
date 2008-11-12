@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Debug Win32" />
+	<File name="containers\fixedvector.h" open="0" top="0" tabpos="0">
+		<Cursor position="2143" topLine="85" />
+	</File>
+	<File name="containers\poolalloc.h" open="0" top="0" tabpos="0">
+		<Cursor position="406" topLine="1" />
+	</File>
+	<File name="containers\queue.h" open="0" top="0" tabpos="0">
+		<Cursor position="2128" topLine="71" />
+	</File>
+	<File name="containers\stack.h" open="0" top="0" tabpos="0">
+		<Cursor position="598" topLine="20" />
+	</File>
+	<File name="containers\string.h" open="0" top="0" tabpos="0">
+		<Cursor position="44" topLine="0" />
+	</File>
+	<File name="containers\stringmap.h" open="0" top="0" tabpos="0">
+		<Cursor position="2653" topLine="109" />
+	</File>
+	<File name="containers\vector.h" open="0" top="0" tabpos="0">
+		<Cursor position="8902" topLine="391" />
+	</File>
+	<File name="file\file.h" open="0" top="0" tabpos="0">
+		<Cursor position="2681" topLine="123" />
+	</File>
+	<File name="file\filesystem.h" open="0" top="0" tabpos="0">
+		<Cursor position="841" topLine="17" />
+	</File>
+	<File name="input\inputsystem.h" open="1" top="0" tabpos="3">
+		<Cursor position="10929" topLine="301" />
+	</File>
+	<File name="math\aabox.h" open="0" top="0" tabpos="0">
+		<Cursor position="778" topLine="12" />
+	</File>
+	<File name="math\intersection.h" open="0" top="0" tabpos="0">
+		<Cursor position="3685" topLine="160" />
+	</File>
+	<File name="math\math.h" open="0" top="0" tabpos="0">
+		<Cursor position="2746" topLine="157" />
+	</File>
+	<File name="math\mtx3x3.h" open="0" top="0" tabpos="0">
+		<Cursor position="5728" topLine="201" />
+	</File>
+	<File name="math\mtx4x3.h" open="0" top="0" tabpos="0">
+		<Cursor position="2465" topLine="77" />
+	</File>
+	<File name="math\sorting.h" open="0" top="0" tabpos="0">
+		<Cursor position="6207" topLine="308" />
+	</File>
+	<File name="math\ssemtx4x3.h" open="0" top="0" tabpos="0">
+		<Cursor position="48" topLine="0" />
+	</File>
+	<File name="math\ssevec3.h" open="0" top="0" tabpos="0">
+		<Cursor position="91" topLine="0" />
+	</File>
+	<File name="math\vec2.h" open="0" top="0" tabpos="0">
+		<Cursor position="793" topLine="27" />
+	</File>
+	<File name="math\vec3.h" open="0" top="0" tabpos="0">
+		<Cursor position="4310" topLine="202" />
+	</File>
+	<File name="physics\collision\broadphase\broadphaseobject.h" open="0" top="0" tabpos="0">
+		<Cursor position="409" topLine="0" />
+	</File>
+	<File name="physics\collision\broadphase\broadphasepair.h" open="0" top="0" tabpos="0">
+		<Cursor position="463" topLine="0" />
+	</File>
+	<File name="physics\collision\broadphase\hgridbroadphase.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="6977" topLine="215" />
+	</File>
+	<File name="physics\collision\broadphase\hgridbroadphase.h" open="0" top="0" tabpos="0">
+		<Cursor position="2077" topLine="40" />
+	</File>
+	<File name="physics\collision\shapeintersection\shapeintersection.h" open="0" top="0" tabpos="0">
+		<Cursor position="844" topLine="0" />
+	</File>
+	<File name="physics\collision\shapes\shape.h" open="0" top="0" tabpos="0">
+		<Cursor position="2150" topLine="78" />
+	</File>
+	<File name="physics\collision\system\constraint.h" open="0" top="0" tabpos="0">
+		<Cursor position="534" topLine="0" />
+	</File>
+	<File name="physics\collision\system\contact.h" open="0" top="0" tabpos="0">
+		<Cursor position="1519" topLine="23" />
+	</File>
+	<File name="physics\collision\system\contactmanager.h" open="0" top="0" tabpos="0">
+		<Cursor position="542" topLine="0" />
+	</File>
+	<File name="physics\system\body.h" open="0" top="0" tabpos="0">
+		<Cursor position="1041" topLine="27" />
+	</File>
+	<File name="physics\system\nbody.h" open="0" top="0" tabpos="0">
+		<Cursor position="799" topLine="6" />
+	</File>
+	<File name="physics\system\physicssystem.h" open="0" top="0" tabpos="0">
+		<Cursor position="1635" topLine="28" />
+	</File>
+	<File name="prop\property.h" open="0" top="0" tabpos="0">
+		<Cursor position="775" topLine="2" />
+	</File>
+	<File name="render\indexbuffer.h" open="0" top="0" tabpos="0">
+		<Cursor position="437" topLine="0" />
+	</File>
+	<File name="render\mesh.h" open="0" top="0" tabpos="0">
+		<Cursor position="541" topLine="0" />
+	</File>
+	<File name="render\renderobject3d.h" open="0" top="0" tabpos="0">
+		<Cursor position="559" topLine="0" />
+	</File>
+	<File name="render\shader.h" open="0" top="0" tabpos="0">
+		<Cursor position="358" topLine="0" />
+	</File>
+	<File name="render\submesh.h" open="0" top="0" tabpos="0">
+		<Cursor position="145" topLine="0" />
+	</File>
+	<File name="render\texture.h" open="0" top="0" tabpos="0">
+		<Cursor position="350" topLine="0" />
+	</File>
+	<File name="render\vertexbuffer.h" open="0" top="0" tabpos="0">
+		<Cursor position="797" topLine="0" />
+	</File>
+	<File name="render\vertexelements.h" open="0" top="0" tabpos="0">
+		<Cursor position="523" topLine="0" />
+	</File>
+	<File name="scene\rootobject.h" open="0" top="0" tabpos="0">
+		<Cursor position="1374" topLine="21" />
+	</File>
+	<File name="threading\mutex.h" open="0" top="0" tabpos="0">
+		<Cursor position="323" topLine="0" />
+	</File>
+	<File name="threading\task.h" open="0" top="0" tabpos="0">
+		<Cursor position="287" topLine="0" />
+	</File>
+	<File name="threading\taskallocator.h" open="0" top="0" tabpos="0">
+		<Cursor position="774" topLine="7" />
+	</File>
+	<File name="threading\taskmanager2.h" open="1" top="0" tabpos="2">
+		<Cursor position="2182" topLine="82" />
+	</File>
+	<File name="threading\thread.h" open="0" top="0" tabpos="0">
+		<Cursor position="448" topLine="0" />
+	</File>
+	<File name="utils\assert.h" open="0" top="0" tabpos="0">
+		<Cursor position="406" topLine="0" />
+	</File>
+	<File name="utils\misc.h" open="0" top="0" tabpos="0">
+		<Cursor position="108" topLine="0" />
+	</File>
+	<File name="utils\ref_ptr.h" open="0" top="0" tabpos="0">
+		<Cursor position="2018" topLine="100" />
+	</File>
+	<File name="utils\referencedobject.h" open="0" top="0" tabpos="0">
+		<Cursor position="183" topLine="0" />
+	</File>
+	<File name="utils\resource.h" open="0" top="0" tabpos="0">
+		<Cursor position="366" topLine="0" />
+	</File>
+	<File name="utils\singleton.h" open="0" top="0" tabpos="0">
+		<Cursor position="972" topLine="0" />
+	</File>
+	<File name="utils\stringhash.h" open="0" top="0" tabpos="0">
+		<Cursor position="3912" topLine="160" />
+	</File>
+	<File name="utils\timer.h" open="0" top="0" tabpos="0">
+		<Cursor position="292" topLine="0" />
+	</File>
+</CodeBlocks_layout_file>
