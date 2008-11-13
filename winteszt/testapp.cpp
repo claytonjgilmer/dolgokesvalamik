@@ -268,6 +268,7 @@ unsigned sumtime=0;
 
 void update_app()
 {
+	timer update_time;
 	char str[128];
 	g_game.t.stop();
 	float frame_time=g_game.t.get_seconds();
@@ -294,38 +295,36 @@ void update_app()
 	t.stop();
 	unsigned sec=t.get_tick();
 	sprintf(str,"simulation time:%d",sec);
-
 	rendersystem::ptr()->draw_text(10,10,color_f(1,1,1,1),str);
 
+	sprintf(str,"pairnum:%d",physicssystem::ptr()->broad_phase.pair_num);
+	rendersystem::ptr()->draw_text(10,40,color_f(1,1,1,1),str);
+
+#if 1
 	for (unsigned n=0; n<(unsigned)physicssystem::ptr()->broad_phase.pair_num; ++n)
 	{
 		broadphasepair& pair=physicssystem::ptr()->broad_phase.pair_array[n];
 
-		vec3 xvec; xvec.set(1,0,0);
-		vec3 yvec; xvec.set(0,1,0);
-		vec3 zvec; xvec.set(0,0,1);
 		{
 			vec3 center=pair.object[0]->bounding_world.get_center();
 			vec3 extent=pair.object[0]->bounding_world.get_extent();
 			vec3 corner[8];
 
-			static int x[]={-1,1,1,-1,-1,1,1,-1};
-
+			const float x[]={-1,1,1,-1,-1,1,1,-1};
 
 
 			for (int n=0; n<8;++n)
 			{
-				corner[n]=center+(x[n])*extent.x*xvec+
-					(2*((n&2)>>1)-1)*extent.y*yvec+
-					(2*((n&4)>>2)-1)*extent.z*zvec;
+				corner[n].x=center.x+(x[n])*extent.x;
+				corner[n].y=center.y+(2*((n&2)>>1)-1)*extent.y;
+				corner[n].z=center.z+(2*((n&4)>>2)-1)*extent.z;
 			}
-
 			int prev=3;
 			for (int n=0; n<4;++n)
 			{
-				rendersystem::ptr()->draw_line(corner[n],color_r8g8b8a8(0,0,0,255),corner[prev],color_r8g8b8a8(255,255,255,255));
-				rendersystem::ptr()->draw_line(corner[n+4],color_r8g8b8a8(0,0,0,255),corner[prev+4],color_r8g8b8a8(255,255,255,255));
-				rendersystem::ptr()->draw_line(corner[n],color_r8g8b8a8(0,0,0,255),corner[n+4],color_r8g8b8a8(255,255,255,255));
+//				rendersystem::ptr()->draw_line(corner[n],color_r8g8b8a8(0,0,0,255),corner[prev],color_r8g8b8a8(255,255,255,255));
+//				rendersystem::ptr()->draw_line(corner[n+4],color_r8g8b8a8(0,0,0,255),corner[prev+4],color_r8g8b8a8(255,255,255,255));
+//				rendersystem::ptr()->draw_line(corner[n],color_r8g8b8a8(0,0,0,255),corner[n+4],color_r8g8b8a8(255,255,255,255));
 				prev=n;
 			}
 		}
@@ -334,27 +333,29 @@ void update_app()
 			vec3 extent=pair.object[1]->bounding_world.get_extent();
 			vec3 corner[8];
 
-			static int x[]={-1,1,1,-1,-1,1,1,-1};
+			const float x[]={-1,1,1,-1,-1,1,1,-1};
 
 			for (int n=0; n<8;++n)
 			{
-				corner[n]=center+(x[n])*extent.x*xvec+
-					(2*((n&2)>>1)-1)*extent.y*yvec+
-					(2*((n&4)>>2)-1)*extent.z*zvec;
+				corner[n].x=center.x+(x[n])*extent.x;
+				corner[n].y=center.y+(2*((n&2)>>1)-1)*extent.y;
+				corner[n].z=center.z+(2*((n&4)>>2)-1)*extent.z;
 			}
 
 			int prev=3;
+
 			for (int n=0; n<4;++n)
 			{
-				rendersystem::ptr()->draw_line(corner[n],color_r8g8b8a8(0,255,0,255),corner[prev],color_r8g8b8a8(0,255,0,255));
-				rendersystem::ptr()->draw_line(corner[n+4],color_r8g8b8a8(0,255,0,255),corner[prev+4],color_r8g8b8a8(0,255,0,255));
-				rendersystem::ptr()->draw_line(corner[n],color_r8g8b8a8(0,255,0,255),corner[n+4],color_r8g8b8a8(0,255,0,255));
+//				rendersystem::ptr()->draw_line(corner[n],color_r8g8b8a8(0,255,0,255),corner[prev],color_r8g8b8a8(0,255,0,255));
+//				rendersystem::ptr()->draw_line(corner[n+4],color_r8g8b8a8(0,255,0,255),corner[prev+4],color_r8g8b8a8(0,255,0,255));
+//				rendersystem::ptr()->draw_line(corner[n],color_r8g8b8a8(0,255,0,255),corner[n+4],color_r8g8b8a8(0,255,0,255));
 				prev=n;
 			}
 		}
 
 	}
-
+#endif
+	update_time.reset();
 	inputsystem* ip=inputsystem::ptr();
 
 	mtx4x3 cammtx=mtx4x3::identitymtx();
@@ -467,6 +468,13 @@ void update_app()
 
 	g_game.sky->render();
 	rendersystem::ptr()->render();
+
+	update_time.stop();
+	unsigned update_tick=update_time.get_tick();
+
+	sprintf(str,"UPT:%d",update_tick);
+	rendersystem::ptr()->draw_text(400,10,color_f(1,1,0,1),str);
+
 }
 
 void exit_app()

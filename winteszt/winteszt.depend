@@ -328,3 +328,332 @@
 1216971576 source:c:\lacika\thingsandsomethings\winteszt\stdafx.cpp
 	"stdafx.h"
 
+1226530428 source:c:\lacika\dolgokesvalamik\winteszt\testapp.cpp
+	"stdafx.h"
+	<MMSystem.h>
+	"render/rendersystem.h"
+	"file/filesystem.h"
+	"threading/taskmanager2.h"
+	"render/shadermanager.h"
+	"render/texturemanager.h"
+	"render/submesh.h"
+	"math/mtx4x4.h"
+	"math/vec2.h"
+	"render/renderobject3d.h"
+	"utils/auto_ptr.h"
+	"utils/timer.h"
+	"input/inputsystem.h"
+	"physics/system/physicssystem.h"
+
+1226520501 c:\lacika\dolgokesvalamik\winteszt\stdafx.h
+	<windows.h>
+	<stdlib.h>
+	<malloc.h>
+	<memory.h>
+	<tchar.h>
+
+1226530506 c:\lacika\dolgokesvalamik\libs\render\rendersystem.h
+	"containers/listallocator.h"
+	"renderqueue.h"
+	"threading/taskmanager2.h"
+	"vertexbuffer.h"
+	"indexbuffer.h"
+	"vertexelements.h"
+	"utils/singleton.h"
+	"math/mtx4x4.h"
+	<d3d9.h>
+	<d3dx9.h>
+
+1226339175 c:\lacika\dolgokesvalamik\libs\containers\listallocator.h
+	"vector.h"
+
+1226520502 c:\lacika\dolgokesvalamik\libs\containers\vector.h
+	<new>
+	"utils/misc.h"
+	"utils/assert.h"
+
+1226432409 c:\lacika\dolgokesvalamik\libs\utils\misc.h
+
+1226528528 c:\lacika\dolgokesvalamik\libs\utils\assert.h
+	<assert.h>
+	<stdio.h>
+	<Windows.h>
+
+1226520502 c:\lacika\dolgokesvalamik\libs\render\renderqueue.h
+	"mesh.h"
+	"math/mtx4x3.h"
+	"containers/vector.h"
+	"containers/string.h"
+
+1226432409 c:\lacika\dolgokesvalamik\libs\render\mesh.h
+	"math/mtx4x3.h"
+	"vertexbuffer.h"
+	"indexbuffer.h"
+	"submesh.h"
+	"containers/vector.h"
+	"utils/resource.h"
+	"utils/auto_ptr.h"
+
+1226432411 c:\lacika\dolgokesvalamik\libs\math\mtx4x3.h
+	"mtx3x3.h"
+
+1226432411 c:\lacika\dolgokesvalamik\libs\math\mtx3x3.h
+	"vec3.h"
+
+1226432411 c:\lacika\dolgokesvalamik\libs\math\vec3.h
+	"math.h"
+
+1226432411 c:\lacika\dolgokesvalamik\libs\math\math.h
+	<math.h>
+	<stdlib.h>
+	"..\utils\misc.h"
+
+1226432409 c:\lacika\dolgokesvalamik\libs\render\vertexbuffer.h
+	<d3d9.h>
+	"vertexelements.h"
+	"containers/vector.h"
+
+1226432409 c:\lacika\dolgokesvalamik\libs\render\vertexelements.h
+
+1226432409 c:\lacika\dolgokesvalamik\libs\render\indexbuffer.h
+	<d3d9.h>
+
+1226432409 c:\lacika\dolgokesvalamik\libs\render\submesh.h
+	"shader.h"
+	"texture.h"
+	"containers/vector.h"
+	"utils/ref_ptr.h"
+
+1226432409 c:\lacika\dolgokesvalamik\libs\render\shader.h
+	<d3dx9.h>
+	"utils/resource.h"
+
+1226432409 c:\lacika\dolgokesvalamik\libs\utils\resource.h
+	"referencedobject.h"
+	"containers/string.h"
+
+1226432409 c:\lacika\dolgokesvalamik\libs\utils\referencedobject.h
+	"utils/misc.h"
+	"utils/assert.h"
+
+1226432410 c:\lacika\dolgokesvalamik\libs\containers\string.h
+	<ctype.h>
+	<float.h>
+	"utils/assert.h"
+	"utils/misc.h"
+
+1226432409 c:\lacika\dolgokesvalamik\libs\render\texture.h
+	"utils/resource.h"
+	<d3d9.h>
+
+1226432409 c:\lacika\dolgokesvalamik\libs\utils\ref_ptr.h
+	"referencedobject.h"
+	"utils/misc.h"
+
+1225017995 c:\lacika\dolgokesvalamik\libs\utils\auto_ptr.h
+
+1226432411 c:\lacika\dolgokesvalamik\libs\threading\taskmanager2.h
+	<malloc.h>
+	"mutex.h"
+	"thread.h"
+	"task.h"
+	"taskallocator.h"
+	"containers/fixedvector.h"
+	"containers/queue.h"
+	"containers/stack.h"
+	"math/math.h"
+	"utils/singleton.h"
+
+1226520502 c:\lacika\dolgokesvalamik\libs\threading\mutex.h
+	<xtl.h>
+	<Windows.h>
+
+1226432411 c:\lacika\dolgokesvalamik\libs\threading\thread.h
+	<windows.h>
+	"containers\string.h"
+
+1226432411 c:\lacika\dolgokesvalamik\libs\threading\task.h
+	"containers/string.h"
+
+1226432411 c:\lacika\dolgokesvalamik\libs\threading\taskallocator.h
+	<assert.h>
+	"containers/listallocator.h"
+
+1226432410 c:\lacika\dolgokesvalamik\libs\containers\fixedvector.h
+	"utils/assert.h"
+
+1226432410 c:\lacika\dolgokesvalamik\libs\containers\queue.h
+	"utils/assert.h"
+
+1226520502 c:\lacika\dolgokesvalamik\libs\containers\stack.h
+	"utils/assert.h"
+
+1226432409 c:\lacika\dolgokesvalamik\libs\utils\singleton.h
+
+1226520502 c:\lacika\dolgokesvalamik\libs\math\mtx4x4.h
+	"mtx4x3.h"
+	"vec4.h"
+
+1226520502 c:\lacika\dolgokesvalamik\libs\math\vec4.h
+	<math.h>
+
+1226432409 c:\lacika\dolgokesvalamik\libs\file\filesystem.h
+	"containers/string.h"
+	"containers/stringmap.h"
+	"containers/listallocator.h"
+	"file/file.h"
+	"utils/singleton.h"
+
+1226432410 c:\lacika\dolgokesvalamik\libs\containers\stringmap.h
+	"utils/misc.h"
+	"utils/stringhash.h"
+
+1226432409 c:\lacika\dolgokesvalamik\libs\utils\stringhash.h
+	"utils/misc.h"
+	"containers/string.h"
+
+1226432409 c:\lacika\dolgokesvalamik\libs\file\file.h
+	"utils/misc.h"
+	"containers/string.h"
+	<sys/stat.h>
+
+1226520502 c:\lacika\dolgokesvalamik\libs\render\shadermanager.h
+	"utils/singleton.h"
+	"containers/string.h"
+	"containers/stringmap.h"
+	"render/shader.h"
+
+1226520502 c:\lacika\dolgokesvalamik\libs\render\texturemanager.h
+	"utils/singleton.h"
+	"containers/string.h"
+	"containers/stringmap.h"
+	"render/texture.h"
+
+1226432411 c:\lacika\dolgokesvalamik\libs\math\vec2.h
+
+1226432409 c:\lacika\dolgokesvalamik\libs\render\renderobject3d.h
+	"scene/node.h"
+	"render/mesh.h"
+	"utils/auto_ptr.h"
+	"containers/fixedvector.h"
+
+1226520502 c:\lacika\dolgokesvalamik\libs\scene\node.h
+	"rootobject.h"
+	"containers/string.h"
+	"utils/assert.h"
+	"math/mtx4x3.h"
+	"prop/property.h"
+
+1226432411 c:\lacika\dolgokesvalamik\libs\scene\rootobject.h
+	"containers/string.h"
+	"nodefactory.h"
+
+1225043253 c:\lacika\dolgokesvalamik\libs\scene\nodefactory.h
+	"containers/vector.h"
+	"containers/string.h"
+	"utils/assert.h"
+	"math/mtx4x3.h"
+	"scripting/lua.h"
+	<stddef.h>
+
+1225043365 c:\lacika\dolgokesvalamik\libs\scripting\lua.h
+	"containers/string.h"
+	"lualib/lua.h"
+	"lualib/lualib.h"
+	"lualib/lauxlib.h"
+	"containers/vector.h"
+	"math/vec3.h"
+
+1216061816 c:\lacika\dolgokesvalamik\libs\scripting\lualib\lua.h
+	<stdarg.h>
+	<stddef.h>
+
+1216061816 c:\lacika\dolgokesvalamik\libs\scripting\lualib\lualib.h
+	"lua.h"
+
+1216061816 c:\lacika\dolgokesvalamik\libs\scripting\lualib\lauxlib.h
+	<stddef.h>
+	<stdio.h>
+	"lua.h"
+
+1226432409 c:\lacika\dolgokesvalamik\libs\prop\property.h
+	"math/vec2.h"
+
+1226432409 c:\lacika\dolgokesvalamik\libs\utils\timer.h
+
+1226520502 c:\lacika\dolgokesvalamik\libs\input\inputsystem.h
+	<dinput.h>
+	"utils/singleton.h"
+	"utils/assert.h"
+
+1226432409 c:\lacika\dolgokesvalamik\libs\physics\system\physicssystem.h
+	"utils/singleton.h"
+	"containers/listallocator.h"
+	"math/mtx4x3.h"
+	"body.h"
+	"nbody.h"
+	"physics/collision/system/contactmanager.h"
+	"physics/collision/shapes/shape.h"
+	"physics/collision/shapeintersection/shapeintersection.h"
+	"physics/collision/broadphase/hgridbroadphase.h"
+
+1226432409 c:\lacika\dolgokesvalamik\libs\physics\system\body.h
+	"math/mtx4x3.h"
+
+1226432409 c:\lacika\dolgokesvalamik\libs\physics\system\nbody.h
+	"containers/vector.h"
+	"math/vec3.h"
+	"math/mtx3x3.h"
+	"math/mtx4x3.h"
+	"body.h"
+
+1226432410 c:\lacika\dolgokesvalamik\libs\physics\collision\system\contactmanager.h
+	"contact.h"
+	"containers/listallocator.h"
+	"containers/vector.h"
+	"threading/mutex.h"
+
+1226432410 c:\lacika\dolgokesvalamik\libs\physics\collision\system\contact.h
+	"constraint.h"
+	"math/vec3.h"
+	"physics/system/body.h"
+
+1226432410 c:\lacika\dolgokesvalamik\libs\physics\collision\system\constraint.h
+
+1226432409 c:\lacika\dolgokesvalamik\libs\physics\collision\shapes\shape.h
+	"math/aabox.h"
+
+1226432411 c:\lacika\dolgokesvalamik\libs\math\aabox.h
+	"vec3.h"
+	"mtx4x3.h"
+
+1226432410 c:\lacika\dolgokesvalamik\libs\physics\collision\shapeintersection\shapeintersection.h
+	"physics/collision/shapes/shape.h"
+
+1226432410 c:\lacika\dolgokesvalamik\libs\physics\collision\broadphase\hgridbroadphase.h
+	"broadphaseobject.h"
+	"broadphasepair.h"
+	"containers/listallocator.h"
+	"threading/mutex.h"
+
+1226432410 c:\lacika\dolgokesvalamik\libs\physics\collision\broadphase\broadphaseobject.h
+	"math/aabox.h"
+
+1226432410 c:\lacika\dolgokesvalamik\libs\physics\collision\broadphase\broadphasepair.h
+
+1217019783 source:c:\lacika\dolgokesvalamik\winteszt\winteszt.cpp
+	"stdafx.h"
+	"winteszt.h"
+
+1214843666 c:\lacika\dolgokesvalamik\winteszt\winteszt.h
+	"resource.h"
+
+1214843666 c:\lacika\dolgokesvalamik\winteszt\resource.h
+
+1214843666 source:c:\lacika\dolgokesvalamik\winteszt\winteszt.rc
+	"resource.h"
+	"windows.h"
+
+1214843666 source:c:\lacika\dolgokesvalamik\winteszt\stdafx.cpp
+	"stdafx.h"
+

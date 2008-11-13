@@ -145,6 +145,9 @@
 	<File name="utils\assert.h" open="0" top="0" tabpos="0">
 		<Cursor position="406" topLine="0" />
 	</File>
+	<File name="utils\chunkstream.cpp" open="1" top="1" tabpos="5">
+		<Cursor position="2599" topLine="124" />
+	</File>
 	<File name="utils\misc.h" open="0" top="0" tabpos="0">
 		<Cursor position="108" topLine="0" />
 	</File>

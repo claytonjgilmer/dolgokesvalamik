@@ -380,21 +380,22 @@ public:
 vector<MeshLODInfo> gMeshLODInfoArray;
 vector<HItem> gHItemArray;
 
-vector<vertexelem> MeshLODInfo::createdecl(string i_filename)
-{
-	vector<vertexelem> ret;
-
 	struct sMappingV
 	{
-		string	Name;
+		const char*	Name;
 		vertexelemtype	Value;
 	};
 
 	struct sMapping
 	{
-		string	Name;
+		const char* Name;
 		unsigned 	Value;
 	};
+
+vector<vertexelem> MeshLODInfo::createdecl(string i_filename)
+{
+	vector<vertexelem> ret;
+
 	static sMappingV usages[] =
 	{
 		"p", vertexelement_position,
@@ -438,11 +439,11 @@ vector<vertexelem> MeshLODInfo::createdecl(string i_filename)
 		int found = false;
 		for (int j = 0 ; j < usageCount ; ++j)
 		{
-			if (i_filename.match(i, usages[j].Name.c_str()))
+			if (i_filename.match(i, usages[j].Name))
 //				if (i_filename.substring(i, usages[j].Name.size()) == usages[j].Name)
 			{
 				usage = usages[j].Value;
-				i += usages[j].Name.size();
+				i += strlen(usages[j].Name);
 				found = true;
 				break;
 			}
@@ -458,11 +459,11 @@ vector<vertexelem> MeshLODInfo::createdecl(string i_filename)
 		found = false;
 		for (int j = 0 ; j < typeCount ; ++j)
 		{
-			if (i_filename.match(i,types[j].Name.c_str()))
+			if (i_filename.match(i,types[j].Name))
 //				if (i_filename.substring(i, types[j].Name.size()) == types[j].Name)
 			{
 				type = types[j].Value;
-				i += types[j].Name.size();
+				i += strlen(types[j].Name);
 				found = true;
 				break;
 			}

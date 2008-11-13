@@ -3,12 +3,6 @@
 #include "assert.h"
 #include "ChunkStream.h"
 
-static void Assert(int condition, const char* message = "Unspecified exception")
-{
-	if (!condition)
-		__asm ("int $3");
-}
-
 
 MChunkHandle::MChunkHandle() :
 mStream(0)
@@ -23,7 +17,7 @@ mDepth(parent_chunk->mDepth+1)
 	mName = mStream->ReadString(mParent->mSizeLeft);
 	mTotalSize = mStream->ReadInt(mParent->mSizeLeft);
 	mSizeLeft = mTotalSize;
-	//Assert(mTotalSize > 0, "hey!");
+	//assertion(mTotalSize > 0, "hey!");
 
 	mStream->PushChunk(this);
 }
@@ -77,7 +71,7 @@ MChunkHandle::~MChunkHandle()
 void MChunkHandle::Close()
 {
 #ifdef _DEBUG
-	Assert(mSizeLeft == 0, "Garbage at the end of chunk. Use Skip() if this is OK");
+	assertion(mSizeLeft == 0, "Garbage at the end of chunk. Use Skip() if this is OK");
 
 	if (mSizeLeft)
 	{
@@ -107,49 +101,49 @@ void MChunkHandle::Skip()
 
 float MChunkHandle::ReadFloat()
 {
-	Assert(mStream!=NULL, "Reading from closed chunk");
+	assertion(mStream!=NULL, "Reading from closed chunk");
 	float f = mStream->ReadFloat(mSizeLeft);
-	Assert(mSizeLeft >= 0, "Reading past end of chunk");
+	assertion(mSizeLeft >= 0, "Reading past end of chunk");
 	return f;
 }
 
 char MChunkHandle::ReadChar()
 {
-	Assert(mStream!=NULL, "Reading from closed chunk");
+	assertion(mStream!=NULL, "Reading from closed chunk");
 	char c = mStream->ReadChar(mSizeLeft);
-	Assert(mSizeLeft >= 0, "Reading past end of chunk");
+	assertion(mSizeLeft >= 0, "Reading past end of chunk");
 	return c;
 }
 
 int MChunkHandle::ReadInt()
 {
-	Assert(mStream!=NULL, "Reading from closed chunk");
+	assertion(mStream!=NULL, "Reading from closed chunk");
 	int i = mStream->ReadInt(mSizeLeft);
-	Assert(mSizeLeft >= 0, "Reading past end of chunk");
+	assertion(mSizeLeft >= 0, "Reading past end of chunk");
 	return i;
 }
 
 unsigned MChunkHandle::ReadUnsigned()
 {
-	Assert(mStream!=NULL, "Reading from closed chunk");
+	assertion(mStream!=NULL, "Reading from closed chunk");
 	unsigned u = mStream->ReadUnsigned(mSizeLeft);
-	Assert(mSizeLeft >= 0, "Reading past end of chunk");
+	assertion(mSizeLeft >= 0, "Reading past end of chunk");
 	return u;
 }
 
 short MChunkHandle::ReadShort()
 {
-	Assert(mStream!=NULL, "Reading from closed chunk");
+	assertion(mStream!=NULL, "Reading from closed chunk");
 	short sh = mStream->ReadShort(mSizeLeft);
-	Assert(mSizeLeft >= 0, "Reading past end of chunk");
+	assertion(mSizeLeft >= 0, "Reading past end of chunk");
 	return sh;
 }
 
 string MChunkHandle::ReadString()
 {
-	Assert(mStream!=NULL, "Reading from closed chunk");
+	assertion(mStream!=NULL, "Reading from closed chunk");
 	string s = mStream->ReadString(mSizeLeft);
-	Assert(mSizeLeft >= 0, "Reading past end of chunk");
+	assertion(mSizeLeft >= 0, "Reading past end of chunk");
 	return s;
 }
 
@@ -272,7 +266,7 @@ MChunk MChunkStream::GetTopChunk()
 
 float MChunkStream::ReadFloat(unsigned& ucs)
 {
-//	Assert(!m_Istream.fail());
+//	assertion(!m_Istream.fail());
 	float f = 0;
 //	m_Istream.read((char*)&f, 4);
 	m_file.read_bytes((char*)&f, 4);
@@ -282,7 +276,7 @@ float MChunkStream::ReadFloat(unsigned& ucs)
 
 int MChunkStream::ReadInt(unsigned& ucs)
 {
-//	Assert(!m_Istream.fail());
+//	assertion(!m_Istream.fail());
 	int i = 0;
 //	m_Istream.read((char*)&i, 4);
 	m_file.read_bytes((char*)&i, 4);
@@ -292,7 +286,7 @@ int MChunkStream::ReadInt(unsigned& ucs)
 
 char MChunkStream::ReadChar(unsigned& ucs)
 {
-//	Assert(!m_Istream.fail());
+//	assertion(!m_Istream.fail());
 	ucs -= 1;
 	char ch;
 	m_file.read_bytes((char*)&ch, 1);
@@ -302,7 +296,7 @@ char MChunkStream::ReadChar(unsigned& ucs)
 
 unsigned MChunkStream::ReadUnsigned(unsigned& ucs)
 {
-//	Assert(!m_Istream.fail());
+//	assertion(!m_Istream.fail());
 	unsigned u = 0;
 //	m_Istream.read((char*)&u, 4);
 	m_file.read_bytes((char*)&u, 4);
@@ -312,7 +306,7 @@ unsigned MChunkStream::ReadUnsigned(unsigned& ucs)
 
 short MChunkStream::ReadShort(unsigned& ucs)
 {
-//	Assert(!m_Istream.fail());
+//	assertion(!m_Istream.fail());
 	short sh = 0;
 //	m_Istream.read((char*)&sh, sizeof(short));
 	m_file.read_bytes((char*)&sh, 2);
@@ -322,7 +316,7 @@ short MChunkStream::ReadShort(unsigned& ucs)
 
 string MChunkStream::ReadString(unsigned& ucs)
 {
-//	Assert(!m_Istream.fail());
+//	assertion(!m_Istream.fail());
 	unsigned len = ReadUnsigned(ucs);
 	char* buf = new char[len+1];
 //	m_Istream.read(buf, len);
@@ -339,19 +333,19 @@ void MChunkStream::Skip(unsigned size)
 //	unsigned pos = m_Istream.tellg();
 //	m_Istream.seekg(size, std::ios_base::cur);
 	m_file.seek_cur(size);
-	//Assert(m_Istream.tellg() == pos + size && !m_Istream.fail());
+	//assertion(m_Istream.tellg() == pos + size && !m_Istream.fail());
 }
 
 void MChunkStream::PushChunk(MChunkHandle* chk)
 {
-	Assert(mStack.size() == chk->mDepth, "Hierarchy error during chunk reading. Forgot to close chunk?");
+	assertion(mStack.size() == chk->mDepth, "Hierarchy error during chunk reading. Forgot to close chunk?");
 	mStack.push_back(chk->GetName());
 }
 
 void MChunkStream::PopChunk(MChunkHandle* chk)
 {
 	string last = mStack.back();
-	Assert(mStack.size() == chk->mDepth + 1 && last == chk->GetName(),
+	assertion(mStack.size() == chk->mDepth + 1 && last == chk->GetName(),
 		"Hierarchy error during chunk reading. Forgot to close chunk?");
 	mStack.pop_back();
 }

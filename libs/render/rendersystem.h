@@ -86,7 +86,6 @@
 #define LINENUM_MAX		100000
 		struct line_struct
 		{
-			line_struct(){}
 			vec3 start;
 			color_r8g8b8a8 start_color;
 			vec3 end;
@@ -96,7 +95,7 @@
 		int draw_lines;
 		int draw_texts;
 
-		void draw_line(const vec3& i_start, const color_r8g8b8a8& i_start_color, const vec3& i_end, const color_r8g8b8a8& i_end_color)
+		inline void draw_line(const vec3& i_start, const color_r8g8b8a8& i_start_color, const vec3& i_end, const color_r8g8b8a8& i_end_color)
 		{
 			if (draw_lines && lines.size()<LINENUM_MAX)
 			{
