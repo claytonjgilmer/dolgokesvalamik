@@ -73,7 +73,7 @@ void init_app(HWND i_hwnd)
 	filesystem::ptr()->register_path("texture","texture\\");
 
 	taskmanagerdesc tdesc;
-	tdesc.m_threadnum=15;
+	tdesc.m_threadnum=5;
 	taskmanager::create(&tdesc);
 
 	shadermanagerdesc shaderdesc("shader");
@@ -262,6 +262,33 @@ void init_app(HWND i_hwnd)
 
 
 
+void vec3_add(vec3& dst, const vec3& src)
+{
+    dst.x+=src.x;
+    dst.y+=src.y;
+    dst.z+=src.z;
+}
+
+void vec3_sub(vec3& dst, const vec3& src)
+{
+    dst.x-=src.x;
+    dst.y-=src.y;
+    dst.z-=src.z;
+}
+
+void vec3_mul_scalar(vec3& dst, float s)
+{
+    dst.x*=s;
+    dst.y*=s;
+    dst.z*=s;
+}
+
+void vec3_mul(vec3& dst, const vec3& src)
+{
+    dst.x*=src.x;
+    dst.y*=src.y;
+    dst.z*=src.z;
+}
 
 
 unsigned sumtime=0;
@@ -300,7 +327,7 @@ void update_app()
 	sprintf(str,"pairnum:%d",physicssystem::ptr()->broad_phase.pair_num);
 	rendersystem::ptr()->draw_text(10,40,color_f(1,1,1,1),str);
 
-#if 1
+#if 0
 	for (unsigned n=0; n<(unsigned)physicssystem::ptr()->broad_phase.pair_num; ++n)
 	{
 		broadphasepair& pair=physicssystem::ptr()->broad_phase.pair_array[n];
@@ -312,13 +339,22 @@ void update_app()
 
 			const float x[]={-1,1,1,-1,-1,1,1,-1};
 
-
+#if 0
 			for (int n=0; n<8;++n)
 			{
 				corner[n].x=center.x+(x[n])*extent.x;
 				corner[n].y=center.y+(2*((n&2)>>1)-1)*extent.y;
 				corner[n].z=center.z+(2*((n&4)>>2)-1)*extent.z;
 			}
+#else
+            for (int n=0; n<8; ++n)
+            {
+                corner[n]=extent;
+                vec3 mul; mul.set(x[n],(2*((n&2)>>1)-1),(2*((n&4)>>2)-1));
+                vec3_mul(corner[n],mul);
+                vec3_add(corner[n],center);
+            }
+#endif
 			int prev=3;
 			for (int n=0; n<4;++n)
 			{
@@ -335,12 +371,22 @@ void update_app()
 
 			const float x[]={-1,1,1,-1,-1,1,1,-1};
 
+#if 0
 			for (int n=0; n<8;++n)
 			{
 				corner[n].x=center.x+(x[n])*extent.x;
 				corner[n].y=center.y+(2*((n&2)>>1)-1)*extent.y;
 				corner[n].z=center.z+(2*((n&4)>>2)-1)*extent.z;
 			}
+#else
+            for (int n=0; n<8; ++n)
+            {
+                corner[n]=extent;
+                vec3 mul; mul.set(x[n],(2*((n&2)>>1)-1),(2*((n&4)>>2)-1));
+                vec3_mul(corner[n],mul);
+                vec3_add(corner[n],center);
+            }
+#endif
 
 			int prev=3;
 
@@ -419,33 +465,33 @@ void update_app()
 		if (pos.t.x<-ROOM_SIZE)
 		{
 			pos.t.x=-ROOM_SIZE;
-			vel.x=abs(vel.x);
+			vel.x=fabsf(vel.x);
 		}
 		if (pos.t.y<-ROOM_SIZE)
 		{
 			pos.t.y=-ROOM_SIZE;
-			vel.y=abs(vel.y);
+			vel.y=fabsf(vel.y);
 		}
 		if (pos.t.z<-ROOM_SIZE)
 		{
 			pos.t.z=-ROOM_SIZE;
-			vel.z=abs(vel.z);
+			vel.z=fabsf(vel.z);
 		}
 
 		if (pos.t.x>ROOM_SIZE)
 		{
 			pos.t.x=ROOM_SIZE;
-			vel.x=-abs(vel.x);
+			vel.x=-fabsf(vel.x);
 		}
 		if (pos.t.y>ROOM_SIZE)
 		{
 			pos.t.y=ROOM_SIZE;
-			vel.y=-abs(vel.y);
+			vel.y=-fabsf(vel.y);
 		}
 		if (pos.t.z>ROOM_SIZE)
 		{
 			pos.t.z=ROOM_SIZE;
-			vel.z=-abs(vel.z);
+			vel.z=-fabsf(vel.z);
 		}
 
 		g_game.phb[n]->set_pos(pos);
@@ -453,7 +499,7 @@ void update_app()
 
 		for (unsigned m=0; m<1; ++m)
 		{
-			rendersystem::ptr()->add_mesh(g_game.m_mesh.get(),pos);
+//			rendersystem::ptr()->add_mesh(g_game.m_mesh.get(),pos);
 			pos.t.x+=10;
 		}
 	}

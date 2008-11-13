@@ -7,9 +7,8 @@
 	//			mtx3x3
 	//////////////////////////////////////////////////////////////////////////
 
-	class mtx3x3
+	struct mtx3x3
 	{
-	public:
 		mtx3x3();
 		mtx3x3(const vec3& i_x, const vec3& i_y, const vec3& i_z);
 
@@ -25,7 +24,7 @@
 		void identity();
 		void clear();
 
-		void fromeuler(float i_xangle, float i_yangle, float i_zangle);
+		void from_euler(float i_xangle, float i_yangle, float i_zangle);
 		void get_euler(float& o_xangle, float& o_yangle, float& o_zangle) const;
 
 		void transform3x3(vec3& o_dst, const vec3& i_src) const;
@@ -103,9 +102,9 @@
 
 	inline void mtx3x3::transform3x3(vec3& o_dst, const vec3& i_src) const
 	{
-		o_dst.x=i_src.x*_11+i_src.y*_21+i_src.z*_31;
-		o_dst.y=i_src.x*_12+i_src.y*_22+i_src.z*_32;
-		o_dst.z=i_src.x*_13+i_src.y*_23+i_src.z*_33;
+		o_dst.x=i_src.x*this->_11+i_src.y*this->_21+i_src.z*this->_31;
+		o_dst.y=i_src.x*this->_12+i_src.y*this->_22+i_src.z*this->_32;
+		o_dst.z=i_src.x*this->_13+i_src.y*this->_23+i_src.z*this->_33;
 	}
 
 	inline vec3 mtx3x3::transform3x3(const vec3& i_src) const
@@ -113,27 +112,27 @@
 	    vec3 t;
 	    t.set
 			(
-			i_src.x*_11+i_src.y*_21+i_src.z*_31,
-			i_src.x*_12+i_src.y*_22+i_src.z*_32,
-			i_src.x*_13+i_src.y*_23+i_src.z*_33
+			i_src.x*this->_11+i_src.y*this->_21+i_src.z*this->_31,
+			i_src.x*this->_12+i_src.y*this->_22+i_src.z*this->_32,
+			i_src.x*this->_13+i_src.y*this->_23+i_src.z*this->_33
 			);
         return t;
 	}
 
 	inline void mtx3x3::transformtransposed3x3(vec3& o_dst, const vec3& i_src) const
 	{
-		o_dst.x=dot(i_src,x);
-		o_dst.y=dot(i_src,y);
-		o_dst.z=dot(i_src,z);
+		o_dst.x=dot(i_src,this->x);
+		o_dst.y=dot(i_src,this->y);
+		o_dst.z=dot(i_src,this->z);
 	}
 
 	inline vec3 mtx3x3::transformtransposed3x3(const vec3& i_src) const
 	{
 	    vec3 t; t.set
 			(
-			dot(i_src,x),
-			dot(i_src,y),
-			dot(i_src,z)
+			dot(i_src,this->x),
+			dot(i_src,this->y),
+			dot(i_src,this->z)
 			);
 
         return t;
@@ -142,9 +141,9 @@
 	inline void mtx3x3::transpose3x3()
 	{
 		float tmp;
-		tmp=_12; _12=_21; _21=tmp;
-		tmp=_13; _13=_31; _31=tmp;
-		tmp=_23; _23=_32; _32=tmp;
+		tmp=this->_12; this->_12=this->_21; this->_21=tmp;
+		tmp=this->_13; this->_13=this->_31; this->_31=tmp;
+		tmp=this->_23; this->_23=this->_32; this->_32=tmp;
 	}
 
 	inline void mtx3x3::transpose3x3(const mtx3x3& i_src)
@@ -206,7 +205,7 @@
 		i_src2transposed.transformtransposed3x3(this->z,i_src1.z);
 	}
 
-	inline void mtx3x3::fromeuler(float i_xangle, float i_yangle, float i_zangle)
+	inline void mtx3x3::from_euler(float i_xangle, float i_yangle, float i_zangle)
 	{
 		float sx=(sin(i_xangle)), cx=(cos(i_xangle));
 		float sy=(sin(i_yangle)), cy=(cos(i_yangle));

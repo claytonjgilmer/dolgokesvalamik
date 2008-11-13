@@ -11,7 +11,7 @@
 
 
 
-	class  rootobject;
+	struct rootobject;
 
 	enum proptype
 	{
@@ -22,7 +22,7 @@
 		prop_string
 	};
 
-	class property_descriptor
+	struct property_descriptor
 	{
 	public:
 		property_descriptor(const char* i_name,proptype i_type,unsigned i_offset):m_name(i_name),m_offset(i_offset),m_type(i_type)
@@ -103,10 +103,10 @@
 //		const char* m_type;
 		unsigned m_offset;
 
-	};//class
+	};//struct
 
 
-	class metaobject
+	struct metaobject
 	{
 	public:
 		metaobject(const char* i_typename, metaobject* i_parent);
@@ -204,7 +204,7 @@
 			return m_parent;
 		}
 
-		class property_iterator
+		struct property_iterator
 		{
 		public:
 			metaobject* m_ptr;
@@ -256,7 +256,7 @@
 //#define BIND_END }
 
 
-	class metaobject_manager
+	struct metaobject_manager
 	{
 	public:
 		static void add_metaobject(metaobject* i_creator)
@@ -299,9 +299,9 @@
 
 		static metaobject* m_metaobjectlist;
 		static int m_type_count;
-	};//class
+	};//struct
 
-template<class T> class prop_binder
+template<typename T> struct prop_binder
 {
 public:
 	prop_binder(const char* i_name, proptype i_type, unsigned i_offset)

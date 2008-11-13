@@ -10,8 +10,11 @@
 	{
 		if (!i_condition)
 		{
+		    #ifdef _MSC_VER
 			__asm int 3;
-//			__asm (  "int $3");
+			#else
+			__asm (  "int $3");
+			#endif
 		}
 	}
 	inline void assertion(int i_condition, const char* i_msg)
@@ -20,8 +23,11 @@
 		{
 			OutputDebugString(i_msg);
 			OutputDebugString("\n");
+			#ifdef _MSC_VER
 			__asm int 3;
-//			__asm (  "int $3");
+			#else
+			__asm (  "int $3");
+			#endif
 		}
 	}
 #else

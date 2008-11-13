@@ -10,7 +10,7 @@
 	const unsigned nodeflag_valid_worldpos=(1<<0);
 	const unsigned nodeflag_dont_save=(1<<0);
 
-	class node:public rootobject
+	struct node:public rootobject
 	{
 		DECLARE_OBJECT(node);
 	public:

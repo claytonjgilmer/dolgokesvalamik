@@ -73,7 +73,10 @@
 				break;
 			}
 		default:
-			assertion(0,"invalid shape type");
+            {
+                s=NULL;
+                assertion(0,"invalid shape type");
+            }
 		}
 
 		s->body=this;

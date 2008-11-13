@@ -531,7 +531,7 @@ fixedvector<mesh*,8> MeshLODInfo::generate_mesh()
 
 		for (int n=startsubset; n<=endsubset; ++n)
 		{
-			if (m_SubSet[n].vertexstreamidx!=streamindex)
+			if (m_SubSet[n].vertexstreamidx!=(int)streamindex)
 				continue;
 
 			m->m_submeshbuf.push_back(submesh());

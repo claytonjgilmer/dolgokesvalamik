@@ -13,10 +13,6 @@
 
 	contact_t* contactmanager::get_contact(body_t* i_body1, body_t* i_body2)
 	{
-		if (i_body1>i_body2)
-			swap(i_body1,i_body2);
-
-
 		uint32 key=((uint32)i_body1) ^ ((uint32)i_body2);
 		uint32 index=get_hashindex(key);
 

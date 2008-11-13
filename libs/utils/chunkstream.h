@@ -62,7 +62,7 @@ class MChunkHandle
 	MChunkStream* mStream;
 	MChunkHandle* mParent;
 	string mName;
-	int mDepth;
+	unsigned mDepth;
 	unsigned mTotalSize;
 	unsigned mSizeLeft;
 
@@ -115,7 +115,7 @@ public:
 
 	/// skip the data left in the current chunk and close it.
 	/// This function can be used as a "safe close" because it
-	/// handles unprocessed data at the end of the chunk. 
+	/// handles unprocessed data at the end of the chunk.
 	/// Close gives an error in this case.
 	void Skip();
 
@@ -194,7 +194,7 @@ public:
 
 	/// skip the data left in the current chunk and close it.
 	/// This function can be used as a "safe close" because it
-	/// handles unprocessed data at the end of the chunk. 
+	/// handles unprocessed data at the end of the chunk.
 	/// Close gives an error in this case.
 	void Skip();
 

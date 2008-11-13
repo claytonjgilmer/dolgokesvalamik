@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1226513286 source:c:\lacika\thingsandsomethings\winteszt\testapp.cpp
+1226588952 source:c:\lacika\thingsandsomethings\winteszt\testapp.cpp
 	"stdafx.h"
 	<MMSystem.h>
 	"render/rendersystem.h"
@@ -23,7 +23,7 @@
 	<memory.h>
 	<tchar.h>
 
-1226508130 c:\lacika\thingsandsomethings\libs\render\rendersystem.h
+1226567181 c:\lacika\thingsandsomethings\libs\render\rendersystem.h
 	"containers/listallocator.h"
 	"renderqueue.h"
 	"threading/taskmanager2.h"
@@ -38,14 +38,14 @@
 1225098791 c:\lacika\thingsandsomethings\libs\containers\listallocator.h
 	"vector.h"
 
-1226507237 c:\lacika\thingsandsomethings\libs\containers\vector.h
+1226576305 c:\lacika\thingsandsomethings\libs\containers\vector.h
 	<new>
 	"utils/misc.h"
 	"utils/assert.h"
 
 1226413023 c:\lacika\thingsandsomethings\libs\utils\misc.h
 
-1226497788 c:\lacika\thingsandsomethings\libs\utils\assert.h
+1226568631 c:\lacika\thingsandsomethings\libs\utils\assert.h
 	<assert.h>
 	<stdio.h>
 	<Windows.h>
@@ -68,10 +68,10 @@
 1226413807 c:\lacika\thingsandsomethings\libs\math\mtx4x3.h
 	"mtx3x3.h"
 
-1226419824 c:\lacika\thingsandsomethings\libs\math\mtx3x3.h
+1226587313 c:\lacika\thingsandsomethings\libs\math\mtx3x3.h
 	"vec3.h"
 
-1226413730 c:\lacika\thingsandsomethings\libs\math\vec3.h
+1226583924 c:\lacika\thingsandsomethings\libs\math\vec3.h
 	"math.h"
 
 1226411434 c:\lacika\thingsandsomethings\libs\math\math.h
@@ -202,24 +202,24 @@
 
 1226419741 c:\lacika\thingsandsomethings\libs\math\vec2.h
 
-1226419792 c:\lacika\thingsandsomethings\libs\render\renderobject3d.h
+1226577449 c:\lacika\thingsandsomethings\libs\render\renderobject3d.h
 	"scene/node.h"
 	"render/mesh.h"
 	"utils/auto_ptr.h"
 	"containers/fixedvector.h"
 
-1226507280 c:\lacika\thingsandsomethings\libs\scene\node.h
+1226577363 c:\lacika\thingsandsomethings\libs\scene\node.h
 	"rootobject.h"
 	"containers/string.h"
 	"utils/assert.h"
 	"math/mtx4x3.h"
 	"prop/property.h"
 
-1226419736 c:\lacika\thingsandsomethings\libs\scene\rootobject.h
+1226577449 c:\lacika\thingsandsomethings\libs\scene\rootobject.h
 	"containers/string.h"
 	"nodefactory.h"
 
-1225098794 c:\lacika\thingsandsomethings\libs\scene\nodefactory.h
+1226577363 c:\lacika\thingsandsomethings\libs\scene\nodefactory.h
 	"containers/vector.h"
 	"containers/string.h"
 	"utils/assert.h"
@@ -301,7 +301,7 @@
 1226419672 c:\lacika\thingsandsomethings\libs\physics\collision\shapeintersection\shapeintersection.h
 	"physics/collision/shapes/shape.h"
 
-1226419687 c:\lacika\thingsandsomethings\libs\physics\collision\broadphase\hgridbroadphase.h
+1226583731 c:\lacika\thingsandsomethings\libs\physics\collision\broadphase\hgridbroadphase.h
 	"broadphaseobject.h"
 	"broadphasepair.h"
 	"containers/listallocator.h"

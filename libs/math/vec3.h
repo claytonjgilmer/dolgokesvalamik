@@ -3,11 +3,8 @@
 
 #include "math.h"
 
-//#define MLINLINE
-
-	class vec3
+	struct vec3
 	{
-	public:
 		float&	operator[](int i_index);
 		const float& operator[](int i_index) const;
 
@@ -94,8 +91,8 @@
 
 	MLINLINE vec3 cross(const vec3& i_src1, const vec3& i_src2)
 	{
-	    vec3 c;
-	    c.set(
+		vec3 c;
+		c.set(
 			i_src1.y*i_src2.z-i_src1.z*i_src2.y,
 			i_src1.z*i_src2.x-i_src1.x*i_src2.z,
 			i_src1.x*i_src2.y-i_src1.y*i_src2.x
@@ -158,16 +155,16 @@
 
 	MLINLINE vec3	vec3::operator+(const vec3& i_other) const
 	{
-	    vec3 a;
-	    a.set(x+i_other.x,y+i_other.y,z+i_other.z);
-	    return a;
+		vec3 a;
+		a.set(x+i_other.x,y+i_other.y,z+i_other.z);
+		return a;
 	}
 
 	MLINLINE vec3	vec3::operator-(const vec3& i_other) const
 	{
-	    vec3 d;
-	    d.set(x-i_other.x,y-i_other.y,z-i_other.z);
-	    return d;
+		vec3 d;
+		d.set(x-i_other.x,y-i_other.y,z-i_other.z);
+		return d;
 	}
 
 	MLINLINE void	vec3::operator+=(const vec3& i_other)
@@ -186,15 +183,15 @@
 
 	MLINLINE vec3	vec3::operator*(float i_scalar) const
 	{
-	    vec3 m; m.set(x*i_scalar,y*i_scalar,z*i_scalar);
-	    return m;
+		vec3 m; m.set(x*i_scalar,y*i_scalar,z*i_scalar);
+		return m;
 	}
 
 	MLINLINE vec3	vec3::operator/(float i_scalar) const
 	{
-	    vec3 d;
-	    d.set(x/i_scalar,y/i_scalar,z/i_scalar);
-	    return d;
+		vec3 d;
+		d.set(x/i_scalar,y/i_scalar,z/i_scalar);
+		return d;
 	}
 
 	MLINLINE vec3 operator*(float i_scalar, const vec3& i_vector)
@@ -218,7 +215,7 @@
 
 	MLINLINE vec3	vec3::operator-() const
 	{
-	    vec3 n; n.set(-x,-y,-z); return n;
+		vec3 n; n.set(-x,-y,-z); return n;
 	}
 
 	MLINLINE void vec3::abs(const vec3& i_src)

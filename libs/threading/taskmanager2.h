@@ -106,7 +106,7 @@
 			private:
 				unsigned m_startindex;
 				unsigned m_num;
-				const S& m_process;
+				S m_process;
 			};
 
 			unsigned start=0;

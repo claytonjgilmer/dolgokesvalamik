@@ -6,10 +6,10 @@
 #include "utils/auto_ptr.h"
 #include "containers/fixedvector.h"
 
-	class object3d:public node
+	struct object3d:public node
 	{
 		DECLARE_OBJECT(object3d);
-	public:
+//	public:
 		object3d();
 		object3d(const char* i_name);
 		~object3d();
@@ -25,7 +25,7 @@
 
 		//properties
 		string m_modelname;
-	protected:
+//	protected:
 		fixedvector<ref_ptr<mesh>,8> m_mesh;
 	};
 #endif//_renderobject3d_h_

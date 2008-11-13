@@ -4,9 +4,9 @@
 #include "containers/string.h"
 #include "nodefactory.h"
 
-	class metaobject;
+	struct metaobject;
 
-	class rootobject
+	struct rootobject
 	{
 	public:
 		rootobject(){}
@@ -22,17 +22,15 @@
 	};
 
 #define DECLARE_OBJECT(_object_) \
-	public:\
-	friend class _object_##_metaobject;\
-	friend class prop_binder<_object_>;\
+	friend struct _object_##_metaobject;\
+	friend struct prop_binder<_object_>;\
 	virtual int get_typeid() const;\
 	virtual metaobject* get_metaobject() const;\
 	static metaobject* get_class_metaobject();
 
 #define  DEFINE_OBJECT(_object_,_parent_)\
-	class _object_##_metaobject:public metaobject\
+	struct _object_##_metaobject:public metaobject\
 	{\
-	public:\
 	_object_##_metaobject():metaobject(#_object_,_parent_::get_class_metaobject()){}\
 	rootobject* create() const{return new _object_;}\
 	void bind_properties();\

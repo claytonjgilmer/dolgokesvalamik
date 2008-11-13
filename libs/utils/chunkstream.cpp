@@ -103,7 +103,7 @@ float MChunkHandle::ReadFloat()
 {
 	assertion(mStream!=NULL, "Reading from closed chunk");
 	float f = mStream->ReadFloat(mSizeLeft);
-	assertion(mSizeLeft >= 0, "Reading past end of chunk");
+//	assertion(mSizeLeft >= 0, "Reading past end of chunk");
 	return f;
 }
 
@@ -111,7 +111,7 @@ char MChunkHandle::ReadChar()
 {
 	assertion(mStream!=NULL, "Reading from closed chunk");
 	char c = mStream->ReadChar(mSizeLeft);
-	assertion(mSizeLeft >= 0, "Reading past end of chunk");
+//	assertion(mSizeLeft >= 0, "Reading past end of chunk");
 	return c;
 }
 
@@ -119,7 +119,7 @@ int MChunkHandle::ReadInt()
 {
 	assertion(mStream!=NULL, "Reading from closed chunk");
 	int i = mStream->ReadInt(mSizeLeft);
-	assertion(mSizeLeft >= 0, "Reading past end of chunk");
+//	assertion(mSizeLeft >= 0, "Reading past end of chunk");
 	return i;
 }
 
@@ -127,7 +127,7 @@ unsigned MChunkHandle::ReadUnsigned()
 {
 	assertion(mStream!=NULL, "Reading from closed chunk");
 	unsigned u = mStream->ReadUnsigned(mSizeLeft);
-	assertion(mSizeLeft >= 0, "Reading past end of chunk");
+//	assertion(mSizeLeft >= 0, "Reading past end of chunk");
 	return u;
 }
 
@@ -135,7 +135,7 @@ short MChunkHandle::ReadShort()
 {
 	assertion(mStream!=NULL, "Reading from closed chunk");
 	short sh = mStream->ReadShort(mSizeLeft);
-	assertion(mSizeLeft >= 0, "Reading past end of chunk");
+//	assertion(mSizeLeft >= 0, "Reading past end of chunk");
 	return sh;
 }
 
@@ -143,7 +143,7 @@ string MChunkHandle::ReadString()
 {
 	assertion(mStream!=NULL, "Reading from closed chunk");
 	string s = mStream->ReadString(mSizeLeft);
-	assertion(mSizeLeft >= 0, "Reading past end of chunk");
+//	assertion(mSizeLeft >= 0, "Reading past end of chunk");
 	return s;
 }
 

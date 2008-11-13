@@ -20,7 +20,42 @@
         mapelem* Next;
     };
 
-	node* sceneloader::load_scene(const char* i_scenename)
+	node* load_node(node* i_parent,lua::Variable& i_nodetable)
+	{
+		int exclude=i_nodetable.GetVariable("Exclude").GetBool(false);
+
+		if (exclude)
+			return NULL;
+
+		string TypeName=i_nodetable.GetVariable("Type").GetString("");
+
+		node* NewNode=(node*)metaobject_manager::create_object(TypeName.c_str());
+
+		if (NewNode)
+			NewNode->get_metaobject()->load_property(NewNode,i_nodetable);
+		else
+			return NULL;
+
+		NewNode->on_load();
+
+		if (i_parent)
+			i_parent->add_child(NewNode);
+
+		lua::Variable childtable=i_nodetable.GetVariable("Child");
+		if (childtable.IsTable())
+		{
+			lua::Variable K,V;
+			for (childtable.Begin(K,V); !childtable.End(K); childtable.Next(K,V))
+			{
+				load_node(NewNode,V);
+			}
+		}
+
+		return NewNode;
+	}
+
+
+	node* load_scene(const char* i_scenename)
 	{
 		stringmap<mapelem,1024> map;
 		vector<node*> nodebuf;
@@ -87,36 +122,3 @@
 		return NULL;
 	}
 
-	node* sceneloader::load_node(node* i_parent,lua::Variable& i_nodetable)
-	{
-		int exclude=i_nodetable.GetVariable("Exclude").GetBool(false);
-
-		if (exclude)
-			return NULL;
-
-		string TypeName=i_nodetable.GetVariable("Type").GetString("");
-
-		node* NewNode=(node*)metaobject_manager::create_object(TypeName.c_str());
-
-		if (NewNode)
-			NewNode->get_metaobject()->load_property(NewNode,i_nodetable);
-		else
-			return NULL;
-
-		NewNode->on_load();
-
-		if (i_parent)
-			i_parent->add_child(NewNode);
-
-		lua::Variable childtable=i_nodetable.GetVariable("Child");
-		if (childtable.IsTable())
-		{
-			lua::Variable K,V;
-			for (childtable.Begin(K,V); !childtable.End(K); childtable.Next(K,V))
-			{
-				load_node(NewNode,V);
-			}
-		}
-
-		return NewNode;
-	}
