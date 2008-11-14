@@ -184,7 +184,8 @@ struct update_bounding
 
 							for (unsigned i=0; i<contactnum; ++i)
 							{
-								ptr->bodystate_array[body1->is_static].pos[indexbody1].transformtransposed(c->relpos[n],
+//								ptr->bodystate_array[body1->is_static].pos[indexbody1].transformtransposed(c->relpos[n],
+							}
 
 						}
 					}

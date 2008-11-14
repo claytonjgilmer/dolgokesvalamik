@@ -19,7 +19,7 @@
 		constraint_t(body_t* i_body1, body_t* i_body2)
 		{
 			body[0]=i_body1;
-			body[2]=i_body2;
+			body[1]=i_body2;
 			edge[0].constraint=edge[1].constraint=this;
 			edge[0].other=i_body2;
 			edge[1].other=i_body1;
