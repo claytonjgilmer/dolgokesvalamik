@@ -6,24 +6,24 @@
 		ZeroMemory(this->contact_hash,sizeof(this->contact_hash));
 	}
 
-	uint32 get_hashindex(uint32 i_key)
+	uint32 get_hashindex(body_t* i_body1, body_t* i_body2)
 	{
-		return i_key & (hashtable_size-1);
+		uint32 key=((uint32)i_body1) ^ ((uint32)i_body2);
+		return key & (hashtable_size-1);
 	}
 
 	contact_t* contactmanager::get_contact(body_t* i_body1, body_t* i_body2)
 	{
-		uint32 key=((uint32)i_body1) ^ ((uint32)i_body2);
-		uint32 index=get_hashindex(key);
+		uint32 index=get_hashindex(i_body1,i_body2);
 
 		contact_t* ptr=this->contact_hash[index];
 
+        this->cm.lock();
 		while (ptr && (ptr->body[0]!=i_body1 || ptr->body[1]!=i_body2))
 			ptr=ptr->next;
 
 		if (!ptr)
 		{
-			cm.lock();
 			ptr=this->contact_list.allocate_place();
 			new (ptr) contact_t(i_body1,i_body2);
 
@@ -33,10 +33,10 @@
 				this->contact_hash[index]->prev=ptr;
 
 			this->contact_hash[index]=ptr;
-			cm.unlock();
 //			this->contact_array.push_back(ptr);
 		}
 
+        this->cm.unlock();
 		return ptr;
 	}
 
@@ -51,10 +51,8 @@
 		}
 		else //ha nincs elozoje, akkor o az elso a hashtablaban
 		{
-			uint32 key=((uint32)i_contact->body[0]) ^ ((uint32)i_contact->body[0]);
-			uint32 index=get_hashindex(key);
-
-			this->contact_hash[index]=physicssystem::ptr()->cm.contact_hash[index]->next;
+			uint32 index=get_hashindex(i_contact->body[0],i_contact->body[1]);
+			this->contact_hash[index]=this->contact_hash[index]->next;
 		}
 
 		contact_list.deallocate(i_contact);

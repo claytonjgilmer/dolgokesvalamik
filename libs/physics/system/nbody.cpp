@@ -8,6 +8,10 @@
 										state_size_sum+=sizeof(_type_); \
 										state_num++
 
+
+void realloc(nbody*, unsigned i_newcapacity);
+
+
 	nbody::nbody():
 	state_size_sum(0),
 	state_num(0),
@@ -24,7 +28,7 @@
 		DECLARE_STATE(this->invinertia_abs,mtx3x3);
 		DECLARE_STATE(this->body,body_t*);
 
-		this->realloc(NBODY_MIN_CAPACITY);
+		realloc(this,NBODY_MIN_CAPACITY);
 	}
 
 	nbody::~nbody()
@@ -33,36 +37,36 @@
 		free(firstaddress);
 	}
 
-	void nbody::realloc(unsigned i_newcapacity)
+	void realloc(nbody* nb, unsigned i_newcapacity)
 	{
-		this->capacity=i_newcapacity;
-		char* newbuf=(char*)malloc(this->state_size_sum*i_newcapacity);
+		nb->capacity=i_newcapacity;
+		char* newbuf=(char*)malloc(nb->state_size_sum*i_newcapacity);
 
-		if (size)
+		if (nb->size)
 		{
 			unsigned act_offset=0;
-			for (unsigned n=0; n<this->state_num; ++n)
+			for (unsigned n=0; n<nb->state_num; ++n)
 			{
 //				void* srcaddress=(void*)*(((char*)this)+4*n);
-				void* srcaddress=*(((void**)this)+n);
-				memcpy(newbuf+act_offset,srcaddress,size*this->state_size[n]);
-				act_offset+=this->state_size[n]*this->capacity;
+				void* srcaddress=*(((void**)nb)+n);
+				memcpy(newbuf+act_offset,srcaddress,nb->size*nb->state_size[n]);
+				act_offset+=nb->state_size[n]*nb->capacity;
 			}
 		}
 
 		unsigned act_offset=0;
-		for (unsigned n=0; n<state_num; ++n)
+		for (unsigned n=0; n<nb->state_num; ++n)
 		{
-			void* &srcaddress=(void*&)*(((char*)this)+4*n);
+			void* &srcaddress=(void*&)*(((char*)nb)+4*n);
 			srcaddress=newbuf+act_offset;
-			act_offset+=this->state_size[n]*this->capacity;
+			act_offset+=nb->state_size[n]*nb->capacity;
 		}
 	}
 
 	void nbody::add_body(const bodydesc i_desc[], body_t* i_body_array[], unsigned i_bodynum)
 	{
 		if (size+i_bodynum>capacity)
-			realloc(nextpoweroftwo(size+i_bodynum));
+			realloc(this,nextpoweroftwo(size+i_bodynum));
 
 		for (unsigned n=0,index=size; n<i_bodynum;++n,++index)
 		{

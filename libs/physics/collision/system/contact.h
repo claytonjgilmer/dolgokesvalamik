@@ -7,53 +7,70 @@
 
 #define MAX_CONTACTNUM_PER_BODYPAIR 4
 
-	struct contact_t:public constraint_t
-	{
-		vec3 relpos[2][MAX_CONTACTNUM_PER_BODYPAIR];
-		vec3 normal;
-		contact_t* prev,*next;
+struct contact_t:public constraint_t
+{
+    vec3 relpos[2][MAX_CONTACTNUM_PER_BODYPAIR];
+    vec3 normal;
+    contact_t* prev,*next;
 
-		char contactnum;
+    char contactnum;
 
-		contact_t(body_t* i_body1, body_t* i_body2):
-		constraint_t(i_body1,i_body2)
-		{
-			//befuzzuk a ket test kontakt-listajaba
-			this->edge[0].prev=0;
-			this->edge[0].next=this->body[0]->contacts;
-			if (this->body[0]->contacts)
-				this->body[0]->contacts->prev=this->edge+0;
-			this->body[0]->contacts=this->edge+0;
+    contact_t(body_t* i_body1, body_t* i_body2);
+    ~contact_t();
 
-			this->edge[1].prev=0;
-			this->edge[1].next=this->body[1]->contacts;
-			if (this->body[1]->contacts)
-				this->body[1]->contacts->prev=this->edge+1;
-			this->body[1]->contacts=this->edge+1;
+    void add_contact(const vec3& relpos_body1, const vec3& relpos_body2);
+};
 
-			this->contactnum=0;
-		}
 
-		~contact_t()
-		{
-			//kifuzzuk a ket test kontakt-listajabol
-			if (this->edge[0].prev)
-				this->edge[0].prev->next=this->edge[0].next;
 
-			if (this->edge[0].prev)
-				this->edge[0].prev->next=this->edge[0].next;
 
-			if (this->body[0]->contacts=this->edge+0)
-				this->body[0]->contacts=this->body[0]->contacts->next;
+MLINLINE contact_t::contact_t(body_t* i_body1, body_t* i_body2):
+constraint_t(i_body1,i_body2)
+{
+    //befuzzuk a ket test kontakt-listajaba
+    this->body[0]->contacts.push_front(this->edge);
+/*
+    this->edge[0].prev=0;
+    this->edge[0].next=this->body[0]->contacts;
+    if (this->body[0]->contacts)
+        this->body[0]->contacts->prev=this->edge+0;
+    this->body[0]->contacts=this->edge+0;
+*/
+    this->body[1]->contacts.push_front(this->edge+1);
+/*
+    this->edge[1].prev=0;
+    this->edge[1].next=this->body[1]->contacts;
+    if (this->body[1]->contacts)
+        this->body[1]->contacts->prev=this->edge+1;
+    this->body[1]->contacts=this->edge+1;
+*/
+    this->contactnum=0;
+}
 
-			if (this->edge[1].prev)
-				this->edge[1].prev->next=this->edge[1].next;
+MLINLINE contact_t::~contact_t()
+{
+    //kifuzzuk a ket test kontakt-listajabol
+    this->body[0]->contacts.erase(this->edge);
+    this->body[1]->contacts.erase(this->edge+1);
+/*
+    if (this->edge[0].prev)
+        this->edge[0].prev->next=this->edge[0].next;
 
-			if (this->edge[1].prev)
-				this->edge[1].prev->next=this->edge[1].next;
+    if (this->edge[0].prev)
+        this->edge[0].prev->next=this->edge[0].next;
 
-			if (this->body[1]->contacts=this->edge+1)
-				this->body[1]->contacts=this->body[1]->contacts->next;
-		}
-	};
+    if (this->body[0]->contacts=this->edge+0)
+        this->body[0]->contacts=this->body[0]->contacts->next;
+
+    if (this->edge[1].prev)
+        this->edge[1].prev->next=this->edge[1].next;
+
+    if (this->edge[1].prev)
+        this->edge[1].prev->next=this->edge[1].next;
+
+    if (this->body[1]->contacts=this->edge+1)
+        this->body[1]->contacts=this->body[1]->contacts->next;
+*/
+}
+
 #endif//_contact_h_

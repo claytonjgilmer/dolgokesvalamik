@@ -328,7 +328,7 @@
 1216971576 source:c:\lacika\thingsandsomethings\winteszt\stdafx.cpp
 	"stdafx.h"
 
-1226530428 source:c:\lacika\dolgokesvalamik\winteszt\testapp.cpp
+1226602515 source:c:\lacika\dolgokesvalamik\winteszt\testapp.cpp
 	"stdafx.h"
 	<MMSystem.h>
 	"render/rendersystem.h"
@@ -352,7 +352,7 @@
 	<memory.h>
 	<tchar.h>
 
-1226530506 c:\lacika\dolgokesvalamik\libs\render\rendersystem.h
+1226530539 c:\lacika\dolgokesvalamik\libs\render\rendersystem.h
 	"containers/listallocator.h"
 	"renderqueue.h"
 	"threading/taskmanager2.h"
@@ -374,7 +374,7 @@
 
 1226432409 c:\lacika\dolgokesvalamik\libs\utils\misc.h
 
-1226528528 c:\lacika\dolgokesvalamik\libs\utils\assert.h
+1226602515 c:\lacika\dolgokesvalamik\libs\utils\assert.h
 	<assert.h>
 	<stdio.h>
 	<Windows.h>
@@ -397,10 +397,10 @@
 1226432411 c:\lacika\dolgokesvalamik\libs\math\mtx4x3.h
 	"mtx3x3.h"
 
-1226432411 c:\lacika\dolgokesvalamik\libs\math\mtx3x3.h
+1226602516 c:\lacika\dolgokesvalamik\libs\math\mtx3x3.h
 	"vec3.h"
 
-1226432411 c:\lacika\dolgokesvalamik\libs\math\vec3.h
+1226602516 c:\lacika\dolgokesvalamik\libs\math\vec3.h
 	"math.h"
 
 1226432411 c:\lacika\dolgokesvalamik\libs\math\math.h
@@ -452,7 +452,7 @@
 
 1225017995 c:\lacika\dolgokesvalamik\libs\utils\auto_ptr.h
 
-1226432411 c:\lacika\dolgokesvalamik\libs\threading\taskmanager2.h
+1226602516 c:\lacika\dolgokesvalamik\libs\threading\taskmanager2.h
 	<malloc.h>
 	"mutex.h"
 	"thread.h"
@@ -531,24 +531,24 @@
 
 1226432411 c:\lacika\dolgokesvalamik\libs\math\vec2.h
 
-1226432409 c:\lacika\dolgokesvalamik\libs\render\renderobject3d.h
+1226602515 c:\lacika\dolgokesvalamik\libs\render\renderobject3d.h
 	"scene/node.h"
 	"render/mesh.h"
 	"utils/auto_ptr.h"
 	"containers/fixedvector.h"
 
-1226520502 c:\lacika\dolgokesvalamik\libs\scene\node.h
+1226602516 c:\lacika\dolgokesvalamik\libs\scene\node.h
 	"rootobject.h"
 	"containers/string.h"
 	"utils/assert.h"
 	"math/mtx4x3.h"
 	"prop/property.h"
 
-1226432411 c:\lacika\dolgokesvalamik\libs\scene\rootobject.h
+1226602516 c:\lacika\dolgokesvalamik\libs\scene\rootobject.h
 	"containers/string.h"
 	"nodefactory.h"
 
-1225043253 c:\lacika\dolgokesvalamik\libs\scene\nodefactory.h
+1226602516 c:\lacika\dolgokesvalamik\libs\scene\nodefactory.h
 	"containers/vector.h"
 	"containers/string.h"
 	"utils/assert.h"
@@ -597,10 +597,11 @@
 	"physics/collision/shapeintersection/shapeintersection.h"
 	"physics/collision/broadphase/hgridbroadphase.h"
 
-1226432409 c:\lacika\dolgokesvalamik\libs\physics\system\body.h
+1227136032 c:\lacika\dolgokesvalamik\libs\physics\system\body.h
 	"math/mtx4x3.h"
+	"containers/intr_list.h"
 
-1226432409 c:\lacika\dolgokesvalamik\libs\physics\system\nbody.h
+1227128947 c:\lacika\dolgokesvalamik\libs\physics\system\nbody.h
 	"containers/vector.h"
 	"math/vec3.h"
 	"math/mtx3x3.h"
@@ -613,14 +614,15 @@
 	"containers/vector.h"
 	"threading/mutex.h"
 
-1226432410 c:\lacika\dolgokesvalamik\libs\physics\collision\system\contact.h
+1227135651 c:\lacika\dolgokesvalamik\libs\physics\collision\system\contact.h
 	"constraint.h"
 	"math/vec3.h"
 	"physics/system/body.h"
 
-1226432410 c:\lacika\dolgokesvalamik\libs\physics\collision\system\constraint.h
+1227134724 c:\lacika\dolgokesvalamik\libs\physics\collision\system\constraint.h
+	"containers/intr_list.h"
 
-1226432409 c:\lacika\dolgokesvalamik\libs\physics\collision\shapes\shape.h
+1227136683 c:\lacika\dolgokesvalamik\libs\physics\collision\shapes\shape.h
 	"math/aabox.h"
 
 1226432411 c:\lacika\dolgokesvalamik\libs\math\aabox.h
@@ -630,7 +632,7 @@
 1226432410 c:\lacika\dolgokesvalamik\libs\physics\collision\shapeintersection\shapeintersection.h
 	"physics/collision/shapes/shape.h"
 
-1226432410 c:\lacika\dolgokesvalamik\libs\physics\collision\broadphase\hgridbroadphase.h
+1227129144 c:\lacika\dolgokesvalamik\libs\physics\collision\broadphase\hgridbroadphase.h
 	"broadphaseobject.h"
 	"broadphasepair.h"
 	"containers/listallocator.h"
@@ -656,4 +658,6 @@
 
 1214843666 source:c:\lacika\dolgokesvalamik\winteszt\stdafx.cpp
 	"stdafx.h"
+
+1227139266 c:\lacika\dolgokesvalamik\libs\containers\intr_list.h
 

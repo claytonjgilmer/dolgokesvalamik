@@ -2,9 +2,10 @@
 #define _PHYSICSBODY_H_
 
 #include "math/mtx4x3.h"
+#include "containers/intr_list.h"
 
 	struct physicssystem;
-	struct constraint_edge;
+	struct constraint_t;
 	struct shape_t;
 	struct shape_desc;
 
@@ -55,9 +56,14 @@
 
 		uint16 array_index;
 		bodystate  is_static;
-		constraint_edge* contacts;
-		constraint_edge* joints;
-		shape_t* shapes;
+
+		intr_list<constraint_t> contacts;
+		intr_list<constraint_t> joints;
+
+//		constraint_edge* contacts;
+//		constraint_edge* joints;
+        intr_list<shape_t> shapes;
+//		shape_t* shapes;
 
 	};
 #endif

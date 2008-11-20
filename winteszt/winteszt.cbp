@@ -19,6 +19,7 @@
 					<Add option="-W" />
 					<Add option="-g" />
 					<Add option="-O0" />
+					<Add option="-fcheck-new" />
 					<Add option="-DWIN32" />
 					<Add option="-D_DEBUG" />
 					<Add option="-D_WINDOWS" />

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug Win32" />
+	<File name="C:\Lacika\dolgokesvalamik\libs\containers\intr_list.h" open="1" top="0" tabpos="1">
+		<Cursor position="1071" topLine="27" />
+	</File>
 	<File name="containers\fixedvector.h" open="0" top="0" tabpos="0">
 		<Cursor position="2143" topLine="85" />
 	</File>
@@ -64,47 +67,50 @@
 	<File name="physics\collision\broadphase\broadphaseobject.h" open="0" top="0" tabpos="0">
 		<Cursor position="409" topLine="0" />
 	</File>
-	<File name="physics\collision\broadphase\broadphasepair.h" open="0" top="0" tabpos="0">
-		<Cursor position="463" topLine="0" />
+	<File name="physics\collision\broadphase\broadphasepair.h" open="0" top="0" tabpos="8">
+		<Cursor position="58" topLine="0" />
 	</File>
-	<File name="physics\collision\broadphase\hgridbroadphase.cpp" open="1" top="1" tabpos="7">
-		<Cursor position="620" topLine="0" />
+	<File name="physics\collision\broadphase\hgridbroadphase.cpp" open="0" top="0" tabpos="6">
+		<Cursor position="538" topLine="0" />
 	</File>
-	<File name="physics\collision\broadphase\hgridbroadphase.h" open="1" top="0" tabpos="8">
-		<Cursor position="507" topLine="0" />
+	<File name="physics\collision\broadphase\hgridbroadphase.h" open="0" top="0" tabpos="7">
+		<Cursor position="426" topLine="0" />
 	</File>
 	<File name="physics\collision\shapeintersection\shapeintersection.h" open="0" top="0" tabpos="0">
 		<Cursor position="809" topLine="0" />
 	</File>
 	<File name="physics\collision\shapes\shape.h" open="0" top="0" tabpos="0">
-		<Cursor position="368" topLine="4" />
+		<Cursor position="632" topLine="0" />
 	</File>
-	<File name="physics\collision\system\constraint.h" open="1" top="0" tabpos="9">
-		<Cursor position="365" topLine="0" />
-	</File>
-	<File name="physics\collision\system\contact.h" open="1" top="0" tabpos="2">
-		<Cursor position="613" topLine="4" />
-	</File>
-	<File name="physics\collision\system\contactmanager.cpp" open="1" top="0" tabpos="4">
+	<File name="physics\collision\system\constraint.h" open="0" top="0" tabpos="9">
 		<Cursor position="345" topLine="0" />
 	</File>
-	<File name="physics\collision\system\contactmanager.h" open="1" top="0" tabpos="3">
+	<File name="physics\collision\system\contact.h" open="0" top="0" tabpos="2">
+		<Cursor position="199" topLine="0" />
+	</File>
+	<File name="physics\collision\system\contactmanager.cpp" open="0" top="0" tabpos="3">
+		<Cursor position="240" topLine="0" />
+	</File>
+	<File name="physics\collision\system\contactmanager.h" open="0" top="0" tabpos="2">
 		<Cursor position="261" topLine="0" />
 	</File>
 	<File name="physics\system\body.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="1714" topLine="52" />
+		<Cursor position="434" topLine="0" />
 	</File>
 	<File name="physics\system\body.h" open="0" top="0" tabpos="0">
-		<Cursor position="1041" topLine="27" />
+		<Cursor position="1193" topLine="35" />
 	</File>
-	<File name="physics\system\nbody.h" open="1" top="0" tabpos="6">
-		<Cursor position="202" topLine="0" />
+	<File name="physics\system\nbody.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="386" topLine="2" />
 	</File>
-	<File name="physics\system\physicssystem.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="4111" topLine="131" />
+	<File name="physics\system\nbody.h" open="0" top="0" tabpos="5">
+		<Cursor position="397" topLine="6" />
 	</File>
-	<File name="physics\system\physicssystem.h" open="1" top="0" tabpos="5">
-		<Cursor position="1297" topLine="16" />
+	<File name="physics\system\physicssystem.cpp" open="1" top="1" tabpos="2">
+		<Cursor position="2616" topLine="70" />
+	</File>
+	<File name="physics\system\physicssystem.h" open="0" top="0" tabpos="4">
+		<Cursor position="1297" topLine="10" />
 	</File>
 	<File name="prop\property.h" open="0" top="0" tabpos="0">
 		<Cursor position="775" topLine="2" />
@@ -140,7 +146,7 @@
 		<Cursor position="86" topLine="0" />
 	</File>
 	<File name="scene\node.h" open="0" top="0" tabpos="0">
-		<Cursor position="301" topLine="3" />
+		<Cursor position="282" topLine="0" />
 	</File>
 	<File name="scene\nodefactory.h" open="0" top="0" tabpos="0">
 		<Cursor position="6297" topLine="268" />
@@ -148,20 +154,23 @@
 	<File name="scene\rootobject.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="350" topLine="0" />
 	</File>
+	<File name="scripting\lualib\llex.c" open="0" top="0" tabpos="0">
+		<Cursor position="331" topLine="9" />
+	</File>
 	<File name="threading\mutex.h" open="0" top="0" tabpos="0">
 		<Cursor position="323" topLine="0" />
 	</File>
-	<File name="threading\task.h" open="0" top="0" tabpos="0">
-		<Cursor position="287" topLine="0" />
+	<File name="threading\task.h" open="0" top="0" tabpos="9">
+		<Cursor position="88" topLine="0" />
 	</File>
 	<File name="threading\taskallocator.h" open="0" top="0" tabpos="0">
 		<Cursor position="774" topLine="7" />
 	</File>
 	<File name="threading\taskmanager2.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="4032" topLine="152" />
+		<Cursor position="1463" topLine="74" />
 	</File>
-	<File name="threading\taskmanager2.h" open="0" top="0" tabpos="2">
-		<Cursor position="2580" topLine="83" />
+	<File name="threading\taskmanager2.h" open="0" top="0" tabpos="10">
+		<Cursor position="2600" topLine="88" />
 	</File>
 	<File name="threading\thread.h" open="0" top="0" tabpos="0">
 		<Cursor position="448" topLine="0" />
@@ -173,7 +182,7 @@
 		<Cursor position="6206" topLine="302" />
 	</File>
 	<File name="utils\misc.h" open="0" top="0" tabpos="0">
-		<Cursor position="108" topLine="0" />
+		<Cursor position="38" topLine="0" />
 	</File>
 	<File name="utils\mmod-loader.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="12273" topLine="524" />

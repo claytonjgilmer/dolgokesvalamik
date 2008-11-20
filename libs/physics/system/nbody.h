@@ -37,6 +37,5 @@
 		unsigned state_size_sum;
 		unsigned state_num;
 
-		void realloc(unsigned i_newcapacity);
 	};
 #endif//_nbody_h_

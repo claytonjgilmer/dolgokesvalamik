@@ -1,4 +1,4 @@
-#ifndef _shape_h_
+ #ifndef _shape_h_
 #define _shape_h_
 
 #include "math/aabox.h"
@@ -21,12 +21,11 @@
 	//////////////////////////////////////////////////////////////////////////
 
 	struct broadphaseobject;
-	struct shape_t
+
+	struct shape_t:public intr_list_node<shape_t>
 	{
 		aabb bounding;
 		body_t* body;
-		shape_t* next;
-		shape_t* prev;
 		shape_type type;
 		broadphaseobject* collider;
 		shape_t():type(shape_type_invalid){}
