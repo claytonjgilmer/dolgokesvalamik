@@ -31,8 +31,8 @@ struct game
 	vec3 light_dir;
 	object3d* obj;
 	object3d* sky;
-#define BODY_NUM 15000
-#define ROOM_SIZE 100.0f
+#define BODY_NUM 50
+#define ROOM_SIZE 30.0f
 #define BODY_SIZE 1.0f
 	body_t* phb[BODY_NUM];
 	int inited;
@@ -86,6 +86,7 @@ void init_app(HWND i_hwnd)
 	texturemanager::create(&textdesc);
 
 	physicssystemdesc pd;
+	pd.gravity.set(0,0,0);
 	physicssystem::create(&pd);
 
 	rendersystemdesc renderdesc;
@@ -232,14 +233,14 @@ void init_app(HWND i_hwnd)
 	for (unsigned n=0; n<BODY_NUM;++n)
 	{
 		float x=random(-ROOM_SIZE,ROOM_SIZE);
-		float y=random(-ROOM_SIZE,ROOM_SIZE);
+		float y=0;//random(-ROOM_SIZE,ROOM_SIZE);
 		float z=random(-ROOM_SIZE,ROOM_SIZE);
 		bd.pos.t.set(x,y,z);
 		x=random(-3.0f,3.0f);
-		y=random(-3.0f,3.0f);
+		y=0;//random(-3.0f,3.0f);
 		z=random(-3.0f,3.0f);
 		bd.vel.set(x,y,z);
-		bd.rotvel.set(x/3,y/3,z/3);
+//		bd.rotvel.set(x/3,y/3,z/3);
 
 		g_game.phb[n]=physicssystem::ptr()->create_body(bd);
 #if 0
@@ -499,7 +500,7 @@ void update_app()
 
 		for (unsigned m=0; m<1; ++m)
 		{
-//			rendersystem::ptr()->add_mesh(g_game.m_mesh.get(),pos);
+			rendersystem::ptr()->add_mesh(g_game.m_mesh.get(),pos);
 			pos.t.x+=10;
 		}
 	}

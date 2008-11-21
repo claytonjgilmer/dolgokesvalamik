@@ -79,6 +79,7 @@
 		}
 
 		s->body=this;
+		s->elem=s;
 		this->shapes.push_front(s);
         aabb aabb=transform(physicssystem::ptr()->bodystate_array[this->is_static].pos[this->array_index],s->bounding);
         s->collider=physicssystem::ptr()->broad_phase.create_object(s,aabb,this->is_static);

@@ -43,7 +43,7 @@
 			return m_allocator;
 		}
 
-		template<class T,class S> void process_buffer(T* i_buf, unsigned i_elemnum, unsigned i_grainsize, const S& i_process)
+		template<class T,class S> void process_buffer(T* i_buf, unsigned i_elemnum, unsigned i_grainsize, S i_process)
 		{
 			class proc_range:public task_t
 			{
@@ -63,7 +63,7 @@
 			private:
 				T* const m_buf;
 				unsigned m_num;
-				const S& m_process;
+				S m_process;
 			};
 
 			unsigned start=0;

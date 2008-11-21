@@ -168,7 +168,8 @@ void near_phase()
 
     if (ptr->parallel_processing)
     {
-        taskmanager::ptr()->process_buffer(ptr->broad_phase.pair_num,10,near_struct());
+		if (ptr->broad_phase.pair_num)
+			taskmanager::ptr()->process_buffer(ptr->broad_phase.pair_num,10,near_struct());
     }
     else
     {
@@ -218,35 +219,35 @@ void near_phase()
 struct update_process
 {
     update_process(nbody* i_b,float i_dt,vec3 i_gravity):
-b(i_b),
-dt(i_dt),
-gravity(i_gravity)
-{
-}
+	b(i_b),
+	dt(i_dt),
+	gravity(i_gravity)
+	{
+	}
 
-void operator()(unsigned i_start,unsigned i_num) const
-{
-    uint32 end=i_start+i_num;
-    for (uint32 n=i_start; n<end; ++n)
-    {
-        b->vel[n]+=dt*(b->invmass[n]*b->force[n]+gravity);
-        b->rotvel[n]+=dt*b->invinertia_abs[n].transform3x3(b->torque[n]);
+	void operator()(unsigned i_start,unsigned i_num) const
+	{
+		uint32 end=i_start+i_num;
+		for (uint32 n=i_start; n<end; ++n)
+		{
+			b->vel[n]+=dt*(b->invmass[n]*b->force[n]+gravity);
+			b->rotvel[n]+=dt*b->invinertia_abs[n].transform3x3(b->torque[n]);
 
-        b->pos[n].t+=dt*b->vel[n];
+			b->pos[n].t+=dt*b->vel[n];
 
-        float angle=b->rotvel[n].length();
+			float angle=b->rotvel[n].length();
 
-        if (angle>0.001f)
-        {
-            vec3 axis=b->rotvel[n]/angle;
-            b->pos[n].rotate(b->pos[n],axis,dt*angle);
-        }
-    }
-}
+			if (angle>0.001f)
+			{
+				vec3 axis=b->rotvel[n]/angle;
+				b->pos[n].rotate(b->pos[n],axis,dt*angle);
+			}
+		}
+	}
 
-nbody* b;
-float dt;
-vec3 gravity;
+	nbody* b;
+	float dt;
+	vec3 gravity;
 };
 
 void update_bodies(float i_dt)
