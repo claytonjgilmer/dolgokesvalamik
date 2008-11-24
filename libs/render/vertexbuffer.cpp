@@ -38,8 +38,8 @@
 
 		decl.push_back(g_decl[vertexelement_num]);
 
-		rendersystem::ptr()->device()->CreateVertexBuffer(i_vertexnum*siz,D3DUSAGE_WRITEONLY,0,D3DPOOL_DEFAULT,&m_hwbuffer,NULL);
-		rendersystem::ptr()->device()->CreateVertexDeclaration(&decl[0],&m_decl);
+		rendersystem::ptr->device()->CreateVertexBuffer(i_vertexnum*siz,D3DUSAGE_WRITEONLY,0,D3DPOOL_DEFAULT,&m_hwbuffer,NULL);
+		rendersystem::ptr->device()->CreateVertexDeclaration(&decl[0],&m_decl);
 		m_vertexsize=siz;
 	}
 
@@ -68,8 +68,8 @@
 
 		decl.push_back(g_decl[vertexelement_num]);
 
-		rendersystem::ptr()->device()->CreateVertexBuffer(i_vertexnum*i_vertexsize,D3DUSAGE_WRITEONLY,0,D3DPOOL_DEFAULT,&m_hwbuffer,NULL);
-		rendersystem::ptr()->device()->CreateVertexDeclaration(&decl[0],&m_decl);
+		rendersystem::ptr->device()->CreateVertexBuffer(i_vertexnum*i_vertexsize,D3DUSAGE_WRITEONLY,0,D3DPOOL_DEFAULT,&m_hwbuffer,NULL);
+		rendersystem::ptr->device()->CreateVertexDeclaration(&decl[0],&m_decl);
 		m_vertexsize=i_vertexsize;
 	}
 

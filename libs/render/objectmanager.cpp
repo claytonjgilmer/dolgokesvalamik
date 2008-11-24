@@ -47,7 +47,7 @@ object3d* load_mmod(file& i_file);
 	object3d* objectmanager::load_mmod_file(const char* i_name)
 	{
 		file objfile;
-		filesystem::ptr()->open_file(objfile,i_name,m_objectgroup.c_str(),"rb");
+		filesystem::ptr->open_file(objfile,i_name,m_objectgroup.c_str(),"rb");
 
 		if (objfile.opened())
 		{

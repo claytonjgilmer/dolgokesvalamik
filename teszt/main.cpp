@@ -11,7 +11,7 @@
 
 
 #include "threading/thread.h"
-#include "threading/taskmanager2.h"
+#include "threading/taskmanager.h"
 
 #include "containers/string.h"
 #include "containers/stringmap.h"
@@ -51,7 +51,7 @@ struct proc2
 	{
 		for (unsigned n=0; n<i_num; ++n)
 		{
-			taskmanager::ptr()->process_buffer(i_buf+n*m_bufsize,m_bufsize,10,proc());
+			taskmanager::ptr->process_buffer(i_buf+n*m_bufsize,m_bufsize,10,proc());
 		}
 	}
 };
@@ -109,7 +109,7 @@ void tasktest()
 
 
 	t.reset();
-	taskmanager::ptr()->process_buffer(buf,buf2_size,1,proc2(buf_size));
+	taskmanager::ptr->process_buffer(buf,buf2_size,1,proc2(buf_size));
 	t.stop();
 	unsigned tick=t.get_tick();
 

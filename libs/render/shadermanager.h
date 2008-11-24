@@ -6,9 +6,8 @@
 #include "containers/stringmap.h"
 #include "render/shader.h"
 
-	class shadermanagerdesc
+	struct shadermanagerdesc
 	{
-	public:
 		string m_shadergroup;
 
 		shadermanagerdesc(const char* i_shadergroup):
@@ -16,10 +15,9 @@
 		{
 		}
 	};
-	class shadermanager
+	struct shadermanager
 	{
 		DECLARE_SINGLETON_DESC(shadermanager,shadermanagerdesc);
-	public:
 		shadermanager(const shadermanagerdesc*);
 		shader* get_shader(const char* i_shadername);
 		void erase_shader(shader*);

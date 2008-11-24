@@ -4,7 +4,7 @@
 
 #include "render/rendersystem.h"
 #include "file/filesystem.h"
-#include "threading/taskmanager2.h"
+#include "threading/taskmanager.h"
 #include "render/shadermanager.h"
 #include "render/texturemanager.h"
 #include "render/submesh.h"
@@ -69,8 +69,8 @@ vec2 g_uv[]={V2(0,0),V2(1,0),V2(1,1),V2(0,1),V2(1,1),V2(0,1),V2(0,0),V2(1,0)};
 void init_app(HWND i_hwnd)
 {
 	filesystem::create();
-	filesystem::ptr()->register_path("shader","shader\\");
-	filesystem::ptr()->register_path("texture","texture\\");
+	filesystem::ptr->register_path("shader","shader\\");
+	filesystem::ptr->register_path("texture","texture\\");
 
 	taskmanagerdesc tdesc;
 	tdesc.m_threadnum=50;
@@ -111,7 +111,7 @@ void init_app(HWND i_hwnd)
 		{
 			submesh& sm=m->m_submeshbuf[k];
 
-			sm.set_shader(shadermanager::ptr()->get_shader("nothing.fx"));
+			sm.set_shader(shadermanager::ptr->get_shader("nothing.fx"));
 		}
 	}
 
@@ -171,12 +171,12 @@ void init_app(HWND i_hwnd)
 	ts.m_firstvertex=0;
 	ts.m_numvertices=8;
 
-	ts.set_shader(shadermanager::ptr()->get_shader("posnormuv.fx"));
+	ts.set_shader(shadermanager::ptr->get_shader("posnormuv.fx"));
 	ts.bind_param("light_dir",&g_game.light_dir,3*sizeof(float));
 
 
 //	texture* txt=texturemanager::instance()->get_texture("teszt.jpg");
-	texture* txt=texturemanager::ptr()->get_texture("structures_malayhouse.dds");
+	texture* txt=texturemanager::ptr->get_texture("structures_malayhouse.dds");
 	ts.m_texturebuf.push_back(txt);
 
 	g_game.x=g_game.y=g_game.z=0;
@@ -215,7 +215,7 @@ void init_app(HWND i_hwnd)
 	sts.m_firstvertex=0;
 	sts.m_numvertices=posnum;
 
-	sts.set_shader(shadermanager::ptr()->get_shader("posnormuv.fx"));
+	sts.set_shader(shadermanager::ptr->get_shader("posnormuv.fx"));
 	sts.bind_param("light_dir",&g_game.light_dir,3*sizeof(float));
 
 
@@ -242,7 +242,7 @@ void init_app(HWND i_hwnd)
 		bd.vel.set(x,y,z);
 //		bd.rotvel.set(x/3,y/3,z/3);
 
-		g_game.phb[n]=physicssystem::ptr()->create_body(bd);
+		g_game.phb[n]=physicssystem::ptr->create_body(bd);
 #if 0
 		box_shape_desc sd;
 		sd.pos.identity();
@@ -303,8 +303,8 @@ void update_app()
 	g_game.t.reset();
 
 	sprintf(str,"FPS:%.1d",(int)(1/frame_time));
-	rendersystem::ptr()->draw_text(800,10,color_f(1,1,0,1),str);
-	taskmanager::ptr()->flush();
+	rendersystem::ptr->draw_text(800,10,color_f(1,1,0,1),str);
+	taskmanager::ptr->flush();
 	unsigned acttime=::timeGetTime();
 	unsigned deltatime=min(acttime-g_time,100u);
 	g_time=acttime;
@@ -313,25 +313,25 @@ void update_app()
 
 	if (sumtime>33)
 	{
-		inputsystem::ptr()->Update();
+		inputsystem::ptr->Update();
 		sumtime-=33;
 	}
 
 	timer t;
 	t.reset();
-	physicssystem::ptr()->simulate(dt);
+	physicssystem::ptr->simulate(dt);
 	t.stop();
 	unsigned sec=t.get_tick();
 	sprintf(str,"simulation time:%d",sec);
-	rendersystem::ptr()->draw_text(10,10,color_f(1,1,1,1),str);
+	rendersystem::ptr->draw_text(10,10,color_f(1,1,1,1),str);
 
-	sprintf(str,"pairnum:%d",physicssystem::ptr()->broad_phase.pair_num);
-	rendersystem::ptr()->draw_text(10,40,color_f(1,1,1,1),str);
+	sprintf(str,"pairnum:%d",physicssystem::ptr->broad_phase.pair_num);
+	rendersystem::ptr->draw_text(10,40,color_f(1,1,1,1),str);
 
 #if 0
-	for (unsigned n=0; n<(unsigned)physicssystem::ptr()->broad_phase.pair_num; ++n)
+	for (unsigned n=0; n<(unsigned)physicssystem::ptr->broad_phase.pair_num; ++n)
 	{
-		broadphasepair& pair=physicssystem::ptr()->broad_phase.pair_array[n];
+		broadphasepair& pair=physicssystem::ptr->broad_phase.pair_array[n];
 
 		{
 			vec3 center=pair.object[0]->bounding_world.get_center();
@@ -359,9 +359,9 @@ void update_app()
 			int prev=3;
 			for (int n=0; n<4;++n)
 			{
-//				rendersystem::ptr()->draw_line(corner[n],color_r8g8b8a8(0,0,0,255),corner[prev],color_r8g8b8a8(255,255,255,255));
-//				rendersystem::ptr()->draw_line(corner[n+4],color_r8g8b8a8(0,0,0,255),corner[prev+4],color_r8g8b8a8(255,255,255,255));
-//				rendersystem::ptr()->draw_line(corner[n],color_r8g8b8a8(0,0,0,255),corner[n+4],color_r8g8b8a8(255,255,255,255));
+//				rendersystem::ptr->draw_line(corner[n],color_r8g8b8a8(0,0,0,255),corner[prev],color_r8g8b8a8(255,255,255,255));
+//				rendersystem::ptr->draw_line(corner[n+4],color_r8g8b8a8(0,0,0,255),corner[prev+4],color_r8g8b8a8(255,255,255,255));
+//				rendersystem::ptr->draw_line(corner[n],color_r8g8b8a8(0,0,0,255),corner[n+4],color_r8g8b8a8(255,255,255,255));
 				prev=n;
 			}
 		}
@@ -393,9 +393,9 @@ void update_app()
 
 			for (int n=0; n<4;++n)
 			{
-//				rendersystem::ptr()->draw_line(corner[n],color_r8g8b8a8(0,255,0,255),corner[prev],color_r8g8b8a8(0,255,0,255));
-//				rendersystem::ptr()->draw_line(corner[n+4],color_r8g8b8a8(0,255,0,255),corner[prev+4],color_r8g8b8a8(0,255,0,255));
-//				rendersystem::ptr()->draw_line(corner[n],color_r8g8b8a8(0,255,0,255),corner[n+4],color_r8g8b8a8(0,255,0,255));
+//				rendersystem::ptr->draw_line(corner[n],color_r8g8b8a8(0,255,0,255),corner[prev],color_r8g8b8a8(0,255,0,255));
+//				rendersystem::ptr->draw_line(corner[n+4],color_r8g8b8a8(0,255,0,255),corner[prev+4],color_r8g8b8a8(0,255,0,255));
+//				rendersystem::ptr->draw_line(corner[n],color_r8g8b8a8(0,255,0,255),corner[n+4],color_r8g8b8a8(0,255,0,255));
 				prev=n;
 			}
 		}
@@ -403,7 +403,7 @@ void update_app()
 	}
 #endif
 	update_time.reset();
-	inputsystem* ip=inputsystem::ptr();
+	inputsystem* ip=inputsystem::ptr;
 
 	mtx4x3 cammtx=mtx4x3::identitymtx();
 	cammtx.set_euler(g_game.camx,g_game.camy,g_game.camz);
@@ -444,7 +444,7 @@ void update_app()
 
 	mtx4x3 viewmtx; viewmtx.linearinvert(cammtx);
 
-	rendersystem::ptr()->set_projection_params(degreetorad(60),g_game.m_aspect,0.3f,10000,(mtx4x4)viewmtx);
+	rendersystem::ptr->set_projection_params(degreetorad(60),g_game.m_aspect,0.3f,10000,(mtx4x4)viewmtx);
 
 	mtx4x3 mtx;
 	mtx.set_euler(g_game.x,g_game.y,g_game.z);
@@ -500,28 +500,28 @@ void update_app()
 
 		for (unsigned m=0; m<1; ++m)
 		{
-			rendersystem::ptr()->add_mesh(g_game.sphere.get(),pos);
+			rendersystem::ptr->add_mesh(g_game.sphere.get(),pos);
 			pos.t.x+=10;
 		}
 	}
 
 /*
-	rendersystem::ptr()->add_mesh(g_game.m_mesh.get(),mtx);
+	rendersystem::ptr->add_mesh(g_game.m_mesh.get(),mtx);
 	mtx.t.set(1,0,2.5f);
-	rendersystem::ptr()->add_mesh(g_game.sphere.get(),mtx);
+	rendersystem::ptr->add_mesh(g_game.sphere.get(),mtx);
 	mtx.set_euler(0,0,0);
 	mtx.t.set(0,0,22.5f);
 	g_game.obj->set_worldposition(mtx);
 //	g_game.obj->render();
 */
 	g_game.sky->render();
-	rendersystem::ptr()->render();
+	rendersystem::ptr->render();
 
 	update_time.stop();
 	unsigned update_tick=update_time.get_tick();
 
 	sprintf(str,"UPT:%d",update_tick);
-	rendersystem::ptr()->draw_text(400,10,color_f(1,1,0,1),str);
+	rendersystem::ptr->draw_text(400,10,color_f(1,1,0,1),str);
 
 }
 
@@ -608,5 +608,5 @@ void generate_sphere(vec3 o_pos[],int& o_numvertices,short o_indices[],int& o_nu
 void reload_shaders()
 {
 //	if (g_game.inited)
-//		shadermanager::ptr()->reload_shaders();
+//		shadermanager::ptr->reload_shaders();
 }

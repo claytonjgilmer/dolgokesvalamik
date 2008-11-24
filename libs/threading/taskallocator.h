@@ -25,7 +25,7 @@
 		}
 	private:
 		class tplaceholder{char c[256];};
-		listallocator<tplaceholder> m_taskalloc;
+		list_allocator<tplaceholder> m_taskalloc;
 		mutex m;
 	};
 

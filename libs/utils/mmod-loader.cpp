@@ -536,14 +536,14 @@ fixedvector<mesh*,8> MeshLODInfo::generate_mesh()
 
 			m->m_submeshbuf.push_back(submesh());
 			submesh& sm=m->m_submeshbuf.back();
-			sm.set_shader(shadermanager::ptr()->get_shader("posnormuv.fx"));
+			sm.set_shader(shadermanager::ptr->get_shader("posnormuv.fx"));
 			sm.m_firstindex=m_SubSet[n].indexStart;
 			sm.m_numindices=m_SubSet[n].indexNum*3;
 			sm.m_firstvertex=m_SubSet[n].vertexStart;
 			sm.m_numvertices=m_SubSet[n].vertexNum;
 			for (unsigned m=0; m<m_SubSet[n].textureNames.size(); ++m)
 			{
-				sm.m_texturebuf.push_back(texturemanager::ptr()->get_texture(m_SubSet[n].textureNames[m].c_str()));
+				sm.m_texturebuf.push_back(texturemanager::ptr->get_texture(m_SubSet[n].textureNames[m].c_str()));
 			}
 		}
 	}

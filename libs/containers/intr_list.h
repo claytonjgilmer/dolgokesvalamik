@@ -51,7 +51,8 @@ struct intr_list
 
     struct iterator
     {
-        intr_list_node<basetype>* n;
+        iterator(){n=0;}
+        iterator(intr_list_node<basetype>* n){this->n=n;}
         basetype* operator*()
         {
             return n->elem;
@@ -66,16 +67,20 @@ struct intr_list
         {
             return n!=other.n;
         }
+
+        intr_list_node<basetype>* n;
     };
 
     iterator begin()
     {
-        iterator it; it.n=_head.next; return it;
+        return _head.next;
+//        iterator it; it.n=_head.next; return it;
     }
 
     iterator end()
     {
-        iterator it; it.n=&_end; return it;
+        return &_end;
+//        iterator it; it.n=&_end; return it;
     }
 };
 

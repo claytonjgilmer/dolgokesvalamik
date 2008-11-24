@@ -3,10 +3,8 @@
 
 #include "utils/assert.h"
 
-	template <class T, unsigned bufsize> class fixedvector
+	template <typename T, unsigned bufsize> struct fixedvector
 	{
-	public:
-//#define TBuf ((T*)m_buf)
 		fixedvector():
 		TBuf((T*)m_buf)
 		{
@@ -113,7 +111,6 @@
 			static const fixedvector v; return v;
 		}
 
-	private:
 		char m_buf[bufsize*sizeof(T)];
 		T* TBuf;
 		unsigned m_size;

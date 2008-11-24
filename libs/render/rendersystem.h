@@ -8,7 +8,7 @@
 
 #include "containers/listallocator.h"
 #include "renderqueue.h"
-#include "threading/taskmanager2.h"
+#include "threading/taskmanager.h"
 
 #include "vertexbuffer.h"
 #include "indexbuffer.h"
@@ -69,10 +69,9 @@
 	class texture;
 	class state;
 
-	class rendersystem
+	struct rendersystem
 	{
 		DECLARE_SINGLETON_DESC(rendersystem,rendersystemdesc);
-	public:
 		rendersystem(const rendersystemdesc*);
 		~rendersystem();
 

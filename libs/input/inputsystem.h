@@ -6,19 +6,16 @@
 #include "utils/singleton.h"
 #include "utils/assert.h"
 
-	class inputinitparams
+	struct inputinitparams
 	{
 	public:
 		HWND	m_Window;
 	};
-	class inputsystem
-	{
-		friend 	BOOL CALLBACK EnumJoysticksCallback( const DIDEVICEINSTANCE* pdidInstance,void* pContext );
-		friend	BOOL CALLBACK EnumObjectsCallback( const DIDEVICEOBJECTINSTANCE* pdidoi,void* tmp );
 
+	struct inputsystem
+	{
 		DECLARE_SINGLETON_DESC(inputsystem,inputinitparams)
 
-	public:
 		inputsystem(const inputinitparams* i_params);
 		~inputsystem();
 		void Init(const inputinitparams& i_Params);
@@ -124,7 +121,10 @@
 		{
 			return m_Inited;
 		}
-	private:
+
+
+
+
 		unsigned char	m_KeyboardState[256];
 		unsigned char	m_PrevKeyboardState[256];
 		DIMOUSESTATE2	m_MouseState;
@@ -132,9 +132,8 @@
 
 
 
-		class JoyStruct
+		struct JoyStruct
 		{
-		public:
 			DIJOYSTATE2	m_JoyState;
 			DIJOYSTATE2	m_PrevJoyState;
 			int			m_AxisNum;

@@ -2,23 +2,17 @@
 #define _singleton_h_
 
 #define DECLARE_SINGLETON(_TYPE_) \
-									public:\
-										static void create(){if (!m_instance)m_instance=new _TYPE_;}\
-										static void release(){if (m_instance) delete m_instance; m_instance=NULL;}\
-										static _TYPE_* ptr(){assertion(m_instance!=NULL,"singleton nincs inicializalva");return m_instance;}\
-									private:\
-										static _TYPE_* m_instance;
+										static void create(){if (!ptr)ptr=new _TYPE_;}\
+										static void release(){if (ptr) delete ptr; ptr=NULL;}\
+										static _TYPE_* ptr;
 
 #define DECLARE_SINGLETON_DESC(_TYPE_,_DESC_) \
-										public:\
-										static void create(const _DESC_* i_desc){if (!m_instance)m_instance=new _TYPE_(i_desc);}\
-										static void release(){if (m_instance) delete m_instance; m_instance=NULL;}\
-										static _TYPE_* ptr(){assertion(m_instance!=NULL,"singleton nincs inicializalva");return m_instance;}\
-										private:\
-										static _TYPE_* m_instance;
+										static void create(const _DESC_* i_desc){if (!ptr)ptr=new _TYPE_(i_desc);}\
+										static void release(){if (ptr) delete ptr; ptr=NULL;}\
+										static _TYPE_* ptr;
 
 #define  DEFINE_SINGLETON(_TYPE_)\
-									_TYPE_* _TYPE_::m_instance=NULL;
+									_TYPE_* _TYPE_::ptr=NULL;
 
 #endif//_singleton_h_
 

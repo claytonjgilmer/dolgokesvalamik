@@ -14,7 +14,7 @@
 		void erase_contact(contact_t* i_contact);
 
 
-		listallocator<contact_t> contact_list;
+		list_allocator<contact_t> contact_list;
 //		vector<contact_t*> contact_array;
 		contact_t* contact_hash[hashtable_size];
 		mutex cm;

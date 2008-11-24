@@ -6,7 +6,7 @@
 		resource(i_name)
 	{
 		Next=NULL;
-		D3DXCreateTextureFromFileInMemory(rendersystem::ptr()->device(),i_buf,i_size,&m_hwbuffer);
+		D3DXCreateTextureFromFileInMemory(rendersystem::ptr->device(),i_buf,i_size,&m_hwbuffer);
 	}
 
 	texture::~texture()
@@ -14,5 +14,5 @@
 		if (m_hwbuffer)
 			m_hwbuffer->Release();
 
-		texturemanager::ptr()->erase_texture(this);
+		texturemanager::ptr->erase_texture(this);
 	}

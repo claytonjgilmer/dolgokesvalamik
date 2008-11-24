@@ -9,8 +9,8 @@
 
 	class filesystem
 	{
-		DECLARE_SINGLETON(filesystem);
 	public:
+		DECLARE_SINGLETON(filesystem);
 
 		void register_path(const char* i_group,const char* i_path);
 		void unregister_path(const char* i_group, const char* i_path);
@@ -37,7 +37,7 @@
 		} ;
 
 		stringmap<groupstruct,128> m_pathmap;
-		listallocator<groupstruct> m_groupbuf;
+		list_allocator<groupstruct> m_groupbuf;
 	};
 
 

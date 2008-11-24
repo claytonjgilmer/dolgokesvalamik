@@ -16,7 +16,7 @@
 	MLINLINE void statebuffer::apply_states()
 	{
 		for (unsigned n=0; n<m_buf.size(); ++n)
-			system::ptr()->set_renderstate(m_buf[n]);
+			system::ptr->set_renderstate(m_buf[n]);
 	}
 
 	MLINLINE void statebuffer::add_state(const state& i_elem)

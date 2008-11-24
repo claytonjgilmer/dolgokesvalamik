@@ -86,14 +86,14 @@
 	public:
 		void run()
 		{
-			rendersystem::ptr()->flush_queues();
+			rendersystem::ptr->flush_queues();
 		}
 	};
 
 
 	void rendersystem::render()
 	{
-		taskmanager::ptr()->spawn_task(new rendertask);
+		taskmanager::ptr->spawn_task(new rendertask);
 
 	}
 

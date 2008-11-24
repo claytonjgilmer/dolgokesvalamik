@@ -8,9 +8,6 @@
 	struct constraint_edge:intr_list_node<struct constraint_t>
 	{
 		struct body_t* other;
-//		struct constraint_t* constraint;
-//		struct constraint_edge* prev;
-//		struct constraint_edge* next;
 	};
 
 	struct constraint_t

@@ -1,66 +1,38 @@
 #ifndef _taskmanager_h_
 #define _taskmanager_h_
 
+#include <malloc.h>
 #include "mutex.h"
 #include "thread.h"
 #include "task.h"
 #include "taskallocator.h"
 #include "containers/fixedvector.h"
 #include "containers/queue.h"
+//#include "containers/stack.h"
 #include "math/math.h"
 #include "utils/singleton.h"
-
-namespace threading
-{
-	enum taskstate
-	{
-		TASK_DEPENDENT,
-		TASK_IDLE,
-		TASK_WORKING,
-		TASK_COMPLETED
-	};
-
-	class taskdescinternal
-	{
-	public:
-		taskdescinternal()
-		{
-			m_task=NULL;
-			m_dependencycounter=0;
-			m_state=TASK_IDLE;
-			m_childnum=0;
-		}
-
-		task* m_task;
-		ctr::fixedvector<unsigned,10> m_dependentlist;
-		int m_dependencycounter;
-		int m_childnum;
-		unsigned m_parenttask;
-		taskstate m_state;
-	};
 
 /************************************************************************/
 /*                taskmanager                                           */
 /************************************************************************/
 
-	class taskmanagerdesc
+	struct taskmanagerdesc
 	{
 	public:
 		unsigned m_threadnum;
-		taskmanagerdesc(): m_threadnum(4){}
+		taskmanagerdesc(): m_threadnum(1){}
 	};
 
-	class taskmanager
+	struct taskmanager
 	{
 		DECLARE_SINGLETON_DESC(taskmanager,taskmanagerdesc);
-	public:
-		friend unsigned WINAPI poolrun(void*);
 		taskmanager(const taskmanagerdesc*);
 		~taskmanager();
+
 		void flush();
 		void exit();
-		unsigned spawn_task(task* i_task, unsigned i_parentID=-1, const ctr::fixedvector<unsigned,10>& i_dependency=ctr::fixedvector<unsigned,10>::emptyvector());
-		unsigned spawn_task(task* i_task, unsigned i_parentID=-1, unsigned i_dependency=-1);
+		void spawn_task(task_t* i_task);
+		void spawn_tasks(task_t* i_tasks[], unsigned i_tasknum);
 
 
 		taskallocator& get_allocator()
@@ -68,89 +40,117 @@ namespace threading
 			return m_allocator;
 		}
 
-		template<class T,class S> unsigned process_buffer(T* i_buf, unsigned i_elemnum, unsigned i_grainsize, const S& i_process)
+		template<class T,class S> void process_buffer(T* i_buf, unsigned i_elemnum, unsigned i_grainsize, S i_process)
 		{
-			class proc_task:public task
+			class proc_range:public task_t
 			{
 			public:
-				proc_task(unsigned i_threadnum, T* i_buf, unsigned i_elemnum, unsigned i_grainsize, const S& i_process, taskmanager* i_tm):
-				m_threadnum(i_threadnum),
-				m_buf(i_buf),
-				m_elemnum(i_elemnum),
-				m_grainsize(i_grainsize),
-				m_process(i_process),
-				m_tm(i_tm)
-				{
-				}
-
-				virtual void run()
-				{
-					class proc_range:public task
-					{
-					public:
-						proc_range(T* i_buf, unsigned i_num, const S& i_process):
-						m_buf(i_buf),
-						m_num(i_num),
-						m_process(i_process)
+				proc_range(T* i_buf, unsigned i_num, const S& i_process):
+				  m_buf(i_buf),
+					  m_num(i_num),
+					  m_process(i_process)
 						{
 						}
 
-						void run()
+				  void run()
 						{
 							m_process(m_buf,m_num);
 						}
 
-					private:
-						T* const m_buf;
-						unsigned m_num;
-						const S& m_process;
-					};
-
-//					unsigned elemnum=m_elemnum;
-					unsigned start=0;
-					unsigned elemnumpertask=math::Max((unsigned)(m_elemnum/m_threadnum),(unsigned)m_grainsize);
-
-					while (start<m_elemnum)
-					{
-						unsigned actnum=math::Min(elemnumpertask,m_elemnum-start);
-
-						proc_range* r=new(m_tm->get_allocator()) proc_range(m_buf+start,actnum,m_process);
-						m_tm->spawn_task(r,get_id(),-1);
-
-						start+=actnum;
-					}
-				}
 			private:
-				const unsigned m_threadnum;
 				T* const m_buf;
-				const unsigned m_elemnum;
-				const unsigned m_grainsize;
-				const S m_process;
-				taskmanager* m_tm;
+				unsigned m_num;
+				S m_process;
 			};
 
-			proc_task* t=new (m_allocator) proc_task(m_threadbuf.size(),i_buf,i_elemnum,i_grainsize,i_process,this);
-			return spawn_task(t,-1,-1);
+			unsigned start=0;
+			unsigned elemnumpertask=max((unsigned)(i_elemnum/(m_threadbuf.size()+5)),(unsigned)i_grainsize);
+
+			unsigned tnum=0;
+			const unsigned n=i_elemnum/elemnumpertask+1;
+			proc_range** tasks=(proc_range**)alloca(n*sizeof(proc_range*));
+
+			while (start<i_elemnum)
+			{
+				unsigned actnum=min(elemnumpertask,i_elemnum-start);
+
+				tasks[tnum++]=new proc_range(i_buf+start,actnum,i_process);
+				start+=actnum;
+			}
+
+			assertion(tnum>0 && tnum<=n);
+
+			spawn_tasks((task_t**)tasks,tnum);
 		}
 
-	private:
-		ctr::vector<thread> m_threadbuf;
+		template <typename S>
+		class proc_range:public task_t
+		{
+		public:
+			proc_range(unsigned i_startindex, unsigned i_num, const S& i_process):
+			  m_startindex(i_startindex),
+				  m_num(i_num),
+				  m_process(i_process)
+			  {
+			  }
+
+			  void run()
+			  {
+				  m_process(m_startindex,m_num);
+			  }
+
+		private:
+			unsigned m_startindex;
+			unsigned m_num;
+			S m_process;
+		};
+
+		template<typename S> void process_buffer(unsigned i_elemnum, unsigned i_grainsize, S i_process)
+		{
+
+			unsigned start=0;
+			unsigned elemnumpertask=max((unsigned)(i_elemnum/(m_threadbuf.size()+5)),(unsigned)i_grainsize);
+
+			unsigned tnum=0;
+			const unsigned n=i_elemnum/elemnumpertask+1;
+			proc_range<S>** tasks=(proc_range<S>**)alloca(n*sizeof(proc_range<S>*));
+
+			while (start<i_elemnum)
+			{
+				unsigned actnum=min(elemnumpertask,i_elemnum-start);
+
+				tasks[tnum++]=new proc_range<S>(start,actnum,i_process);
+				start+=actnum;
+			}
+
+			assertion(tnum>0 && tnum<=n);
+
+			spawn_tasks((task_t**)tasks,tnum);
+		}
+
+
+
+
+
+
+#define REF_COUNT 64
+		unsigned m_ref_buf[REF_COUNT];
+		HANDLE	m_ref_event[REF_COUNT];
+
+//		stack<unsigned,REF_COUNT> m_ref_index;
+		queue<unsigned,REF_COUNT> m_ref_index;
+		vector<thread> m_threadbuf;
 		taskallocator m_allocator;
 
-		ctr::fixedvector<taskdescinternal,128> m_taskbuf;
+		queue<task_t*,16384> m_taskbuf;
 		volatile unsigned m_incompletetasknum;
-		ctr::queue<unsigned,128> m_idletask;
-
-		mutex m_taskmutex;
 
 		HANDLE m_workevent;
 		HANDLE m_exitevent;
 
-
 		void run();
 		int wait_for_task_or_exit();
-		task* get_task();
-		void post_process(task*);
+		task_t* get_task();
+		void post_process(task_t* i_task);
 	};
-}
 #endif//_taskmanager_h_

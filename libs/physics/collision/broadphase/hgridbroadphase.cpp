@@ -1,6 +1,6 @@
 #include "hgridbroadphase.h"
 #include "math/intersection.h"
-#include "threading/taskmanager2.h"
+#include "threading/taskmanager.h"
 #include "physics/system/physicssystem.h"
 
 MLINLINE unsigned compute_hash_bucket_index(int x, int y, int z)
@@ -224,9 +224,9 @@ void hgridbroadphase::update()
 {
     this->pair_num=0;
 
-    listallocator<hgridobject>::iterator it;
+    list_allocator<hgridobject>::iterator it;
 
-    if (!physicssystem::ptr()->parallel_processing)
+    if (!physicssystem::ptr->parallel_processing)
     {
         for (it=this->dynamic_list.begin(); it!=this->dynamic_list.end(); ++it)
             move_object(this, *it);
@@ -239,7 +239,7 @@ void hgridbroadphase::update()
         unsigned obj_count=this->dynamic_list.size();
         hgridobject** obj_array=(hgridobject**)_alloca(obj_count*sizeof(hgridobject*));
 
-        listallocator<hgridobject>::iterator it=this->dynamic_list.begin();
+        list_allocator<hgridobject>::iterator it=this->dynamic_list.begin();
 
         for (unsigned n=0; n<obj_count;++n,++it)
         {
@@ -247,7 +247,7 @@ void hgridbroadphase::update()
             move_object(this, obj_array[n]);
         }
 
-        taskmanager::ptr()->process_buffer(obj_count,10,hgrid_update_process(this,obj_array));
+        taskmanager::ptr->process_buffer(obj_count,10,hgrid_update_process(this,obj_array));
     }
 }
 

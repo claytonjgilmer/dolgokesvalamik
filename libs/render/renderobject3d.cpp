@@ -27,7 +27,7 @@
 		while (ptr)
 		{
 			for (unsigned n=0; n<ptr->m_mesh.size(); ++n)
-				rendersystem::ptr()->add_mesh(ptr->m_mesh[n].get(),ptr->get_worldposition());
+				rendersystem::ptr->add_mesh(ptr->m_mesh[n].get(),ptr->get_worldposition());
 
 			ptr=(object3d*)ptr->get_next();
 		}
@@ -37,7 +37,7 @@
 	{
 		if (m_modelname!="")
 		{
-			object3d* obj=objectmanager::ptr()->get_object(m_modelname.c_str());
+			object3d* obj=objectmanager::ptr->get_object(m_modelname.c_str());
 			if (obj)
 				add_child(obj);
 		}

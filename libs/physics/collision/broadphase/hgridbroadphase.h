@@ -51,8 +51,8 @@ struct hgridbroadphase
 
     int tick;
 
-    listallocator<hgridobject> static_list;
-    listallocator<hgridobject> dynamic_list;
+    list_allocator<hgridobject> static_list;
+    list_allocator<hgridobject> dynamic_list;
 
 //		vector<broadphasepair> pair_array;
     broadphasepair pair_array[65536];

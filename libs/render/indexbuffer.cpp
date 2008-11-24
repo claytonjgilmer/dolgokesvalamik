@@ -6,7 +6,7 @@
 	{
 		D3DFORMAT indexformat=i_32bit ? D3DFMT_INDEX32 : D3DFMT_INDEX16;
 
-		rendersystem::ptr()->device()->CreateIndexBuffer(	i_indexnum*m_indexsize,
+		rendersystem::ptr->device()->CreateIndexBuffer(	i_indexnum*m_indexsize,
 			D3DUSAGE_WRITEONLY,
 			indexformat,
 			D3DPOOL_DEFAULT,

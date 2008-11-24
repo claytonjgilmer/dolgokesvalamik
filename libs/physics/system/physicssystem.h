@@ -50,10 +50,10 @@
 		physicssystemdesc desc;
 		nbody bodystate_array[2];
 
-		listallocator<body_t> body_list;
+		list_allocator<body_t> body_list;
 		vector<body_t*> killed[2];
 
-		contactmanager cm;
+		contactmanager contact_manager;
 		intersectfn intersect_fn[shape_type_num][shape_type_num];
 		hgridbroadphase broad_phase;
 

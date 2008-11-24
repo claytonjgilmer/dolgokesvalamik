@@ -1,31 +1,29 @@
 #define _WIN32_WINNT 0x0501	// Change this to the appropriate value to target other versions of Windows.
-#include "taskmanager.h"
-//#ifndef _WIN32_WINNT		// Allow use of features specific to Windows XP or later.                   
-//#endif						
 #include <Windows.h>
+#include "taskmanager.h"
 
-namespace threading
-{
 	DEFINE_SINGLETON(taskmanager);
 
 	unsigned WINAPI poolrun(void* i_param)
 	{
 		taskmanager* tm=(taskmanager*)i_param;
-
 		tm->run();
-
 		return 0;
 	}
 
 	taskmanager::taskmanager(const taskmanagerdesc* i_desc)
 	{
 		m_incompletetasknum=0;
-//		m_taskbuf.reserve(128);
 
-		m_workevent= CreateSemaphore(NULL,0,1000,NULL);
+		m_workevent= CreateSemaphore(NULL,0,10000,NULL);
 		m_exitevent= CreateEvent(NULL,TRUE,FALSE,NULL);
 
-		ResetEvent(m_exitevent);
+		for (unsigned n=0; n<REF_COUNT;++n)
+		{
+			m_ref_index.push(n);
+			m_ref_event[n]=CreateEvent(NULL,TRUE,FALSE,NULL);
+			m_ref_buf[n]=0;
+		}
 
 		if (i_desc->m_threadnum)
 			m_threadbuf.resize(i_desc->m_threadnum);
@@ -35,7 +33,7 @@ namespace threading
 			m_threadbuf[n].start(&poolrun,this);
 
 			char str[256]; sprintf(str,"working thread #%d",n+1);
-			m_threadbuf[n].set_name(ctr::string(str));
+			m_threadbuf[n].set_name(string(str));
 		}
 
 	}
@@ -58,9 +56,7 @@ namespace threading
 			SetEvent(m_exitevent);
 
 			for (unsigned n=0; n<m_threadbuf.size(); ++n)
-			{
 				m_threadbuf[n].join();
-			}
 		}
 		CloseHandle(m_exitevent);
 		CloseHandle(m_workevent);
@@ -68,14 +64,14 @@ namespace threading
 
 	void taskmanager::run()
 	{
-		while (true)
+		for(;;)
 		{
 			int exit=wait_for_task_or_exit();
 
 			if (exit)
 				return;
 
-			task* t=get_task();
+			task_t* t=get_task();
 
 			t->run();
 			post_process(t);
@@ -88,135 +84,107 @@ namespace threading
 		return WaitForMultipleObjects(2,waitFor,FALSE,INFINITE) - WAIT_OBJECT_0;
 	}
 
-	task* taskmanager::get_task()
+	task_t* taskmanager::get_task()
 	{
-		m_taskmutex.lock();
-		task* t=m_taskbuf[m_idletask.front()].m_task;
-		m_taskbuf[m_idletask.front()].m_state=TASK_WORKING;
-		m_idletask.pop();
-		m_taskmutex.unlock();
-
-		return t;
+		return m_taskbuf.pop();
 	}
 
-	void taskmanager::post_process(task* i_task)
+	void taskmanager::post_process(task_t* i_task)
 	{
+		InterlockedDecrement((long*)&m_incompletetasknum);
+		int refval=InterlockedDecrement((long*)(m_ref_buf+i_task->m_ref_index));
+
+		if (!refval)
+			SetEvent(m_ref_event[i_task->m_ref_index]);
+
 		m_allocator.deallocate(i_task);
+	}
 
-		m_taskmutex.lock();
 
-		unsigned taskindex=i_task->m_taskID;
-		m_taskbuf[taskindex].m_state=TASK_COMPLETED;
+#ifdef _DEBUG
+	static long g_check=0;
+#endif
 
-		while (true)
+#if 1
+	void taskmanager::spawn_task(task_t* i_task)
+	{
+
+		assertion(!m_incompletetasknum);
+		unsigned ref_index=m_ref_index.pop();
+
+#ifdef _DEBUG
+		int lcheck=InterlockedIncrement(&g_check);
+		assertion(lcheck==1);
+#endif
+		assertion(!m_ref_buf[ref_index]);
+		m_ref_buf[ref_index]=1;
+
+		i_task->m_ref_index=ref_index;
+		m_taskbuf.push(i_task);
+		InterlockedIncrement((long*)&m_incompletetasknum);
+#ifdef _DEBUG
+		InterlockedDecrement(&g_check);
+#endif
+
+		ReleaseSemaphore(m_workevent,1,NULL);
+
+
+		for(;;)
 		{
-			if (m_taskbuf[taskindex].m_childnum)
-				break;
+			const HANDLE waitFor[]={m_ref_event[ref_index],m_workevent};
+			unsigned ret=WaitForMultipleObjects(2,waitFor,FALSE,INFINITE) - WAIT_OBJECT_0;
 
-			//ha nincs gyereke, indulhatnak a dependensek
-			for (unsigned int n=0; n<m_taskbuf[taskindex].m_dependentlist.size();++n)
+			if (!ret)
 			{
-				m_idletask.push(m_taskbuf[taskindex].m_dependentlist[n]);
-				m_taskbuf[taskindex].m_state=TASK_IDLE;
-				ReleaseSemaphore(m_workevent,1,NULL);
+				ResetEvent(m_ref_event[ref_index]);
+				m_ref_index.push(ref_index);
+				assertion(!m_incompletetasknum);
+				return;
 			}
 
-			taskindex=m_taskbuf[taskindex].m_parenttask;
+			task_t* t=get_task();
 
-			if (taskindex==-1)
-				break;
-
-			--m_taskbuf[taskindex].m_childnum;
+			t->run();
+			post_process(t);
 		}
-
-
-		--m_incompletetasknum;
-		m_taskmutex.unlock();
 	}
-
-	unsigned taskmanager::spawn_task(task* i_task, unsigned i_parentID/* =-1 */, const ctr::fixedvector<unsigned,10>& i_dependency/* =ctr::fixedvector<unsigned>::emptyvector */)
+#endif
+	void taskmanager::spawn_tasks(task_t* i_tasks[], unsigned i_tasknum)
 	{
-		m_taskmutex.lock();
+//		m_taskmutex.lock();
+		assertion(!m_incompletetasknum);
+		unsigned ref_index=m_ref_index.pop();
+		assertion(!m_ref_buf[ref_index]);
 
-		unsigned taskindex=m_taskbuf.size();
-//		printf_s("%d. taszk akar spawnolni\n",taskindex);
-		m_taskbuf.resize(taskindex+1);
+		m_ref_buf[ref_index]=i_tasknum;
+		InterlockedExchangeAdd((long*)&m_incompletetasknum,i_tasknum);
+//		m_incompletetasknum+=i_tasknum;
 
-		taskdescinternal& newtaskdesc=m_taskbuf.back();
-
-		newtaskdesc.m_parenttask=i_parentID;
-		newtaskdesc.m_task=i_task;
-
-		if (i_parentID!=-1)
-			m_taskbuf[i_parentID].m_childnum++;
-		
-		for (unsigned int n=0; n<i_dependency.size();++n)
+		for (unsigned n=0; n<i_tasknum; ++n)
 		{
-			taskdescinternal& td=m_taskbuf[i_dependency[n]];
-
-			if (td.m_state==TASK_COMPLETED)
-				continue;
-
-			td.m_dependentlist.push_back(taskindex);
-			++newtaskdesc.m_dependencycounter;
+			i_tasks[n]->m_ref_index=ref_index;
+			m_taskbuf.push(i_tasks[n]);
 		}
+		ReleaseSemaphore(m_workevent,i_tasknum,NULL);
+//		m_taskmutex.unlock();
 
-		if (!newtaskdesc.m_dependencycounter)
+		for(;;)
 		{
-			m_idletask.push(taskindex);
-			newtaskdesc.m_state=TASK_IDLE;
-			ReleaseSemaphore(m_workevent,1,NULL);
-		}
-		else
-		{
-			newtaskdesc.m_state=TASK_DEPENDENT;
-		}
+			const HANDLE waitFor[]={m_ref_event[ref_index],m_workevent};
+			unsigned ret=WaitForMultipleObjects(2,waitFor,FALSE,INFINITE) - WAIT_OBJECT_0;
 
-		++m_incompletetasknum;
-		i_task->m_taskID=taskindex;
-		m_taskmutex.unlock();
-		return taskindex;
-	}
-	unsigned taskmanager::spawn_task(task* i_task, unsigned i_parentID/* =-1 */, unsigned i_dependency/*=-1*/)
-	{
-		m_taskmutex.lock();
-
-		unsigned taskindex=m_taskbuf.size();
-		m_taskbuf.resize(taskindex+1);
-
-		taskdescinternal& newtaskdesc=m_taskbuf.back();
-
-		newtaskdesc.m_parenttask=i_parentID;
-		newtaskdesc.m_task=i_task;
-
-		if (i_parentID!=-1)
-			m_taskbuf[i_parentID].m_childnum++;
-
-		if (i_dependency!=-1)
-		{
-			taskdescinternal& td=m_taskbuf[i_dependency];
-
-			if (td.m_state!=TASK_COMPLETED)
+			if (!ret)
 			{
-				td.m_dependentlist.push_back(taskindex);
-				++newtaskdesc.m_dependencycounter;
+				ResetEvent(m_ref_event[ref_index]);
+				m_ref_index.push(ref_index);
+				assertion(!m_incompletetasknum);
+				return;
 			}
+
+			task_t* t=get_task();
+
+			t->run();
+			post_process(t);
 		}
 
-		if (!newtaskdesc.m_dependencycounter)
-		{
-			m_idletask.push(taskindex);
-			newtaskdesc.m_state=TASK_IDLE;
-			ReleaseSemaphore(m_workevent,1,NULL);
-		}
-		else
-		{
-			newtaskdesc.m_state=TASK_DEPENDENT;
-		}
-
-		++m_incompletetasknum;
-		i_task->m_taskID=taskindex;
-		m_taskmutex.unlock();
-		return taskindex;
 	}
-}

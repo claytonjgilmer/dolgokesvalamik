@@ -59,16 +59,18 @@
 				</Linker>
 			</Target>
 		</Build>
+		<Compiler>
+			<Add option="-std=gnu++0x" />
+		</Compiler>
 		<Linker>
 			<Add directory="C:\Program Files\Microsoft DirectX SDK (March 2008)\Lib\x86" />
 		</Linker>
-		<Unit filename="..\..\dolgokesvalamik\libs\containers\intr_list.h" />
 		<Unit filename="containers\fixedvector.h" />
 		<Unit filename="containers\hashgrid_2d.h" />
+		<Unit filename="containers\intr_list.h" />
 		<Unit filename="containers\listallocator.h" />
 		<Unit filename="containers\poolalloc.h" />
 		<Unit filename="containers\queue.h" />
-		<Unit filename="containers\stack.h" />
 		<Unit filename="containers\string.h" />
 		<Unit filename="containers\stringmap.h" />
 		<Unit filename="containers\vector.h" />
@@ -260,8 +262,8 @@
 		<Unit filename="threading\task.cpp" />
 		<Unit filename="threading\task.h" />
 		<Unit filename="threading\taskallocator.h" />
-		<Unit filename="threading\taskmanager2.cpp" />
-		<Unit filename="threading\taskmanager2.h" />
+		<Unit filename="threading\taskmanager.cpp" />
+		<Unit filename="threading\taskmanager.h" />
 		<Unit filename="threading\thread.cpp" />
 		<Unit filename="threading\thread.h" />
 		<Unit filename="utils\Tga.h" />

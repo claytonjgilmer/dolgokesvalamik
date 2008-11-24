@@ -1,5 +1,5 @@
 #include "physicssystem.h"
-#include "threading/taskmanager2.h"
+#include "threading/taskmanager.h"
 
 DEFINE_SINGLETON(physicssystem);
 
@@ -8,6 +8,7 @@ void update_inertia();
 void update_bodies(float dt);
 void broadphase();
 void near_phase();
+void create_contact_groups();
 
 
 physicssystem::physicssystem(const physicssystemdesc* i_desc):
@@ -53,6 +54,7 @@ void physicssystem::simulate(float i_dt)
 
     broadphase();
     near_phase();
+    create_contact_groups();
     update_inertia();
     update_bodies(i_dt);
 }
@@ -60,7 +62,7 @@ void physicssystem::simulate(float i_dt)
 
 void kill_deads()
 {
-    physicssystem* sys=physicssystem::ptr();
+    physicssystem* sys=physicssystem::ptr;
 
     if (sys->killed[0].size())
     {
@@ -83,7 +85,7 @@ struct update_bounding
 
     void operator()(unsigned i_start,unsigned i_num) const
     {
-		const nbody& nb=physicssystem::ptr()->bodystate_array[BODYSTATE_DYNAMIC];
+		const nbody& nb=physicssystem::ptr->bodystate_array[BODYSTATE_DYNAMIC];
         uint32 end=i_start+i_num;
         for (uint32 n=i_start; n<end; ++n)
         {
@@ -94,8 +96,6 @@ struct update_bounding
                 shape_t* s=(*it);
 				s->collider->bounding_world=transform(nb.pos[n],s->bounding);
             }
-//			for (shape_t* s=nb.body[n]->shapes;s;s=s->next)
-//				s->collider->bounding_world=transform(nb.pos[n],s->bounding);
         }
     }
 };
@@ -103,27 +103,17 @@ struct update_bounding
 
 void broadphase()
 {
-    physicssystem* ptr=physicssystem::ptr();
+    physicssystem* ptr=physicssystem::ptr;
     const nbody& nb=ptr->bodystate_array[BODYSTATE_DYNAMIC];
 
     if (ptr->parallel_processing)
     {
-        taskmanager::ptr()->process_buffer(nb.size,10,update_bounding());
+        taskmanager::ptr->process_buffer(nb.size,10,update_bounding());
     }
     else
     {
-        for (unsigned n=0; n<nb.size; ++n)
-        {
-            body_t* b=nb.body[n];
-
-            intr_list<shape_t>::iterator it,endit;
-            endit=b->shapes.end();
-            for (it=b->shapes.begin(); it!=endit; ++it)
-            {
-                shape_t* s=(*it);
-                s->collider->bounding_world=transform(nb.pos[n],s->bounding);
-            }
-        }
+        update_bounding ub;
+        ub(0,nb.size);
     }
 
     ptr->broad_phase.update();
@@ -133,7 +123,7 @@ struct near_struct
 {
     void operator()(unsigned i_start,unsigned i_num) const
     {
-        physicssystem* const ptr=physicssystem::ptr();
+        physicssystem* const ptr=physicssystem::ptr;
         const broadphasepair* array=ptr->broad_phase.pair_array;
         const uint32 end=i_start+i_num;
         for (uint32 n=i_start; n<end; ++n)
@@ -174,7 +164,7 @@ struct near_struct
                             shape2->body->set_vel(vel2-velmag*normal);
                         }
 */
-                        contact_t* c=ptr->cm.get_contact(shape1->body,shape2->body);
+                        contact_t* c=ptr->contact_manager.get_contact(shape1->body,shape2->body);
 
                         c->normal=normal;
                         vec3 normal_body1; body1_mtx.transformtransposed3x3(normal_body1,normal);
@@ -188,12 +178,12 @@ struct near_struct
 
 void near_phase()
 {
-    physicssystem* ptr=physicssystem::ptr();
+    physicssystem* ptr=physicssystem::ptr;
 
     if (ptr->parallel_processing)
     {
 		if (ptr->broad_phase.pair_num)
-			taskmanager::ptr()->process_buffer(ptr->broad_phase.pair_num,10,near_struct());
+			taskmanager::ptr->process_buffer(ptr->broad_phase.pair_num,10,near_struct());
     }
     else
     {
@@ -238,30 +228,16 @@ struct update_process
 
 void update_bodies(float i_dt)
 {
-    physicssystem* ptr=physicssystem::ptr();
+    physicssystem* ptr=physicssystem::ptr;
+    nbody* b=ptr->bodystate_array+BODYSTATE_DYNAMIC;
     if (ptr->parallel_processing)
     {
-        nbody* b=ptr->bodystate_array+BODYSTATE_DYNAMIC;
-        taskmanager::ptr()->process_buffer(b->size,10,update_process(b,i_dt,ptr->desc.gravity));
+        taskmanager::ptr->process_buffer(b->size,10,update_process(b,i_dt,ptr->desc.gravity));
     }
     else
     {
-        nbody* b=ptr->bodystate_array+BODYSTATE_DYNAMIC;
-        for (uint32 n=0; n<b->size;++n)
-        {
-            b->vel[n]+=i_dt*(b->invmass[n]*b->force[n]+ptr->desc.gravity);
-            b->rotvel[n]+=i_dt*b->invinertia_abs[n].transform3x3(b->torque[n]);
-
-            b->pos[n].t+=i_dt*b->vel[n];
-
-            float angle=b->rotvel[n].length();
-
-            if (angle>0.001f)
-            {
-                vec3 axis=b->rotvel[n]/angle;
-                b->pos[n].rotate(b->pos[n],axis,i_dt*angle);
-            }
-        }
+        update_process p(b,i_dt,ptr->desc.gravity);
+        p(0,b->size);
     }
 }
 
@@ -288,20 +264,79 @@ struct inertia_process
 
 void update_inertia()
 {
-    physicssystem* ptr=physicssystem::ptr();
+    physicssystem* ptr=physicssystem::ptr;
     nbody* b=ptr->bodystate_array+BODYSTATE_DYNAMIC;
 
     if (ptr->parallel_processing)
     {
-        taskmanager::ptr()->process_buffer(b->size,10,inertia_process(b));
+        taskmanager::ptr->process_buffer(b->size,10,inertia_process(b));
     }
     else
     {
-        for (uint32 n=0; n<b->size; ++n)
+        inertia_process i(b);
+        i(0,b->size);
+    }
+}
+
+
+#include <malloc.h>
+
+struct contact_group
+{
+    vector<contact_t*> contacts;
+};
+
+//#include "physics/collision/system/constraint.h"
+
+void add_body_to_group(short groupindex_array[],int body_index, int group_index, contact_group& group)
+{
+    if (groupindex_array[body_index]!=-1)
+        return;
+
+    physicssystem* ptr=physicssystem::ptr;
+    groupindex_array[body_index]=group_index;
+
+    body_t* b=ptr->bodystate_array[BODYSTATE_DYNAMIC].body[body_index];
+    intr_list<constraint_t>::iterator it;
+    for (it=b->contacts.begin(); it!=b->contacts.end(); ++it)
+    {
+        contact_t* c=(contact_t*)(*it);
+        group.contacts.push_back(c);
+        constraint_edge* edge=(constraint_edge*)it.n;
+
+        if (!edge->other->is_static)
+            add_body_to_group(groupindex_array,edge->other->array_index,group_index,group);
+    }
+}
+
+void create_contact_groups()
+{
+    physicssystem* ptr=physicssystem::ptr;
+/*
+    int contact_count=ptr->contact_manager.contact_list.size();
+    contact_t** contact_array=(contact_t**)_alloca(contact_count*sizeof(contact_t*));
+
+    list_allocator<contact_t>::iterator it=ptr->contact_manager.contact_list.begin();
+
+    int n;
+    for (int n=0;n<contact_count; ++it,++n)
+        contact_array[n]=*it;
+*/
+    int dynamic_body_count=ptr->bodystate_array[BODYSTATE_DYNAMIC].size;
+    short* body_group_array=(short*)_alloca(dynamic_body_count*sizeof(short));
+
+    for (int n=0; n<dynamic_body_count; ++n)
+        body_group_array[n]=-1;
+
+    vector<contact_group> group_array;
+
+    for (int n=0; dynamic_body_count; ++n)
+    {
+        if (body_group_array[n]==-1)
         {
-            mtx3x3 invpos; invpos.transpose3x3(b->pos[n]);
-            mtx3x3 tmp; tmp.multiply3x3(invpos,b->invinertia_rel[n]);
-            b->invinertia_abs[n].multiply3x3(tmp,b->pos[n]);
+            group_array.push_back(contact_group());
+            add_body_to_group(body_group_array,n,group_array.size()-1,group_array.back());
         }
     }
+
 }

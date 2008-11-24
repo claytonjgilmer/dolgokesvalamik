@@ -1,24 +1,21 @@
-#ifndef _listallocator_h_
-#define _listallocator_h_
+#ifndef _list_allocator_h_
+#define _list_allocator_h_
 
 #include "vector.h"
 
-	template <class basetype, int blocksize=128> class listallocator //blocksize kettohatvany!
+	template <typename basetype, int blocksize=128> class list_allocator //blocksize kettohatvany!
 	{
 	protected:
-		class elem
+		struct elem_t
 		{
-		public:
 			char m_data[sizeof(basetype)];
-			elem* m_prev;
-			elem* m_next;
+			elem_t* m_prev;
+			elem_t* m_next;
 		};
 
 	public:
-		class iterator
+		struct iterator
 		{
-			friend class listallocator;
-		public:
 			iterator()
 			{
 				m_elem=NULL;
@@ -26,10 +23,10 @@
 
 			iterator(basetype* i_elem)
 			{
-				m_elem=(elem*)i_elem;
+				m_elem=(elem_t*)i_elem;
 			}
 
-			iterator(elem* i_elem)
+			iterator(elem_t* i_elem)
 			{
 				m_elem=i_elem;
 			}
@@ -59,12 +56,11 @@
 				return m_elem!=i_other.m_elem;
 			}
 
-		protected:
-			elem* m_elem;
+			elem_t* m_elem;
 		};
 	public:
-		listallocator();
-		~listallocator();
+		list_allocator();
+		~list_allocator();
 		basetype* allocate();
 		void deallocate(basetype*);
 		void deallocate_place(basetype*);
@@ -84,26 +80,26 @@
 		{
 			return iterator(&m_head);
 		}
-		
+
 		void moveafter(iterator i_elem, iterator i_after);
 		void movebefore(iterator i_elem, iterator i_before);
 		unsigned size() const;
 
 
 	protected:
-		vector<elem*> m_allocated;
-		elem* m_free;
-		elem m_head;
-		elem m_end;
+		vector<elem_t*> m_allocated;
+		elem_t* m_free;
+		elem_t  m_head;
+		elem_t  m_end;
 		unsigned m_size;
 
 		void allocfree();
-	}; //class listallocator
+	}; //class list_allocator
 
-	template <class basetype,int blocksize> 
-	MLINLINE void listallocator<basetype,blocksize>::allocfree()
+	template <typename basetype,int blocksize>
+	MLINLINE void list_allocator<basetype,blocksize>::allocfree()
 	{
-		elem* newelem=(elem*)malloc(blocksize*sizeof(elem));
+		elem_t* newelem=(elem_t*)malloc(blocksize*sizeof(elem_t));
 
 		for (int n=0;n<blocksize-1; ++n)
 			newelem[n].m_next=&newelem[n+1];
@@ -113,10 +109,10 @@
 		m_allocated.push_back(newelem);
 	}
 
-	template <class basetype,int blocksize> 
-	MLINLINE basetype* listallocator<basetype,blocksize>::allocate()
+	template <typename basetype,int blocksize>
+	MLINLINE basetype* list_allocator<basetype,blocksize>::allocate()
 	{
-		elem* newelem;
+		elem_t* newelem;
 		if (!m_free)
 			allocfree();
 		newelem=m_free;
@@ -133,10 +129,10 @@
 		return (basetype*)(&newelem->m_data);
 	}
 
-	template <class basetype,int blocksize> 
-	MLINLINE basetype* listallocator<basetype,blocksize>::allocate_place()
+	template <typename basetype,int blocksize>
+	MLINLINE basetype* list_allocator<basetype,blocksize>::allocate_place()
 	{
-		elem* newelem;
+		elem_t* newelem;
 
 		if (!m_free)
 			allocfree();
@@ -154,17 +150,17 @@
 		return (basetype*)(&newelem->m_data);
 	}
 
-	template <class basetype, int blocksize> 
-	MLINLINE void listallocator<basetype,blocksize>::deallocate(basetype* i_data)
+	template <typename basetype, int blocksize>
+	MLINLINE void list_allocator<basetype,blocksize>::deallocate(basetype* i_data)
 	{
 		i_data->~basetype();
 		deallocate_place(i_data);
 	}
 
-	template <class basetype, int blocksize> 
-	MLINLINE void listallocator<basetype,blocksize>::deallocate_place(basetype* i_data)
+	template <typename basetype, int blocksize>
+	MLINLINE void list_allocator<basetype,blocksize>::deallocate_place(basetype* i_data)
 	{
-		elem* actelem=(elem*)i_data;
+		elem_t* actelem=(elem_t*)i_data;
 
 		actelem->m_next->m_prev=actelem->m_prev;
 		actelem->m_prev->m_next=actelem->m_next;
@@ -175,20 +171,20 @@
 		m_size--;
 	}
 
-	template <class basetype, int blocksize> 
-	MLINLINE void listallocator<basetype,blocksize>::deallocate_all()
+	template <typename basetype, int blocksize>
+	MLINLINE void list_allocator<basetype,blocksize>::deallocate_all()
 	{
 		if (!m_size)
 			return;
 
-		elem* ptr=m_head.m_next;
+		elem_t* ptr=m_head.m_next;
 
 		while (ptr->m_next!=&m_end)
 		{
 			((basetype*)ptr)->~basetype();
 			ptr=ptr->m_next;
 		}
-		
+
 		((basetype*)ptr)->~basetype();
 
 		ptr->m_next=m_free;
@@ -199,8 +195,8 @@
 		m_size=0;
 	}
 
-	template <class basetype,int blocksize>
-	listallocator<basetype,blocksize>::listallocator()
+	template <typename basetype,int blocksize>
+	list_allocator<basetype,blocksize>::list_allocator()
 	{
 		m_end.m_prev=&m_head;
 		m_end.m_next=NULL;
@@ -211,24 +207,24 @@
 		allocfree();
 	}
 
-	template <class basetype, int blocksize>
-	MLINLINE listallocator<basetype,blocksize>::~listallocator()
+	template <typename basetype, int blocksize>
+	MLINLINE list_allocator<basetype,blocksize>::~list_allocator()
 	{
 		for (unsigned int n=0; n<m_allocated.size(); ++n)
 			free(m_allocated[n]);
 	}
 
-	template <class basetype, int blocksize>
-	MLINLINE unsigned listallocator<basetype,blocksize>::size() const
+	template <typename basetype, int blocksize>
+	MLINLINE unsigned list_allocator<basetype,blocksize>::size() const
 	{
 		return m_size;
 	}
 
-	template<class basetype, int blocksize>
-	MLINLINE void listallocator<basetype,blocksize>::moveafter(iterator i_elem, iterator i_after)
+	template<typename basetype, int blocksize>
+	MLINLINE void list_allocator<basetype,blocksize>::moveafter(iterator i_elem, iterator i_after)
 	{
-		elem* e=i_elem.m_elem;
-		elem* after=i_after.m_elem;
+		elem_t* e=i_elem.m_elem;
+		elem_t* after=i_after.m_elem;
 		dynassert(i_after!=i_elem);
 		if (after->m_next==e)
 			return;
@@ -240,16 +236,16 @@
 		//befuz
 		e->m_next=after->m_next;
 		e->m_prev=after;
-		
+
 		after->m_next->m_prev=e;
 		after->m_next=e;
 	}
 
-	template<class basetype, int blocksize>
-	MLINLINE void listallocator<basetype,blocksize>::movebefore(iterator i_elem, iterator i_before)
+	template<typename basetype, int blocksize>
+	MLINLINE void list_allocator<basetype,blocksize>::movebefore(iterator i_elem, iterator i_before)
 	{
-		elem* e=i_elem.m_elem;
-		elem* before=i_before.m_elem;
+		elem_t* e=i_elem.m_elem;
+		elem_t* before=i_before.m_elem;
 		dynassert(i_elem!=i_before);
 		if (before->m_prev==e)
 			return;
@@ -265,4 +261,4 @@
 		before->m_prev->m_next=e;
 		before->m_prev=e;
 	}
-#endif//_listallocator_h_
+#endif//_list_allocator_h_

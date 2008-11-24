@@ -18,7 +18,7 @@
 			return t;
 
 		file texturefile;
-		filesystem::ptr()->open_file(texturefile,m_texturegroup.c_str(),i_texturename,"rb");
+		filesystem::ptr->open_file(texturefile,m_texturegroup.c_str(),i_texturename,"rb");
 
 		if (texturefile.opened())
 		{
