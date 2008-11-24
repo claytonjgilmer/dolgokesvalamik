@@ -16,7 +16,6 @@
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-W" />
-					<Add option="-Wall" />
 					<Add option="-g" />
 					<Add option="-O0" />
 					<Add option="-fcheck-new" />
@@ -98,6 +97,7 @@
 		<Unit filename="physics\collision\shapes\shape.h" />
 		<Unit filename="physics\collision\system\collisionsystem.h" />
 		<Unit filename="physics\collision\system\constraint.h" />
+		<Unit filename="physics\collision\system\contact.cpp" />
 		<Unit filename="physics\collision\system\contact.h" />
 		<Unit filename="physics\collision\system\contactmanager.cpp" />
 		<Unit filename="physics\collision\system\contactmanager.h" />

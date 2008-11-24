@@ -86,41 +86,43 @@
 			spawn_tasks((task_t**)tasks,tnum);
 		}
 
+		template <typename S>
+		class proc_range:public task_t
+		{
+		public:
+			proc_range(unsigned i_startindex, unsigned i_num, const S& i_process):
+			  m_startindex(i_startindex),
+				  m_num(i_num),
+				  m_process(i_process)
+			  {
+			  }
+
+			  void run()
+			  {
+				  m_process(m_startindex,m_num);
+			  }
+
+		private:
+			unsigned m_startindex;
+			unsigned m_num;
+			S m_process;
+		};
+
 		template<typename S> void process_buffer(unsigned i_elemnum, unsigned i_grainsize, S i_process)
 		{
-			class proc_range:public task_t
-			{
-			public:
-				proc_range(unsigned i_startindex, unsigned i_num, const S& i_process):
-					  m_startindex(i_startindex),
-					  m_num(i_num),
-					  m_process(i_process)
-						{
-						}
-
-				  void run()
-						{
-							m_process(m_startindex,m_num);
-						}
-
-			private:
-				unsigned m_startindex;
-				unsigned m_num;
-				S m_process;
-			};
 
 			unsigned start=0;
 			unsigned elemnumpertask=Max((unsigned)(i_elemnum/(m_threadbuf.size()+5)),(unsigned)i_grainsize);
 
 			unsigned tnum=0;
 			const unsigned n=i_elemnum/elemnumpertask+1;
-			proc_range** tasks=(proc_range**)alloca(n*sizeof(proc_range*));
+			proc_range<S>** tasks=(proc_range<S>**)alloca(n*sizeof(proc_range<S>*));
 
 			while (start<i_elemnum)
 			{
 				unsigned actnum=Min(elemnumpertask,i_elemnum-start);
 
-				tasks[tnum++]=new proc_range(start,actnum,i_process);
+				tasks[tnum++]=new proc_range<S>(start,actnum,i_process);
 				start+=actnum;
 			}
 
@@ -129,11 +131,12 @@
 			spawn_tasks((task_t**)tasks,tnum);
 		}
 	private:
-#define REF_COUNT 32
+#define REF_COUNT 64
 		unsigned m_ref_buf[REF_COUNT];
 		HANDLE	m_ref_event[REF_COUNT];
 
-		stack<unsigned,REF_COUNT> m_ref_index;
+//		stack<unsigned,REF_COUNT> m_ref_index;
+		queue<unsigned,REF_COUNT> m_ref_index;
 		vector<thread> m_threadbuf;
 		taskallocator m_allocator;
 

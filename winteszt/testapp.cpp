@@ -32,8 +32,8 @@ struct game
 	object3d* obj;
 	object3d* sky;
 #define BODY_NUM 50
-#define ROOM_SIZE 30.0f
-#define BODY_SIZE 1.0f
+#define ROOM_SIZE 10.0f
+#define BODY_SIZE .5f
 	body_t* phb[BODY_NUM];
 	int inited;
 	timer t;
@@ -73,7 +73,7 @@ void init_app(HWND i_hwnd)
 	filesystem::ptr()->register_path("texture","texture\\");
 
 	taskmanagerdesc tdesc;
-	tdesc.m_threadnum=5;
+	tdesc.m_threadnum=50;
 	taskmanager::create(&tdesc);
 
 	shadermanagerdesc shaderdesc("shader");
@@ -189,7 +189,7 @@ void init_app(HWND i_hwnd)
 	short index[16384];
 	int indexnum;
 
-	generate_sphere(pos,posnum,index,indexnum,0.1f,5);
+	generate_sphere(pos,posnum,index,indexnum,BODY_SIZE,5);
 	g_game.sphere=new mesh("sphere");
 	g_game.sphere->m_vb=new vertexbuffer(posnum,ve);
 	g_game.sphere->m_ib=new indexbuffer(indexnum*3);
@@ -500,19 +500,20 @@ void update_app()
 
 		for (unsigned m=0; m<1; ++m)
 		{
-			rendersystem::ptr()->add_mesh(g_game.m_mesh.get(),pos);
+			rendersystem::ptr()->add_mesh(g_game.sphere.get(),pos);
 			pos.t.x+=10;
 		}
 	}
 
+/*
 	rendersystem::ptr()->add_mesh(g_game.m_mesh.get(),mtx);
 	mtx.t.set(1,0,2.5f);
 	rendersystem::ptr()->add_mesh(g_game.sphere.get(),mtx);
 	mtx.set_euler(0,0,0);
 	mtx.t.set(0,0,22.5f);
 	g_game.obj->set_worldposition(mtx);
-	g_game.obj->render();
-
+//	g_game.obj->render();
+*/
 	g_game.sky->render();
 	rendersystem::ptr()->render();
 

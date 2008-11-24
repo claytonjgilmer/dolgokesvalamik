@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_workspace_file>
 	<Workspace title="teszt workspace">
-		<Project filename="libs\libs.cbp" />
+		<Project filename="libs\libs.cbp" active="1" />
 		<Project filename="teszt\teszt.cbp" />
-		<Project filename="winteszt\winteszt.cbp" active="1">
+		<Project filename="winteszt\winteszt.cbp">
 			<Depends filename="libs\libs.cbp" />
 		</Project>
 	</Workspace>

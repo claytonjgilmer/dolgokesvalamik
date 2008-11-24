@@ -13,7 +13,7 @@ struct contact_t:public constraint_t
     vec3 normal;
     contact_t* prev,*next;
 
-    char contactnum;
+    char contact_count;
 
     contact_t(body_t* i_body1, body_t* i_body2);
     ~contact_t();
@@ -44,7 +44,7 @@ constraint_t(i_body1,i_body2)
         this->body[1]->contacts->prev=this->edge+1;
     this->body[1]->contacts=this->edge+1;
 */
-    this->contactnum=0;
+    this->contact_count=0;
 }
 
 MLINLINE contact_t::~contact_t()

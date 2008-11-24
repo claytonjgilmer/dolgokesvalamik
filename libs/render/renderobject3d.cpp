@@ -8,13 +8,14 @@
 
 	object3d::object3d()
 	{
+	    m_flags|=nodeflag_dont_save;
 	}
 
 	object3d::object3d(const char* i_name):
 	node(i_name)
 	{
 	}
-	
+
 	object3d::~object3d()
 	{
 	}

@@ -15,6 +15,8 @@
 
 #ifdef _DEBUG
 		string m_name;
+
+		virtual ~task_t(){}
 #endif
 	};
 #endif//_task_h_

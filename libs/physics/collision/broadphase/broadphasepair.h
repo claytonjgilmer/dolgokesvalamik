@@ -1,7 +1,11 @@
 #ifndef _broadphasepair_h_
 #define _broadphasepair_h_
 
+#ifdef _MSC_VER
 #pragma  warning(disable:4351)
+#else
+//#warning disable:4351
+#endif
 
 	struct broadphaseobject;
 

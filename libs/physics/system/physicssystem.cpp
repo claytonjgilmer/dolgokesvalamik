@@ -141,6 +141,8 @@ struct near_struct
             shape_t* shape1=(shape_t*)array[n].object[0]->userdata;
             shape_t* shape2=(shape_t*)array[n].object[1]->userdata;
 
+            assert(shape1!=shape2);
+
             assertion(shape1!=shape2);
 
             if (shape1->body!=shape2->body)
@@ -154,6 +156,18 @@ struct near_struct
 
                     if (intersect)
                     {
+/*
+                        vec3 vel1=shape1->body->get_vel();
+                        vec3 vel2=shape2->body->get_vel();
+
+                        float velmag=0.5f*dot(vel2-vel1,normal);
+
+                        if (velmag<0)
+                        {
+                            shape1->body->set_vel(vel1+velmag*normal);
+                            shape2->body->set_vel(vel2-velmag*normal);
+                        }
+*/
                         contact_t* c=ptr->cm.get_contact(shape1->body,shape2->body);
                     }
                 }
@@ -173,46 +187,8 @@ void near_phase()
     }
     else
     {
-        const broadphasepair* array=ptr->broad_phase.pair_array;
-        const unsigned pair_num=ptr->broad_phase.pair_num;
-
-        for (unsigned n=0; n<pair_num; ++n)
-        {
-            shape_t* shape1=(shape_t*)array[n].object[0]->userdata;
-            shape_t* shape2=(shape_t*)array[n].object[1]->userdata;
-
-            if (shape1->body!=shape2->body)
-            {
-                if (ptr->intersect_fn[shape1->type][shape2->type])
-                {
-                    vec3 contact[20][2];
-                    vec3 normal;
-                    unsigned contactnum;
-                    int intersect=ptr->intersect_fn[shape1->type][shape2->type](shape1,ptr->bodystate_array[shape1->body->is_static].pos[shape1->body->array_index],shape2,ptr->bodystate_array[shape2->body->is_static].pos[shape2->body->array_index],contact,normal,contactnum);
-
-                    if (intersect)
-                    {
-                        body_t* body1=shape1->body;
-                        body_t* body2=shape2->body;
-                        if (body1>body2)
-                            swap(body1,body2);
-
-                        contact_t* c=ptr->cm.get_contact(body1,body2);
-                        c->normal=normal;
-                        c->contactnum=contactnum;
-
-                        int indexbody1=body1->array_index;
-                        int indexbody2=body2->array_index;
-
-                        for (unsigned i=0; i<contactnum; ++i)
-                        {
-//								ptr->bodystate_array[body1->is_static].pos[indexbody1].transformtransposed(c->relpos[n],
-                        }
-
-                    }
-                }
-            }
-        }
+        near_struct ns;
+        ns(0,ptr->broad_phase.pair_num);
     }
 }
 

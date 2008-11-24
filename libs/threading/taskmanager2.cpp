@@ -22,6 +22,7 @@
 		{
 			m_ref_index.push(n);
 			m_ref_event[n]=CreateEvent(NULL,TRUE,FALSE,NULL);
+			m_ref_buf[n]=0;
 		}
 
 		if (i_desc->m_threadnum)
@@ -85,27 +86,16 @@
 
 	task_t* taskmanager::get_task()
 	{
-//		m_taskmutex.lock();
-		task_t* t=m_taskbuf.threadsafe_pop();
-//		m_taskbuf.pop();
-//		m_taskmutex.unlock();
-
-		return t;
+		return m_taskbuf.pop();
 	}
 
 	void taskmanager::post_process(task_t* i_task)
 	{
-//		m_taskmutex.lock();
-//		--m_incompletetasknum;
 		InterlockedDecrement((long*)&m_incompletetasknum);
-		InterlockedDecrement((long*)(m_ref_buf+i_task->m_ref_index));
+		int refval=InterlockedDecrement((long*)(m_ref_buf+i_task->m_ref_index));
 
-//		--m_ref_buf[i_task->m_ref_index];
-
-		if (!m_ref_buf[i_task->m_ref_index])
+		if (!refval)
 			SetEvent(m_ref_event[i_task->m_ref_index]);
-
-//		m_taskmutex.unlock();
 
 		m_allocator.deallocate(i_task);
 	}
@@ -114,23 +104,24 @@
 #ifdef _DEBUG
 	static long g_check=0;
 #endif
+
+#if 1
 	void taskmanager::spawn_task(task_t* i_task)
 	{
 
+		assertion(!m_incompletetasknum);
 		unsigned ref_index=m_ref_index.pop();
 
-//		m_taskmutex.lock();
 #ifdef _DEBUG
 		int lcheck=InterlockedIncrement(&g_check);
 		assertion(lcheck==1);
 #endif
+		assertion(!m_ref_buf[ref_index]);
 		m_ref_buf[ref_index]=1;
 
 		i_task->m_ref_index=ref_index;
-		m_taskbuf.threadsafe_push(i_task);
+		m_taskbuf.push(i_task);
 		InterlockedIncrement((long*)&m_incompletetasknum);
-//		++m_incompletetasknum;
-//		m_taskmutex.unlock();
 #ifdef _DEBUG
 		InterlockedDecrement(&g_check);
 #endif
@@ -147,6 +138,7 @@
 			{
 				ResetEvent(m_ref_event[ref_index]);
 				m_ref_index.push(ref_index);
+				assertion(!m_incompletetasknum);
 				return;
 			}
 
@@ -156,11 +148,13 @@
 			post_process(t);
 		}
 	}
-
+#endif
 	void taskmanager::spawn_tasks(task_t* i_tasks[], unsigned i_tasknum)
 	{
 //		m_taskmutex.lock();
+		assertion(!m_incompletetasknum);
 		unsigned ref_index=m_ref_index.pop();
+		assertion(!m_ref_buf[ref_index]);
 
 		m_ref_buf[ref_index]=i_tasknum;
 		InterlockedExchangeAdd((long*)&m_incompletetasknum,i_tasknum);
@@ -169,7 +163,7 @@
 		for (unsigned n=0; n<i_tasknum; ++n)
 		{
 			i_tasks[n]->m_ref_index=ref_index;
-			m_taskbuf.threadsafe_push(i_tasks[n]);
+			m_taskbuf.push(i_tasks[n]);
 		}
 		ReleaseSemaphore(m_workevent,i_tasknum,NULL);
 //		m_taskmutex.unlock();
@@ -183,6 +177,7 @@
 			{
 				ResetEvent(m_ref_event[ref_index]);
 				m_ref_index.push(ref_index);
+				assertion(!m_incompletetasknum);
 				return;
 			}
 
@@ -191,4 +186,5 @@
 			t->run();
 			post_process(t);
 		}
+
 	}

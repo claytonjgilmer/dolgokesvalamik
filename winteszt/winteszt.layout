@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<ActiveTarget name="Debug Win32" />
+	<ActiveTarget name="Release Win32" />
 	<File name="testapp.cpp" open="0" top="0" tabpos="1">
-		<Cursor position="5684" topLine="218" />
+		<Cursor position="901" topLine="1" />
 	</File>
 </CodeBlocks_layout_file>

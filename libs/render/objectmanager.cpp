@@ -36,7 +36,7 @@ object3d* load_mmod(file& i_file);
 
 		while (ptr)
 		{
-			ptr->set_flag(nodeflag_dont_save);
+//			ptr->set_flag(nodeflag_dont_save);
 			ptr=ptr->get_next(obj);
 		}
 
