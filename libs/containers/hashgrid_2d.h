@@ -1,6 +1,7 @@
 #ifndef hashgrid2d_h_
 #define hashgrid2d_h_
 
+#if 0
 template<typename T>
 struct grid_cell
 {
@@ -20,4 +21,5 @@ struct hashgrid_2d
 	void insert_object(const T& obj, float bounding_min[2], float bounding_max[2]);
 	void remove_object(const T& obj);
 };
+#endif// if 0
 #endif

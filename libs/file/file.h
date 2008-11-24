@@ -3,6 +3,7 @@
 
 #include "utils/misc.h"
 #include "containers/string.h"
+#include <stdio.h>
 #include <sys/stat.h>
 
 	class file
@@ -44,6 +45,7 @@
 	{
 		open(i_name,i_attributes);
 	}
+//_CRTIMP int __cdecl __MINGW_NOTHROW	_fileno (FILE*);
 
 	MLINLINE void file::open(const char* i_name, const char* i_attributes)
 	{

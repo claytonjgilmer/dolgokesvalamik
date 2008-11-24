@@ -9,7 +9,7 @@
 
 struct contact_t:public constraint_t
 {
-    vec3 relpos[2][MAX_CONTACTNUM_PER_BODYPAIR];
+    vec3 relpos[MAX_CONTACTNUM_PER_BODYPAIR][2];
     vec3 normal;
     contact_t* prev,*next;
 
@@ -18,7 +18,7 @@ struct contact_t:public constraint_t
     contact_t(body_t* i_body1, body_t* i_body2);
     ~contact_t();
 
-    void add_contact(const vec3& relpos_body1, const vec3& relpos_body2);
+    void add_contact(const vec3 relpos[][2], int contact_count);
 };
 
 

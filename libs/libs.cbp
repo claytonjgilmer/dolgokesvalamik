@@ -24,7 +24,8 @@
 					<Add option="-D_LIB" />
 					<Add option="-D_CRT_SECURE_NO_WARNINGS" />
 					<Add option="-DNEED_ASSERT" />
-					<Add directory=".\" />
+					<Add option="-DNOMINMAX" />
+					<Add directory="..\libs" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory=".\" />
@@ -47,7 +48,8 @@
 					<Add option="-DNDEBUG" />
 					<Add option="-D_LIB" />
 					<Add option="-D_CRT_SECURE_NO_WARNINGS" />
-					<Add directory=".\" />
+					<Add option="-DNOMINMAX" />
+					<Add directory="..\libs" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory=".\" />
@@ -60,8 +62,9 @@
 		<Linker>
 			<Add directory="C:\Program Files\Microsoft DirectX SDK (March 2008)\Lib\x86" />
 		</Linker>
-		<Unit filename="C:\Lacika\dolgokesvalamik\libs\containers\intr_list.h" />
+		<Unit filename="..\..\dolgokesvalamik\libs\containers\intr_list.h" />
 		<Unit filename="containers\fixedvector.h" />
+		<Unit filename="containers\hashgrid_2d.h" />
 		<Unit filename="containers\listallocator.h" />
 		<Unit filename="containers\poolalloc.h" />
 		<Unit filename="containers\queue.h" />
@@ -91,6 +94,7 @@
 		<Unit filename="math\vec4.h" />
 		<Unit filename="physics\collision\broadphase\broadphaseobject.h" />
 		<Unit filename="physics\collision\broadphase\broadphasepair.h" />
+		<Unit filename="physics\collision\broadphase\gird_2d.h" />
 		<Unit filename="physics\collision\broadphase\hgridbroadphase.cpp" />
 		<Unit filename="physics\collision\broadphase\hgridbroadphase.h" />
 		<Unit filename="physics\collision\shapeintersection\shapeintersection.h" />

@@ -67,7 +67,7 @@
 			};
 
 			unsigned start=0;
-			unsigned elemnumpertask=Max((unsigned)(i_elemnum/(m_threadbuf.size()+5)),(unsigned)i_grainsize);
+			unsigned elemnumpertask=max((unsigned)(i_elemnum/(m_threadbuf.size()+5)),(unsigned)i_grainsize);
 
 			unsigned tnum=0;
 			const unsigned n=i_elemnum/elemnumpertask+1;
@@ -75,7 +75,7 @@
 
 			while (start<i_elemnum)
 			{
-				unsigned actnum=Min(elemnumpertask,i_elemnum-start);
+				unsigned actnum=min(elemnumpertask,i_elemnum-start);
 
 				tasks[tnum++]=new proc_range(i_buf+start,actnum,i_process);
 				start+=actnum;
@@ -112,7 +112,7 @@
 		{
 
 			unsigned start=0;
-			unsigned elemnumpertask=Max((unsigned)(i_elemnum/(m_threadbuf.size()+5)),(unsigned)i_grainsize);
+			unsigned elemnumpertask=max((unsigned)(i_elemnum/(m_threadbuf.size()+5)),(unsigned)i_grainsize);
 
 			unsigned tnum=0;
 			const unsigned n=i_elemnum/elemnumpertask+1;
@@ -120,7 +120,7 @@
 
 			while (start<i_elemnum)
 			{
-				unsigned actnum=Min(elemnumpertask,i_elemnum-start);
+				unsigned actnum=min(elemnumpertask,i_elemnum-start);
 
 				tasks[tnum++]=new proc_range<S>(start,actnum,i_process);
 				start+=actnum;

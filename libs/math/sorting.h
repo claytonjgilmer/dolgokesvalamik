@@ -60,7 +60,7 @@ void q_sort(T numbers[], int left, int right)
 }
 
 
-#include <algorithm>
+//#include <algorithm>
 
 void qf(float a[], int l, int r)
 {
@@ -74,13 +74,13 @@ void qf(float a[], int l, int r)
 		while (a[++i] < v) ;
 		while (v < a[--j]) if (j == l) break;
 		if (i >= j) break;
-		std::swap(a[i], a[j]);
-		if (a[i] == v) { p++; std::swap(a[p], a[i]); }
-		if (v == a[j]) { q--; std::swap(a[j], a[q]); }
+		swap(a[i], a[j]);
+		if (a[i] == v) { p++; swap(a[p], a[i]); }
+		if (v == a[j]) { q--; swap(a[j], a[q]); }
 	}
-	std::swap(a[i], a[r]); j = i-1; i = i+1;
-	for (int k = l; k < p; k++, j--) std::swap(a[k], a[j]);
-	for (int k = r-1; k > q; k--, i++) std::swap(a[i], a[k]);
+	swap(a[i], a[r]); j = i-1; i = i+1;
+	for (int k = l; k < p; k++, j--) swap(a[k], a[j]);
+	for (int k = r-1; k > q; k--, i++) swap(a[i], a[k]);
 	qf(a, l, j);
 	qf(a, i, r);
 }
@@ -110,7 +110,7 @@ void q_sort_rec(T numbers[], int left, int right)
 		while (comparefn(numbers[left],pivot_elem) && (left < right))
 			left++;
 
-		std::swap(numbers[left],numbers[right]);
+		swap(numbers[left],numbers[right]);
 		left++;
 		right--;
 	}

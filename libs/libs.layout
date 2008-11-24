@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug Win32" />
-	<File name="C:\Lacika\dolgokesvalamik\libs\containers\intr_list.h" open="0" top="0" tabpos="1">
-		<Cursor position="1078" topLine="27" />
-	</File>
 	<File name="containers\fixedvector.h" open="0" top="0" tabpos="0">
-		<Cursor position="2143" topLine="85" />
+		<Cursor position="81" topLine="0" />
 	</File>
 	<File name="containers\poolalloc.h" open="0" top="0" tabpos="0">
 		<Cursor position="406" topLine="1" />
@@ -17,7 +14,7 @@
 		<Cursor position="38" topLine="0" />
 	</File>
 	<File name="containers\string.h" open="0" top="0" tabpos="0">
-		<Cursor position="44" topLine="0" />
+		<Cursor position="6488" topLine="241" />
 	</File>
 	<File name="containers\stringmap.h" open="0" top="0" tabpos="0">
 		<Cursor position="2653" topLine="109" />
@@ -25,32 +22,32 @@
 	<File name="containers\vector.h" open="0" top="0" tabpos="0">
 		<Cursor position="8902" topLine="391" />
 	</File>
-	<File name="file\file.h" open="0" top="0" tabpos="0">
-		<Cursor position="2681" topLine="123" />
+	<File name="file\file.h" open="0" top="0" tabpos="12">
+		<Cursor position="953" topLine="34" />
 	</File>
-	<File name="file\filesystem.h" open="0" top="0" tabpos="0">
-		<Cursor position="1115" topLine="40" />
+	<File name="file\filesystem.h" open="0" top="0" tabpos="11">
+		<Cursor position="74" topLine="0" />
 	</File>
 	<File name="input\inputsystem.h" open="0" top="0" tabpos="3">
 		<Cursor position="10929" topLine="276" />
 	</File>
-	<File name="math\aabox.h" open="0" top="0" tabpos="0">
-		<Cursor position="778" topLine="12" />
+	<File name="math\aabox.h" open="0" top="0" tabpos="10">
+		<Cursor position="369" topLine="0" />
 	</File>
 	<File name="math\intersection.h" open="0" top="0" tabpos="0">
 		<Cursor position="3685" topLine="160" />
 	</File>
-	<File name="math\math.h" open="0" top="0" tabpos="0">
-		<Cursor position="2768" topLine="150" />
+	<File name="math\math.h" open="1" top="0" tabpos="1">
+		<Cursor position="2062" topLine="111" />
 	</File>
-	<File name="math\mtx3x3.h" open="0" top="0" tabpos="0">
-		<Cursor position="5390" topLine="183" />
+	<File name="math\mtx3x3.h" open="0" top="0" tabpos="7">
+		<Cursor position="233" topLine="0" />
 	</File>
 	<File name="math\mtx4x3.h" open="0" top="0" tabpos="0">
 		<Cursor position="2465" topLine="77" />
 	</File>
-	<File name="math\sorting.h" open="0" top="0" tabpos="0">
-		<Cursor position="6207" topLine="308" />
+	<File name="math\sorting.h" open="1" top="0" tabpos="2">
+		<Cursor position="1425" topLine="63" />
 	</File>
 	<File name="math\ssemtx4x3.h" open="0" top="0" tabpos="0">
 		<Cursor position="48" topLine="0" />
@@ -61,22 +58,22 @@
 	<File name="math\vec2.h" open="0" top="0" tabpos="0">
 		<Cursor position="793" topLine="27" />
 	</File>
-	<File name="math\vec3.h" open="0" top="0" tabpos="0">
+	<File name="math\vec3.h" open="0" top="0" tabpos="6">
 		<Cursor position="77" topLine="0" />
 	</File>
-	<File name="physics\collision\broadphase\broadphaseobject.h" open="0" top="0" tabpos="0">
-		<Cursor position="409" topLine="0" />
+	<File name="physics\collision\broadphase\broadphaseobject.h" open="0" top="0" tabpos="9">
+		<Cursor position="84" topLine="0" />
 	</File>
 	<File name="physics\collision\broadphase\broadphasepair.h" open="0" top="0" tabpos="8">
 		<Cursor position="116" topLine="0" />
 	</File>
-	<File name="physics\collision\broadphase\hgridbroadphase.cpp" open="0" top="0" tabpos="7">
-		<Cursor position="7653" topLine="232" />
+	<File name="physics\collision\broadphase\hgridbroadphase.cpp" open="0" top="0" tabpos="17">
+		<Cursor position="1956" topLine="29" />
 	</File>
 	<File name="physics\collision\broadphase\hgridbroadphase.h" open="0" top="0" tabpos="7">
 		<Cursor position="426" topLine="0" />
 	</File>
-	<File name="physics\collision\shapeintersection\shapeintersection.h" open="1" top="0" tabpos="1">
+	<File name="physics\collision\shapeintersection\shapeintersection.h" open="0" top="0" tabpos="1">
 		<Cursor position="863" topLine="33" />
 	</File>
 	<File name="physics\collision\shapes\shape.h" open="0" top="0" tabpos="0">
@@ -85,13 +82,13 @@
 	<File name="physics\collision\system\constraint.h" open="0" top="0" tabpos="9">
 		<Cursor position="345" topLine="0" />
 	</File>
-	<File name="physics\collision\system\contact.cpp" open="1" top="1" tabpos="5">
-		<Cursor position="1092" topLine="17" />
+	<File name="physics\collision\system\contact.cpp" open="1" top="1" tabpos="8">
+		<Cursor position="1043" topLine="6" />
 	</File>
-	<File name="physics\collision\system\contact.h" open="1" top="0" tabpos="4">
-		<Cursor position="1204" topLine="29" />
+	<File name="physics\collision\system\contact.h" open="1" top="0" tabpos="7">
+		<Cursor position="469" topLine="0" />
 	</File>
-	<File name="physics\collision\system\contactmanager.cpp" open="1" top="0" tabpos="3">
+	<File name="physics\collision\system\contactmanager.cpp" open="0" top="0" tabpos="3">
 		<Cursor position="904" topLine="24" />
 	</File>
 	<File name="physics\collision\system\contactmanager.h" open="0" top="0" tabpos="2">
@@ -109,8 +106,8 @@
 	<File name="physics\system\nbody.h" open="0" top="0" tabpos="5">
 		<Cursor position="397" topLine="6" />
 	</File>
-	<File name="physics\system\physicssystem.cpp" open="1" top="0" tabpos="2">
-		<Cursor position="5179" topLine="140" />
+	<File name="physics\system\physicssystem.cpp" open="1" top="0" tabpos="6">
+		<Cursor position="5342" topLine="140" />
 	</File>
 	<File name="physics\system\physicssystem.h" open="0" top="0" tabpos="4">
 		<Cursor position="669" topLine="11" />
@@ -175,8 +172,8 @@
 	<File name="threading\taskmanager2.cpp" open="0" top="0" tabpos="3">
 		<Cursor position="3780" topLine="141" />
 	</File>
-	<File name="threading\taskmanager2.h" open="0" top="0" tabpos="4">
-		<Cursor position="2964" topLine="107" />
+	<File name="threading\taskmanager2.h" open="0" top="0" tabpos="16">
+		<Cursor position="2925" topLine="103" />
 	</File>
 	<File name="threading\thread.h" open="0" top="0" tabpos="0">
 		<Cursor position="448" topLine="0" />
@@ -190,8 +187,8 @@
 	<File name="utils\misc.h" open="0" top="0" tabpos="0">
 		<Cursor position="38" topLine="0" />
 	</File>
-	<File name="utils\mmod-loader.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="12273" topLine="524" />
+	<File name="utils\mmod-loader.cpp" open="0" top="0" tabpos="14">
+		<Cursor position="13357" topLine="557" />
 	</File>
 	<File name="utils\ref_ptr.h" open="0" top="0" tabpos="0">
 		<Cursor position="2018" topLine="100" />

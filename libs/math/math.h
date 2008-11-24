@@ -126,12 +126,12 @@ typedef char int8;
 		return i_degree*(pi()/180.0f);
 	}
 
-	template<typename T> MLINLINE T Min(const T& i_value1, const T& i_value2)
+	template<typename T> MLINLINE T min(const T& i_value1, const T& i_value2)
 	{
 		return i_value1<i_value2 ? i_value1 : i_value2;
 	}
 
-	template<class t> MLINLINE t Max(t i_value1, t i_value2)
+	template<class t> MLINLINE t max(t i_value1, t i_value2)
 	{
 		return i_value1>i_value2 ? i_value1 : i_value2;
 	}

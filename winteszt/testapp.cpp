@@ -306,7 +306,7 @@ void update_app()
 	rendersystem::ptr()->draw_text(800,10,color_f(1,1,0,1),str);
 	taskmanager::ptr()->flush();
 	unsigned acttime=::timeGetTime();
-	unsigned deltatime=min(acttime-g_time,100);
+	unsigned deltatime=min(acttime-g_time,100u);
 	g_time=acttime;
 	sumtime+=deltatime;
 	float dt=(float)deltatime/1000.0f;

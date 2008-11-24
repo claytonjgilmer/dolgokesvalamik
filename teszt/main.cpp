@@ -1,12 +1,14 @@
-#include "math/sorting.h"
-#include "math/vec3.h"
-#include "math/math.h"
-#include "containers/listallocator.h"
 #include <conio.h>
 #include <stdio.h>
 #include <windows.h>
 #include <MMSystem.h>
+
+#include "math/sorting.h"
+#include "math/vec3.h"
+#include "math/math.h"
+#include "containers/listallocator.h"
 #include "physics/system/physicssystem.h"
+
 
 #include "threading/thread.h"
 #include "threading/taskmanager2.h"
@@ -22,7 +24,7 @@
 #include "render/renderobject3d.h"
 
 #include "containers/poolalloc.h"
-
+#include <algorithm>
 object3d* load_mmod(const char* i_filename);
 
 struct proc
@@ -34,9 +36,7 @@ struct proc
 			int sum=10;
 
 			for (int m=0; m<100; ++m)
-			{
 				sum+=m;
-			}
 
 			i_buf[n]+=sum;
 		}
@@ -106,21 +106,6 @@ void tasktest()
 	}
 	t.stop();
 	unsigned tick2=t.get_tick();
-
-
-/*
-	t.reset();
-	const unsigned tasknum=4;
-	proc_task* task[tasknum];
-	const unsigned egybe=buf_size/tasknum;
-	for (int n=0; n<tasknum; ++n)
-	{
-		task[n]=new proc_task(buf+n*egybe,egybe);
-	}
-	taskmanager::instance()->spawn_tasks((task**)task,tasknum);
-	t.stop();
-	unsigned tick15=t.get_tick();
-*/
 
 
 	t.reset();
@@ -309,7 +294,7 @@ unsigned get_radix_key(float f)
 
 
 
-#include <algorithm>
+//#include <algorithm>
 
 void sorttest()
 {
@@ -460,9 +445,28 @@ void sorttest2()
 }
 
 vec3 x,y;
+typedef int* tipus;
+
+class vvvvv
+{
+public:
+	float x,y,z;
+
+//	virtual ~vvvvv(){}
+};
 
 int _cdecl main()
 {
+	tipus valami1=tipus();
+	vvvvv valami2=vvvvv();
+//	valami2=
+//	valami2.x=1; valami2.y=2; valami2.z=3;
+
+//	new (&valami2) vvvvv ();
+
+	printf("pointer:%d\n",valami1);
+	printf("vec3 :%f %f %f\n",valami2.x,valami2.y,valami2.z);
+	return 0;
 	vec3 a1,a2; a1.set(1,2,3),a2.set(4,5,6);
 	x=a1+a2;
 	y=x;

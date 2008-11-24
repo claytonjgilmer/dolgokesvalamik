@@ -1,10 +1,10 @@
 #ifndef _filesystem_h_
 #define _filesystem_h_
 
+#include "file/file.h"
 #include "containers/string.h"
 #include "containers/stringmap.h"
 #include "containers/listallocator.h"
-#include "file/file.h"
 #include "utils/singleton.h"
 
 	class filesystem

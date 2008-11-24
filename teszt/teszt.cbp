@@ -26,7 +26,7 @@
 				</ResourceCompiler>
 				<Linker>
 					<Add library="winmm" />
-					<Add library="libs" />
+					<Add library="..\libs\lib_d.a" />
 				</Linker>
 			</Target>
 			<Target title="Release Win32">
@@ -35,11 +35,11 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-W" />
 					<Add option="-DWIN32" />
 					<Add option="-DNDEBUG" />
 					<Add option="-D_WINDOWS" />
 					<Add option="-D_CRT_SECURE_NO_WARNINGS" />
-					<Add option="-W" />
 					<Add directory="..\libs\" />
 				</Compiler>
 				<ResourceCompiler>
@@ -47,13 +47,21 @@
 				</ResourceCompiler>
 				<Linker>
 					<Add library="winmm" />
+					<Add library="..\libs\lib.a" />
 				</Linker>
 			</Target>
 		</Build>
+		<Compiler>
+			<Add option="-DNOMINMAX" />
+		</Compiler>
+		<Linker>
+			<Add directory="..\libs" />
+		</Linker>
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />
+			<envvars />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

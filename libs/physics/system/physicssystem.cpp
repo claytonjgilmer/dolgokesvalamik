@@ -151,8 +151,8 @@ struct near_struct
                 {
                     vec3 contact[20][2];
                     vec3 normal;
-                    unsigned contactnum;
-                    int intersect=ptr->intersect_fn[shape1->type][shape2->type](shape1,ptr->bodystate_array[shape1->body->is_static].pos[shape1->body->array_index],shape2,ptr->bodystate_array[shape2->body->is_static].pos[shape2->body->array_index],contact,normal,contactnum);
+                    unsigned contact_count;
+                    int intersect=ptr->intersect_fn[shape1->type][shape2->type](shape1,ptr->bodystate_array[shape1->body->is_static].pos[shape1->body->array_index],shape2,ptr->bodystate_array[shape2->body->is_static].pos[shape2->body->array_index],contact,normal,contact_count);
 
                     if (intersect)
                     {
@@ -169,6 +169,11 @@ struct near_struct
                         }
 */
                         contact_t* c=ptr->cm.get_contact(shape1->body,shape2->body);
+
+                        for (int n=0; n<contact_count; ++n)
+                        {
+                        	c->add_contact(contact[n]);
+                        }
                     }
                 }
             }

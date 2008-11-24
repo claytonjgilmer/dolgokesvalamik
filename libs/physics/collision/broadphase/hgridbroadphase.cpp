@@ -16,7 +16,7 @@ broadphaseobject(i_userdata,i_bounding,i_static)
 {
     this->pos=i_bounding.get_center();
     vec3 extent=i_bounding.get_extent();
-    this->radius=Max(extent.x,Max(extent.y,extent.z));
+    this->radius=max(extent.x,max(extent.y,extent.z));
 }
 
 hgridbroadphase::hgridbroadphase()
@@ -46,7 +46,7 @@ void add_object_to_hgrid(hgridbroadphase* hgrid, hgridobject *obj)
     int level;
     float diameter = 2.0f * obj->radius;
 
-    for (level = 0; SPHERE_TO_CELL_RATIO < diameter*hgrid->oo_cell_size[level]; level++);
+    for (level = 0 ; SPHERE_TO_CELL_RATIO < diameter*hgrid->oo_cell_size[level] ; level++){}
 
     assertion(level < HGRID_MAX_LEVELS);
 

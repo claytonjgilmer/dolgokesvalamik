@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1226588952 source:c:\lacika\thingsandsomethings\winteszt\testapp.cpp
+1227530396 source:c:\lacika\thingsandsomethings\winteszt\testapp.cpp
 	"stdafx.h"
 	<MMSystem.h>
 	"render/rendersystem.h"
@@ -123,7 +123,7 @@
 
 1225098789 c:\lacika\thingsandsomethings\libs\utils\auto_ptr.h
 
-1226595453 c:\lacika\thingsandsomethings\libs\threading\taskmanager2.h
+1227282196 c:\lacika\thingsandsomethings\libs\threading\taskmanager2.h
 	<malloc.h>
 	"mutex.h"
 	"thread.h"
@@ -268,10 +268,11 @@
 	"physics/collision/shapeintersection/shapeintersection.h"
 	"physics/collision/broadphase/hgridbroadphase.h"
 
-1226419626 c:\lacika\thingsandsomethings\libs\physics\system\body.h
+1227282195 c:\lacika\thingsandsomethings\libs\physics\system\body.h
 	"math/mtx4x3.h"
+	"containers/intr_list.h"
 
-1226419620 c:\lacika\thingsandsomethings\libs\physics\system\nbody.h
+1227282195 c:\lacika\thingsandsomethings\libs\physics\system\nbody.h
 	"containers/vector.h"
 	"math/vec3.h"
 	"math/mtx3x3.h"
@@ -284,14 +285,15 @@
 	"containers/vector.h"
 	"threading/mutex.h"
 
-1226419630 c:\lacika\thingsandsomethings\libs\physics\collision\system\contact.h
+1227282195 c:\lacika\thingsandsomethings\libs\physics\collision\system\contact.h
 	"constraint.h"
 	"math/vec3.h"
 	"physics/system/body.h"
 
-1226670906 c:\lacika\thingsandsomethings\libs\physics\collision\system\constraint.h
+1227282195 c:\lacika\thingsandsomethings\libs\physics\collision\system\constraint.h
+	"containers/intr_list.h"
 
-1226419667 c:\lacika\thingsandsomethings\libs\physics\collision\shapes\shape.h
+1227282195 c:\lacika\thingsandsomethings\libs\physics\collision\shapes\shape.h
 	"math/aabox.h"
 
 1226419675 c:\lacika\thingsandsomethings\libs\math\aabox.h
@@ -301,7 +303,7 @@
 1226419672 c:\lacika\thingsandsomethings\libs\physics\collision\shapeintersection\shapeintersection.h
 	"physics/collision/shapes/shape.h"
 
-1226583731 c:\lacika\thingsandsomethings\libs\physics\collision\broadphase\hgridbroadphase.h
+1227282264 c:\lacika\thingsandsomethings\libs\physics\collision\broadphase\hgridbroadphase.h
 	"broadphaseobject.h"
 	"broadphasepair.h"
 	"containers/listallocator.h"
@@ -660,4 +662,301 @@
 	"stdafx.h"
 
 1227139266 c:\lacika\dolgokesvalamik\libs\containers\intr_list.h
+
+1227282195 c:\lacika\thingsandsomethings\libs\containers\intr_list.h
+
+1226567181 c:\lacika\thingsandsomethings\libs\\render\rendersystem.h
+	"containers/listallocator.h"
+	"renderqueue.h"
+	"threading/taskmanager2.h"
+	"vertexbuffer.h"
+	"indexbuffer.h"
+	"vertexelements.h"
+	"utils/singleton.h"
+	"math/mtx4x4.h"
+	<d3d9.h>
+	<d3dx9.h>
+
+1225098791 c:\lacika\thingsandsomethings\libs\\containers\listallocator.h
+	"vector.h"
+
+1226576305 c:\lacika\thingsandsomethings\libs\\containers\vector.h
+	<new>
+	"utils/misc.h"
+	"utils/assert.h"
+
+1226413023 c:\lacika\thingsandsomethings\libs\\utils\misc.h
+
+1226568631 c:\lacika\thingsandsomethings\libs\\utils\assert.h
+	<assert.h>
+	<stdio.h>
+	<Windows.h>
+
+1226508130 c:\lacika\thingsandsomethings\libs\\render\renderqueue.h
+	"mesh.h"
+	"math/mtx4x3.h"
+	"containers/vector.h"
+	"containers/string.h"
+
+1226419789 c:\lacika\thingsandsomethings\libs\\render\mesh.h
+	"math/mtx4x3.h"
+	"vertexbuffer.h"
+	"indexbuffer.h"
+	"submesh.h"
+	"containers/vector.h"
+	"utils/resource.h"
+	"utils/auto_ptr.h"
+
+1226413807 c:\lacika\thingsandsomethings\libs\\math\mtx4x3.h
+	"mtx3x3.h"
+
+1226587313 c:\lacika\thingsandsomethings\libs\\math\mtx3x3.h
+	"vec3.h"
+
+1227535276 c:\lacika\thingsandsomethings\libs\\math\vec3.h
+	"math.h"
+
+1227527771 c:\lacika\thingsandsomethings\libs\\math\math.h
+	<math.h>
+	<stdlib.h>
+	"..\utils\misc.h"
+
+1226419752 c:\lacika\thingsandsomethings\libs\\render\vertexbuffer.h
+	<d3d9.h>
+	"vertexelements.h"
+	"containers/vector.h"
+
+1226419749 c:\lacika\thingsandsomethings\libs\\render\vertexelements.h
+
+1226419756 c:\lacika\thingsandsomethings\libs\\render\indexbuffer.h
+	<d3d9.h>
+
+1226419392 c:\lacika\thingsandsomethings\libs\\render\submesh.h
+	"shader.h"
+	"texture.h"
+	"containers/vector.h"
+	"utils/ref_ptr.h"
+
+1226419781 c:\lacika\thingsandsomethings\libs\\render\shader.h
+	<d3dx9.h>
+	"utils/resource.h"
+
+1226419778 c:\lacika\thingsandsomethings\libs\\utils\resource.h
+	"referencedobject.h"
+	"containers/string.h"
+
+1226419321 c:\lacika\thingsandsomethings\libs\\utils\referencedobject.h
+	"utils/misc.h"
+	"utils/assert.h"
+
+1227527869 c:\lacika\thingsandsomethings\libs\\containers\string.h
+	<ctype.h>
+	<float.h>
+	"utils/assert.h"
+	"utils/misc.h"
+
+1226419784 c:\lacika\thingsandsomethings\libs\\render\texture.h
+	"utils/resource.h"
+	<d3d9.h>
+
+1226419787 c:\lacika\thingsandsomethings\libs\\utils\ref_ptr.h
+	"referencedobject.h"
+	"utils/misc.h"
+
+1225098789 c:\lacika\thingsandsomethings\libs\\utils\auto_ptr.h
+
+1227527834 c:\lacika\thingsandsomethings\libs\\threading\taskmanager2.h
+	<malloc.h>
+	"mutex.h"
+	"thread.h"
+	"task.h"
+	"taskallocator.h"
+	"containers/fixedvector.h"
+	"containers/queue.h"
+	"containers/stack.h"
+	"math/math.h"
+	"utils/singleton.h"
+
+1226507454 c:\lacika\thingsandsomethings\libs\\threading\mutex.h
+	<xtl.h>
+	<Windows.h>
+
+1226419697 c:\lacika\thingsandsomethings\libs\\threading\thread.h
+	<windows.h>
+	"containers\string.h"
+
+1227517613 c:\lacika\thingsandsomethings\libs\\threading\task.h
+	"containers/string.h"
+
+1226419704 c:\lacika\thingsandsomethings\libs\\threading\taskallocator.h
+	<assert.h>
+	"containers/listallocator.h"
+
+1226419707 c:\lacika\thingsandsomethings\libs\\containers\fixedvector.h
+	"utils/assert.h"
+
+1227517612 c:\lacika\thingsandsomethings\libs\\containers\queue.h
+	"utils/assert.h"
+
+1226509673 c:\lacika\thingsandsomethings\libs\\containers\stack.h
+	"utils/assert.h"
+
+1226419711 c:\lacika\thingsandsomethings\libs\\utils\singleton.h
+
+1226507204 c:\lacika\thingsandsomethings\libs\\math\mtx4x4.h
+	"mtx4x3.h"
+	"vec4.h"
+
+1226502187 c:\lacika\thingsandsomethings\libs\\math\vec4.h
+	<math.h>
+
+1227534315 c:\lacika\thingsandsomethings\libs\\file\filesystem.h
+	"file/file.h"
+	"containers/string.h"
+	"containers/stringmap.h"
+	"containers/listallocator.h"
+	"utils/singleton.h"
+
+1226419719 c:\lacika\thingsandsomethings\libs\\containers\stringmap.h
+	"utils/misc.h"
+	"utils/stringhash.h"
+
+1226419714 c:\lacika\thingsandsomethings\libs\\utils\stringhash.h
+	"utils/misc.h"
+	"containers/string.h"
+
+1227534624 c:\lacika\thingsandsomethings\libs\\file\file.h
+	"utils/misc.h"
+	"containers/string.h"
+	<stdio.h>
+	<sys/stat.h>
+
+1226508098 c:\lacika\thingsandsomethings\libs\\render\shadermanager.h
+	"utils/singleton.h"
+	"containers/string.h"
+	"containers/stringmap.h"
+	"render/shader.h"
+
+1226508098 c:\lacika\thingsandsomethings\libs\\render\texturemanager.h
+	"utils/singleton.h"
+	"containers/string.h"
+	"containers/stringmap.h"
+	"render/texture.h"
+
+1226419741 c:\lacika\thingsandsomethings\libs\\math\vec2.h
+
+1226577449 c:\lacika\thingsandsomethings\libs\\render\renderobject3d.h
+	"scene/node.h"
+	"render/mesh.h"
+	"utils/auto_ptr.h"
+	"containers/fixedvector.h"
+
+1226577363 c:\lacika\thingsandsomethings\libs\\scene\node.h
+	"rootobject.h"
+	"containers/string.h"
+	"utils/assert.h"
+	"math/mtx4x3.h"
+	"prop/property.h"
+
+1226577449 c:\lacika\thingsandsomethings\libs\\scene\rootobject.h
+	"containers/string.h"
+	"nodefactory.h"
+
+1226577363 c:\lacika\thingsandsomethings\libs\\scene\nodefactory.h
+	"containers/vector.h"
+	"containers/string.h"
+	"utils/assert.h"
+	"math/mtx4x3.h"
+	"scripting/lua.h"
+	<stddef.h>
+
+1225098790 c:\lacika\thingsandsomethings\libs\\scripting\lua.h
+	"containers/string.h"
+	"lualib/lua.h"
+	"lualib/lualib.h"
+	"lualib/lauxlib.h"
+	"containers/vector.h"
+	"math/vec3.h"
+
+1216971584 c:\lacika\thingsandsomethings\libs\\scripting\lualib\lua.h
+	<stdarg.h>
+	<stddef.h>
+
+1216971583 c:\lacika\thingsandsomethings\libs\\scripting\lualib\lualib.h
+	"lua.h"
+
+1216971583 c:\lacika\thingsandsomethings\libs\\scripting\lualib\lauxlib.h
+	<stddef.h>
+	<stdio.h>
+	"lua.h"
+
+1226419745 c:\lacika\thingsandsomethings\libs\\prop\property.h
+	"math/vec2.h"
+
+1226419836 c:\lacika\thingsandsomethings\libs\\utils\timer.h
+
+1226509391 c:\lacika\thingsandsomethings\libs\\input\inputsystem.h
+	<dinput.h>
+	"utils/singleton.h"
+	"utils/assert.h"
+
+1226419690 c:\lacika\thingsandsomethings\libs\\physics\system\physicssystem.h
+	"utils/singleton.h"
+	"containers/listallocator.h"
+	"math/mtx4x3.h"
+	"body.h"
+	"nbody.h"
+	"physics/collision/system/contactmanager.h"
+	"physics/collision/shapes/shape.h"
+	"physics/collision/shapeintersection/shapeintersection.h"
+	"physics/collision/broadphase/hgridbroadphase.h"
+
+1227282195 c:\lacika\thingsandsomethings\libs\\physics\system\body.h
+	"math/mtx4x3.h"
+	"containers/intr_list.h"
+
+1227282195 c:\lacika\thingsandsomethings\libs\\containers\intr_list.h
+
+1227282195 c:\lacika\thingsandsomethings\libs\\physics\system\nbody.h
+	"containers/vector.h"
+	"math/vec3.h"
+	"math/mtx3x3.h"
+	"math/mtx4x3.h"
+	"body.h"
+
+1226419636 c:\lacika\thingsandsomethings\libs\\physics\collision\system\contactmanager.h
+	"contact.h"
+	"containers/listallocator.h"
+	"containers/vector.h"
+	"threading/mutex.h"
+
+1227517978 c:\lacika\thingsandsomethings\libs\\physics\collision\system\contact.h
+	"constraint.h"
+	"math/vec3.h"
+	"physics/system/body.h"
+
+1227282195 c:\lacika\thingsandsomethings\libs\\physics\collision\system\constraint.h
+	"containers/intr_list.h"
+
+1227282195 c:\lacika\thingsandsomethings\libs\\physics\collision\shapes\shape.h
+	"math/aabox.h"
+
+1226419675 c:\lacika\thingsandsomethings\libs\\math\aabox.h
+	"vec3.h"
+	"mtx4x3.h"
+
+1227517611 c:\lacika\thingsandsomethings\libs\\physics\collision\shapeintersection\shapeintersection.h
+	"physics/collision/shapes/shape.h"
+	<float.h>
+
+1227282264 c:\lacika\thingsandsomethings\libs\\physics\collision\broadphase\hgridbroadphase.h
+	"broadphaseobject.h"
+	"broadphasepair.h"
+	"containers/listallocator.h"
+	"threading/mutex.h"
+
+1226419681 c:\lacika\thingsandsomethings\libs\\physics\collision\broadphase\broadphaseobject.h
+	"math/aabox.h"
+
+1227517611 c:\lacika\thingsandsomethings\libs\\physics\collision\broadphase\broadphasepair.h
 

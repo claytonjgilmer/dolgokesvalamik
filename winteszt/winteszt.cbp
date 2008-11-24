@@ -75,6 +75,10 @@
 				</Linker>
 			</Target>
 		</Build>
+		<Compiler>
+			<Add option="-DNOMINMAX" />
+			<Add directory="..\libs\" />
+		</Compiler>
 		<Unit filename="ReadMe.txt" />
 		<Unit filename="Resource.h" />
 		<Unit filename="small.ico" />
