@@ -3,6 +3,7 @@
 
 #include <math.h>
 #include <stdlib.h>
+#include <float.h>
 #include "..\utils\misc.h"
 
 typedef unsigned __int64 uint64;

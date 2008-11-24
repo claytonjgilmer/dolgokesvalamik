@@ -716,9 +716,10 @@
 1227535276 c:\lacika\thingsandsomethings\libs\\math\vec3.h
 	"math.h"
 
-1227527771 c:\lacika\thingsandsomethings\libs\\math\math.h
+1227548397 c:\lacika\thingsandsomethings\libs\\math\math.h
 	<math.h>
 	<stdlib.h>
+	<float.h>
 	"..\utils\misc.h"
 
 1226419752 c:\lacika\thingsandsomethings\libs\\render\vertexbuffer.h
@@ -930,7 +931,7 @@
 	"containers/vector.h"
 	"threading/mutex.h"
 
-1227517978 c:\lacika\thingsandsomethings\libs\\physics\collision\system\contact.h
+1227548375 c:\lacika\thingsandsomethings\libs\\physics\collision\system\contact.h
 	"constraint.h"
 	"math/vec3.h"
 	"physics/system/body.h"
