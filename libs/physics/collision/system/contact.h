@@ -21,6 +21,7 @@ struct contact_t:public constraint_t
     contact_t* prev,*next;
 
     char contact_count;
+    int group_index;
 
     contact_t(body_t* i_body1, body_t* i_body2);
     ~contact_t();

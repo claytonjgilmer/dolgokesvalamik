@@ -330,12 +330,12 @@
 1216971576 source:c:\lacika\thingsandsomethings\winteszt\stdafx.cpp
 	"stdafx.h"
 
-1227558479 source:c:\lacika\dolgokesvalamik\winteszt\testapp.cpp
+1227561040 source:c:\lacika\dolgokesvalamik\winteszt\testapp.cpp
 	"stdafx.h"
 	<MMSystem.h>
 	"render/rendersystem.h"
 	"file/filesystem.h"
-	"threading/taskmanager2.h"
+	"threading/taskmanager.h"
 	"render/shadermanager.h"
 	"render/texturemanager.h"
 	"render/submesh.h"
@@ -961,10 +961,10 @@
 
 1227517611 c:\lacika\thingsandsomethings\libs\\physics\collision\broadphase\broadphasepair.h
 
-1227559502 c:\lacika\dolgokesvalamik\libs\\render\rendersystem.h
+1227561040 c:\lacika\dolgokesvalamik\libs\\render\rendersystem.h
 	"containers/listallocator.h"
 	"renderqueue.h"
-	"threading/taskmanager2.h"
+	"threading/taskmanager.h"
 	"vertexbuffer.h"
 	"indexbuffer.h"
 	"vertexelements.h"
@@ -1089,7 +1089,7 @@
 	<assert.h>
 	"containers/listallocator.h"
 
-1226432410 c:\lacika\dolgokesvalamik\libs\\containers\fixedvector.h
+1227561147 c:\lacika\dolgokesvalamik\libs\\containers\fixedvector.h
 	"utils/assert.h"
 
 1227298407 c:\lacika\dolgokesvalamik\libs\\containers\queue.h
@@ -1197,7 +1197,7 @@
 	"utils/singleton.h"
 	"utils/assert.h"
 
-1227559502 c:\lacika\dolgokesvalamik\libs\\physics\system\physicssystem.h
+1227564482 c:\lacika\dolgokesvalamik\libs\\physics\system\physicssystem.h
 	"utils/singleton.h"
 	"containers/listallocator.h"
 	"math/mtx4x3.h"
@@ -1208,11 +1208,11 @@
 	"physics/collision/shapeintersection/shapeintersection.h"
 	"physics/collision/broadphase/hgridbroadphase.h"
 
-1227136032 c:\lacika\dolgokesvalamik\libs\\physics\system\body.h
+1227649990 c:\lacika\dolgokesvalamik\libs\\physics\system\body.h
 	"math/mtx4x3.h"
 	"containers/intr_list.h"
 
-1227139266 c:\lacika\dolgokesvalamik\libs\\containers\intr_list.h
+1227649958 c:\lacika\dolgokesvalamik\libs\\containers\intr_list.h
 
 1227128947 c:\lacika\dolgokesvalamik\libs\\physics\system\nbody.h
 	"containers/vector.h"
@@ -1227,15 +1227,15 @@
 	"containers/vector.h"
 	"threading/mutex.h"
 
-1227557316 c:\lacika\dolgokesvalamik\libs\\physics\collision\system\contact.h
+1227651169 c:\lacika\dolgokesvalamik\libs\\physics\collision\system\contact.h
 	"constraint.h"
 	"math/vec3.h"
 	"physics/system/body.h"
 
-1227134724 c:\lacika\dolgokesvalamik\libs\\physics\collision\system\constraint.h
+1227650038 c:\lacika\dolgokesvalamik\libs\\physics\collision\system\constraint.h
 	"containers/intr_list.h"
 
-1227136683 c:\lacika\dolgokesvalamik\libs\\physics\collision\shapes\shape.h
+1227650050 c:\lacika\dolgokesvalamik\libs\\physics\collision\shapes\shape.h
 	"math/aabox.h"
 
 1226432411 c:\lacika\dolgokesvalamik\libs\\math\aabox.h
@@ -1256,4 +1256,15 @@
 	"math/aabox.h"
 
 1227401246 c:\lacika\dolgokesvalamik\libs\\physics\collision\broadphase\broadphasepair.h
+
+1227561040 c:\lacika\dolgokesvalamik\libs\\threading\taskmanager.h
+	<malloc.h>
+	"mutex.h"
+	"thread.h"
+	"task.h"
+	"taskallocator.h"
+	"containers/fixedvector.h"
+	"containers/queue.h"
+	"math/math.h"
+	"utils/singleton.h"
 

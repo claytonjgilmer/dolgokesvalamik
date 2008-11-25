@@ -57,13 +57,11 @@
 		uint16 array_index;
 		bodystate  is_static;
 
-		intr_list<constraint_t> contacts;
-		intr_list<constraint_t> joints;
+		intr_list contacts;
+		intr_list joints;
 
-//		constraint_edge* contacts;
-//		constraint_edge* joints;
-        intr_list<shape_t> shapes;
-//		shape_t* shapes;
+        intr_list shapes;
+        int group_index;
 
 	};
 #endif

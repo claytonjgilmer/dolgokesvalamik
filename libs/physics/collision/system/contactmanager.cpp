@@ -51,7 +51,6 @@ static int hash_check[hashtable_size];
 				this->contact_hash[index]->prev=ptr;
 
 			this->contact_hash[index]=ptr;
-//			this->contact_array.push_back(ptr);
 		}
 
         this->cm.unlock();

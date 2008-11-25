@@ -89,11 +89,11 @@ struct update_bounding
         uint32 end=i_start+i_num;
         for (uint32 n=i_start; n<end; ++n)
         {
-            intr_list<shape_t>::iterator it,endit;
+            intr_list::iterator it,endit;
             endit=nb.body[n]->shapes.end();
             for (it=nb.body[n]->shapes.begin(); it!=endit; ++it)
             {
-                shape_t* s=(*it);
+                shape_t* s=(shape_t*)(*it);
 				s->collider->bounding_world=transform(nb.pos[n],s->bounding);
             }
         }
@@ -279,64 +279,84 @@ void update_inertia()
 }
 
 
-#include <malloc.h>
-
 struct contact_group
 {
-    vector<contact_t*> contacts;
+    int first_contact;
+    int contact_count;
+
+    int first_joint;
+    int joint_count;
 };
 
-//#include "physics/collision/system/constraint.h"
-
-void add_body_to_group(short groupindex_array[],int body_index, int group_index, contact_group& group)
+struct contact_group_manager
 {
-    if (groupindex_array[body_index]!=-1)
-        return;
-
-    physicssystem* ptr=physicssystem::ptr;
-    groupindex_array[body_index]=group_index;
-
-    body_t* b=ptr->bodystate_array[BODYSTATE_DYNAMIC].body[body_index];
-    intr_list<constraint_t>::iterator it;
-    for (it=b->contacts.begin(); it!=b->contacts.end(); ++it)
-    {
-        contact_t* c=(contact_t*)(*it);
-        group.contacts.push_back(c);
-        constraint_edge* edge=(constraint_edge*)it.n;
-
-        if (!edge->other->is_static)
-            add_body_to_group(groupindex_array,edge->other->array_index,group_index,group);
-    }
-}
-
-void create_contact_groups()
-{
-    physicssystem* ptr=physicssystem::ptr;
-/*
-    int contact_count=ptr->contact_manager.contact_list.size();
-    contact_t** contact_array=(contact_t**)_alloca(contact_count*sizeof(contact_t*));
-
-    list_allocator<contact_t>::iterator it=ptr->contact_manager.contact_list.begin();
-
-    int n;
-    for (int n=0;n<contact_count; ++it,++n)
-        contact_array[n]=*it;
-*/
-    int dynamic_body_count=ptr->bodystate_array[BODYSTATE_DYNAMIC].size;
-    short* body_group_array=(short*)_alloca(dynamic_body_count*sizeof(short));
-
-    for (int n=0; n<dynamic_body_count; ++n)
-        body_group_array[n]=-1;
-
+    vector<contact_t*> contact_array;
     vector<contact_group> group_array;
 
-    for (int n=0; dynamic_body_count; ++n)
+    void create_contact_groups()
     {
-        if (body_group_array[n]==-1)
+        physicssystem* ptr=physicssystem::ptr;
+
+        int dynbody_count=(int)ptr->bodystate_array[BODYSTATE_DYNAMIC].size;
+
+        for (int n=0; n<dynbody_count; ++n)
+            ptr->bodystate_array[BODYSTATE_DYNAMIC].body[n]->group_index=-1;
+
+        list_allocator<contact_t>::iterator cit;
+        for (cit=ptr->contact_manager.contact_list.begin(); cit!=ptr->contact_manager.contact_list.end();++cit)
+            (*cit)->group_index=-1;
+
+        int group_count=0;
+        contact_array.resize(ptr->contact_manager.contact_list.size());
+        group_array.resize(0);
+        int act_contact_count=0;
+        group_array.push_back(contact_group());
+
+        for (int n=0; n<dynbody_count; ++n)
         {
-            group_array.push_back(contact_group());
-            add_body_to_group(body_group_array,n,group_array.size()-1,group_array.back());
+            body_t* b=ptr->bodystate_array[BODYSTATE_DYNAMIC].body[n];
+
+            if (b->group_index==-1 && b->contacts.begin()!=b->contacts.end())
+            {
+                contact_group* group=&group_array.back();
+                group->contact_count=0;
+                group->first_contact=act_contact_count;
+                create_one_group(b,group_count);
+
+                if (group->contact_count)
+                {
+                    act_contact_count+=group->contact_count;
+                    ++group_count;
+                    group_array.push_back(contact_group());
+                }
+            }
         }
     }
 
+    void create_one_group(body_t* b, int group_index)
+    {
+        b->group_index=group_index;
+        intr_list::iterator cit;
+        for (cit=b->contacts.begin(); cit!=b->contacts.end(); ++cit)
+        {
+            constraint_edge* e=(constraint_edge*)(*cit);
+            contact_t* c=(contact_t*)e->elem;
+            if (c->group_index==-1)
+            {
+                contact_group* group=&this->group_array[group_index];
+                c->group_index=group_index;
+                this->contact_array[group->first_contact+group->contact_count]=c;
+                ++group->contact_count;
+                if (!e->other->is_static && e->other->group_index==-1)
+                    create_one_group(e->other,group_index);
+            }
+        }
+    }
+};
+
+
+void create_contact_groups()
+{
+    contact_group_manager gm;
+    gm.create_contact_groups();
 }

@@ -22,7 +22,7 @@
 
 	struct broadphaseobject;
 
-	struct shape_t:public intr_list_node<shape_t>
+	struct shape_t:public intr_list_node
 	{
 		aabb bounding;
 		body_t* body;

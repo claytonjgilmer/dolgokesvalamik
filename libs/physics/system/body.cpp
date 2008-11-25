@@ -9,10 +9,10 @@
 	body_t::~body_t()
 	{
 	    while (this->contacts._head.next!=&this->contacts._end)
-			physicssystem::ptr->contact_manager.erase_contact((contact_t*)this->contacts._head.next->elem);
+			physicssystem::ptr->contact_manager.erase_contact((contact_t*)((constraint_edge*)this->contacts._head.next)->elem);
 
         while (this->shapes._head.next!=&this->shapes._end)
-            this->release_shape(this->shapes._head.next->elem);
+            this->release_shape((shape_t*)(this->shapes._head.next));
 //		while (this->shapes)
 	//		this->release_shape(this->shapes);
 
@@ -79,7 +79,6 @@
 		}
 
 		s->body=this;
-		s->elem=s;
 		this->shapes.push_front(s);
         aabb aabb=transform(physicssystem::ptr->bodystate_array[this->is_static].pos[this->array_index],s->bounding);
         s->collider=physicssystem::ptr->broad_phase.create_object(s,aabb,this->is_static);

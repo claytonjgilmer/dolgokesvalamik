@@ -1,20 +1,20 @@
 #ifndef _INTR_LIST_H_
 #define _INTR_LIST_H_
 
-template<typename basetype>
+//template<typename basetype>
 struct intr_list_node
 {
     intr_list_node* prev;
     intr_list_node* next;
-    basetype* elem;
+//    basetype* elem;
 };
 
 
-template<typename basetype>
+//template<typename basetype>
 struct intr_list
 {
-    intr_list_node<basetype> _head;
-    intr_list_node<basetype> _end;
+    intr_list_node _head;
+    intr_list_node  _end;
 
     intr_list()
     {
@@ -23,11 +23,9 @@ struct intr_list
 
         _end.next=0;
         _end.prev=&_head;
-
-        _head.elem=_end.elem=0;
     }
 
-    void push_back(intr_list_node<basetype>* newnode)
+    void push_back(intr_list_node* newnode)
     {
         newnode->prev=this->_end.prev;
         newnode->next=&this->_end;
@@ -35,7 +33,7 @@ struct intr_list
         this->_end.prev=newnode;
     }
 
-    void push_front(intr_list_node<basetype>* newnode)
+    void push_front(intr_list_node* newnode)
     {
         newnode->prev=&this->_head;
         newnode->next=this->_head.next;
@@ -43,7 +41,7 @@ struct intr_list
         this->_head.next=newnode;
     }
 
-    void erase(intr_list_node<basetype>* newnode)
+    void erase(intr_list_node* newnode)
     {
         newnode->prev->next=newnode->next;
         newnode->next->prev=newnode->prev;
@@ -52,10 +50,10 @@ struct intr_list
     struct iterator
     {
         iterator(){n=0;}
-        iterator(intr_list_node<basetype>* n){this->n=n;}
-        basetype* operator*()
+        iterator(intr_list_node* n){this->n=n;}
+        intr_list_node* operator*()
         {
-            return n->elem;
+            return n;
         }
 
         void operator++()
@@ -68,19 +66,17 @@ struct intr_list
             return n!=other.n;
         }
 
-        intr_list_node<basetype>* n;
+        intr_list_node* n;
     };
 
     iterator begin()
     {
         return _head.next;
-//        iterator it; it.n=_head.next; return it;
     }
 
     iterator end()
     {
         return &_end;
-//        iterator it; it.n=&_end; return it;
     }
 };
 
