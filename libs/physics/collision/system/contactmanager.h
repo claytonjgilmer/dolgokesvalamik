@@ -14,6 +14,9 @@
 		void erase_contact(contact_t* i_contact);
 
 
+		void update_contacts();
+
+
 		list_allocator<contact_t> contact_list;
 //		vector<contact_t*> contact_array;
 		contact_t* contact_hash[hashtable_size];

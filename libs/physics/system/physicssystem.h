@@ -6,6 +6,7 @@
 #include "math/mtx4x3.h"
 #include "body.h"
 #include "nbody.h"
+#include "contactgroupmanager.h"
 #include "physics/collision/system/contactmanager.h"
 #include "physics/collision/shapes/shape.h"
 #include "physics/collision/shapeintersection/shapeintersection.h"
@@ -54,6 +55,7 @@
 		vector<body_t*> killed[2];
 
 		contactmanager contact_manager;
+		contact_group_manager_t contact_group_manager;
 		intersectfn intersect_fn[shape_type_num][shape_type_num];
 		hgridbroadphase broad_phase;
 

@@ -5,10 +5,9 @@
 #include "utils/misc.h"
 #include "utils/assert.h"
 
-	template <class basetype>
-	class vector
+	template <typename basetype>
+	struct vector
 	{
-	public:
 		vector();
 		~vector();
 
@@ -57,15 +56,13 @@
 
 		void operator=(const vector& i_other);
 		vector(const vector& i_other);
-	protected:
 		basetype* m_buf;
+	protected:
 		unsigned m_size;
 		unsigned m_capacity;
 
 		void alloc();
 		void alloc(int i_newcapacity);
-
-	private:
 	};
 
 

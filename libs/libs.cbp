@@ -109,6 +109,8 @@
 		<Unit filename="physics\collision\system\contactmanager.h" />
 		<Unit filename="physics\system\body.cpp" />
 		<Unit filename="physics\system\body.h" />
+		<Unit filename="physics\system\contactgroupmanager.cpp" />
+		<Unit filename="physics\system\contactgroupmanager.h" />
 		<Unit filename="physics\system\nbody.cpp" />
 		<Unit filename="physics\system\nbody.h" />
 		<Unit filename="physics\system\physicssystem.cpp" />

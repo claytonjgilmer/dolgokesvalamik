@@ -27,6 +27,7 @@ struct contact_t:public constraint_t
     ~contact_t();
 
     void add_contact(const vec3 relpos[][2], int contact_count, const vec3& normal_body1);
+    void update();
 };
 
 

@@ -4,10 +4,10 @@
 	<File name="containers\fixedvector.h" open="0" top="0" tabpos="0">
 		<Cursor position="205" topLine="9" />
 	</File>
-	<File name="containers\intr_list.h" open="1" top="0" tabpos="11">
+	<File name="containers\intr_list.h" open="0" top="0" tabpos="11">
 		<Cursor position="423" topLine="17" />
 	</File>
-	<File name="containers\listallocator.h" open="1" top="0" tabpos="12">
+	<File name="containers\listallocator.h" open="0" top="0" tabpos="12">
 		<Cursor position="635" topLine="9" />
 	</File>
 	<File name="containers\poolalloc.h" open="0" top="0" tabpos="0">
@@ -22,8 +22,8 @@
 	<File name="containers\stringmap.h" open="0" top="0" tabpos="0">
 		<Cursor position="2653" topLine="109" />
 	</File>
-	<File name="containers\vector.h" open="0" top="0" tabpos="0">
-		<Cursor position="8902" topLine="391" />
+	<File name="containers\vector.h" open="1" top="0" tabpos="10">
+		<Cursor position="1300" topLine="36" />
 	</File>
 	<File name="file\file.h" open="0" top="0" tabpos="12">
 		<Cursor position="953" topLine="34" />
@@ -70,50 +70,53 @@
 	<File name="physics\collision\broadphase\broadphasepair.h" open="0" top="0" tabpos="8">
 		<Cursor position="116" topLine="0" />
 	</File>
-	<File name="physics\collision\broadphase\hgridbroadphase.cpp" open="0" top="0" tabpos="17">
-		<Cursor position="93" topLine="2" />
+	<File name="physics\collision\broadphase\hgridbroadphase.cpp" open="1" top="0" tabpos="6">
+		<Cursor position="6478" topLine="185" />
 	</File>
-	<File name="physics\collision\broadphase\hgridbroadphase.h" open="0" top="0" tabpos="7">
-		<Cursor position="156" topLine="5" />
+	<File name="physics\collision\broadphase\hgridbroadphase.h" open="1" top="0" tabpos="7">
+		<Cursor position="650" topLine="0" />
 	</File>
 	<File name="physics\collision\shapeintersection\shapeintersection.h" open="0" top="0" tabpos="1">
 		<Cursor position="863" topLine="33" />
 	</File>
-	<File name="physics\collision\shapes\shape.h" open="1" top="0" tabpos="10">
+	<File name="physics\collision\shapes\shape.h" open="0" top="0" tabpos="10">
 		<Cursor position="617" topLine="6" />
 	</File>
 	<File name="physics\collision\system\constraint.h" open="0" top="0" tabpos="10">
 		<Cursor position="406" topLine="0" />
 	</File>
-	<File name="physics\collision\system\contact.cpp" open="0" top="0" tabpos="8">
-		<Cursor position="0" topLine="0" />
+	<File name="physics\collision\system\contact.cpp" open="1" top="1" tabpos="9">
+		<Cursor position="2789" topLine="71" />
 	</File>
 	<File name="physics\collision\system\contact.h" open="1" top="0" tabpos="8">
-		<Cursor position="456" topLine="9" />
+		<Cursor position="641" topLine="9" />
 	</File>
-	<File name="physics\collision\system\contactmanager.cpp" open="1" top="1" tabpos="2">
-		<Cursor position="0" topLine="0" />
+	<File name="physics\collision\system\contactmanager.cpp" open="1" top="0" tabpos="2">
+		<Cursor position="2213" topLine="48" />
 	</File>
 	<File name="physics\collision\system\contactmanager.h" open="1" top="0" tabpos="3">
-		<Cursor position="225" topLine="0" />
+		<Cursor position="396" topLine="0" />
 	</File>
-	<File name="physics\system\body.cpp" open="1" top="0" tabpos="5">
-		<Cursor position="2137" topLine="58" />
+	<File name="physics\system\body.cpp" open="0" top="0" tabpos="5">
+		<Cursor position="2137" topLine="49" />
 	</File>
-	<File name="physics\system\body.h" open="1" top="0" tabpos="7">
-		<Cursor position="983" topLine="32" />
+	<File name="physics\system\body.h" open="0" top="0" tabpos="7">
+		<Cursor position="983" topLine="23" />
+	</File>
+	<File name="physics\system\contactgroupmanager.cpp" open="1" top="0" tabpos="5">
+		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="physics\system\nbody.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="386" topLine="2" />
 	</File>
-	<File name="physics\system\nbody.h" open="1" top="0" tabpos="6">
-		<Cursor position="419" topLine="5" />
+	<File name="physics\system\nbody.h" open="0" top="0" tabpos="6">
+		<Cursor position="419" topLine="0" />
 	</File>
 	<File name="physics\system\physicssystem.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="9921" topLine="325" />
+		<Cursor position="248" topLine="0" />
 	</File>
 	<File name="physics\system\physicssystem.h" open="1" top="0" tabpos="4">
-		<Cursor position="1406" topLine="28" />
+		<Cursor position="1599" topLine="30" />
 	</File>
 	<File name="prop\property.h" open="0" top="0" tabpos="0">
 		<Cursor position="775" topLine="2" />
@@ -223,7 +226,7 @@
 	<File name="utils\chunkstream.cpp" open="0" top="0" tabpos="4">
 		<Cursor position="6206" topLine="302" />
 	</File>
-	<File name="utils\misc.h" open="1" top="0" tabpos="9">
+	<File name="utils\misc.h" open="0" top="0" tabpos="9">
 		<Cursor position="110" topLine="0" />
 	</File>
 	<File name="utils\mmod-loader.cpp" open="0" top="0" tabpos="14">
