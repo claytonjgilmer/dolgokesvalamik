@@ -107,6 +107,8 @@
 		<Unit filename="physics\collision\system\contact.h" />
 		<Unit filename="physics\collision\system\contactmanager.cpp" />
 		<Unit filename="physics\collision\system\contactmanager.h" />
+		<Unit filename="physics\solver\lcpsolver.cpp" />
+		<Unit filename="physics\solver\lcpsolver.h" />
 		<Unit filename="physics\system\body.cpp" />
 		<Unit filename="physics\system\body.h" />
 		<Unit filename="physics\system\contactgroupmanager.cpp" />

@@ -35,6 +35,13 @@
 	{
 		shape_type type;
 		shape_desc():type(shape_type_invalid){}
+
+		int owner_flag;
+		int collision_mask;
+		/*
+		fricition
+		restitution kulon tablazatban
+		*/
 	};
 
 

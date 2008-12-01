@@ -455,8 +455,28 @@ public:
 //	virtual ~vvvvv(){}
 };
 
+void fib(int n,int& f)
+{
+    if (n==1) f=1;
+    else if (n==2) f=2;
+    else
+    {
+        int f1,f2;
+        fib(n-1,f1);
+        fib(n-2,f2);
+        f=f1+f2;
+    }
+}
+
 int _cdecl main()
 {
+    for (int n=1; n<=50; ++n)
+    {
+        int f;
+        fib(n,f);
+        printf("fibonacci(%d)=%d\n",n,f);
+    }
+    return 0;
 	tipus valami1=tipus();
 	vvvvv valami2=vvvvv();
 //	valami2=

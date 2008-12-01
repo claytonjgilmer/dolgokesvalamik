@@ -112,7 +112,7 @@ typedef char int8;
 	}
 */
 
-	template<class t> t sqr(t i_value)
+	template<typename t> t sqr(t i_value)
 	{
 		return i_value*i_value;
 	}

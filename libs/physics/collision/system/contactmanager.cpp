@@ -81,7 +81,5 @@ static int hash_check[hashtable_size];
 	    list_allocator<contact_t>::iterator it;
 
 	    for (it=this->contact_list.begin(); it!=this->contact_list.end(); ++it)
-	    {
             (*it)->update();
-	    }
 	}

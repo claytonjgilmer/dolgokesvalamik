@@ -87,6 +87,12 @@ void contact_t::add_contact(const vec3 relpos[][2], int contact_count,const vec3
 	}
 }
 
+/*
+    update:
+    ki kell szedni az ervenytelen kontaktokat
+    1. nempenetralo kontaktok
+    2. tangensiranyban eltavolodott kontaktok
+*/
 void contact_t::update()
 {
     physicssystem* ptr=physicssystem::ptr;
@@ -97,9 +103,24 @@ void contact_t::update()
         vec3 abs_pos[2];
         body1_pos.transform(abs_pos[0],this->contactarray[n].rel_pos[0]);
         body2_pos.transform(abs_pos[1],this->contactarray[n].rel_pos[1]);
+        vec3 dir=abs_pos[1]-abs_pos[0];
 
+        float penetration=dot(this->normal,dir);
+        if (penetration>CONTACT_MIN_PENETRATION)
+        {
+            this->contactarray[n]=this->contactarray[--this->contact_count];
+        }
+        else
+        {
+            vec3 tangentdir=dir=penetration*this->normal;
+            if (tangentdir.squarelength()>CONTACT_MAX_TANGENTDIST*CONTACT_MAX_TANGENTDIST)
+                this->contactarray[n]=this->contactarray[--this->contact_count];
+        }
+    }
 
-
+    if (!this->contact_count)
+    {
+        physicssystem::ptr->contact_manager.erase_contact(this);
     }
 }
 

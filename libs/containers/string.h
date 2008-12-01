@@ -244,7 +244,7 @@
 	MLINLINE tstring<TSTRING_MIN_CAPACITY>& tstring<TSTRING_MIN_CAPACITY>::operator+=(int i_num)
 	{
 		char strtmp[16];
-		sprintf("%d",strtmp,i_num);
+		sprintf(strtmp,"%d",i_num);
 //		_itoa(i_num,strtmp,10);
 		return *this+=strtmp;
 	}

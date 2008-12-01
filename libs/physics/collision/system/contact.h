@@ -14,6 +14,9 @@ struct one_contact
 	float cached_lambda;
 };
 
+#define CONTACT_MIN_PENETRATION 0.01f
+#define CONTACT_MAX_TANGENTDIST 0.05f
+
 struct contact_t:public constraint_t
 {
     one_contact contactarray[CONTACTBUFFER_SIZE];

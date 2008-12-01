@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<ActiveTarget name="Debug Win32" />
+	<ActiveTarget name="Release Win32" />
 	<File name="containers\fixedvector.h" open="0" top="0" tabpos="0">
 		<Cursor position="205" topLine="9" />
 	</File>
@@ -17,7 +17,7 @@
 		<Cursor position="695" topLine="15" />
 	</File>
 	<File name="containers\string.h" open="0" top="0" tabpos="0">
-		<Cursor position="4882" topLine="185" />
+		<Cursor position="6087" topLine="236" />
 	</File>
 	<File name="containers\stringmap.h" open="0" top="0" tabpos="0">
 		<Cursor position="2653" topLine="109" />
@@ -40,8 +40,8 @@
 	<File name="math\intersection.h" open="0" top="0" tabpos="0">
 		<Cursor position="3685" topLine="160" />
 	</File>
-	<File name="math\math.h" open="0" top="0" tabpos="1">
-		<Cursor position="96" topLine="0" />
+	<File name="math\math.h" open="1" top="0" tabpos="11">
+		<Cursor position="1651" topLine="91" />
 	</File>
 	<File name="math\mtx3x3.h" open="0" top="0" tabpos="7">
 		<Cursor position="233" topLine="0" />
@@ -79,23 +79,29 @@
 	<File name="physics\collision\shapeintersection\shapeintersection.h" open="0" top="0" tabpos="1">
 		<Cursor position="863" topLine="33" />
 	</File>
-	<File name="physics\collision\shapes\shape.h" open="0" top="0" tabpos="10">
-		<Cursor position="617" topLine="6" />
+	<File name="physics\collision\shapes\shape.h" open="1" top="0" tabpos="15">
+		<Cursor position="937" topLine="6" />
 	</File>
 	<File name="physics\collision\system\constraint.h" open="0" top="0" tabpos="10">
 		<Cursor position="406" topLine="0" />
 	</File>
-	<File name="physics\collision\system\contact.cpp" open="1" top="1" tabpos="9">
-		<Cursor position="2789" topLine="71" />
+	<File name="physics\collision\system\contact.cpp" open="1" top="0" tabpos="9">
+		<Cursor position="3554" topLine="82" />
 	</File>
 	<File name="physics\collision\system\contact.h" open="1" top="0" tabpos="8">
-		<Cursor position="641" topLine="9" />
+		<Cursor position="392" topLine="3" />
 	</File>
 	<File name="physics\collision\system\contactmanager.cpp" open="1" top="0" tabpos="2">
-		<Cursor position="2213" topLine="48" />
+		<Cursor position="2207" topLine="39" />
 	</File>
 	<File name="physics\collision\system\contactmanager.h" open="1" top="0" tabpos="3">
 		<Cursor position="396" topLine="0" />
+	</File>
+	<File name="physics\solver\lcpsolver.cpp" open="1" top="0" tabpos="13">
+		<Cursor position="771" topLine="0" />
+	</File>
+	<File name="physics\solver\lcpsolver.h" open="1" top="0" tabpos="12">
+		<Cursor position="136" topLine="0" />
 	</File>
 	<File name="physics\system\body.cpp" open="0" top="0" tabpos="5">
 		<Cursor position="2137" topLine="49" />
@@ -104,19 +110,19 @@
 		<Cursor position="983" topLine="23" />
 	</File>
 	<File name="physics\system\contactgroupmanager.cpp" open="1" top="0" tabpos="5">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="1070" topLine="1" />
 	</File>
-	<File name="physics\system\nbody.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="386" topLine="2" />
+	<File name="physics\system\nbody.cpp" open="1" top="0" tabpos="16">
+		<Cursor position="2828" topLine="69" />
 	</File>
-	<File name="physics\system\nbody.h" open="0" top="0" tabpos="6">
-		<Cursor position="419" topLine="0" />
+	<File name="physics\system\nbody.h" open="1" top="0" tabpos="14">
+		<Cursor position="321" topLine="0" />
 	</File>
 	<File name="physics\system\physicssystem.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="248" topLine="0" />
+		<Cursor position="7643" topLine="250" />
 	</File>
 	<File name="physics\system\physicssystem.h" open="1" top="0" tabpos="4">
-		<Cursor position="1599" topLine="30" />
+		<Cursor position="1599" topLine="20" />
 	</File>
 	<File name="prop\property.h" open="0" top="0" tabpos="0">
 		<Cursor position="775" topLine="2" />
