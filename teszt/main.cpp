@@ -468,8 +468,16 @@ void fib(int n,int& f)
     }
 }
 
+int g_vmi=12;
+
 int _cdecl main()
 {
+	int array[g_vmi];
+	for (int n=0; n<g_vmi; ++n)
+	{
+		array[n]=n;
+		printf("%d\n",array[n]);
+	}
     for (int n=1; n<=50; ++n)
     {
         int f;

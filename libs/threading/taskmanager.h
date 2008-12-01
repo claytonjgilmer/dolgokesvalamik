@@ -68,7 +68,8 @@
 
 			unsigned tnum=0;
 			const unsigned n=i_elemnum/elemnumpertask+1;
-			proc_range** tasks=(proc_range**)alloca(n*sizeof(proc_range*));
+//			proc_range** tasks=(proc_range**)alloca(n*sizeof(proc_range*));
+			proc_range* tasks[n];
 
 			while (start<i_elemnum)
 			{
@@ -113,7 +114,8 @@
 
 			unsigned tnum=0;
 			const unsigned n=i_elemnum/elemnumpertask+1;
-			proc_range<S>** tasks=(proc_range<S>**)alloca(n*sizeof(proc_range<S>*));
+//			proc_range<S>** tasks=(proc_range<S>**)alloca(n*sizeof(proc_range<S>*));
+			proc_range<S>* tasks[n];
 
 			while (start<i_elemnum)
 			{

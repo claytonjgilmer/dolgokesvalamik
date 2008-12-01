@@ -237,7 +237,8 @@ void hgridbroadphase::update()
     else
     {
         unsigned obj_count=this->dynamic_list.size();
-        hgridobject** obj_array=(hgridobject**)_alloca(obj_count*sizeof(hgridobject*));
+//        hgridobject** obj_array=(hgridobject**)_alloca(obj_count*sizeof(hgridobject*));
+        hgridobject* obj_array[obj_count];
 
         list_allocator<hgridobject>::iterator it=this->dynamic_list.begin();
 
