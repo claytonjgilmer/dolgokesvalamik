@@ -11,10 +11,10 @@
             (*cit)->group_index=-1;
 
         int group_count=0;
-        contact_array.resize(contact_list.size());
-        group_array.resize(0);
+        this->contact_array.resize(contact_list.size());
+        this->group_array.resize(0);
         int act_contact_count=0;
-        group_array.push_back(contact_group());
+        this->group_array.push_back(contact_group());
 
         for (int n=0; n<dynbody_count; ++n)
         {
@@ -31,7 +31,7 @@
                 {
                     act_contact_count+=group->contact_count;
                     ++group_count;
-                    group_array.push_back(contact_group());
+                    this->group_array.push_back(contact_group());
                 }
             }
         }

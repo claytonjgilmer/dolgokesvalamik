@@ -472,18 +472,29 @@ int g_vmi=12;
 
 int _cdecl main()
 {
-	int array[g_vmi];
-	for (int n=0; n<g_vmi; ++n)
+    int n0=0;
+	for (int n=1; n<20; ++n)
 	{
-		array[n]=n;
-		printf("%d\n",array[n]);
+	    int array[n];
+
+        array[0]=0;
+	    for (int m=1;m<n; ++m)
+	    {
+            array[m]=array[m-1]+m;
+	    }
+
+	    n0+=array[n-1];
 	}
-    for (int n=1; n<=50; ++n)
+
+    printf("%d\n",n0);
+	int f0=0;
+    for (int n=1; n<=30; ++n)
     {
         int f;
         fib(n,f);
-        printf("fibonacci(%d)=%d\n",n,f);
+        f0+=f;
     }
+    printf("fibonacci(%d)=%d\n",30,f0);
     return 0;
 	tipus valami1=tipus();
 	vvvvv valami2=vvvvv();

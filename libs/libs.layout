@@ -7,7 +7,7 @@
 	<File name="containers\intr_list.h" open="0" top="0" tabpos="11">
 		<Cursor position="423" topLine="17" />
 	</File>
-	<File name="containers\listallocator.h" open="1" top="0" tabpos="5">
+	<File name="containers\listallocator.h" open="1" top="0" tabpos="4">
 		<Cursor position="582" topLine="0" />
 	</File>
 	<File name="containers\poolalloc.h" open="0" top="0" tabpos="0">
@@ -70,7 +70,7 @@
 	<File name="physics\collision\broadphase\broadphasepair.h" open="0" top="0" tabpos="8">
 		<Cursor position="116" topLine="0" />
 	</File>
-	<File name="physics\collision\broadphase\hgridbroadphase.cpp" open="1" top="0" tabpos="6">
+	<File name="physics\collision\broadphase\hgridbroadphase.cpp" open="1" top="0" tabpos="5">
 		<Cursor position="7333" topLine="220" />
 	</File>
 	<File name="physics\collision\broadphase\hgridbroadphase.h" open="0" top="0" tabpos="7">
@@ -91,14 +91,14 @@
 	<File name="physics\collision\system\contact.h" open="0" top="0" tabpos="8">
 		<Cursor position="392" topLine="3" />
 	</File>
-	<File name="physics\collision\system\contactmanager.cpp" open="0" top="0" tabpos="2">
-		<Cursor position="2207" topLine="37" />
+	<File name="physics\collision\system\contactmanager.cpp" open="1" top="0" tabpos="8">
+		<Cursor position="2211" topLine="39" />
 	</File>
 	<File name="physics\collision\system\contactmanager.h" open="0" top="0" tabpos="3">
 		<Cursor position="396" topLine="0" />
 	</File>
-	<File name="physics\solver\lcpsolver.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="771" topLine="0" />
+	<File name="physics\solver\lcpsolver.cpp" open="1" top="1" tabpos="1">
+		<Cursor position="848" topLine="20" />
 	</File>
 	<File name="physics\solver\lcpsolver.h" open="1" top="0" tabpos="2">
 		<Cursor position="136" topLine="0" />
@@ -109,8 +109,8 @@
 	<File name="physics\system\body.h" open="0" top="0" tabpos="7">
 		<Cursor position="983" topLine="23" />
 	</File>
-	<File name="physics\system\contactgroupmanager.cpp" open="0" top="0" tabpos="5">
-		<Cursor position="1070" topLine="1" />
+	<File name="physics\system\contactgroupmanager.cpp" open="1" top="0" tabpos="9">
+		<Cursor position="26" topLine="0" />
 	</File>
 	<File name="physics\system\nbody.cpp" open="1" top="0" tabpos="3">
 		<Cursor position="1024" topLine="20" />
@@ -220,7 +220,7 @@
 	<File name="threading\taskmanager.cpp" open="0" top="0" tabpos="3">
 		<Cursor position="279" topLine="0" />
 	</File>
-	<File name="threading\taskmanager.h" open="1" top="1" tabpos="7">
+	<File name="threading\taskmanager.h" open="1" top="0" tabpos="6">
 		<Cursor position="2755" topLine="96" />
 	</File>
 	<File name="threading\thread.h" open="0" top="0" tabpos="0">
