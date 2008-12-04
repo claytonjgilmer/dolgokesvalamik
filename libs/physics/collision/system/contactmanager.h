@@ -10,7 +10,7 @@
 	struct contactmanager
 	{
 		contactmanager();
-		contact_t* get_contact(body_t* i_body1, body_t* i_body2);
+		contact_t* get_contact(shape_t* i_shape1, shape_t* i_shape2);
 		void erase_contact(contact_t* i_contact);
 
 

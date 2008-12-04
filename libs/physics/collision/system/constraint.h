@@ -5,7 +5,7 @@
 
 	struct body_t;
 	struct constraint_t;
-	struct constraint_edge:intr_list_node
+	struct constraint_edge:intr_list_node_base<constraint_edge>
 	{
 		body_t* other;
 		constraint_t* elem;

@@ -2,6 +2,7 @@
 #define _shape_h_
 
 #include "math/aabox.h"
+#include "containers\intr_list.h"
 
 	//////////////////////////////////////////////////////////////////////////
 	//			shape tipusok felsorolasa
@@ -21,14 +22,28 @@
 	//////////////////////////////////////////////////////////////////////////
 
 	struct broadphaseobject;
+	struct body_t;
+	struct shape_t;
+	struct contact_t;
 
-	struct shape_t:public intr_list_node
+	struct contact_edge:intr_list_node_base<contact_edge>
+	{
+	    shape_t* other;
+	    contact_t* elem;
+	};
+
+	struct shape_t:public intr_list_node_base<shape_t>
 	{
 		aabb bounding;
 		body_t* body;
 		shape_type type;
 		broadphaseobject* collider;
+		intr_list<contact_edge> contacts;
+
+
+
 		shape_t():type(shape_type_invalid){}
+		~shape_t();
 	};
 
 	struct shape_desc

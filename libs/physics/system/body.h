@@ -3,6 +3,8 @@
 
 #include "math/mtx4x3.h"
 #include "containers/intr_list.h"
+#include "physics/collision/system/constraint.h"
+#include "physics\collision\shapes\shape.h"
 
 	struct physicssystem;
 	struct constraint_t;
@@ -37,6 +39,8 @@
 		}
 	};
 
+	class constraint_edge;
+
 	struct body_t
 	{
 		const mtx4x3& get_pos() const;
@@ -57,10 +61,9 @@
 		uint16 array_index;
 		bodystate  is_static;
 
-		intr_list contacts;
-		intr_list joints;
+		intr_list<constraint_edge> joints;
 
-        intr_list shapes;
+        intr_list<shape_t> shapes;
         int group_index;
 
 	};

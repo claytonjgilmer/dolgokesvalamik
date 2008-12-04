@@ -91,11 +91,10 @@ struct update_bounding
         uint32 end=i_start+i_num;
         for (uint32 n=i_start; n<end; ++n)
         {
-            intr_list::iterator it,endit;
-            endit=nb.body[n]->shapes.end();
-            for (it=nb.body[n]->shapes.begin(); it!=endit; ++it)
+            shape_t* s,*endit;
+            endit=nb.body[n]->shapes.last();
+            for (s=nb.body[n]->shapes.first(); s!=endit; s=s->next)
             {
-                shape_t* s=(shape_t*)(*it);
 				s->collider->bounding_world=transform(nb.pos[n],s->bounding);
             }
         }

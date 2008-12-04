@@ -2,7 +2,11 @@
 #define _INTR_LIST_H_
 
 //template<typename basetype>
-struct intr_list_node
+
+
+
+template <typename intr_list_node>
+struct intr_list_node_base
 {
     intr_list_node* prev;
     intr_list_node* next;
@@ -11,6 +15,7 @@ struct intr_list_node
 
 
 //template<typename basetype>
+template <typename intr_list_node>
 struct intr_list
 {
     intr_list_node _head;
@@ -47,6 +52,7 @@ struct intr_list
         newnode->next->prev=newnode->prev;
     }
 
+/*
     struct iterator
     {
         iterator(){n=0;}
@@ -68,7 +74,17 @@ struct intr_list
 
         intr_list_node* n;
     };
+*/
+    intr_list_node* first()
+    {
+        return _head.next;
+    }
 
+    intr_list_node* last()
+    {
+        return &_end;
+    }
+/*
     iterator begin()
     {
         return _head.next;
@@ -78,6 +94,7 @@ struct intr_list
     {
         return &_end;
     }
+*/
 };
 
 #endif // _INTR_LIST_H_

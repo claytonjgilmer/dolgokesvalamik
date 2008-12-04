@@ -68,8 +68,8 @@ void solve(lcp_solver_t* solver, contact_t* contact_array[], int contact_count)
     {
         contact_t* actcontact=contact_array[contact_index];
 
-        int body[2]={actcontact->body[0]->array_index,actcontact->body[1]->array_index};
-        int is_static[2]={actcontact->body[0]->is_static,actcontact->body[1]->is_static};
+        int body[2]={actcontact->shape[0]->body->array_index,actcontact->shape[1]->body->array_index};
+        int is_static[2]={actcontact->shape[0]->body->is_static,actcontact->shape[1]->body->is_static};
         for (int n=0; n<actcontact->contact_count; ++n)
         {
             ptr->bodystate_array[is_static[0]].vel[body[0]];

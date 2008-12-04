@@ -8,9 +8,6 @@
 	}
 	body_t::~body_t()
 	{
-	    while (this->contacts._head.next!=&this->contacts._end)
-			physicssystem::ptr->contact_manager.erase_contact((contact_t*)((constraint_edge*)this->contacts._head.next)->elem);
-
         while (this->shapes._head.next!=&this->shapes._end)
             this->release_shape((shape_t*)(this->shapes._head.next));
 //		while (this->shapes)

@@ -10,7 +10,7 @@ static int hash_check[hashtable_size];
 		ZeroMemory(hash_check,sizeof(hash_check));
 	}
 
-	uint32 get_hashindex(body_t* i_body1, body_t* i_body2)
+	uint32 get_hashindex(shape_t* i_body1, shape_t* i_body2)
 	{
 #if 0
 		uint32 key=((uint32)i_body1) ^ ((uint32)i_body2);
@@ -29,21 +29,21 @@ static int hash_check[hashtable_size];
 #endif
 	}
 
-	contact_t* contactmanager::get_contact(body_t* i_body1, body_t* i_body2)
-	{
-		uint32 index=get_hashindex(i_body1,i_body2);
+	contact_t* contactmanager::get_contact(shape_t* i_shape1, shape_t* i_shape2)
+    {
+		uint32 index=get_hashindex(i_shape1,i_shape2);
 
 		this->cm.lock();
 		contact_t* ptr=this->contact_hash[index];
 
-		while (ptr && (ptr->body[0]!=i_body1 || ptr->body[1]!=i_body2))
+		while (ptr && (ptr->shape[0]!=i_shape1 || ptr->shape[1]!=i_shape2))
 			ptr=ptr->next;
 
 		if (!ptr)
 		{
 			++hash_check[index];
 			ptr=this->contact_list.allocate_place();
-			new (ptr) contact_t(i_body1,i_body2);
+			new (ptr) contact_t(i_shape1,i_shape2);
 
 			ptr->prev=0;
 			ptr->next=this->contact_hash[index];
@@ -68,7 +68,7 @@ static int hash_check[hashtable_size];
 		}
 		else //ha nincs elozoje, akkor o az elso a hashtablaban
 		{
-			uint32 index=get_hashindex(i_contact->body[0],i_contact->body[1]);
+			uint32 index=get_hashindex(i_contact->shape[0],i_contact->shape[1]);
 			this->contact_hash[index]=this->contact_hash[index]->next;
 		}
 
@@ -81,5 +81,9 @@ static int hash_check[hashtable_size];
 	    list_allocator<contact_t>::iterator it;
 
 	    for (it=this->contact_list.begin(); it!=this->contact_list.end(); ++it)
+	    {
             (*it)->update();
+            if (!(*it)->contact_count)
+                erase_contact((*it));
+	    }
 	}
