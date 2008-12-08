@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1228173977 source:c:\lacika\dolgokesvalamik\teszt\main.cpp
+1228174060 source:c:\lacika\dolgokesvalamik\teszt\main.cpp
 	<conio.h>
 	<stdio.h>
 	<windows.h>
@@ -24,7 +24,7 @@
 1227557317 c:\lacika\dolgokesvalamik\libs\\math\sorting.h
 	"math.h"
 
-1227962792 c:\lacika\dolgokesvalamik\libs\\math\math.h
+1228692784 c:\lacika\dolgokesvalamik\libs\\math\math.h
 	<math.h>
 	<stdlib.h>
 	<float.h>
@@ -68,11 +68,13 @@
 1226602516 c:\lacika\dolgokesvalamik\libs\\math\mtx3x3.h
 	"vec3.h"
 
-1227649990 c:\lacika\dolgokesvalamik\libs\\physics\system\body.h
+1228690335 c:\lacika\dolgokesvalamik\libs\\physics\system\body.h
 	"math/mtx4x3.h"
 	"containers/intr_list.h"
+	"physics/collision/system/constraint.h"
+	"physics\collision\shapes\shape.h"
 
-1227649958 c:\lacika\dolgokesvalamik\libs\\containers\intr_list.h
+1228344859 c:\lacika\dolgokesvalamik\libs\\containers\intr_list.h
 
 1227128947 c:\lacika\dolgokesvalamik\libs\\physics\system\nbody.h
 	"containers/vector.h"
@@ -86,15 +88,15 @@
 	"containers\vector.h"
 	"containers\listallocator.h"
 
-1227962762 c:\lacika\dolgokesvalamik\libs\\physics\collision\system\contact.h
+1228690345 c:\lacika\dolgokesvalamik\libs\\physics\collision\system\contact.h
 	"constraint.h"
 	"math/vec3.h"
 	"physics/system/body.h"
 
-1227650038 c:\lacika\dolgokesvalamik\libs\\physics\collision\system\constraint.h
+1228344482 c:\lacika\dolgokesvalamik\libs\\physics\collision\system\constraint.h
 	"containers/intr_list.h"
 
-1227740616 c:\lacika\dolgokesvalamik\libs\\physics\collision\system\contactmanager.h
+1228346935 c:\lacika\dolgokesvalamik\libs\\physics\collision\system\contactmanager.h
 	"contact.h"
 	"containers/listallocator.h"
 	"containers/vector.h"
@@ -104,8 +106,9 @@
 	<xtl.h>
 	<Windows.h>
 
-1228064016 c:\lacika\dolgokesvalamik\libs\\physics\collision\shapes\shape.h
+1228689844 c:\lacika\dolgokesvalamik\libs\\physics\collision\shapes\shape.h
 	"math/aabox.h"
+	"containers\intr_list.h"
 
 1226432411 c:\lacika\dolgokesvalamik\libs\\math\aabox.h
 	"vec3.h"

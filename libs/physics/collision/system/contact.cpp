@@ -85,6 +85,8 @@ void contact_t::add_contact(const vec3 relpos[][2], int contact_count,const vec3
 		for (int n=0; n<MAX_CONTACTNUM_PER_BODYPAIR; ++n)
 			this->contactarray[n]=data[n];
 	}
+
+	this->contact_count=min(contact_count_tmp,MAX_CONTACTNUM_PER_BODYPAIR);
 }
 
 /*

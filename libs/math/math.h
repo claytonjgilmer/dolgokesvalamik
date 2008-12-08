@@ -180,12 +180,13 @@ typedef char int8;
 		io_value2=tmp;
 	}
 
+/*
 	template<class t>
 	MLINLINE void sort(t& id0, t& id1)
 	{
 		if(id0>id1)	swap(id0, id1);
 	}
-
+*/
 
 
 	MLINLINE unsigned nextpoweroftwo(unsigned i_value)

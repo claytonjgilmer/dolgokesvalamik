@@ -40,6 +40,11 @@
 	};
 
 	class constraint_edge;
+	struct contact_edge:intr_list_node_base<contact_edge>
+	{
+	    body_t* other;
+	    contact_t* elem;
+	};
 
 	struct body_t
 	{
@@ -61,6 +66,7 @@
 		uint16 array_index;
 		bodystate  is_static;
 
+		intr_list<contact_edge> contacts;
 		intr_list<constraint_edge> joints;
 
         intr_list<shape_t> shapes;

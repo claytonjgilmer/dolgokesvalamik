@@ -43,12 +43,12 @@ MLINLINE contact_t::contact_t(shape_t* i_shape1, shape_t* i_shape2)
     this->shape[0]=i_shape1;
     this->shape[1]=i_shape2;
     this->edge[0].elem=this->edge[0].elem=this;
-    this->edge[0].other=i_shape2;
-    this->edge[1].other=i_shape1;
+    this->edge[0].other=i_shape2->body;
+    this->edge[1].other=i_shape1->body;
 
     //befuzzuk a ket test kontakt-listajaba
-    this->shape[0]->contacts.push_front(this->edge);
-    this->shape[1]->contacts.push_front(this->edge+1);
+    i_shape1->body->contacts.push_front(this->edge);
+    i_shape2->body->contacts.push_front(this->edge+1);
     this->contact_count=0;
 
     for (int n=0; n<CONTACTBUFFER_SIZE; ++n)
@@ -58,8 +58,8 @@ MLINLINE contact_t::contact_t(shape_t* i_shape1, shape_t* i_shape2)
 MLINLINE contact_t::~contact_t()
 {
     //kifuzzuk a ket test kontakt-listajabol
-    this->shape[0]->contacts.erase(this->edge);
-    this->shape[1]->contacts.erase(this->edge+1);
+    this->shape[0]->body->contacts.erase(this->edge);
+    this->shape[1]->body->contacts.erase(this->edge+1);
 }
 
 #endif//_contact_h_

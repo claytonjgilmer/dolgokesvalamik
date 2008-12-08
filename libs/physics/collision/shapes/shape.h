@@ -26,11 +26,6 @@
 	struct shape_t;
 	struct contact_t;
 
-	struct contact_edge:intr_list_node_base<contact_edge>
-	{
-	    shape_t* other;
-	    contact_t* elem;
-	};
 
 	struct shape_t:public intr_list_node_base<shape_t>
 	{
@@ -38,7 +33,6 @@
 		body_t* body;
 		shape_type type;
 		broadphaseobject* collider;
-		intr_list<contact_edge> contacts;
 
 
 

@@ -20,9 +20,6 @@
         {
             body_t* b=dynbody_array[n];
 
-            shape_t* s;
-
-            for (s=b->shapes
             if (b->group_index==-1 && b->contacts.first()!=b->contacts.last())
             {
                 contact_group* group=&group_array.back();
@@ -43,7 +40,7 @@
     void create_one_group(contact_group_manager_t* gm, body_t* b, int group_index)
     {
         b->group_index=group_index;
-        constraint_edge* e;
+        contact_edge* e;
         for (e=b->contacts.first(); e!=b->contacts.last(); e=e->next)
         {
             contact_t* c=(contact_t*)e->elem;

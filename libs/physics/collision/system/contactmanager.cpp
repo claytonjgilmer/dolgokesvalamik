@@ -37,7 +37,10 @@ static int hash_check[hashtable_size];
 		contact_t* ptr=this->contact_hash[index];
 
 		while (ptr && (ptr->shape[0]!=i_shape1 || ptr->shape[1]!=i_shape2))
+		{
+		    assertion(ptr->shape[0]!=i_shape2 || ptr->shape[1]!=i_shape1);
 			ptr=ptr->next;
+		}
 
 		if (!ptr)
 		{
