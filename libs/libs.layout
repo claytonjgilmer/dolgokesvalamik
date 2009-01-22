@@ -4,11 +4,11 @@
 	<File name="containers\fixedvector.h" open="0" top="0" tabpos="0">
 		<Cursor position="205" topLine="9" />
 	</File>
-	<File name="containers\intr_list.h" open="0" top="0" tabpos="11">
-		<Cursor position="1770" topLine="63" />
+	<File name="containers\intr_list.h" open="1" top="1" tabpos="2">
+		<Cursor position="1861" topLine="69" />
 	</File>
-	<File name="containers\listallocator.h" open="1" top="0" tabpos="13">
-		<Cursor position="557" topLine="0" />
+	<File name="containers\listallocator.h" open="0" top="0" tabpos="3">
+		<Cursor position="582" topLine="0" />
 	</File>
 	<File name="containers\poolalloc.h" open="0" top="0" tabpos="0">
 		<Cursor position="406" topLine="1" />
@@ -37,11 +37,20 @@
 	<File name="math\aabox.h" open="0" top="0" tabpos="10">
 		<Cursor position="369" topLine="0" />
 	</File>
+	<File name="math\convexhull.h" open="1" top="0" tabpos="6">
+		<Cursor position="474" topLine="0" />
+	</File>
+	<File name="math\convexhullgeneration.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="7268" topLine="257" />
+	</File>
+	<File name="math\convexhullgeneration.h" open="1" top="0" tabpos="5">
+		<Cursor position="305" topLine="0" />
+	</File>
 	<File name="math\intersection.h" open="0" top="0" tabpos="0">
 		<Cursor position="3685" topLine="160" />
 	</File>
-	<File name="math\math.h" open="1" top="0" tabpos="11">
-		<Cursor position="3014" topLine="171" />
+	<File name="math\math.h" open="0" top="0" tabpos="11">
+		<Cursor position="1651" topLine="91" />
 	</File>
 	<File name="math\mtx3x3.h" open="0" top="0" tabpos="7">
 		<Cursor position="233" topLine="0" />
@@ -49,8 +58,11 @@
 	<File name="math\mtx4x3.h" open="0" top="0" tabpos="0">
 		<Cursor position="2465" topLine="77" />
 	</File>
-	<File name="math\sorting.h" open="0" top="0" tabpos="2">
-		<Cursor position="1425" topLine="63" />
+	<File name="math\plane.h" open="1" top="0" tabpos="4">
+		<Cursor position="54" topLine="0" />
+	</File>
+	<File name="math\sorting.h" open="1" top="0" tabpos="3">
+		<Cursor position="9274" topLine="454" />
 	</File>
 	<File name="math\ssemtx4x3.h" open="0" top="0" tabpos="0">
 		<Cursor position="48" topLine="0" />
@@ -79,53 +91,53 @@
 	<File name="physics\collision\shapeintersection\shapeintersection.h" open="0" top="0" tabpos="1">
 		<Cursor position="863" topLine="33" />
 	</File>
-	<File name="physics\collision\shapes\shape.cpp" open="1" top="0" tabpos="3">
-		<Cursor position="426" topLine="0" />
+	<File name="physics\collision\shapes\shape.cpp" open="0" top="0" tabpos="13">
+		<Cursor position="63" topLine="0" />
 	</File>
-	<File name="physics\collision\shapes\shape.h" open="1" top="0" tabpos="1">
-		<Cursor position="670" topLine="0" />
+	<File name="physics\collision\shapes\shape.h" open="0" top="0" tabpos="14">
+		<Cursor position="630" topLine="0" />
 	</File>
-	<File name="physics\collision\system\constraint.h" open="0" top="0" tabpos="9">
+	<File name="physics\collision\system\constraint.h" open="0" top="0" tabpos="12">
 		<Cursor position="187" topLine="0" />
 	</File>
-	<File name="physics\collision\system\contact.cpp" open="1" top="0" tabpos="14">
-		<Cursor position="2337" topLine="53" />
+	<File name="physics\collision\system\contact.cpp" open="0" top="0" tabpos="8">
+		<Cursor position="2335" topLine="71" />
 	</File>
-	<File name="physics\collision\system\contact.h" open="1" top="0" tabpos="4">
-		<Cursor position="438" topLine="6" />
+	<File name="physics\collision\system\contact.h" open="0" top="0" tabpos="7">
+		<Cursor position="492" topLine="0" />
 	</File>
-	<File name="physics\collision\system\contactmanager.cpp" open="1" top="1" tabpos="8">
-		<Cursor position="1988" topLine="53" />
+	<File name="physics\collision\system\contactmanager.cpp" open="0" top="0" tabpos="5">
+		<Cursor position="2030" topLine="40" />
 	</File>
-	<File name="physics\collision\system\contactmanager.h" open="1" top="0" tabpos="7">
-		<Cursor position="566" topLine="0" />
+	<File name="physics\collision\system\contactmanager.h" open="0" top="0" tabpos="16">
+		<Cursor position="533" topLine="0" />
 	</File>
-	<File name="physics\solver\lcpsolver.cpp" open="0" top="0" tabpos="1">
-		<Cursor position="1665" topLine="41" />
+	<File name="physics\solver\lcpsolver.cpp" open="0" top="0" tabpos="18">
+		<Cursor position="1606" topLine="49" />
 	</File>
-	<File name="physics\solver\lcpsolver.h" open="0" top="0" tabpos="2">
+	<File name="physics\solver\lcpsolver.h" open="0" top="0" tabpos="1">
 		<Cursor position="136" topLine="0" />
 	</File>
-	<File name="physics\system\body.cpp" open="1" top="0" tabpos="9">
-		<Cursor position="366" topLine="0" />
+	<File name="physics\system\body.cpp" open="1" top="0" tabpos="7">
+		<Cursor position="388" topLine="0" />
 	</File>
-	<File name="physics\system\body.h" open="1" top="0" tabpos="2">
-		<Cursor position="221" topLine="0" />
+	<File name="physics\system\body.h" open="0" top="0" tabpos="9">
+		<Cursor position="1164" topLine="39" />
 	</File>
-	<File name="physics\system\contactgroupmanager.cpp" open="1" top="0" tabpos="5">
-		<Cursor position="2023" topLine="22" />
+	<File name="physics\system\contactgroupmanager.cpp" open="0" top="0" tabpos="6">
+		<Cursor position="1634" topLine="20" />
 	</File>
-	<File name="physics\system\nbody.cpp" open="0" top="0" tabpos="3">
+	<File name="physics\system\nbody.cpp" open="0" top="0" tabpos="2">
 		<Cursor position="1024" topLine="20" />
 	</File>
 	<File name="physics\system\nbody.h" open="0" top="0" tabpos="14">
 		<Cursor position="321" topLine="0" />
 	</File>
-	<File name="physics\system\physicssystem.cpp" open="1" top="0" tabpos="6">
-		<Cursor position="4917" topLine="143" />
+	<File name="physics\system\physicssystem.cpp" open="0" top="0" tabpos="11">
+		<Cursor position="2670" topLine="75" />
 	</File>
-	<File name="physics\system\physicssystem.h" open="1" top="0" tabpos="10">
-		<Cursor position="1434" topLine="30" />
+	<File name="physics\system\physicssystem.h" open="0" top="0" tabpos="4">
+		<Cursor position="1599" topLine="18" />
 	</File>
 	<File name="prop\property.h" open="0" top="0" tabpos="0">
 		<Cursor position="775" topLine="2" />
@@ -142,8 +154,8 @@
 	<File name="render\objectmanager.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="860" topLine="20" />
 	</File>
-	<File name="render\renderobject3d.cpp" open="1" top="0" tabpos="12">
-		<Cursor position="152" topLine="0" />
+	<File name="render\renderobject3d.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="731" topLine="4" />
 	</File>
 	<File name="render\renderobject3d.h" open="0" top="0" tabpos="0">
 		<Cursor position="216" topLine="0" />
@@ -208,8 +220,8 @@
 	<File name="scripting\lualib\llex.c" open="0" top="0" tabpos="0">
 		<Cursor position="331" topLine="9" />
 	</File>
-	<File name="threading\mutex.h" open="0" top="0" tabpos="0">
-		<Cursor position="323" topLine="0" />
+	<File name="threading\mutex.h" open="0" top="0" tabpos="17">
+		<Cursor position="711" topLine="19" />
 	</File>
 	<File name="threading\task.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="40" topLine="0" />
@@ -223,7 +235,7 @@
 	<File name="threading\taskmanager.cpp" open="0" top="0" tabpos="3">
 		<Cursor position="279" topLine="0" />
 	</File>
-	<File name="threading\taskmanager.h" open="0" top="0" tabpos="5">
+	<File name="threading\taskmanager.h" open="0" top="0" tabpos="4">
 		<Cursor position="2755" topLine="96" />
 	</File>
 	<File name="threading\thread.h" open="0" top="0" tabpos="0">

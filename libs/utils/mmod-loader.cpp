@@ -42,9 +42,8 @@ struct LODInfo
 	int endSubset;
 };
 
-class Stream_t
+struct Stream_t
 {
-public:
 	void AddFloat(const FloatArray& i_FloatArr)
 	{
 		for (unsigned int n=0; n<i_FloatArr.size(); ++n)
@@ -230,7 +229,6 @@ public:
 		return m_Vertices;
 	}
 
-protected:
 	int			m_FloatPerVertices;
 	string		m_MVF;
 	FloatArray	m_Vertices;
@@ -258,9 +256,8 @@ struct HItem
 	}
 };
 
-class MeshLODInfo
+struct MeshLODInfo
 {
-public:
 	MeshLODInfo() : m_RefCount(0)
 	{
 		m_sphere_center.clear();
@@ -354,7 +351,6 @@ public:
 	int  GetRefCount() const { return m_RefCount; }
 
 
-//protected:
 	typedef vector<SubsetInfo> SubsetArray;
 	typedef vector<LODInfo> LODArray;
 	typedef vector<Stream_t> StreamArray;
@@ -1099,7 +1095,7 @@ void PrintHierarchyChunk(MChunk& chunk)
 }
 
 
-template <class T>
+template <typename T>
 static inline void Limit(T& x, const T a, const T b)
 {
 	if (x > b)

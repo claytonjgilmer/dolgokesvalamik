@@ -6,7 +6,7 @@
 #include "utils/auto_ptr.h"
 #include "containers/fixedvector.h"
 
-	struct object3d:public node
+	struct object3d:public node_t
 	{
 		DECLARE_OBJECT(object3d);
 //	public:

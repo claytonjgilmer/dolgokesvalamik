@@ -3,9 +3,8 @@
 
 #include <d3d9.h>
 
-	class indexbuffer
+	struct indexbuffer
 	{
-	public:
 		indexbuffer(unsigned i_indexnum, int i_32bit=false);
 		~indexbuffer();
 		void* lock()
@@ -20,7 +19,8 @@
 		{
 			m_hwbuffer->Unlock();
 		}
-//	private:
+
+
 		IDirect3DIndexBuffer9* m_hwbuffer;
 		const int m_indexsize;
 	};

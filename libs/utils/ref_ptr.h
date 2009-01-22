@@ -4,8 +4,8 @@
 #include "referencedobject.h"
 #include "utils/misc.h"
 
-	template <class REF>
-	class ref_ptr
+	template <typename REF>
+	struct ref_ptr
 	{
 	public:
 		ref_ptr();
@@ -50,13 +50,13 @@
 		REF* m_ptr;
 	};
 
-	template <class REF>
+	template <typename REF>
 	inline ref_ptr<REF>::ref_ptr()
 	{
 		m_ptr=0;
 	}
 
-	template <class REF>
+	template <typename REF>
 	inline ref_ptr<REF>::ref_ptr(const ref_ptr& i_other)
 	{
 		m_ptr=i_other.m_ptr;
@@ -65,7 +65,7 @@
 			m_ptr->add_ref();
 	}
 
-	template <class REF>
+	template <typename REF>
 	inline ref_ptr<REF>::ref_ptr(REF* i_object)
 	{
 		m_ptr=i_object;
@@ -74,7 +74,7 @@
 			((referencedobject*)m_ptr)->add_ref();
 	}
 
-	template <class REF>
+	template <typename REF>
 	inline void ref_ptr<REF>::operator =(const ref_ptr& i_other)
 	{
 		if (m_ptr)
@@ -91,7 +91,7 @@
 			m_ptr->add_ref();
 	}
 
-	template <class REF>
+	template <typename REF>
 	inline void ref_ptr<REF>::operator =(REF* i_object)
 	{
 		if (m_ptr)
@@ -108,19 +108,19 @@
 			m_ptr->add_ref();
 	}
 /*
-	template <class REF>
+	template <typename REF>
 	inline REF& ref_ptr<REF>::operator *()
 	{
 		return *m_ptr;
 	}
 
-	template <class REF>
+	template <typename REF>
 	inline const REF& ref_ptr<REF>::operator *() const
 	{
 		return m_ptr;
 	}
 */
-	template <class REF>
+	template <typename REF>
 	inline ref_ptr<REF>::~ref_ptr()
 	{
 		if (m_ptr)

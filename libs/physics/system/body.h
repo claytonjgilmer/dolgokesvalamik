@@ -4,6 +4,7 @@
 #include "math/mtx4x3.h"
 #include "containers/intr_list.h"
 #include "physics/collision/system/constraint.h"
+//#include "physics/collision/system/contact.h"
 #include "physics\collision\shapes\shape.h"
 
 	struct physicssystem;
@@ -39,12 +40,12 @@
 		}
 	};
 
-	class constraint_edge;
-	struct contact_edge:intr_list_node_base<contact_edge>
-	{
-	    body_t* other;
-	    contact_t* elem;
-	};
+struct contact_t;
+struct contact_edge:intr_list_node_base<contact_edge>
+{
+	body_t* other;
+	contact_t* elem;
+};
 
 	struct body_t
 	{

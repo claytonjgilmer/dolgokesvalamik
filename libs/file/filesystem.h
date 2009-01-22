@@ -7,15 +7,16 @@
 #include "containers/listallocator.h"
 #include "utils/singleton.h"
 
-	class filesystem
+	struct filesystem
 	{
-	public:
 		DECLARE_SINGLETON(filesystem);
 
 		void register_path(const char* i_group,const char* i_path);
 		void unregister_path(const char* i_group, const char* i_path);
 		void open_file(file& o_file, const char* i_group, const char* i_filename, const char* i_mode) const;
-	private:
+
+
+
 		struct groupstruct
 		{
 			groupstruct(const char* i_group):

@@ -4,9 +4,8 @@
 #include <xmmintrin.h>
 #include <assert.h>
 
-	_declspec(align (16)) class ssevec3
+	_declspec(align (16)) struct ssevec3
 	{
-	public:
 		ssevec3()
 		{
 		}
@@ -94,5 +93,5 @@
 		}
 */
 		__m128	vec;
-	}; //class ssevec3
+	}; //ssevec3
 #endif//_ssevec3_h_

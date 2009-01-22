@@ -15,6 +15,9 @@
 #include "utils/timer.h"
 #include "input/inputsystem.h"
 #include "physics/system/physicssystem.h"
+#include "math/convexhull.h"
+#include "math/convexhullgeneration.h"
+#include "utils/timer.h"
 
 void generate_sphere(vec3 o_pos[],int& o_numvertices,short o_indices[],int& o_numfaces,float i_radius, int i_depth);
 object3d* load_mmod(const char* i_filename);
@@ -37,6 +40,8 @@ struct game
 	body_t* phb[BODY_NUM];
 	int inited;
 	timer t;
+
+	convex_hull ch;
 
 	game()
 	{
@@ -135,9 +140,8 @@ void init_app(HWND i_hwnd)
 	m->m_vb=new vertexbuffer(8,ve);
 	m->m_ib=new indexbuffer(3*12);
 
-	class vertex_t
+	struct vertex_t
 	{
-	public:
 		vec3 pos;
 		vec3 normal;
 		vec2 uv;
@@ -255,6 +259,34 @@ void init_app(HWND i_hwnd)
 		g_game.phb[n]->add_shape(sd);
 	}
 
+	convex_hull_desc hd;
+	hd.face_thickness=.001f;
+	vector<vec3>& b=hd.vertex_array;
+
+#if 0
+	b.resize(9);
+
+	b[0].set(-1,0,-1);
+	b[1].set(-1,0,1);
+	b[2].set(-1,1,-1);
+	b[3].set(-1,1,1);
+	b[4].set(1,0,-1);
+	b[5].set(1,0,1);
+	b[6].set(1,1,-1);
+	b[7].set(1,1,1);
+	b[8].set(1,1.5f,1);
+#else
+#define buff_size 40
+	b.resize(buff_size);
+
+	for (unsigned n=0; n<buff_size; ++n)
+		for (int m=0; m<3; ++m)
+			b[n][m]=random(-1.0f, 1.0f);
+
+#endif
+	g_game.ch=generate_convex_hull(hd);
+
+
 
 	g_game.inited=true;
 }
@@ -319,7 +351,7 @@ void update_app()
 
 	timer t;
 	t.reset();
-	physicssystem::ptr->simulate(dt);
+//	physicssystem::ptr->simulate(dt);
 	t.stop();
 	unsigned sec=t.get_tick();
 	sprintf(str,"simulation time:%d",sec);
@@ -327,6 +359,26 @@ void update_app()
 
 	sprintf(str,"pairnum:%d",physicssystem::ptr->broad_phase.pair_num);
 	rendersystem::ptr->draw_text(10,40,color_f(1,1,1,1),str);
+
+	//convex hull rajzolas
+	for (unsigned n=0; n<g_game.ch.vertices.size()-1; ++n)
+	{
+		int firstadj=g_game.ch.vertices[n].adj_index;
+		int adjnum=g_game.ch.vertices[n+1].adj_index-firstadj;
+
+		vec3 start=g_game.ch.vertices[n].pos;
+
+		for (int m=0; m<adjnum; ++m)
+		{
+			int vindex=g_game.ch.vertex_adjacency[firstadj+m];
+
+			if (vindex<n)
+			{
+				vec3 end=g_game.ch.vertices[vindex].pos;
+				rendersystem::ptr->draw_line(start,color_r8g8b8a8(0,0,0,255),end,color_r8g8b8a8(255,255,255,255));
+			}
+		}
+	}
 
 #if 0
 	for (unsigned n=0; n<(unsigned)physicssystem::ptr->broad_phase.pair_num; ++n)

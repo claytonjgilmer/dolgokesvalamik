@@ -5,9 +5,8 @@
 #include "containers/listallocator.h"
 
 
-	class taskallocator
+	struct taskallocator
 	{
-	public:
 		void* allocate()
 		{
 			m.lock();
@@ -23,8 +22,8 @@
 			m_taskalloc.deallocate((tplaceholder*)i_buf);
 			m.unlock();
 		}
-	private:
-		class tplaceholder{char c[256];};
+
+		struct tplaceholder{char c[256];};
 		list_allocator<tplaceholder> m_taskalloc;
 		mutex m;
 	};

@@ -30,7 +30,7 @@ object3d* load_mmod(file& i_file);
 			m_map.add_data(obj);
 		}
 
-		node* ptr=obj;
+		node_t* ptr=obj;
 
 	//	ptr=ptr->get_next(obj);
 

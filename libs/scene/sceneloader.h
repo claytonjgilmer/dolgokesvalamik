@@ -3,8 +3,8 @@
 
 #include "scripting/lua.h"
 
-	struct node;
+	struct node_t;
 
-	static node* load_scene(const char* i_scenename);
-	static void save_scene(const char* i_scenename,node* i_scene);
+	static node_t* load_scene(const char* i_scenename);
+	static void save_scene(const char* i_scenename,node_t* i_scene);
 #endif//_sceneloader_h_

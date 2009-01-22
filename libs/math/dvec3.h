@@ -2,9 +2,8 @@
 #define _dvec3_h_
 
 
-	class dvec3
+	struct dvec3
 	{
-	public:
 		dvec3();
 		dvec3(double i_xcoord, double i_ycoord, double i_zcoord);
 		dvec3(const double* i_src);

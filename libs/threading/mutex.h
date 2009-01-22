@@ -16,16 +16,14 @@
 
 #define mutextype 0
 
-	class mutex
+	struct mutex
 	{
-	public:
 		mutex();
 		~mutex();
 
 		void lock();
 		BOOL try_lock();
 		void unlock();
-	private:
 
 #if mutextype==0
 		CRITICAL_SECTION m_cs;
@@ -36,15 +34,14 @@
 
 
 
-	class mutex2
+	struct mutex2
 	{
-	public:
 		mutex2();
 		~mutex2();
 
 		void lock();
 		void unlock();
-	private:
+
 		long m_data;
 	};
 

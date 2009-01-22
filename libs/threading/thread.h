@@ -5,15 +5,17 @@
 #include "containers\string.h"
 	typedef unsigned (WINAPI *threadfunc)(void*);
 
-	class thread
+	struct thread
 	{
-	public:
 		thread(const string& i_name=string(""));
 		void start(threadfunc i_func, void* i_data);
 		unsigned getid() const;
 		void join() const;
 		void set_name(const string& i_name);
-	private:
+
+
+
+
 		HANDLE m_handle;
 		string m_name;
 		unsigned m_id;

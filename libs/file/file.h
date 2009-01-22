@@ -6,9 +6,8 @@
 #include <stdio.h>
 #include <sys/stat.h>
 
-	class file
+	struct file
 	{
-	public:
 		file();
 		file(const char* i_name, const char* i_attributes);
 		~file();
@@ -25,7 +24,7 @@
 		unsigned size() const;
 
 		int opened() const;
-	private:
+
 		file(const file&);
 		void operator=(const file&);
 		FILE* m_handle;

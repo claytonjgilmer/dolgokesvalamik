@@ -4,7 +4,7 @@
 #include "math.h"
 
 template <typename T,int (*comparefn)(T,T)>
-void q_sort(T numbers[], int left, int right)
+inline void q_sort(T numbers[], int left, int right)
 {
 	T pivot;
 	int l_hold, r_hold;
@@ -62,7 +62,7 @@ void q_sort(T numbers[], int left, int right)
 
 //#include <algorithm>
 
-void qf(float a[], int l, int r)
+inline void qf(float a[], int l, int r)
 {
 	int i = l-1, j = r, p = l-1, q = r;
 	float v = a[r];
@@ -92,7 +92,7 @@ void qf(float a[], int l, int r)
 
 
 template <typename T,int (*comparefn)(T,T)>
-void q_sort_rec(T numbers[], int left, int right)
+inline void q_sort_rec(T numbers[], int left, int right)
 {
 	int pivot_index;
 	int l_hold, r_hold;
@@ -122,7 +122,7 @@ void q_sort_rec(T numbers[], int left, int right)
 		q_sort_rec<T,comparefn>(numbers, left, r_hold);
 }
 
-void quicksortfloat(float a[], int lo, int hi)
+inline void quicksortfloat(float a[], int lo, int hi)
 {
 	int i=lo, j=hi;
 	float x=med3(a[lo],a[hi],a[(lo+hi)/2]);
@@ -144,7 +144,7 @@ void quicksortfloat(float a[], int lo, int hi)
 	if (i<hi) quicksortfloat(a, i, hi);
 }
 
-void quick4(float a[], int lo, int hi)
+inline void quick4(float a[], int lo, int hi)
 {
 	int i=lo, j=hi;
 //	float x=med3(a[lo],a[hi],a[(lo+hi)/2]);
@@ -180,7 +180,7 @@ void quick4(float a[], int lo, int hi)
 
 
 template <typename T,int (*comparefn)(T,T)>
-void insertion_sort(T numbers[] , int size)
+inline void insertion_sort(T numbers[] , int size)
 {
 	int i, j;
 	T act_elem;
@@ -200,7 +200,7 @@ void insertion_sort(T numbers[] , int size)
 }
 
 template <typename T,int (*comparefn)(T,T)>
-void merge(T numbers[], T tmpbuf[],int lo, int hi)
+inline void merge(T numbers[], T tmpbuf[],int lo, int hi)
 {
 	if (lo == hi)
 	{
@@ -226,7 +226,7 @@ void merge(T numbers[], T tmpbuf[],int lo, int hi)
 }
 
 template <typename T,int (*comparefn)(T,T)>
-void merge_sort(T numbers[], int size)
+inline void merge_sort(T numbers[], int size)
 {
 	T* tmpbuf=new T[size];
 
@@ -338,6 +338,319 @@ union FloatToUnsigned
 		return i;
 	}
 };
+
+
+
+
+////////////////////////////////////
+//		intro sort
+////////////////////////////////////
+
+
+#define MIN_LENGTH_FOR_QUICKSORT	64
+#define MAX_DEPTH_BEFORE_HEAPSORT	256
+
+template<typename T>
+struct std_pred
+{
+	static bool less(const T& i1, const T& i2)
+	{
+		return i1<i2;
+	}
+
+	static bool eq(const T& i1, const T& i2)
+	{
+		return i1==i2;
+	}
+};
+
+
+template <typename T, typename Pred=std_pred<T> >
+struct introsort
+{
+	void operator()(T * array, unsigned int count);
+
+	void Partition(T * left, unsigned int count, unsigned int depth = 1);
+
+	T SelectPivot(T value1, T value2, T value3);
+
+	void Swap(T * valueA, T * valueB);
+
+	// insertion sort methods
+	void InsertionSort(T * array, unsigned int count);
+
+	// heap sort methods
+	void HeapSort(T * array, int length);
+
+	void HeapSort(T * array, int k, int N);
+};
+
+template <typename T,typename Pred>
+inline void introsort<T,Pred>::operator()(T * array, unsigned int count)
+{
+	// Public method used to invoke the sort.
+
+
+	// Call quick sort partition method if there are enough
+	// elements to warrant it or insertion sort otherwise.
+	if (count >= MIN_LENGTH_FOR_QUICKSORT)
+		Partition(array, count);
+	else
+		InsertionSort(array, count);
+}
+
+
+
+
+template <typename T,typename Pred>
+inline void introsort<T,Pred>::Swap(T * valueA, T * valueB)
+{
+	// do the ol' "switch-a-me-do" on two values.
+	T temp = *valueA;
+	*valueA = *valueB;
+	*valueB = temp;
+}
+
+
+
+
+
+template <typename T,typename Pred>
+inline T introsort<T,Pred>::SelectPivot(T value1, T value2, T value3)
+{
+	// middle of three method.
+	if (Pred::less(value1 , value2))
+		return (Pred::less(value2 , value3) ? value2 : Pred::less(value1 , value3) ? value3 : value1);
+	return (Pred::less(value1 , value3) ? value1 : Pred::less(value2 , value3) ? value3 : value2);
+}
+
+
+
+
+
+template <typename T,typename Pred>
+inline void introsort<T,Pred>::Partition(T * left, unsigned int count, unsigned int depth)
+{
+	if (depth > MAX_DEPTH_BEFORE_HEAPSORT)
+	{
+		// If enough recursion has happened then we bail to heap sort since it looks
+		// as if we are experiencing a 'worst case' for quick sort.  This should not
+		// happen very often at all.
+		HeapSort(left, count);
+		return;
+	}
+
+	T * right = left + count - 1;
+	T * startingLeft = left;
+	T * startingRight = right;
+	T * equalLeft = left;
+	T * equalRight = right;
+
+	// select the pivot value.
+	T pivot = SelectPivot(left[0], right[0], left[((right - left) >> 1)]);
+
+	// do three way partitioning.
+	do
+	{
+		while ((left < right) && !Pred::less(pivot, *left))
+			if (Pred::eq(*(left++), pivot))
+			{
+				// equal to pivot value.  move to far left.
+				Swap(equalLeft++, left - 1);
+			}
+
+		while ((left < right) && !Pred::less(*right, pivot))
+			if (Pred::eq(*(right--), pivot))
+			{
+				// equal to pivot value.  move to far right.
+				Swap(equalRight--, right + 1);
+			}
+
+		if (left >= right)
+		{
+			if (left == right)
+			{
+				if (!Pred::less(*left, pivot))
+					left--;
+				if (!Pred::less(pivot, *right))
+					right++;
+			}
+			else
+			{
+				left--;
+				right++;
+			}
+			break;	// done partitioning
+		}
+
+		// left and right are ready for swaping
+		Swap(left++, right--);
+	} while (true);
+
+
+	// move values that were equal to pivot from the far left into the middle.
+	// these values are now placed in their final sorted position.
+	if (equalLeft > startingLeft)
+	{
+		do
+		{
+			Swap(--equalLeft, left--);
+		} while (equalLeft > startingLeft);
+		if (left < startingLeft)
+			left = startingLeft;
+	}
+
+	// move values that were equal to pivot from the far right into the middle.
+	// these values are now placed in their final sorted position.
+	if (equalRight < startingRight)
+	{
+		do
+		{
+			Swap(++equalRight, right++);
+		} while (equalRight < startingRight);
+		if (right > startingRight)
+			right = startingRight;
+	}
+
+	// Calculate new partition sizes ...
+	unsigned int leftSize = left - startingLeft + 1;
+	unsigned int rightSize = startingRight - right + 1;
+
+	// Partition left (less than pivot) if there are enough values to warrant it
+	// otherwise do insertion sort on the values.
+	if (leftSize >= MIN_LENGTH_FOR_QUICKSORT)
+		Partition(startingLeft, leftSize, depth + 1);
+	else
+		InsertionSort(startingLeft, leftSize);
+
+	// Partition right (greater than pivot) if there are enough values to warrant it
+	// otherwise do insertion sort on the values.
+	if (rightSize >= MIN_LENGTH_FOR_QUICKSORT)
+		Partition(right, rightSize, depth + 1);
+	else
+		InsertionSort(right, rightSize);
+}
+
+
+
+
+
+
+
+template <typename T,typename Pred>
+inline void introsort<T,Pred>::InsertionSort(T * array, unsigned int count)
+{
+	// A basic insertion sort.
+	if (count < 3)
+	{
+		if (count == 2)
+			if (Pred::less(array[1],array[0]))
+			{
+				T temp = array[0];
+				array[0] = array[1];
+				array[1] = temp;
+			}
+		return;
+	}
+
+	T * ptr2, * ptr3 = array + 1, * ptr4 = array + count;
+
+	if (Pred::less(array[1],array[0]))
+	{
+		T temp = array[0];
+		array[0] = array[1];
+		array[1] = temp;
+	}
+
+
+	while (true)
+	{
+		while ((++ptr3 < ptr4) && !Pred::less(*ptr3, ptr3[-1])){}
+		if (ptr3 >= ptr4)
+			break;
+
+		if (!Pred::less(*ptr3, ptr3[-2]))
+		{
+			if (Pred::less(*ptr3, ptr3[-1]))
+			{
+				T temp = *ptr3;
+				*ptr3 = ptr3[-1];
+				ptr3[-1] = temp;
+			}
+			continue;
+		}
+
+		ptr2 = ptr3 - 1;
+		T v = *ptr3;
+		while ((ptr2 >= array) && Pred::less(v,*ptr2))
+		{
+			ptr2[1] = ptr2[0];
+			ptr2--;
+		}
+		ptr2[1] = v;
+	}
+}
+
+
+
+
+
+template <typename T,typename Pred>
+inline void introsort<T,Pred>::HeapSort(T * array, int length)
+{
+	// A basic heapsort.
+	for (int k = length >> 1; k > 0; k--)
+	    HeapSort(array, k, length);
+
+	do
+	{
+		T temp = array[0];
+		array[0] = array[--length];
+		array[length] = temp;
+        HeapSort(array, 1, length);
+	} while (length > 1);
+}
+
+
+
+
+
+template <typename T,typename Pred>
+inline void introsort<T,Pred>::HeapSort(T * array, int k, int N)
+{
+	// A basic heapsort.
+	T temp = array[k - 1];
+	int n = N >> 1;
+
+	while (k <= n)
+	{
+		int j = (k << 1);
+        if ((j < N) && Pred::less(array[j - 1] , array[j]))
+	        j++;
+	    if (!Pred::less(temp , array[j - 1]))
+			break;
+	    else
+		{
+			array[k - 1] = array[j - 1];
+			k = j;
+        }
+	}
+
+    array[k - 1] = temp;
+}
+
+
+template <typename T, typename Pred>
+inline void intro_sort(T* array, int count, Pred pr)
+{
+	introsort<T,Pred> i; i(array, count);
+}
+
+template<typename T>
+inline void intro_sort(T* array, int count)
+{
+	introsort<T,std_pred<T> > i; i(array, count);
+}
 
 
 

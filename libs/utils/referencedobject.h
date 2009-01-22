@@ -5,20 +5,18 @@
 #include "utils/misc.h"
 #include "utils/assert.h"
 
-    template <class T> class ref_ptr;
-	class referencedobject
+//    template <typename T> struct ref_ptr;
+	struct referencedobject
 	{
-		template <class T> friend class ref_ptr;
-	public:
 		int get_ref() const;
-	protected:
+
+
 		referencedobject();
 		virtual ~referencedobject()
 		{
 			assertion(m_refcount==0,"referencedobject refcountja nem nulla!");
 		}
 
-	private:
 		void add_ref();
 		void remove_ref();
 		int m_refcount;

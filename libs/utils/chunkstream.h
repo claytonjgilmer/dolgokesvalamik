@@ -11,18 +11,15 @@
 
 //#include <boost/shared_ptr.hpp>
 
-class MChunk;
-class MChunkHandle;
-class MChunkStream;
+struct MChunk;
+struct MChunkHandle;
+struct MChunkStream;
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class MChunkStream
+struct MChunkStream
 {
-public:
-	friend class MChunkHandle;
-
 //	MChunkStream(const string& filename);
 	MChunkStream(file& i_file);
 	~MChunkStream();
@@ -31,7 +28,6 @@ public:
 	/// you should use this chunk to interface with this file afterwards
 	MChunk GetTopChunk();
 
-protected:
 	void PushChunk(MChunkHandle*);
 	void PopChunk(MChunkHandle*);
 
@@ -46,7 +42,6 @@ protected:
 
 	vector<string> mStack;
 
-//	std::ifstream m_Istream;
 	file& m_file;
 };
 
@@ -54,19 +49,14 @@ protected:
 
 /// helper class to read chunks from a ChunkStream. Don't use this
 /// class, use MChunk instead which is a proxy class to use handles
-class MChunkHandle
+struct MChunkHandle
 {
-	friend class MChunkStream;
-	friend class MChunk;
-
 	MChunkStream* mStream;
 	MChunkHandle* mParent;
 	string mName;
 	unsigned mDepth;
 	unsigned mTotalSize;
 	unsigned mSizeLeft;
-
-public:
 
 	MChunkHandle(MChunkHandle* p);
 
@@ -126,12 +116,11 @@ public:
 ////////////////////////////////////////////////////////////////////////////////
 
 /// helper class to read chunks from a ChunkStream
-class MChunk
+struct MChunk
 {
 //	boost::shared_ptr<MChunkHandle> ptr;
 	MChunkHandle* ptr;
 
-public:
 	MChunk();
 
 	MChunk(MChunkHandle* c);

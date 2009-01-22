@@ -47,9 +47,8 @@
 
 
 	};
-	class rendersystemdesc
+	struct rendersystemdesc
 	{
-	public:
 		int					m_windowed;
 		unsigned				m_backbuffercount;
 		unsigned				m_screenwidth;
@@ -66,8 +65,8 @@
 		}
 	};
 
-	class texture;
-	class state;
+	struct texture;
+	struct state;
 
 	struct rendersystem
 	{

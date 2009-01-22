@@ -1,7 +1,7 @@
 #ifndef _vec2i_h_
 #define _vec2i_h_
 
-	class vec2i
+	struct vec2i
 	{
 	public:
 		int	x;

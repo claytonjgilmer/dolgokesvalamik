@@ -132,12 +132,12 @@ typedef char int8;
 		return i_value1<i_value2 ? i_value1 : i_value2;
 	}
 
-	template<class t> MLINLINE t max(t i_value1, t i_value2)
+	template<typename t> MLINLINE t max(t i_value1, t i_value2)
 	{
 		return i_value1>i_value2 ? i_value1 : i_value2;
 	}
 
-	template<class t> MLINLINE t clamp(t i_src, t i_minvalue, t i_maxvalue)
+	template<typename t> MLINLINE t clamp(t i_src, t i_minvalue, t i_maxvalue)
 	{
 		if (i_src<i_minvalue)
 			return i_minvalue;
@@ -172,7 +172,7 @@ typedef char int8;
 		swap((int&)io_value1,(int&)io_value2);
 	}
 */
-	template<class t>
+	template<typename t>
 	MLINLINE void swap(t& io_value1, t& io_value2)
 	{
 		t tmp=io_value1;
@@ -181,12 +181,36 @@ typedef char int8;
 	}
 
 /*
-	template<class t>
+	template<typename t>
 	MLINLINE void sort(t& id0, t& id1)
 	{
 		if(id0>id1)	swap(id0, id1);
 	}
 */
+
+    template<typename T>
+    MLINLINE T* min_elem(T* first, T* last)
+    {
+        T* m=first;
+        T* ptr;
+        for(ptr=first,++ptr; ptr!=last; ++ptr)
+            if (*ptr<*m)
+                m=ptr;
+
+        return m;
+    }
+
+	template<typename T>
+	MLINLINE T* max_elem(T* first, T* last)
+	{
+		T* m=first;
+		T* ptr;
+		for(ptr=first,++ptr; ptr!=last; ++ptr)
+			if (*ptr>*m)
+				m=ptr;
+
+		return m;
+	}
 
 
 	MLINLINE unsigned nextpoweroftwo(unsigned i_value)
@@ -209,12 +233,12 @@ typedef char int8;
 		return (1 << i_actnumber) & 3;
 	}
 
-	template<class t> t interpolate(const t& x, const t& p1, const t& p2, const t& v1, const t& v2)
+	template<typename t> t interpolate(const t& x, const t& p1, const t& p2, const t& v1, const t& v2)
 	{
 		return ((v2-v1)/(p2-p1))*(x-p1)+v1;
 	}
 
-	template<class t> t interpolate(float x, const t& v1, const t& v2)
+	template<typename t> t interpolate(float x, const t& v1, const t& v2)
 	{
 		return (v2-v1)*x+v1;
 	}

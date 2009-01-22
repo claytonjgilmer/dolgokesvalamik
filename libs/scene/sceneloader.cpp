@@ -9,7 +9,7 @@
         {
             return m_name;
         }
-        vector<node*> m_child;
+        vector<node_t*> m_child;
         string m_name;
 
         mapelem(const char* i_name):
@@ -20,7 +20,7 @@
         mapelem* Next;
     };
 
-	node* load_node(node* i_parent,lua::Variable& i_nodetable)
+	node_t* load_node(node_t* i_parent,lua::Variable& i_nodetable)
 	{
 		int exclude=i_nodetable.GetVariable("Exclude").GetBool(false);
 
@@ -29,7 +29,7 @@
 
 		string TypeName=i_nodetable.GetVariable("Type").GetString("");
 
-		node* NewNode=(node*)metaobject_manager::create_object(TypeName.c_str());
+		node_t* NewNode=(node_t*)metaobject_manager::create_object(TypeName.c_str());
 
 		if (NewNode)
 			NewNode->get_metaobject()->load_property(NewNode,i_nodetable);
@@ -55,11 +55,11 @@
 	}
 
 
-	node* load_scene(const char* i_scenename)
+	node_t* load_scene(const char* i_scenename)
 	{
 		stringmap<mapelem,1024> map;
-		vector<node*> nodebuf;
-		vector<node*> root;
+		vector<node_t*> nodebuf;
+		vector<node_t*> root;
 
 		lua Lua;
 		Lua.InitState((lua::eLuaLib)(lua::LL_BASE | lua::LL_MATH));
@@ -74,7 +74,7 @@
 
 		for (scenetable.Begin(K,V); !scenetable.End(K); scenetable.Next(K,V))
 		{
-			node* n =load_node(NULL,V);
+			node_t* n =load_node(NULL,V);
 
 			if (!n)
 				continue;

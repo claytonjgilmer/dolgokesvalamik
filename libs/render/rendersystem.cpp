@@ -55,7 +55,7 @@
 			"Times New Roman", &this->font );
 		D3DXCreateSprite( this->m_device, &this->font_sprite);
 
-		this->draw_lines=FALSE;
+		this->draw_lines=TRUE;
 		this->draw_texts=TRUE;
 
 
@@ -81,9 +81,8 @@
 		return m_device;
 	}
 
-	class rendertask:public task_t
+	struct rendertask:task_t
 	{
-	public:
 		void run()
 		{
 			rendersystem::ptr->flush_queues();

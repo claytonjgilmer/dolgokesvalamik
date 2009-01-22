@@ -12,7 +12,7 @@
             physicssystem::ptr->contact_manager.erase_contact(this->contacts.first()->elem);
 
         while (this->shapes.first()!=this->shapes.last())
-            this->release_shape((shape_t*)(this->shapes._head.next));
+            this->release_shape(this->shapes.first());
 //		while (this->shapes)
 	//		this->release_shape(this->shapes);
 

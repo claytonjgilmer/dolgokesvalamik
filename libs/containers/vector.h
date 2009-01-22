@@ -56,8 +56,10 @@
 
 		void operator=(const vector& i_other);
 		vector(const vector& i_other);
+
+
+
 		basetype* m_buf;
-	protected:
 		unsigned m_size;
 		unsigned m_capacity;
 
@@ -72,7 +74,7 @@
 
 
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE void vector<basetype>::operator =(const vector& i_other)
 	{
 		clear();
@@ -84,7 +86,7 @@
 
 	}
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE vector<basetype>::vector(const vector& i_other)
 	{
 		if (i_other.m_size)
@@ -104,7 +106,7 @@
 		}
 	}
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE vector<basetype>::vector()
 	{
 		m_buf=NULL;
@@ -112,7 +114,7 @@
 		m_capacity=0;
 	}
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE vector<basetype>::~vector()
 	{
 		if (!m_buf)
@@ -125,35 +127,35 @@
 		delete [] charbuf;
 	}
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE typename vector<basetype>::iterator vector<basetype>::begin()
 	{
 		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
 		return m_buf;
 	}
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE typename vector<basetype>::const_iterator vector<basetype>::begin() const
 	{
 		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
 		return m_buf;
 	}
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE typename vector<basetype>::iterator vector<basetype>::end()
 	{
 		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
 		return m_buf+m_size;
 	}
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE typename vector<basetype>::const_iterator vector<basetype>::end() const
 	{
 		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
 		return m_buf+m_size;
 	}
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE void vector<basetype>::push_back(const basetype& i_newelem)
 	{
 		if (m_size==m_capacity)
@@ -163,7 +165,7 @@
 		++m_size;
 	}
 
-	template <class basetype>
+	template <typename basetype>
 	MLINLINE void vector<basetype>::pop_back()
 	{
 		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
@@ -172,7 +174,7 @@
 	}
 
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE void vector<basetype>::insert(iterator i_where, const basetype& i_val)
 	{
 		unsigned where=i_where-m_buf;
@@ -209,7 +211,7 @@
 		m_size++;
 	}
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE basetype& vector<basetype>::back()
 	{
 		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
@@ -217,7 +219,7 @@
 		return m_buf[m_size-1];
 	}
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE const basetype& vector<basetype>::back() const
 	{
 		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
@@ -225,7 +227,7 @@
 		return m_buf[m_size-1];
 	}
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE basetype& vector<basetype>::front()
 	{
 		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
@@ -233,7 +235,7 @@
 		return m_buf[0];
 	}
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE const basetype& vector<basetype>::front() const
 	{
 		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
@@ -241,19 +243,19 @@
 		return m_buf[0];
 	}
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE unsigned vector<basetype>::size() const
 	{
 		return m_size;
 	}
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE int vector<basetype>::empty() const
 	{
 		return m_size==0;
 	}
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE void vector<basetype>::clear()
 	{
 		if (m_size)
@@ -267,7 +269,7 @@
 		}
 	}
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE void vector<basetype>::assign(unsigned i_count, const basetype& val)
 	{
 		clear();
@@ -281,7 +283,7 @@
 	}
 
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE void vector<basetype>::erase(iterator i_where)
 	{
 		for (iterator it=i_where; it!=end()-1; ++it)
@@ -291,7 +293,7 @@
 		--m_size;
 	}
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE void vector<basetype>::remove(const basetype& i_elem)
 	{
 		iterator it;
@@ -308,7 +310,7 @@
 		--m_size;
 	}
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE void vector<basetype>::eraseunordered(iterator i_where)
 	{
 
@@ -317,7 +319,7 @@
 		--m_size;
 	}
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE void vector<basetype>::resize(unsigned i_newsize)
 	{
 		if (i_newsize>m_size)
@@ -344,27 +346,27 @@
 
 	}
 #if 0//def _DEBUG
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE basetype& vector<basetype>::operator[](unsigned i_index)
 	{
 		assertion(i_index<m_size,"vector<basetype>::size() <=i_index!!!");
 		return m_buf[i_index];
 	}
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE const basetype& vector<basetype>::operator[](unsigned i_index) const
 	{
 		assertion(i_index<m_size,"vector<basetype>::size() <=i_index!!!");
 		return m_buf[i_index];
 	}
 #else
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE vector<basetype>::operator basetype* ()
 	{
 		return m_buf;
 	}
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE vector<basetype>::operator const basetype* () const
 	{
 		return m_buf;
@@ -372,7 +374,7 @@
 
 #endif//_DEBUG
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE void vector<basetype>::alloc()
 	{
 		++m_capacity<<=1;
@@ -393,14 +395,14 @@
 		m_buf=(basetype*)newbuf;
 	}
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE void vector<basetype>::reserve(unsigned i_capacity)
 	{
 		if (m_capacity<i_capacity)
 			alloc(i_capacity);
 	}
 
-	template<class basetype>
+	template<typename basetype>
 	MLINLINE void vector<basetype>::alloc(int i_newcapacity)
 	{
 		m_capacity=i_newcapacity;

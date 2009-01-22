@@ -18,6 +18,17 @@
 		{
 			return 0.5f*(this->max-this->min);
 		}
+
+		void extend(const vec3& v)
+		{
+		    for (int n=0; n<3; ++n)
+		    {
+		        if (v[n]<min[n])
+                    min[n]=v[n];
+                if (v[n]>max[n])
+                    max[n]=v[n];
+		    }
+		}
 	};
 
 	MLINLINE aabb transform(const mtx4x3& i_mtx, const aabb& i_src)

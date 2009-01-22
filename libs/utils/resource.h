@@ -4,19 +4,15 @@
 #include "referencedobject.h"
 #include "containers/string.h"
 
-	class resource:public referencedobject
+	struct resource:referencedobject
 	{
-	public:
 		resource(const string& i_name):
 		  m_name(i_name)
 		{
 
 		}
 
-	const string& get_name(){return m_name;}
-	protected:
-		~resource(){}
-	private:
+		const string& get_name(){return m_name;}
 		string m_name;
 
 	};

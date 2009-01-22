@@ -23,9 +23,6 @@
 
 	struct broadphaseobject;
 	struct body_t;
-	struct shape_t;
-	struct contact_t;
-
 
 	struct shape_t:public intr_list_node_base<shape_t>
 	{
@@ -34,10 +31,7 @@
 		shape_type type;
 		broadphaseobject* collider;
 
-
-
 		shape_t():type(shape_type_invalid){}
-		~shape_t();
 	};
 
 	struct shape_desc

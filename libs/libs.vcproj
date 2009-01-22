@@ -40,13 +40,13 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".\"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;NEED_ASSERT"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;NEED_ASSERT;NOMINMAX"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -107,7 +107,7 @@
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories=".\"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;NOMINMAX"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -200,7 +200,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\physics\system\contactgroupmanager.h"
+				>
+			</File>
+			<File
 				RelativePath=".\physics\collision\system\contactmanager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\math\convexhull.h"
+				>
+			</File>
+			<File
+				RelativePath=".\math\convexhullgeneration.h"
 				>
 			</File>
 			<File
@@ -220,6 +232,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\physics\collision\broadphase\gird_2d.h"
+				>
+			</File>
+			<File
+				RelativePath=".\containers\hashgrid_2d.h"
+				>
+			</File>
+			<File
 				RelativePath=".\physics\collision\broadphase\hgridbroadphase.h"
 				>
 			</File>
@@ -236,6 +256,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\containers\intr_list.h"
+				>
+			</File>
+			<File
 				RelativePath=".\scripting\lualib\lapi.h"
 				>
 			</File>
@@ -245,6 +269,10 @@
 			</File>
 			<File
 				RelativePath=".\scripting\lualib\lcode.h"
+				>
+			</File>
+			<File
+				RelativePath=".\physics\solver\lcpsolver.h"
 				>
 			</File>
 			<File
@@ -468,10 +496,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\containers\stack.h"
-				>
-			</File>
-			<File
 				RelativePath=".\containers\string.h"
 				>
 			</File>
@@ -496,7 +520,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\threading\taskmanager2.h"
+				RelativePath=".\threading\taskmanager.h"
 				>
 			</File>
 			<File
@@ -572,7 +596,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\physics\collision\system\contact.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\physics\system\contactgroupmanager.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\physics\collision\system\contactmanager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\math\convexhullgeneration.cpp"
 				>
 			</File>
 			<File
@@ -605,6 +641,10 @@
 			</File>
 			<File
 				RelativePath=".\scripting\lualib\lcode.c"
+				>
+			</File>
+			<File
+				RelativePath=".\physics\solver\lcpsolver.cpp"
 				>
 			</File>
 			<File
@@ -772,11 +812,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\physics\collision\shapes\shape.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\threading\task.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\threading\taskmanager2.cpp"
+				RelativePath=".\threading\taskmanager.cpp"
 				>
 			</File>
 			<File

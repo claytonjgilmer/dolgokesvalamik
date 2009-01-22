@@ -9,6 +9,8 @@
 #include "containers/listallocator.h"
 #include "physics/system/physicssystem.h"
 
+#include "math\convexhullgeneration.h"
+
 
 #include "threading/thread.h"
 #include "threading/taskmanager.h"
@@ -56,9 +58,8 @@ struct proc2
 	}
 };
 
-class proc_task:public task_t
+struct proc_task:task_t
 {
-public:
 	int* m_buf;
 	unsigned m_size;
 
@@ -410,18 +411,51 @@ unsigned timer_get_tick(timer_t* t)
 }
 
 
+template<int coord=0>
+struct vec_sort_t_2
+{
+	bool operator()(const vec3& v1, const vec3& v2) const
+    {
+        return v1[coord]<v2[coord];
+    }
+    static bool less(const vec3& v1, const vec3& v2)
+    {
+        return v1[coord]<v2[coord];
+    }
+    static bool eq(const vec3& v1, const vec3& v2)
+    {
+        return v1[coord]==v2[coord];
+    }
+};
+namespace lofasz
+{
+
 void sorttest2()
 {
 	timer_t t;
-#define buff_size 20000
+#define buff_size 4000
 	//#define print_buf
-	int buf[buff_size];
+	vec3 buf[buff_size];
+	vec3 buf2[buff_size];
+	vec3 buf3[buff_size];
 	int n;
 
+	convex_hull_desc hd;
+	hd.face_thickness=.001f;
+	vector<vec3>& b=hd.vertex_array;
+//	b.resize(buff_size);
+
 	for (n=0; n<buff_size; ++n)
-		//			buf[n]=buf_size-n;
-//		buf[n]=0;
-		buf[n]=rand();
+		for (int m=0; m<3; ++m)
+		{
+//		buf[n][m]=buff_size-n;
+//		buf[n][m]=0;
+		buf[n][m]=random(-10.0f, 10.0f);
+
+		buf2[n][m]=buf[n][m];
+		buf3[n][m]=buf[n][m];
+//		b[n][m]=buf[n][m];
+		}
 
 #ifdef print_buf
 	for (n=0; n<buff_size; ++n)
@@ -429,13 +463,49 @@ void sorttest2()
 
 	printf("\n");
 #endif
+	b.resize(9);
+
+	b[0].set(-1,0,-1);
+	b[1].set(-1,0,1);
+	b[2].set(-1,1,-1);
+	b[3].set(-1,1,1);
+	b[4].set(1,0,-1);
+	b[5].set(1,0,1);
+	b[6].set(1,1,-1);
+	b[7].set(1,1,1);
+	b[8].set(1,1.5f,1);
+	timer_start(&t);
+	convex_hull h=generate_convex_hull(hd);
+	timer_stop(&t);
+	printf("%d elem convexhull generalasa:%d\n",buff_size,timer_get_tick(&t));
+/*
+	vector<vec3> b2;
+	simplify_vertex_array(b2,b);
+
+	for (n=0; n<b.size(); ++n)
+		printf("%d: %.2f, %.2f, %.2f\n", n, b[n].x,b[n].z,b[n].y);
+	for (n=0; n<b2.size(); ++n)
+		printf("%d: %.2f, %.2f, %.2f\n", n, b2[n].x,b2[n].z,b2[n].y);
+*/
+
 
 	timer_start(&t);
-	std::sort(buf,buf+buff_size);
+	std::sort(buf,buf+buff_size,vec_sort_t_2<0>());
+	timer_stop(&t);
+	printf("%d elem sortolasa:%d\n",buff_size,timer_get_tick(&t));
+
+
+	timer_start(&t);
+	introsort<vec3,vec_sort_t_2<0> >i; i(buf2,buff_size);
 	timer_stop(&t);
 
 	printf("%d elem sortolasa:%d\n",buff_size,timer_get_tick(&t));
 
+	timer_start(&t);
+	intro_sort(buf3,buff_size,vec_sort_t_2<0>());
+	timer_stop(&t);
+
+	printf("%d elem sortolasa:%d\n",buff_size,timer_get_tick(&t));
 #ifdef print_buf
 	for (n=0; n<buff_size; ++n)
 		printf("%d, ",buf[n]);
@@ -443,80 +513,9 @@ void sorttest2()
 	printf("\n");
 #endif
 }
-
-vec3 x,y;
-typedef int* tipus;
-
-class vvvvv
-{
-public:
-	float x,y,z;
-
-//	virtual ~vvvvv(){}
-};
-
-void fib(int n,int& f)
-{
-    if (n==1) f=1;
-    else if (n==2) f=2;
-    else
-    {
-        int f1,f2;
-        fib(n-1,f1);
-        fib(n-2,f2);
-        f=f1+f2;
-    }
 }
-
-int g_vmi=12;
 
 int _cdecl main()
 {
-    int n0=0;
-	for (int n=1; n<20; ++n)
-	{
-	    int array[n];
-
-        array[0]=0;
-	    for (int m=1;m<n; ++m)
-	    {
-            array[m]=array[m-1]+m;
-	    }
-
-	    n0+=array[n-1];
-	}
-
-    printf("%d\n",n0);
-	int f0=0;
-    for (int n=1; n<=30; ++n)
-    {
-        int f;
-        fib(n,f);
-        f0+=f;
-    }
-    printf("fibonacci(%d)=%d\n",30,f0);
-    return 0;
-	tipus valami1=tipus();
-	vvvvv valami2=vvvvv();
-//	valami2=
-//	valami2.x=1; valami2.y=2; valami2.z=3;
-
-//	new (&valami2) vvvvv ();
-
-	printf("pointer:%d\n",valami1);
-	printf("vec3 :%f %f %f\n",valami2.x,valami2.y,valami2.z);
-	return 0;
-	vec3 a1,a2; a1.set(1,2,3),a2.set(4,5,6);
-	x=a1+a2;
-	y=x;
-	x=add(a1,a2);
-	sorttest2();
-	return 0;
-	proba();
-	return 0;
-	for (int n=0; n<1000; ++n)
-	{
-		printf("%d.\n",n+1);
-		tasktest();
-	}
+	lofasz::sorttest2();
 }

@@ -80,6 +80,9 @@
 		<Unit filename="input\inputsystem.cpp" />
 		<Unit filename="input\inputsystem.h" />
 		<Unit filename="math\aabox.h" />
+		<Unit filename="math\convexhull.h" />
+		<Unit filename="math\convexhullgeneration.cpp" />
+		<Unit filename="math\convexhullgeneration.h" />
 		<Unit filename="math\dvec3.h" />
 		<Unit filename="math\intersection.h" />
 		<Unit filename="math\math.h" />

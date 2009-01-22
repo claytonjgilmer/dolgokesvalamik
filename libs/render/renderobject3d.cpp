@@ -3,7 +3,7 @@
 #include "objectmanager.h"
 //#include "scene/nodefactory.h"
 
-	DEFINE_OBJECT(object3d,node);
+	DEFINE_OBJECT(object3d,node_t);
 	BIND_PROPERTY(object3d,m_modelname,"modelname",string);
 
 	object3d::object3d()
@@ -12,7 +12,7 @@
 	}
 
 	object3d::object3d(const char* i_name):
-	node(i_name)
+	node_t(i_name)
 	{
 	}
 

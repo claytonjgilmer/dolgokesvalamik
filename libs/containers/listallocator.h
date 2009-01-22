@@ -3,9 +3,8 @@
 
 #include "vector.h"
 
-	template <typename basetype, int blocksize=128> class list_allocator //blocksize kettohatvany!
+	template <typename basetype, int blocksize=128> struct list_allocator //blocksize kettohatvany!
 	{
-	protected:
 		struct elem_t
 		{
 			char m_data[sizeof(basetype)];
@@ -13,7 +12,6 @@
 			elem_t* m_next;
 		};
 
-	public:
 		struct iterator
 		{
 			iterator()
@@ -58,7 +56,7 @@
 
 			elem_t* m_elem;
 		};
-	public:
+
 		list_allocator();
 		~list_allocator();
 		basetype* allocate();
@@ -85,8 +83,6 @@
 		void movebefore(iterator i_elem, iterator i_before);
 		unsigned size() const;
 
-
-	protected:
 		vector<elem_t*> m_allocated;
 		elem_t* m_free;
 		elem_t  m_head;
@@ -94,7 +90,7 @@
 		unsigned m_size;
 
 		void allocfree();
-	}; //class list_allocator
+	}; //struct  list_allocator
 
 	template <typename basetype,int blocksize>
 	MLINLINE void list_allocator<basetype,blocksize>::allocfree()

@@ -10,20 +10,20 @@
 	const unsigned nodeflag_valid_worldpos=(1<<0);
 	const unsigned nodeflag_dont_save=(1<<0);
 
-	struct node:public rootobject
+	struct node_t:public rootobject
 	{
-		DECLARE_OBJECT(node);
+		DECLARE_OBJECT(node_t);
 	public:
-		node();
-		node(const char* i_name);
-		virtual ~node();
+		node_t();
+		node_t(const char* i_name);
+		virtual ~node_t();
 
-		node* get_parent() const;
-		node* get_child() const;
-		node* get_bro() const;
+		node_t* get_parent() const;
+		node_t* get_child() const;
+		node_t* get_bro() const;
 
-		void add_child(node* i_child);
-		void remove_child(node* i_child);
+		void add_child(node_t* i_child);
+		void remove_child(node_t* i_child);
 
 		void set_localposition(const mtx4x3&);
 		const mtx4x3& get_localposition() const;
@@ -31,9 +31,9 @@
 		void set_worldposition(const mtx4x3&);
 		const mtx4x3& get_worldposition();
 
-		node* get_next(node* i_root=NULL) const;
+		node_t* get_next(node_t* i_root=NULL) const;
 
-		node* get_node_by_name(const char* i_name);
+		node_t* get_node_by_name(const char* i_name);
 
 		void set_flag(unsigned i_flag);
 		void clr_flag(unsigned i_flag);
@@ -42,9 +42,9 @@
 
 
 //	protected:
-		node* m_parent;
-		node* m_child;
-		node* m_bro;
+		node_t* m_parent;
+		node_t* m_child;
+		node_t* m_bro;
 
 //		string m_name;
 		mtx4x3 m_localpos;

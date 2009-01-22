@@ -8,9 +8,8 @@
 	//			mtx4x3
 	//////////////////////////////////////////////////////////////////////////
 
-	class mtx4x3:public mtx3x3
+	struct mtx4x3:mtx3x3
 	{
-	public:
 		void identity();
 		static mtx4x3 identitymtx();
 
@@ -45,7 +44,7 @@
 				vec3 t;
 			};
 		};
-	}; //class mtx4x3
+	}; //struct mtx4x3
 
 	MLINLINE void mtx4x3::identity()
 	{

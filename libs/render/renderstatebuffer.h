@@ -4,12 +4,11 @@
 #include "renderstate.h"
 #include "rendersystem.h"
 
-	class statebuffer
+	struct statebuffer
 	{
-	public:
 		void apply_states();
 		void add_state(const state& i_elem);
-	private:
+
 		vector<state> m_buf;
 	};
 

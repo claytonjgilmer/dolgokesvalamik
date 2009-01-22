@@ -3,9 +3,8 @@
 
 #include "ssevec3.h"
 
-	_declspec(align (16)) class ssemtx4x3
+	_declspec(align (16)) struct ssemtx4x3
 	{
-	public:
 		ssevec3 xaxis;
 		ssevec3 yaxis;
 		ssevec3 zaxis;
@@ -26,7 +25,7 @@
 
 			return ret;
 		}
-	};//class ssemtx4x3
+	};//struct ssemtx4x3
 
 	inline ssevec3 ssemtx4x3::transform(const ssevec3& i_src) const
 	{

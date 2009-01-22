@@ -8,9 +8,8 @@
 #include "utils/misc.h"
 
 	template <unsigned TSTRING_MIN_CAPACITY=16>
-	class tstring
+	struct tstring
 	{
-	public:
 		tstring();
 		~tstring();
 
@@ -52,7 +51,6 @@
 		void to_upper();
 		void to_lower();
 
-	private:
 		char* m_buf;
 		char m_innerbuf[TSTRING_MIN_CAPACITY];
 		unsigned m_capacity;

@@ -5,10 +5,8 @@
 #include "vertexelements.h"
 #include "containers/vector.h"
 
-	class vertexbuffer
+	struct vertexbuffer
 	{
-		friend class rendersystem;
-	public:
 		vertexbuffer(unsigned i_vertexnum, const vector<vertexelem>& i_vertexelements);
 		vertexbuffer(unsigned i_vertexnum, const vector<vertexelem>& i_vertexelements, unsigned i_vertexsize);
 		~vertexbuffer();
@@ -22,7 +20,7 @@
 		{
 			m_hwbuffer->Unlock();
 		}
-	private:
+
 		LPDIRECT3DVERTEXBUFFER9 m_hwbuffer;
 		LPDIRECT3DVERTEXDECLARATION9 m_decl;
 		unsigned m_vertexsize;

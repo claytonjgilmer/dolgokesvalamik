@@ -19,16 +19,16 @@ struct one_contact
 
 struct contact_t
 {
-    shape_t* shape[2];
+    body_t* body[2];
     contact_edge edge[2];
     one_contact contactarray[CONTACTBUFFER_SIZE];
     vec3 normal;
-    contact_t* prev,*next;
+//    contact_t* prev,*next;
 
     char contact_count;
     int group_index;
 
-    contact_t(shape_t* i_shape1, shape_t* i_shape2);
+    contact_t(body_t* i_body1, body_t* i_body2);
     ~contact_t();
 
     void add_contact(const vec3 relpos[][2], int contact_count, const vec3& normal_body1);
@@ -38,17 +38,18 @@ struct contact_t
 
 
 
-MLINLINE contact_t::contact_t(shape_t* i_shape1, shape_t* i_shape2)
+
+MLINLINE contact_t::contact_t(body_t* i_body1, body_t* i_body2)
 {
-    this->shape[0]=i_shape1;
-    this->shape[1]=i_shape2;
+    this->body[0]=i_body1;
+    this->body[1]=i_body2;
     this->edge[0].elem=this->edge[0].elem=this;
-    this->edge[0].other=i_shape2->body;
-    this->edge[1].other=i_shape1->body;
+    this->edge[0].other=i_body2;
+    this->edge[1].other=i_body1;
 
     //befuzzuk a ket test kontakt-listajaba
-    i_shape1->body->contacts.push_front(this->edge);
-    i_shape2->body->contacts.push_front(this->edge+1);
+    this->body[0]->contacts.push_front(this->edge);
+    this->body[1]->contacts.push_front(this->edge+1);
     this->contact_count=0;
 
     for (int n=0; n<CONTACTBUFFER_SIZE; ++n)
@@ -58,8 +59,8 @@ MLINLINE contact_t::contact_t(shape_t* i_shape1, shape_t* i_shape2)
 MLINLINE contact_t::~contact_t()
 {
     //kifuzzuk a ket test kontakt-listajabol
-    this->shape[0]->body->contacts.erase(this->edge);
-    this->shape[1]->body->contacts.erase(this->edge+1);
+    this->body[0]->contacts.erase(this->edge);
+    this->body[1]->contacts.erase(this->edge+1);
 }
 
 #endif//_contact_h_

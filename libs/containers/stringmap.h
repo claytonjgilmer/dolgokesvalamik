@@ -12,10 +12,9 @@
 		float m_avg;
 		int m_max;
 	};
-	template <class T, unsigned bufsize=1024>
-	class stringmap
+	template <typename T, unsigned bufsize=1024>
+	struct stringmap
 	{
-	public:
 		stringmap();
 		unsigned add_data(T* i_data);
 		void remove_data(const char* i_name);
@@ -24,21 +23,20 @@
 		stringmapstat statistics() const;
 		T** get_buffer(){return m_buf;}
 
-	private:
 		T* m_buf[bufsize];
 	};
 
 
 #define hashfn BKDRHash
 
-	template<class T, unsigned bufsize>
+	template<typename T, unsigned bufsize>
 	MLINLINE stringmap<T,bufsize>::stringmap()
 	{
 		for (unsigned n=0; n<bufsize; ++n)
 			m_buf[n]=NULL;
 	}
 
-	template<class T, unsigned bufsize>
+	template<typename T, unsigned bufsize>
 	MLINLINE unsigned stringmap<T,bufsize>::add_data(T* i_data)
 	{
 		unsigned hashkey=hashfn(i_data->get_name()) & (bufsize-1);
@@ -63,7 +61,7 @@
 		return hashkey;
 	}
 
-	template<class T, unsigned bufsize>
+	template<typename T, unsigned bufsize>
 	MLINLINE void stringmap<T,bufsize>::remove_data(const char* i_name)
 	{
 		unsigned hashkey=hashfn(string(i_name)) & (bufsize-1);
@@ -89,7 +87,7 @@
 		}
 	}
 
-	template<class T, unsigned bufsize>
+	template<typename T, unsigned bufsize>
 	MLINLINE T* stringmap<T,bufsize>::get_data(const char* i_name) const
 	{
 		unsigned hashkey=hashfn(string(i_name)) & (bufsize-1);
@@ -109,7 +107,7 @@
 		return NULL;
 	}
 
-	template<class T, unsigned bufsize>
+	template<typename T, unsigned bufsize>
 	MLINLINE stringmapstat stringmap<T,bufsize>::statistics() const
 	{
 		stringmapstat stat;

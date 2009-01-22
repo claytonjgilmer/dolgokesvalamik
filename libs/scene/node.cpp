@@ -1,10 +1,10 @@
 #include "node.h"
 #include "containers/vector.h"
 
-DEFINE_OBJECT(node,rootobject);
-BIND_PROPERTY(node,m_localpos,"localpos",mtx4x3);
+DEFINE_OBJECT(node_t,rootobject);
+BIND_PROPERTY(node_t,m_localpos,"localpos",mtx4x3);
 
-	node::node(const char* i_name):
+	node_t::node_t(const char* i_name):
 	rootobject(i_name),
 	m_localpos(mtx4x3::identitymtx()),
 	m_worldpos(mtx4x3::identitymtx())
@@ -16,7 +16,7 @@ BIND_PROPERTY(node,m_localpos,"localpos",mtx4x3);
 	}
 
 
-	node::node():
+	node_t::node_t():
 	m_localpos(mtx4x3::identitymtx()),
 	m_worldpos(mtx4x3::identitymtx())
 	{
@@ -26,16 +26,16 @@ BIND_PROPERTY(node,m_localpos,"localpos",mtx4x3);
 		m_flags|=nodeflag_valid_worldpos;
 	}
 
-	node::~node()
+	node_t::~node_t()
 	{
 		if (m_parent)
 			m_parent->remove_child(this);
 
-		vector<node*> subh;
+		vector<node_t*> subh;
 
 
 
-		node* ptr=m_child;
+		node_t* ptr=m_child;
 
 		while (ptr)
 		{
@@ -53,22 +53,22 @@ BIND_PROPERTY(node,m_localpos,"localpos",mtx4x3);
 		}
 	}
 
-	node* node::get_bro() const
+	node_t* node_t::get_bro() const
 	{
 		return m_bro;
 	}
 
-	node* node::get_child() const
+	node_t* node_t::get_child() const
 	{
 		return m_child;
 	}
 
-	node* node::get_parent() const
+	node_t* node_t::get_parent() const
 	{
 		return m_parent;
 	}
 
-	void node::add_child(node* i_child)
+	void node_t::add_child(node_t* i_child)
 	{
 		if (i_child->get_parent())
 			i_child->get_parent()->remove_child(i_child);
@@ -78,13 +78,13 @@ BIND_PROPERTY(node,m_localpos,"localpos",mtx4x3);
 		m_child=i_child;
 	}
 
-	void node::remove_child(node* i_child)
+	void node_t::remove_child(node_t* i_child)
 	{
 		assertion(i_child->get_parent()==this,"nonono!");
 
 
-		node* ptr=m_child;
-		node* prevptr=NULL;
+		node_t* ptr=m_child;
+		node_t* prevptr=NULL;
 
 		while (ptr!=i_child)
 		{
@@ -101,12 +101,12 @@ BIND_PROPERTY(node,m_localpos,"localpos",mtx4x3);
 		i_child->m_bro=NULL;
 	}
 
-	node* node::get_next(node* i_root) const
+	node_t* node_t::get_next(node_t* i_root) const
 	{
 		if (m_child)
 			return m_child;
 
-		const node* ptr=this;
+		const node_t* ptr=this;
 
 		while (ptr!=i_root)
 		{
@@ -119,14 +119,14 @@ BIND_PROPERTY(node,m_localpos,"localpos",mtx4x3);
 		return NULL;
 	}
 
-	void node::set_localposition(const mtx4x3& i_mtx)
+	void node_t::set_localposition(const mtx4x3& i_mtx)
 	{
 		m_localpos=i_mtx;
 
 		//ennek a node-nak es a childnode-oknak ilyenkor invalidalodik a worldmatrixa
 		m_flags&=~nodeflag_valid_worldpos;
 
-		node* ptr=this;
+		node_t* ptr=this;
 
 		while (ptr)
 		{
@@ -134,13 +134,13 @@ BIND_PROPERTY(node,m_localpos,"localpos",mtx4x3);
 			ptr=ptr->get_next(this);
 		}
 	}
-	const mtx4x3& node::get_localposition() const
+	const mtx4x3& node_t::get_localposition() const
 	{
 		//localpos mindig valid;
 		return m_localpos;
 	}
 
-	void node::set_worldposition(const mtx4x3& i_mtx)
+	void node_t::set_worldposition(const mtx4x3& i_mtx)
 	{
 		m_worldpos=i_mtx;
 
@@ -154,7 +154,7 @@ BIND_PROPERTY(node,m_localpos,"localpos",mtx4x3);
 
 		m_flags|=nodeflag_valid_worldpos;
 
-		node* ptr=this;
+		node_t* ptr=this;
 		ptr=ptr->get_next(this);
 
 		while (ptr)
@@ -164,11 +164,11 @@ BIND_PROPERTY(node,m_localpos,"localpos",mtx4x3);
 		}
 	}
 
-	const mtx4x3& node::get_worldposition()
+	const mtx4x3& node_t::get_worldposition()
 	{
-		node* buf[128];
+		node_t* buf[128];
 		int bufsize=0;
-		node* ptr=this;
+		node_t* ptr=this;
 
 		while (ptr->m_parent && !(ptr->m_flags & nodeflag_valid_worldpos))
 		{
@@ -185,19 +185,19 @@ BIND_PROPERTY(node,m_localpos,"localpos",mtx4x3);
 		return m_worldpos;
 	}
 
-	void node::set_flag(unsigned i_flag)
+	void node_t::set_flag(unsigned i_flag)
 	{
 		m_flags|=i_flag;
 	}
 
-	void node::clr_flag(unsigned i_flag)
+	void node_t::clr_flag(unsigned i_flag)
 	{
 		m_flags&=~i_flag;
 	}
 
-	node* node::get_node_by_name(const char* i_name)
+	node_t* node_t::get_node_by_name(const char* i_name)
 	{
-		for (node* ptr=this; ptr; ptr=ptr->get_next())
+		for (node_t* ptr=this; ptr; ptr=ptr->get_next())
 		{
 			if (ptr->m_name==i_name)
 				return ptr;

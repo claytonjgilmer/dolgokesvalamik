@@ -1,9 +1,8 @@
 #ifndef _vec2_h_
 #define _vec2_h_
 
-	class vec2
+	struct vec2
 	{
-	public:
 		float	x;
 		float	y;
 

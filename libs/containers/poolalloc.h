@@ -1,10 +1,9 @@
 #ifndef _poolalloc_h_
 #define _poolalloc_h_
 
-	template<class T, unsigned poolsize=128> //legyen mar kettohatvany
-	class poolalloc
+	template<typename T, unsigned poolsize=128> //legyen mar kettohatvany
+	struct poolalloc
 	{
-	public:
 		poolalloc();
 		~poolalloc();
 
@@ -16,41 +15,39 @@
 
 		void erase(unsigned i_index);
 
-	protected:
 		vector<fixedvector<T,poolsize> > m_poolbuf;
-	private:
 		poolalloc(const poolalloc& i_other){}
 		void operator=(const poolalloc& i_other){}
 	};
 
-	template<class T, unsigned poolsize>
+	template<typename T, unsigned poolsize>
 	poolalloc<T,poolsize>::poolalloc()
 	{
 	}
 
-	template<class T, unsigned poolsize>
+	template<typename T, unsigned poolsize>
 	poolalloc<T,poolsize>::~poolalloc()
 	{
 	}
 
-	template<class T, unsigned poolsize>
+	template<typename T, unsigned poolsize>
 	void poolalloc<T,poolsize>::clear()
 	{
 		m_poolbuf.clear();
 	}
-	template<class T, unsigned poolsize>
+	template<typename T, unsigned poolsize>
 	T& poolalloc<T,poolsize>::operator[](unsigned i_index)
 	{
 		return m_poolbuf[i_index & poolsize][i_index >> (logn<poolsize>())];
 	}
 
-	template<class T, unsigned poolsize>
+	template<typename T, unsigned poolsize>
 	const T& poolalloc<T,poolsize>::operator[](unsigned i_index) const
 	{
 		return m_poolbuf[i_index & poolsize][i_index >> (logn<poolsize>())];
 	}
 
-	template<class T, unsigned poolsize>
+	template<typename T, unsigned poolsize>
 	void poolalloc<T,poolsize>::erase(unsigned i_index)
 	{
 		m_poolbuf[i_index & poolsize][i_index >> (logn<poolsize>())]=m_poolbuf.back().back();
@@ -63,7 +60,7 @@
 			m_poolbuf.pop_back();
 	}
 
-	template<class T, unsigned poolsize>
+	template<typename T, unsigned poolsize>
 	void poolalloc<T,poolsize>::push_back(const T& i_elem)
 	{
 		if (!m_poolbuf.size() || m_poolbuf.back().size()==poolsize)

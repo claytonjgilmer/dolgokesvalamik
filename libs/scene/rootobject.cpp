@@ -2,12 +2,11 @@
 #include "nodefactory.h"
 
 
-	class rootobject_metaobject:public metaobject
+	struct rootobject_metaobject:metaobject
 	{
-		public:
 		rootobject_metaobject():metaobject("rootobject",NULL){}
 		rootobject* create() const{return new rootobject;}
-	};//class
+	};
 
 	rootobject_metaobject g_rootobject_metaobject;
 	BIND_PROPERTY(rootobject,m_name,"name",string);

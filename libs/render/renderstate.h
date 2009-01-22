@@ -3,9 +3,8 @@
 
 #include <d3d9.h>
 
-	class state
+	struct state
 	{
-	public:
 		D3DRENDERSTATETYPE m_type;
 		unsigned m_value;
 

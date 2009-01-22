@@ -55,7 +55,7 @@
 				vec3 x,y,z;
 			};
 		};
-	}; //class mtx3x3
+	}; //struct mtx3x3
 
 	inline mtx3x3::mtx3x3()
 	{

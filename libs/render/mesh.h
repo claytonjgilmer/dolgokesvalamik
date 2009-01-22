@@ -9,9 +9,8 @@
 #include "utils/resource.h"
 #include "utils/auto_ptr.h"
 
-	class mesh:public resource
+	struct mesh:resource
 	{
-	public:
 		mesh(const char* i_name);
 
 		void set_vertexbuffer(vertexbuffer* i_vb);
@@ -21,7 +20,8 @@
 		auto_ptr<indexbuffer> m_ib;
 
 		vector<submesh> m_submeshbuf;
-	private:
+
+
 		~mesh();
 	};
 #endif//_mesh_h_

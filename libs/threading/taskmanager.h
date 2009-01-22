@@ -40,11 +40,10 @@
 			return m_allocator;
 		}
 
-		template<class T,class S> void process_buffer(T* i_buf, unsigned i_elemnum, unsigned i_grainsize, S i_process)
+		template<typename T,typename S> void process_buffer(T* i_buf, unsigned i_elemnum, unsigned i_grainsize, S i_process)
 		{
-			class proc_range:public task_t
+			struct proc_range:task_t
 			{
-			public:
 				proc_range(T* i_buf, unsigned i_num, const S& i_process):
 				  m_buf(i_buf),
 					  m_num(i_num),
@@ -57,7 +56,6 @@
 							m_process(m_buf,m_num);
 						}
 
-			private:
 				T* const m_buf;
 				unsigned m_num;
 				S m_process;
@@ -68,8 +66,11 @@
 
 			unsigned tnum=0;
 			const unsigned n=i_elemnum/elemnumpertask+1;
-//			proc_range** tasks=(proc_range**)alloca(n*sizeof(proc_range*));
+#ifdef _MSC_VER
+			proc_range** tasks=(proc_range**)alloca(n*sizeof(proc_range*));
+#else
 			proc_range* tasks[n];
+#endif
 
 			while (start<i_elemnum)
 			{
@@ -85,9 +86,8 @@
 		}
 
 		template <typename S>
-		class proc_range:public task_t
+		struct proc_range:task_t
 		{
-		public:
 			proc_range(unsigned i_startindex, unsigned i_num, const S& i_process):
 			  m_startindex(i_startindex),
 				  m_num(i_num),
@@ -100,7 +100,6 @@
 				  m_process(m_startindex,m_num);
 			  }
 
-		private:
 			unsigned m_startindex;
 			unsigned m_num;
 			S m_process;
@@ -114,8 +113,11 @@
 
 			unsigned tnum=0;
 			const unsigned n=i_elemnum/elemnumpertask+1;
-//			proc_range<S>** tasks=(proc_range<S>**)alloca(n*sizeof(proc_range<S>*));
+#ifdef _MSC_VER
+			proc_range<S>** tasks=(proc_range<S>**)alloca(n*sizeof(proc_range<S>*));
+#else
 			proc_range<S>* tasks[n];
+#endif
 
 			while (start<i_elemnum)
 			{

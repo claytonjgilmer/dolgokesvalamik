@@ -165,7 +165,7 @@ struct near_struct
                             shape2->body->set_vel(vel2-velmag*normal);
                         }
 */
-                        contact_t* c=ptr->contact_manager.get_contact(shape1,shape2);
+                        contact_t* c=ptr->contact_manager.get_contact(shape1->body,shape2->body);
 
                         c->normal=normal;
                         vec3 normal_body1; body1_mtx.transformtransposed3x3(normal_body1,normal);
