@@ -34,6 +34,7 @@
 	MLINLINE void plane_t::set(const vec3& i_point, const vec3& i_normal)
 	{
 		normal=i_normal;
+		normal.normalize();
 		dist=-i_point.dot(normal);
 	}
 

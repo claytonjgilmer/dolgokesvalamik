@@ -260,10 +260,11 @@ void init_app(HWND i_hwnd)
 	}
 
 	convex_hull_desc hd;
-	hd.face_thickness=.001f;
+	hd.face_thickness=.0001f;
+	hd.triangle_output=false;
 	vector<vec3>& b=hd.vertex_array;
 
-#if 1
+#if 0
 	b.resize(10);
 
 	b[0].set(-1,0,-1);
@@ -277,12 +278,15 @@ void init_app(HWND i_hwnd)
 	b[8].set(1,1.5f,1);
 	b[9].set(-1,.5f,-1);
 #else
-#define buff_size 40
+#define buff_size 1250
 	b.resize(buff_size);
 
 	for (unsigned n=0; n<buff_size; ++n)
+	{
 		for (int m=0; m<3; ++m)
 			b[n][m]=random(-1.0f, 1.0f);
+		b[n].normalize();
+	}
 
 #endif
 	g_game.ch=generate_convex_hull(hd);
@@ -376,7 +380,7 @@ void update_app()
 			if (vindex<n)
 			{
 				vec3 end=g_game.ch.vertices[vindex].pos;
-				rendersystem::ptr->draw_line(start,color_r8g8b8a8(0,0,0,255),end,color_r8g8b8a8(255,255,255,255));
+				rendersystem::ptr->draw_line(start,color_r8g8b8a8(255,255,255,255),end,color_r8g8b8a8(255,255,255,255));
 			}
 		}
 	}

@@ -7,10 +7,12 @@ struct convex_hull_desc
 {
 	vector<vec3> vertex_array;
 	float face_thickness;
+	bool triangle_output;
 
 	convex_hull_desc()
 	{
 		face_thickness=0.0001f;
+		triangle_output=false;
 	}
 };
 convex_hull generate_convex_hull(const convex_hull_desc& hull_desc);

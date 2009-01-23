@@ -21,12 +21,22 @@ struct gen_half_edge_t
     gen_half_edge_t* prev;
     gen_half_edge_t* next;
 
+	bool freed;
+
     gen_half_edge_t(gen_face_t* i_face,int i_head_vertex):
     head_vertex(i_head_vertex),
     face(i_face)
     {
     	prev=next=NULL;
+		freed=false;
     }
+
+	~gen_half_edge_t()
+	{
+		freed=true;
+	}
+
+
 
 	void* operator new(size_t size);
 	void operator delete(void* edge);
@@ -49,10 +59,12 @@ struct gen_face_t:plane_t
 {
     struct intr_circular_list<gen_half_edge_t> edges; //vertexek, koruljarasi sorrendben
     bool valid;
+	bool freed;
 
 	gen_face_t()
 	{
 		valid=true;
+		freed=false;
 	}
 
     ~gen_face_t()
@@ -63,6 +75,8 @@ struct gen_face_t:plane_t
     		edges.erase(edge);
     		delete edge;
     	}
+
+		freed=true;
     }
 
 	void* operator new(size_t size);
@@ -124,6 +138,7 @@ struct convex_hull_generator
 	vector<vec3> work_array;
 	vector<gen_face_t*> faces;
 	float plane_thickness;
+	bool triangle_output;
 
 	convex_hull ch;
 };
@@ -240,14 +255,16 @@ bool convex_hull_generator::is_horizon_edge(gen_half_edge_t* edge, const vec3& r
 
 gen_half_edge_t* convex_hull_generator::find_next_horizon_edge(gen_half_edge_t* edge, const vec3& ref_vertex)
 {
+	assertion(!edge->next->face->valid);
 	while (!is_horizon_edge(edge->next,ref_vertex))
+	{
+		assertion(!edge->next->face->valid && !edge->next->opposite->face->valid);
 		edge=edge->next->opposite;
+	}
+
+	assertion(!edge->next->face->valid && edge->next->opposite->face->valid);
 
 	return edge->next;
-	if (is_horizon_edge(edge->next,ref_vertex))
-		return edge->next;
-	else
-		return find_next_horizon_edge(edge->next->opposite,ref_vertex);
 }
 
 void convex_hull_generator::calculate_horizon(vector<gen_half_edge_t*>& edge_array, const vec3& ref_vertex)
@@ -313,9 +330,11 @@ convex_hull generate_convex_hull(const convex_hull_desc& hull_desc)
 	return chg.ch;
 }
 
+float g_dist;
 int convex_hull_generator::check_vertex(gen_face_t* face, const vec3& v)
 {
 	float dist=face->get_distance(v);
+	g_dist=dist;
 	if (dist>plane_thickness)
 		return PLANE_OUTSIDE;
 	if (dist<-plane_thickness)
@@ -327,6 +346,7 @@ int convex_hull_generator::check_vertex(gen_face_t* face, const vec3& v)
 void convex_hull_generator::merge_faces(vector<gen_half_edge_t*>& edge_array, int vertex_index)
 {
 	vec3 v=work_array[vertex_index];
+	vector<gen_half_edge_t*> nevevan;
 	for (unsigned n=0; n<edge_array.size(); ++n)
 	{
 		gen_half_edge_t* e=edge_array[n];
@@ -334,10 +354,10 @@ void convex_hull_generator::merge_faces(vector<gen_half_edge_t*>& edge_array, in
 		{
 			gen_half_edge_t* preve=e->prev;
 			gen_half_edge_t* nexte=e->next;
-			e->prev->next=e->opposite->next;
-			e->next->prev=e->opposite->prev;
-			e->opposite->next->prev=e->prev;
-			e->opposite->prev->next=e->next;
+			preve->next=e->opposite->next;
+			nexte->prev=e->opposite->prev;
+			e->opposite->next->prev=preve;
+			e->opposite->prev->next=nexte;
 			//most mar e-re es e->opposite-ra senki sem hivatkozik
 			e->opposite->face->edges.clear();
 
@@ -357,6 +377,7 @@ void convex_hull_generator::merge_faces(vector<gen_half_edge_t*>& edge_array, in
 			//ha preve vagy nexte parhuzamos a mellette levo ellel, akkor nem kell annyira
 			vec3 v1,v2;
 
+/*
 			v1=work_array[preve->head_vertex]-work_array[preve->prev->head_vertex]; v1.normalize();
 			v2=work_array[preve->next->head_vertex]-work_array[preve->head_vertex]; v2.normalize();
 
@@ -366,23 +387,38 @@ void convex_hull_generator::merge_faces(vector<gen_half_edge_t*>& edge_array, in
 				preve->face->edges.erase(preve);
 				delete preve;
 			}
-
+*/
 			v1=work_array[nexte->head_vertex]-work_array[nexte->prev->head_vertex]; v1.normalize();
 			v2=work_array[nexte->prev->head_vertex]-work_array[nexte->prev->prev->head_vertex]; v2.normalize();
 
 			if (cross(v1,v2).squarelength()<0.0001f)
+				nevevan.push_back(nexte);
 //			if (dot(v1,v2)>0.9999f)//mennyi lenne a jo szam? nexte nem kell
-			{
-				nexte->face->edges.erase(nexte->prev);
-				delete nexte->prev;
-			}
 		}
+	}
+
+	for (unsigned n=0; n<nevevan.size(); ++n)
+	{
+		gen_half_edge_t* nexte=nevevan[n];
+
+		nexte->face->edges.erase(nexte->prev);
+		gen_half_edge_t* new_opposite=nexte->opposite->next;
+		new_opposite->opposite=nexte;
+		nexte->opposite=new_opposite;
+
+		delete nexte->prev;
+		new_opposite->face->edges.erase(new_opposite->prev);
+		delete new_opposite->prev;
+
+		assertion(nexte->face->valid);
+		assertion(new_opposite->face->valid);
 	}
 }
 
 void convex_hull_generator::generate(const convex_hull_desc& hull_desc)
 {
 	plane_thickness=hull_desc.face_thickness;
+	triangle_output=hull_desc.triangle_output;
     simplify_vertex_array(hull_desc.vertex_array);
 	set_big_face();
 
@@ -471,8 +507,16 @@ void convex_hull_generator::generate(const convex_hull_desc& hull_desc)
 			new_horizon.clear();
 			horizon_edge_array.push_back(horizon_edge);
 			calculate_horizon(horizon_edge_array,act_vertex);
+
+			for (int n=0; n<horizon_edge_array.size(); ++n)
+			{
+				gen_half_edge_t* e=horizon_edge_array[n];
+				assertion(!e->face->valid && e->opposite->face->valid);
+			}
 			insert_vertex(vertex_index,horizon_edge_array,new_horizon);
-			merge_faces(new_horizon,vertex_index);
+
+			if (!triangle_output)
+				merge_faces(new_horizon,vertex_index);
 		}
 		else
 		{
@@ -480,6 +524,8 @@ void convex_hull_generator::generate(const convex_hull_desc& hull_desc)
 			//valid_vertex[vertex_index]=false;
 		}
 	}
+
+	//no most mar minden vertex hozza van adagolva, mar csak ki kell vonni a zokszigentet
 	vector<int > valid_vertex;
 	valid_vertex.assign(work_array.size(),0);
 
@@ -546,7 +592,7 @@ void convex_hull_generator::generate(const convex_hull_desc& hull_desc)
 
 	ch.faces.resize(faces.size());
 
-	for (int n=0; n<faces.size(); ++n)
+	for (unsigned n=0; n<faces.size(); ++n)
 	{
 		gen_face_t* face=faces[n];
 		gen_half_edge_t* edge=face->edges.first();
