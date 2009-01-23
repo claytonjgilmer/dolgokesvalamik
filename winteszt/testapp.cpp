@@ -263,8 +263,8 @@ void init_app(HWND i_hwnd)
 	hd.face_thickness=.001f;
 	vector<vec3>& b=hd.vertex_array;
 
-#if 0
-	b.resize(9);
+#if 1
+	b.resize(10);
 
 	b[0].set(-1,0,-1);
 	b[1].set(-1,0,1);
@@ -275,6 +275,7 @@ void init_app(HWND i_hwnd)
 	b[6].set(1,1,-1);
 	b[7].set(1,1,1);
 	b[8].set(1,1.5f,1);
+	b[9].set(-1,.5f,-1);
 #else
 #define buff_size 40
 	b.resize(buff_size);

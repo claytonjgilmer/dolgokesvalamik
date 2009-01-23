@@ -373,8 +373,8 @@ void convex_hull_generator::merge_faces(vector<gen_half_edge_t*>& edge_array, in
 			if (cross(v1,v2).squarelength()<0.0001f)
 //			if (dot(v1,v2)>0.9999f)//mennyi lenne a jo szam? nexte nem kell
 			{
-				nexte->face->edges.erase(nexte);
-				delete nexte;
+				nexte->face->edges.erase(nexte->prev);
+				delete nexte->prev;
 			}
 		}
 	}
@@ -500,6 +500,7 @@ void convex_hull_generator::generate(const convex_hull_desc& hull_desc)
 
 		do 
 		{
+			assertion(edge->opposite->face->valid);
 			++valid_vertex[edge->head_vertex];
 			edge=edge->next;
 		} while (edge!=face->edges.first());
@@ -512,7 +513,7 @@ void convex_hull_generator::generate(const convex_hull_desc& hull_desc)
 
 	for (unsigned n=0; n<work_array.size(); ++n)
 	{
-		assertion(valid_vertex[n]!=1 && valid_vertex[n]!=2);//ha egy vertexet hasznalatban van, akkor legyen mar rajta legalabb 3 face-en
+ 		assertion(valid_vertex[n]!=1 && valid_vertex[n]!=2);//ha egy vertexet hasznalatban van, akkor legyen mar rajta legalabb 3 face-en
 
 		if (valid_vertex[n])
 			vertex_remap[n]=act_index++;
@@ -552,8 +553,13 @@ void convex_hull_generator::generate(const convex_hull_desc& hull_desc)
 
 		do 
 		{
+			if (edge->head_vertex==4 || edge->opposite->head_vertex==4)
+				strlen("");
 			int act_vertex=vertex_remap[edge->head_vertex];
 			int adj_vertex=vertex_remap[edge->opposite->head_vertex];
+
+			if (adj_vertex==-1)
+				strlen("");
 
 			ch.vertex_adjacency[ch.vertices[act_vertex].adj_index+act_adj_index[act_vertex]]=adj_vertex;
 			++act_adj_index[act_vertex];
