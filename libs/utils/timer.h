@@ -1,7 +1,7 @@
 #ifndef _timer_h_
 #define _timer_h_
 
-	struct timer
+	struct timer_t
 	{
 		void reset();
 		void stop();

@@ -97,7 +97,7 @@ void tasktest()
 		p(buf+n*buf_size,buf_size);
 	}
 
-	timer t;
+	timer_t t;
 
 	t.reset();
 	for (int n=0; n<buf2_size; ++n)
@@ -174,7 +174,7 @@ in** g_p2;
 void proba()
 {
 
-	timer t;
+	timer_t t;
 
 #define szam 1000
 #define szam2 1000
@@ -313,7 +313,7 @@ void sorttest()
 
 	memcpy(array,tmparray,elem_count*sizeof(float));
 
-	timer t;
+	timer_t t;
 
 	t.reset();
 	qsort(array,elem_count,sizeof(float),&compareq);
@@ -382,32 +382,19 @@ uint32 sort_key;
 
 
 //timer
-typedef struct timer_t
-{
-	long long start;
-	long long stop;
-} timer_t;
-
-long long timer_get_act_tick()
-{
-	LARGE_INTEGER counter;
-	QueryPerformanceCounter(&counter);
-	return counter.QuadPart;
-}
-
 void timer_start(timer_t* t)
 {
-	t->start=timer_get_act_tick();
+	t->reset();
 }
 
 void timer_stop(timer_t* t)
 {
-	t->stop=timer_get_act_tick();
+	t->stop();
 }
 
 unsigned timer_get_tick(timer_t* t)
 {
-	return (unsigned)(t->stop-t->start);
+	return t->get_tick();
 }
 
 

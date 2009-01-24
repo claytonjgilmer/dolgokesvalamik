@@ -15,25 +15,25 @@
 		return counter.QuadPart;
 	}
 
-	long long timer::freq=freqinit();
-	double timer::freqd=(double)freqinit();
+	long long timer_t::freq=freqinit();
+	double timer_t::freqd=(double)freqinit();
 
-	void timer::reset()
+	void timer_t::reset()
 	{
 		start_tick=get_act_tick();
 	}
 
-	void timer::stop()
+	void timer_t::stop()
 	{
 		stop_tick=get_act_tick();
 	}
 
-	unsigned timer::get_tick() const
+	unsigned timer_t::get_tick() const
 	{
 		return unsigned (stop_tick-start_tick);
 	}
 
-	float timer::get_seconds() const
+	float timer_t::get_seconds() const
 	{
 		return float(double(stop_tick-start_tick)/freqd);
 	}

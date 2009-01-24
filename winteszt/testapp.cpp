@@ -39,7 +39,7 @@ struct game
 #define BODY_SIZE .5f
 	body_t* phb[BODY_NUM];
 	int inited;
-	timer t;
+	timer_t t;
 
 	convex_hull ch;
 
@@ -78,7 +78,7 @@ void init_app(HWND i_hwnd)
 	filesystem::ptr->register_path("texture","texture\\");
 
 	taskmanagerdesc tdesc;
-	tdesc.m_threadnum=50;
+	tdesc.m_threadnum=4;
 	taskmanager::create(&tdesc);
 
 	shadermanagerdesc shaderdesc("shader");
@@ -260,8 +260,8 @@ void init_app(HWND i_hwnd)
 	}
 
 	convex_hull_desc hd;
-	hd.face_thickness=.0001f;
-	hd.triangle_output=false;
+	hd.face_thickness=.001f;
+	hd.triangle_output=true;
 	vector<vec3>& b=hd.vertex_array;
 
 #if 0
@@ -278,7 +278,7 @@ void init_app(HWND i_hwnd)
 	b[8].set(1,1.5f,1);
 	b[9].set(-1,.5f,-1);
 #else
-#define buff_size 1250
+#define buff_size 1350
 	b.resize(buff_size);
 
 	for (unsigned n=0; n<buff_size; ++n)
@@ -289,7 +289,11 @@ void init_app(HWND i_hwnd)
 	}
 
 #endif
+	timer_t t;
+	t.reset();
 	g_game.ch=generate_convex_hull(hd);
+	t.stop();
+	PRINT("hull generation: %f sec\n",t.get_seconds());
 
 
 
@@ -333,7 +337,7 @@ unsigned sumtime=0;
 
 void update_app()
 {
-	timer update_time;
+	timer_t update_time;
 	char str[128];
 	g_game.t.stop();
 	float frame_time=g_game.t.get_seconds();
@@ -354,7 +358,7 @@ void update_app()
 		sumtime-=33;
 	}
 
-	timer t;
+	timer_t t;
 	t.reset();
 //	physicssystem::ptr->simulate(dt);
 	t.stop();
@@ -366,7 +370,7 @@ void update_app()
 	rendersystem::ptr->draw_text(10,40,color_f(1,1,1,1),str);
 
 	//convex hull rajzolas
-	for (unsigned n=0; n<g_game.ch.vertices.size()-1; ++n)
+	for (int n=0; n<(int)g_game.ch.vertices.size()-1; ++n)
 	{
 		int firstadj=g_game.ch.vertices[n].adj_index;
 		int adjnum=g_game.ch.vertices[n+1].adj_index-firstadj;
