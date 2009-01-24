@@ -6,12 +6,12 @@
 struct convex_hull_desc
 {
 	vector<vec3> vertex_array;
-	float face_thickness;
+	double face_thickness;
 	bool triangle_output;
 
 	convex_hull_desc()
 	{
-		face_thickness=0.0001f;
+		face_thickness=0.000001;
 		triangle_output=false;
 	}
 };

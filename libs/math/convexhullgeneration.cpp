@@ -63,7 +63,7 @@ void gen_half_edge_t::operator delete(void* edge)
 }
 
 
-struct gen_face_t:plane_t
+struct gen_face_t:dplane_t
 {
     struct intr_circular_list<gen_half_edge_t> edges; //vertexek, koruljarasi sorrendben
     bool valid;
@@ -114,15 +114,15 @@ void gen_face_t::operator delete(void* face)
 template<int coord=0>
 struct vec_sort_t
 {
-     bool operator()(const vec3& v1, const vec3& v2) const
+     bool operator()(const dvec3& v1, const dvec3& v2) const
     {
         return v1[coord]<v2[coord];
     }
-    static bool less(const vec3& v1, const vec3& v2)
+    static bool less(const dvec3& v1, const dvec3& v2)
     {
         return v1[coord]<v2[coord];
     }
-    static bool eq(const vec3& v1, const vec3& v2)
+    static bool eq(const dvec3& v1, const dvec3& v2)
     {
         return v1[coord]==v2[coord];
     }
@@ -137,15 +137,15 @@ struct convex_hull_generator
 
 	void simplify_vertex_array(const vector<vec3>& src_array);
 	void set_big_face();
-	void calculate_horizon(vector<gen_half_edge_t*>& edge_array, const vec3& ref_vertex);
-	bool is_horizon_edge(gen_half_edge_t* edge, const vec3& ref_vertex);
-	gen_half_edge_t* find_next_horizon_edge(gen_half_edge_t* edge, const vec3& ref_vertex);
-	int check_vertex(gen_face_t* face, const vec3& v);
+	void calculate_horizon(vector<gen_half_edge_t*>& edge_array, const dvec3& ref_vertex);
+	bool is_horizon_edge(gen_half_edge_t* edge, const dvec3& ref_vertex);
+	gen_half_edge_t* find_next_horizon_edge(gen_half_edge_t* edge, const dvec3& ref_vertex);
+	int check_vertex(gen_face_t* face, const dvec3& v);
 	void insert_vertex(int vertex_index, const vector<gen_half_edge_t*>& edge_array, vector<gen_half_edge_t*>& new_horizon);
 	void merge_faces(vector<gen_half_edge_t*>& edge_array, int vertex_index);
-	vector<vec3> work_array;
+	vector<dvec3> work_array;
 	vector<gen_face_t*> faces;
-	float plane_thickness;
+	double dplane_thickness;
 	bool triangle_output;
 
 	convex_hull ch;
@@ -156,12 +156,15 @@ struct convex_hull_generator
 
 void convex_hull_generator::simplify_vertex_array(const vector<vec3>& src_array)
 {
-    vector<vec3> tmp_array=src_array;
+    vector<dvec3> tmp_array; tmp_array.resize(src_array.size());
+	
+	for (unsigned n=0; n<src_array.size(); ++n)
+		tmp_array[n]=(dvec3)src_array[n];
     intro_sort(tmp_array.begin(), tmp_array.size(),vec_sort_t<0>());
 //	std::sort(tmp_array.begin(), tmp_array.end(),vec_sort_t<0>());
 
-    vec3 sum=tmp_array[0];
-    float num=1;
+    dvec3 sum=tmp_array[0];
+    double num=1;
 
     for (unsigned n=1; n<tmp_array.size(); ++n)
     {
@@ -182,7 +185,7 @@ void convex_hull_generator::simplify_vertex_array(const vector<vec3>& src_array)
 void convex_hull_generator::set_big_face()
 {
     int face[3];
-    vec3 bmin,bmax;
+    dvec3 bmin,bmax;
     bmin.set(FLT_MAX,FLT_MAX,FLT_MAX);
     bmax.set(-FLT_MAX,-FLT_MAX,-FLT_MAX);
 
@@ -205,20 +208,20 @@ void convex_hull_generator::set_big_face()
 		}
 	}
 
-    vec3 extent=bmax-bmin;
-	float* minptr=max_elem(&extent[0],&extent[3]);
+    dvec3 extent=bmax-bmin;
+	double* minptr=max_elem(&extent[0],&extent[3]);
 	int	axis=minptr-&extent[0];
 
 	face[0]=minindex[axis];
 	face[1]=maxindex[axis];
 
-	vec3 segmentdir=work_array[face[1]]-work_array[face[0]];
+	dvec3 segmentdir=work_array[face[1]]-work_array[face[0]];
 	segmentdir.normalize();
-	float maxdist=-FLT_MAX;
+	double maxdist=-FLT_MAX;
 	for (unsigned int n=0; n<work_array.size(); ++n)
     {
-        vec3 v=work_array[n]-work_array[face[0]];
-        float actdist=(v-dot(v,segmentdir)*segmentdir).squarelength();
+        dvec3 v=work_array[n]-work_array[face[0]];
+        double actdist=(v-dot(v,segmentdir)*segmentdir).squarelength();
 
         if (actdist>maxdist)
         {
@@ -234,16 +237,16 @@ void convex_hull_generator::set_big_face()
 	swap(work_array[1],work_array[face[1]]);
 	swap(work_array[2],work_array[face[2]]);
 
-	plane_t plane;
+	dplane_t plane;
 	plane.set(work_array[0],cross(work_array[2]-work_array[0],work_array[1]-work_array[0]));
 
 	//most megkeressuk a legtavolabbi vertexet az elso face-tol, es az lesz a 4. vertex;
 
-	float max_dist=-FLT_MAX;
+	double max_dist=-FLT_MAX;
 	int max_index;
 	for (unsigned n=3; n<work_array.size(); ++n)
 	{
-		float act_dist=fabsf(plane.get_distance(work_array[n]));
+		double act_dist=fabs(plane.get_distance(work_array[n]));
 		if (act_dist>max_dist)
 		{
 			max_dist=act_dist;
@@ -254,12 +257,12 @@ void convex_hull_generator::set_big_face()
 	swap(work_array[3],work_array[max_index]);
 }
 
-bool convex_hull_generator::is_horizon_edge(gen_half_edge_t* edge, const vec3& ref_vertex) //sajat face out kell hogy legyen
+bool convex_hull_generator::is_horizon_edge(gen_half_edge_t* edge, const dvec3& ref_vertex) //sajat face out kell hogy legyen
 {
 	return (check_vertex(edge->opposite->face,ref_vertex)!=PLANE_OUTSIDE);
 }
 
-gen_half_edge_t* convex_hull_generator::find_next_horizon_edge(gen_half_edge_t* edge, const vec3& ref_vertex)
+gen_half_edge_t* convex_hull_generator::find_next_horizon_edge(gen_half_edge_t* edge, const dvec3& ref_vertex)
 {
 	CONSISTENCY_ASSERT(!edge->next->face->valid);
 	while (!is_horizon_edge(edge->next,ref_vertex))
@@ -273,7 +276,7 @@ gen_half_edge_t* convex_hull_generator::find_next_horizon_edge(gen_half_edge_t* 
 	return edge->next;
 }
 
-void convex_hull_generator::calculate_horizon(vector<gen_half_edge_t*>& edge_array, const vec3& ref_vertex)
+void convex_hull_generator::calculate_horizon(vector<gen_half_edge_t*>& edge_array, const dvec3& ref_vertex)
 {
 	gen_half_edge_t* next_edge=find_next_horizon_edge(edge_array.back(), ref_vertex);
 
@@ -336,14 +339,14 @@ convex_hull generate_convex_hull(const convex_hull_desc& hull_desc)
 	return chg.ch;
 }
 
-float g_dist;
-int convex_hull_generator::check_vertex(gen_face_t* face, const vec3& v)
+double g_dist;
+int convex_hull_generator::check_vertex(gen_face_t* face, const dvec3& v)
 {
-	float dist=face->get_distance(v);
+	double dist=face->get_distance(v);
 	g_dist=dist;
-	if (dist>plane_thickness)
+	if (dist>dplane_thickness)
 		return PLANE_OUTSIDE;
-	if (dist<-plane_thickness)
+	if (dist<-dplane_thickness)
 		return PLANE_INSIDE;
 	else
 		return PLANE_ON;
@@ -351,7 +354,7 @@ int convex_hull_generator::check_vertex(gen_face_t* face, const vec3& v)
 
 void convex_hull_generator::merge_faces(vector<gen_half_edge_t*>& edge_array, int vertex_index)
 {
-	vec3 v=work_array[vertex_index];
+	dvec3 v=work_array[vertex_index];
 	vector<gen_half_edge_t*> nevevan;
 	for (unsigned n=0; n<edge_array.size(); ++n)
 	{
@@ -381,7 +384,7 @@ void convex_hull_generator::merge_faces(vector<gen_half_edge_t*>& edge_array, in
 			} while (e!=nexte);
 
 			//ha preve vagy nexte parhuzamos a mellette levo ellel, akkor nem kell annyira
-			vec3 v1,v2;
+			dvec3 v1,v2;
 
 /*
 			v1=work_array[preve->head_vertex]-work_array[preve->prev->head_vertex]; v1.normalize();
@@ -397,7 +400,7 @@ void convex_hull_generator::merge_faces(vector<gen_half_edge_t*>& edge_array, in
 			v1=work_array[nexte->head_vertex]-work_array[nexte->prev->head_vertex]; v1.normalize();
 			v2=work_array[nexte->prev->head_vertex]-work_array[nexte->prev->prev->head_vertex]; v2.normalize();
 
-			if (cross(v1,v2).squarelength()<0.0001f)
+			if (cross(v1,v2).squarelength()<0.00001)
 				nevevan.push_back(nexte);
 //			if (dot(v1,v2)>0.9999f)//mennyi lenne a jo szam? nexte nem kell
 		}
@@ -423,7 +426,7 @@ void convex_hull_generator::merge_faces(vector<gen_half_edge_t*>& edge_array, in
 
 void convex_hull_generator::generate(const convex_hull_desc& hull_desc)
 {
-	plane_thickness=hull_desc.face_thickness;
+	dplane_thickness=hull_desc.face_thickness;
 	triangle_output=hull_desc.triangle_output;
     simplify_vertex_array(hull_desc.vertex_array);
 	set_big_face();
@@ -453,7 +456,7 @@ void convex_hull_generator::generate(const convex_hull_desc& hull_desc)
     edge3->opposite=edge5;
     edge5->opposite=edge3;
 
-	vec3 normal; normal.cross(work_array[2]-work_array[0],work_array[1]-work_array[0]); normal.normalize();
+	dvec3 normal; normal.cross(work_array[2]-work_array[0],work_array[1]-work_array[0]); normal.normalize();
 
 	face1->set(work_array[2],normal);
 	face2->set(work_array[2],-normal);
@@ -467,7 +470,7 @@ void convex_hull_generator::generate(const convex_hull_desc& hull_desc)
 		gen_half_edge_t* horizon_edge=NULL;
 		bool vanjoface=false;
 
-		vec3 act_vertex=work_array[vertex_index];
+		dvec3 act_vertex=work_array[vertex_index];
 
 		for (unsigned int n=0; n<faces.size(); ++n)
 		{
@@ -584,7 +587,10 @@ void convex_hull_generator::generate(const convex_hull_desc& hull_desc)
 		if (valid_vertex[n])
 		{
 			ch.vertices.push_back(vertex_data());
-			ch.vertices.back().pos=work_array[n];
+			ch.vertices.back().pos.x=(float)work_array[n].x;
+			ch.vertices.back().pos.y=(float)work_array[n].y;
+			ch.vertices.back().pos.z=(float)work_array[n].z;
+
 			ch.vertices.back().adj_index=act_adj;
 			act_adj+=valid_vertex[n];
 		}
@@ -606,7 +612,9 @@ void convex_hull_generator::generate(const convex_hull_desc& hull_desc)
 	for (unsigned n=0; n<faces.size(); ++n)
 	{
 		gen_face_t* face=faces[n];
-		ch.faces[n].normal=face->normal;
+		ch.faces[n].normal.x=(float)face->normal.x;
+		ch.faces[n].normal.y=(float)face->normal.y;
+		ch.faces[n].normal.z=(float)face->normal.z;
 		ch.faces[n].vertex_index=index;
 		gen_half_edge_t* edge=face->edges.first();
 

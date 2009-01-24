@@ -8,6 +8,13 @@
 		dvec3(double i_xcoord, double i_ycoord, double i_zcoord);
 		dvec3(const double* i_src);
 
+		explicit dvec3(const vec3& src)
+		{
+			x=src.x;
+			y=src.y;
+			z=src.z;
+		}
+
 		double&	operator[](int i_index);
 		const double& operator[](int i_index) const;
 
@@ -121,7 +128,7 @@
 
 	MLINLINE dvec3 dvec3::cross(const dvec3& i_other) const
 	{
-		return dyn::cross(*this,i_other);
+		return ::cross(*this,i_other);
 	}
 
 	MLINLINE double	dvec3::dot(const dvec3& i_other) const
@@ -146,24 +153,24 @@
 
 	MLINLINE void	dvec3::normalize()
 	{
-		double length=length();
+		double l=length();
 
-		x/=length;
-		y/=length;
-		z/=length;
+		x/=l;
+		y/=l;
+		z/=l;
 	}
 
 	MLINLINE void	dvec3::normalizesafe()
 	{
-		double squarelength=squarelength();
+		double sqlength=squarelength();
 
-		if (squarelength>0.000001f)
+		if (sqlength>0.000001f)
 		{
-			double length=sqrt(squarelength);
+			double l=sqrt(sqlength);
 
-			x/=length;
-			y/=length;
-			z/=length;
+			x/=l;
+			y/=l;
+			z/=l;
 		}
 		else
 		{
@@ -231,9 +238,9 @@
 
 	MLINLINE void dvec3::abs(const dvec3& i_src)
 	{
-		x=fabsf(i_src.x);
-		y=fabsf(i_src.y);
-		z=fabsf(i_src.z);
+		x=fabs(i_src.x);
+		y=fabs(i_src.y);
+		z=fabs(i_src.z);
 	}
 
 	MLINLINE void dvec3::max(const dvec3& i_v1, const dvec3& i_v2)
@@ -284,7 +291,7 @@
 		dvec3 a=i_src.dot(i_axis)*i_axis;
 		dvec3 b=i_src-a;
 		dvec3 c; c.cross(i_axis,b);
-		*this=b*cosf(i_angle)+c*sinf(i_angle)+a;
+		*this=b*cos(i_angle)+c*sin(i_angle)+a;
 	}
 
 	MLINLINE void getorthogonalaxes(dvec3& o_axis1, dvec3& o_axis2, const dvec3& i_axissrc)
