@@ -2,7 +2,7 @@
 #define _convexhullgeneration_h_
 
 #include "convexhull.h"
-#include "plane.h"
+#include "math/plane.h"
 #include "containers\intr_list.h"
 
 struct convex_hull_desc

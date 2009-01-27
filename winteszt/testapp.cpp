@@ -15,8 +15,8 @@
 #include "utils/timer.h"
 #include "input/inputsystem.h"
 #include "physics/system/physicssystem.h"
-#include "math/convexhull.h"
-#include "math/convexhullgeneration.h"
+#include "math/geometry/convexhull.h"
+#include "math/geometry/convexhullgeneration.h"
 #include "utils/timer.h"
 
 void generate_sphere(vec3 o_pos[],int& o_numvertices,short o_indices[],int& o_numfaces,float i_radius, int i_depth);

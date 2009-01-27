@@ -1,6 +1,6 @@
 #include <algorithm>
 #include "convexhullgeneration.h"
-#include "sorting.h"
+#include "math/sorting.h"
 #include "containers\listallocator.h"
 #include "render\rendersystem.h"
 

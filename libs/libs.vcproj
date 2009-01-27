@@ -208,11 +208,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\math\convexhull.h"
+				RelativePath=".\math\geometry\convexhull.h"
 				>
 			</File>
 			<File
-				RelativePath=".\math\convexhullgeneration.h"
+				RelativePath=".\math\geometry\convexhullgeneration.h"
 				>
 			</File>
 			<File
@@ -252,7 +252,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\math\intersection.h"
+				RelativePath=".\math\geometry\intersection.h"
 				>
 			</File>
 			<File
@@ -336,11 +336,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\scripting\lua.h"
+				RelativePath=".\scripting\lualib\lua.h"
 				>
 			</File>
 			<File
-				RelativePath=".\scripting\lualib\lua.h"
+				RelativePath=".\scripting\lua.h"
 				>
 			</File>
 			<File
@@ -417,6 +417,10 @@
 			</File>
 			<File
 				RelativePath=".\prop\property.h"
+				>
+			</File>
+			<File
+				RelativePath=".\math\geometry\quadedge.h"
 				>
 			</File>
 			<File
@@ -608,7 +612,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\math\convexhullgeneration.cpp"
+				RelativePath=".\math\geometry\convexhullgeneration.cpp"
 				>
 			</File>
 			<File
@@ -781,6 +785,10 @@
 			</File>
 			<File
 				RelativePath=".\physics\system\physicssystem.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\math\geometry\quadedge.cpp"
 				>
 			</File>
 			<File

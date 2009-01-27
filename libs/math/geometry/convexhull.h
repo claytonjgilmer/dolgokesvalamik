@@ -1,7 +1,7 @@
 #ifndef _convexhull_h_
 #define _convexhull_h_
 
-#include "vec3.h"
+#include "math/vec3.h"
 #include "containers\vector.h"
 
 struct vertex_data
