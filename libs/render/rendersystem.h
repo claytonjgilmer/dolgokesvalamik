@@ -45,6 +45,14 @@
 		{
 		}
 
+		void set(uint8 i_r, uint8 i_g, uint8 i_b, uint8 i_a)
+		{
+			a=i_a;
+			r=i_r;
+			g=i_g;
+			b=i_b;
+		}
+
 
 	};
 	struct rendersystemdesc
@@ -104,6 +112,38 @@
 				s.end=i_end;
 				s.end_color=i_end_color;
 				lines.push_back(s);
+			}
+		}
+
+		inline void draw_line(const vec3& i_start, const vec3& i_end)
+		{
+			if (draw_lines && lines.size()<LINENUM_MAX)
+			{
+				line_struct s;
+
+				s.start=i_start;
+				s.start_color.set(255,255,255,255);
+				s.end=i_end;
+				s.end_color.set(255,255,255,255);
+				lines.push_back(s);
+			}
+		}
+
+		inline void draw_circle(const vec3& center, float radius)
+		{
+			vec3 x=m_view_matrix.column(0);
+			vec3 y=m_view_matrix.column(1);
+
+			vec3 start=center+radius*x;
+
+			const int section_count=10;
+
+			for (int n=0; n<section_count; ++n)
+			{
+				float angle=2*n*pi()/(section_count-1);
+				vec3 end=center+cosf(angle)*radius*x+sinf(angle)*radius*y;
+				draw_line(start,end);
+				start=end;
 			}
 		}
 

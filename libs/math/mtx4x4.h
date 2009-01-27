@@ -27,6 +27,18 @@
 		void transpose();
 		void invert(const mtx4x4& i_src);
 
+		const vec3& axis(int n)
+		{
+			return (vec3&)m[4*n];
+		}
+
+		vec3 column(int n)
+		{
+			vec3 ret;
+			ret.set(m[n],m[n+4],m[n+8]);
+			return ret;
+		}
+
 		union
 		{
 			struct

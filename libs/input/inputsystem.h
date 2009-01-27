@@ -19,7 +19,7 @@
 		inputsystem(const inputinitparams* i_params);
 		~inputsystem();
 		void Init(const inputinitparams& i_Params);
-		void Update();
+		void Update(bool eger_is);
 		void Clear();
 
 		int KeyDown(int i_Key)

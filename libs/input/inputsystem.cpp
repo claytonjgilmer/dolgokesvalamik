@@ -383,9 +383,11 @@
 		}
 	}
 
-	void inputsystem::Update()
+	void inputsystem::Update(bool eger_is)
 	{
 		UpdateKeyboard();
+
+		if (eger_is)
 		UpdateMouse();
 //		UpdateJoys();
 	}

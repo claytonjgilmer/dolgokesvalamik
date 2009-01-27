@@ -41,7 +41,8 @@ struct game
 	int inited;
 	timer_t t;
 
-	convex_hull ch;
+//	convex_hull ch;
+	convex_hull_generator ch;
 
 	game()
 	{
@@ -50,13 +51,17 @@ struct game
 		inited=false;
 		t.reset();
 	}
-} g_game;
+};
+
+game* g_game=NULL;
 
 void change_screen_size(unsigned i_newwidth, unsigned i_newheight)
 {
 	if (!i_newheight || !i_newwidth)
 		return;
-	g_game.m_aspect=i_newwidth/(float)i_newheight;
+
+	if (g_game)
+		g_game->m_aspect=i_newwidth/(float)i_newheight;
 }
 
 
@@ -73,6 +78,7 @@ vec2 g_uv[]={V2(0,0),V2(1,0),V2(1,1),V2(0,1),V2(1,1),V2(0,1),V2(0,0),V2(1,0)};
 
 void init_app(HWND i_hwnd)
 {
+	g_game=new game;
 	filesystem::create();
 	filesystem::ptr->register_path("shader","shader\\");
 	filesystem::ptr->register_path("texture","texture\\");
@@ -105,12 +111,12 @@ void init_app(HWND i_hwnd)
 
 	rendersystem::create(&renderdesc);
 
-	g_game.obj=	load_mmod("model/box.mmod");
-	g_game.sky= load_mmod("model/skyBOX.MMOD");
+	g_game->obj=	load_mmod("model/box.mmod");
+	g_game->sky= load_mmod("model/skyBOX.MMOD");
 
-	for (unsigned n=0; n<g_game.sky->get_meshnum();++n)
+	for (unsigned n=0; n<g_game->sky->get_meshnum();++n)
 	{
-		mesh* m=g_game.sky->get_mesh(n);
+		mesh* m=g_game->sky->get_mesh(n);
 
 		for (unsigned k=0; k<m->m_submeshbuf.size(); ++k)
 		{
@@ -121,13 +127,13 @@ void init_app(HWND i_hwnd)
 	}
 
 
-	g_game.m_aspect=(float)renderdesc.m_screenwidth/(float)renderdesc.m_screenheight;
+	g_game->m_aspect=(float)renderdesc.m_screenwidth/(float)renderdesc.m_screenheight;
 
 	::GetWindowRect(i_hwnd,&g_rect);
 	g_time=timeGetTime();
 //	g_hwnd=i_hwnd;
 
-//	mtx4x4 mtx; mtx.set_projectionmatrix(tan(degreetorad(45)),g_game.m_aspect,1,10000);
+//	mtx4x4 mtx; mtx.set_projectionmatrix(tan(degreetorad(45)),g_game->m_aspect,1,10000);
 
 	mesh* m=new mesh("fucka");
 
@@ -176,16 +182,16 @@ void init_app(HWND i_hwnd)
 	ts.m_numvertices=8;
 
 	ts.set_shader(shadermanager::ptr->get_shader("posnormuv.fx"));
-	ts.bind_param("light_dir",&g_game.light_dir,3*sizeof(float));
+	ts.bind_param("light_dir",&g_game->light_dir,3*sizeof(float));
 
 
 //	texture* txt=texturemanager::instance()->get_texture("teszt.jpg");
 	texture* txt=texturemanager::ptr->get_texture("structures_malayhouse.dds");
 	ts.m_texturebuf.push_back(txt);
 
-	g_game.x=g_game.y=g_game.z=0;
+	g_game->x=g_game->y=g_game->z=0;
 
-	g_game.m_mesh=m;
+	g_game->m_mesh=m;
 
 
 	vec3 pos[15000];
@@ -194,10 +200,10 @@ void init_app(HWND i_hwnd)
 	int indexnum;
 
 	generate_sphere(pos,posnum,index,indexnum,BODY_SIZE,5);
-	g_game.sphere=new mesh("sphere");
-	g_game.sphere->m_vb=new vertexbuffer(posnum,ve);
-	g_game.sphere->m_ib=new indexbuffer(indexnum*3);
-	vb=(vertex_t*)g_game.sphere->m_vb->lock();
+	g_game->sphere=new mesh("sphere");
+	g_game->sphere->m_vb=new vertexbuffer(posnum,ve);
+	g_game->sphere->m_ib=new indexbuffer(indexnum*3);
+	vb=(vertex_t*)g_game->sphere->m_vb->lock();
 
 	for (int n=0; n<posnum; ++n)
 	{
@@ -206,21 +212,21 @@ void init_app(HWND i_hwnd)
 		vb[n].normal.normalize();
 		vb[n].uv.set(0,0);
 	}
-	g_game.sphere->m_vb->unlock();
+	g_game->sphere->m_vb->unlock();
 
-	ib=(unsigned short*)g_game.sphere->m_ib->lock();
+	ib=(unsigned short*)g_game->sphere->m_ib->lock();
 	memcpy(ib,index,indexnum*3*sizeof(short));
-	g_game.sphere->m_ib->unlock();
+	g_game->sphere->m_ib->unlock();
 
-	g_game.sphere->m_submeshbuf.resize(1);
-	submesh& sts=g_game.sphere->m_submeshbuf.back();
+	g_game->sphere->m_submeshbuf.resize(1);
+	submesh& sts=g_game->sphere->m_submeshbuf.back();
 	sts.m_firstindex=0;
 	sts.m_numindices=indexnum*3;
 	sts.m_firstvertex=0;
 	sts.m_numvertices=posnum;
 
 	sts.set_shader(shadermanager::ptr->get_shader("posnormuv.fx"));
-	sts.bind_param("light_dir",&g_game.light_dir,3*sizeof(float));
+	sts.bind_param("light_dir",&g_game->light_dir,3*sizeof(float));
 
 
 	//	texture* txt=texturemanager::instance()->get_texture("teszt.jpg");
@@ -246,7 +252,7 @@ void init_app(HWND i_hwnd)
 		bd.vel.set(x,y,z);
 //		bd.rotvel.set(x/3,y/3,z/3);
 
-		g_game.phb[n]=physicssystem::ptr->create_body(bd);
+		g_game->phb[n]=physicssystem::ptr->create_body(bd);
 #if 0
 		box_shape_desc sd;
 		sd.pos.identity();
@@ -256,7 +262,7 @@ void init_app(HWND i_hwnd)
 		sd.center.clear();
 		sd.radius=BODY_SIZE;
 #endif
-		g_game.phb[n]->add_shape(sd);
+		g_game->phb[n]->add_shape(sd);
 	}
 
 	convex_hull_desc hd;
@@ -264,8 +270,8 @@ void init_app(HWND i_hwnd)
 	hd.triangle_output=false;
 	vector<vec3>& b=hd.vertex_array;
 
-#if 1
-	b.resize(14);
+#if 0
+	b.resize(11);
 
 	b[0].set(-1,-1,-1);
 	b[1].set(-1,-1,1);
@@ -276,11 +282,11 @@ void init_app(HWND i_hwnd)
 	b[6].set(1,1,-1);
 	b[7].set(1,1,1);
 	b[8].set(1,0,0);
-	b[9].set(-1,0,0);
-	b[10].set(0,1,0);
-	b[11].set(0,-1,0);
-	b[12].set(0,0,1);
-	b[13].set(0,0,-1);
+	b[9].set(1,0,-.5f);
+	b[10].set(0,1,.5f);
+//	b[11].set(0,-1,0);
+//	b[12].set(0,0,1);
+//	b[13].set(0,0,-1);
 #else
 #define buff_size 500
 	b.resize(buff_size);
@@ -305,14 +311,15 @@ void init_app(HWND i_hwnd)
 
 #endif
 	timer_t t;
-	t.reset();
-	g_game.ch=generate_convex_hull(hd);
-	t.stop();
+//	t.reset();
+//	g_game->ch=generate_convex_hull(hd);
+//	t.stop();
+	g_game->ch.init(hd);
 	PRINT("hull generation: %f sec\n",t.get_seconds());
 
 
 
-	g_game.inited=true;
+	g_game->inited=true;
 }
 
 
@@ -354,9 +361,9 @@ void update_app()
 {
 	timer_t update_time;
 	char str[128];
-	g_game.t.stop();
-	float frame_time=g_game.t.get_seconds();
-	g_game.t.reset();
+	g_game->t.stop();
+	float frame_time=g_game->t.get_seconds();
+	g_game->t.reset();
 
 	sprintf(str,"FPS:%.1d",(int)(1/frame_time));
 	rendersystem::ptr->draw_text(800,10,color_f(1,1,0,1),str);
@@ -369,9 +376,11 @@ void update_app()
 
 	if (sumtime>33)
 	{
-		inputsystem::ptr->Update();
+		inputsystem::ptr->Update(true);
 		sumtime-=33;
 	}
+	else
+		inputsystem::ptr->Update(false);
 
 	timer_t t;
 	t.reset();
@@ -385,104 +394,31 @@ void update_app()
 	rendersystem::ptr->draw_text(10,40,color_f(1,1,1,1),str);
 
 	//convex hull rajzolas
-	for (int n=0; n<(int)g_game.ch.vertices.size()-1; ++n)
+/*
+	for (int n=0; n<(int)g_game->ch.vertices.size()-1; ++n)
 	{
-		int firstadj=g_game.ch.vertices[n].adj_index;
-		int adjnum=g_game.ch.vertices[n+1].adj_index-firstadj;
+		int firstadj=g_game->ch.vertices[n].adj_index;
+		int adjnum=g_game->ch.vertices[n+1].adj_index-firstadj;
 
-		vec3 start=g_game.ch.vertices[n].pos;
+		vec3 start=g_game->ch.vertices[n].pos;
 
 		for (int m=0; m<adjnum; ++m)
 		{
-			int vindex=g_game.ch.vertex_adjacency[firstadj+m];
+			int vindex=g_game->ch.vertex_adjacency[firstadj+m];
 
 			if (vindex<n)
 			{
-				vec3 end=g_game.ch.vertices[vindex].pos;
+				vec3 end=g_game->ch.vertices[vindex].pos;
 				rendersystem::ptr->draw_line(start,color_r8g8b8a8(255,255,255,255),end,color_r8g8b8a8(255,255,255,255));
 			}
 		}
 	}
-
-#if 0
-	for (unsigned n=0; n<(unsigned)physicssystem::ptr->broad_phase.pair_num; ++n)
-	{
-		broadphasepair& pair=physicssystem::ptr->broad_phase.pair_array[n];
-
-		{
-			vec3 center=pair.object[0]->bounding_world.get_center();
-			vec3 extent=pair.object[0]->bounding_world.get_extent();
-			vec3 corner[8];
-
-			const float x[]={-1,1,1,-1,-1,1,1,-1};
-
-#if 0
-			for (int n=0; n<8;++n)
-			{
-				corner[n].x=center.x+(x[n])*extent.x;
-				corner[n].y=center.y+(2*((n&2)>>1)-1)*extent.y;
-				corner[n].z=center.z+(2*((n&4)>>2)-1)*extent.z;
-			}
-#else
-            for (int n=0; n<8; ++n)
-            {
-                corner[n]=extent;
-                vec3 mul; mul.set(x[n],(2*((n&2)>>1)-1),(2*((n&4)>>2)-1));
-                vec3_mul(corner[n],mul);
-                vec3_add(corner[n],center);
-            }
-#endif
-			int prev=3;
-			for (int n=0; n<4;++n)
-			{
-//				rendersystem::ptr->draw_line(corner[n],color_r8g8b8a8(0,0,0,255),corner[prev],color_r8g8b8a8(255,255,255,255));
-//				rendersystem::ptr->draw_line(corner[n+4],color_r8g8b8a8(0,0,0,255),corner[prev+4],color_r8g8b8a8(255,255,255,255));
-//				rendersystem::ptr->draw_line(corner[n],color_r8g8b8a8(0,0,0,255),corner[n+4],color_r8g8b8a8(255,255,255,255));
-				prev=n;
-			}
-		}
-		{
-			vec3 center=pair.object[1]->bounding_world.get_center();
-			vec3 extent=pair.object[1]->bounding_world.get_extent();
-			vec3 corner[8];
-
-			const float x[]={-1,1,1,-1,-1,1,1,-1};
-
-#if 0
-			for (int n=0; n<8;++n)
-			{
-				corner[n].x=center.x+(x[n])*extent.x;
-				corner[n].y=center.y+(2*((n&2)>>1)-1)*extent.y;
-				corner[n].z=center.z+(2*((n&4)>>2)-1)*extent.z;
-			}
-#else
-            for (int n=0; n<8; ++n)
-            {
-                corner[n]=extent;
-                vec3 mul; mul.set(x[n],(2*((n&2)>>1)-1),(2*((n&4)>>2)-1));
-                vec3_mul(corner[n],mul);
-                vec3_add(corner[n],center);
-            }
-#endif
-
-			int prev=3;
-
-			for (int n=0; n<4;++n)
-			{
-//				rendersystem::ptr->draw_line(corner[n],color_r8g8b8a8(0,255,0,255),corner[prev],color_r8g8b8a8(0,255,0,255));
-//				rendersystem::ptr->draw_line(corner[n+4],color_r8g8b8a8(0,255,0,255),corner[prev+4],color_r8g8b8a8(0,255,0,255));
-//				rendersystem::ptr->draw_line(corner[n],color_r8g8b8a8(0,255,0,255),corner[n+4],color_r8g8b8a8(0,255,0,255));
-				prev=n;
-			}
-		}
-
-	}
-#endif
+*/
 	update_time.reset();
 	inputsystem* ip=inputsystem::ptr;
 
 	mtx4x3 cammtx=mtx4x3::identitymtx();
-	cammtx.set_euler(g_game.camx,g_game.camy,g_game.camz);
+	cammtx.set_euler(g_game->camx,g_game->camy,g_game->camz);
 
 	float speed;
 
@@ -492,52 +428,70 @@ void update_app()
 		speed=3;
 
 	if (ip->KeyDown(KEYCODE_W))
-		g_game.camt+=speed*dt*cammtx.z;
+		g_game->camt+=speed*dt*cammtx.z;
 
 	if (ip->KeyDown(KEYCODE_S))
-		g_game.camt-=speed*dt*cammtx.z;
+		g_game->camt-=speed*dt*cammtx.z;
 
 	if (ip->KeyDown(KEYCODE_A))
-		g_game.camt-=speed*dt*cammtx.x;
+		g_game->camt-=speed*dt*cammtx.x;
 
 	if (ip->KeyDown(KEYCODE_D))
-		g_game.camt+=speed*dt*cammtx.x;
+		g_game->camt+=speed*dt*cammtx.x;
 
 	if (ip->KeyDown(KEYCODE_Q))
-		g_game.camt+=speed*dt*cammtx.y;
+		g_game->camt+=speed*dt*cammtx.y;
 
 	if (ip->KeyDown(KEYCODE_Z))
-		g_game.camt-=speed*dt*cammtx.y;
+		g_game->camt-=speed*dt*cammtx.y;
 
 	int mx=ip->GetMouseX();
 	int my=ip->GetMouseY();
 
 
-	g_game.camy+=dt*(float)ip->GetMouseX()/10.0f;
-	g_game.camx+=dt*(float)ip->GetMouseY()/10.0f;
+	g_game->camy+=dt*(float)ip->GetMouseX()/10.0f;
+	g_game->camx+=dt*(float)ip->GetMouseY()/10.0f;
 
-	cammtx.t=g_game.camt;
+	cammtx.t=g_game->camt;
+
+	static bool keszvan=false;
+
+	if (!keszvan)
+	{
+		if (inputsystem::ptr->KeyPressed(KEYCODE_SPACE))
+		{
+			while (!keszvan)
+				keszvan=g_game->ch.generate();
+		}
+	}
+
+	g_game->ch.draw();
+
+
+
+
 
 	mtx4x3 viewmtx; viewmtx.linearinvert(cammtx);
 
-	rendersystem::ptr->set_projection_params(degreetorad(60),g_game.m_aspect,0.3f,10000,(mtx4x4)viewmtx);
+	rendersystem::ptr->set_projection_params(degreetorad(60),g_game->m_aspect,0.3f,10000,(mtx4x4)viewmtx);
 
 	mtx4x3 mtx;
-	mtx.set_euler(g_game.x,g_game.y,g_game.z);
+	mtx.set_euler(g_game->x,g_game->y,g_game->z);
 	mtx.t.set(-1,0,2.5f);
 
 	vec3 light_dir; light_dir.set(1,1,0);
-	g_game.obj->get_worldposition().transformtransposed3x3(g_game.light_dir,light_dir);
-	g_game.light_dir.normalize();
+	g_game->obj->get_worldposition().transformtransposed3x3(g_game->light_dir,light_dir);
+	g_game->light_dir.normalize();
 
-	g_game.x+=dt/10;
-	g_game.y+=2*dt/10;
-	g_game.z+=3*dt/10;
+	g_game->x+=dt/10;
+	g_game->y+=2*dt/10;
+	g_game->z+=3*dt/10;
 
+	if (0)
 	for (unsigned n=0; n<BODY_NUM;++n)
 	{
-		mtx4x3 pos=g_game.phb[n]->get_pos();
-		vec3 vel=g_game.phb[n]->get_vel();
+		mtx4x3 pos=g_game->phb[n]->get_pos();
+		vec3 vel=g_game->phb[n]->get_vel();
 
 		if (pos.t.x<-ROOM_SIZE)
 		{
@@ -571,26 +525,26 @@ void update_app()
 			vel.z=-fabsf(vel.z);
 		}
 
-		g_game.phb[n]->set_pos(pos);
-		g_game.phb[n]->set_vel(vel);
+		g_game->phb[n]->set_pos(pos);
+		g_game->phb[n]->set_vel(vel);
 
 		for (unsigned m=0; m<1; ++m)
 		{
-			rendersystem::ptr->add_mesh(g_game.sphere.get(),pos);
+			rendersystem::ptr->add_mesh(g_game->sphere.get(),pos);
 			pos.t.x+=10;
 		}
 	}
 
 /*
-	rendersystem::ptr->add_mesh(g_game.m_mesh.get(),mtx);
+	rendersystem::ptr->add_mesh(g_game->m_mesh.get(),mtx);
 	mtx.t.set(1,0,2.5f);
-	rendersystem::ptr->add_mesh(g_game.sphere.get(),mtx);
+	rendersystem::ptr->add_mesh(g_game->sphere.get(),mtx);
 	mtx.set_euler(0,0,0);
 	mtx.t.set(0,0,22.5f);
-	g_game.obj->set_worldposition(mtx);
-//	g_game.obj->render();
+	g_game->obj->set_worldposition(mtx);
+//	g_game->obj->render();
 */
-	g_game.sky->render();
+	g_game->sky->render();
 	rendersystem::ptr->render();
 
 	update_time.stop();
@@ -603,18 +557,20 @@ void update_app()
 
 void exit_app()
 {
-	g_game.inited=false;
+	g_game->inited=false;
 	filesystem::release();
 	taskmanager::release();
-	g_game.m_mesh=NULL;
-	g_game.sphere=NULL;
-	delete g_game.obj;
-	delete g_game.sky;
+	g_game->m_mesh=NULL;
+	g_game->sphere=NULL;
+	delete g_game->obj;
+	delete g_game->sky;
 	shadermanager::release();
 	texturemanager::release();
 	inputsystem::release();
 	rendersystem::release();
 	physicssystem::release();
+
+	delete g_game;
 }
 
 void generate_tetrahedron(vec3 o_pos[],float i_radius)
@@ -683,6 +639,6 @@ void generate_sphere(vec3 o_pos[],int& o_numvertices,short o_indices[],int& o_nu
 
 void reload_shaders()
 {
-//	if (g_game.inited)
+//	if (g_game->inited)
 //		shadermanager::ptr->reload_shaders();
 }
