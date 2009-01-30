@@ -356,6 +356,7 @@ void vec3_mul(vec3& dst, const vec3& src)
 
 
 unsigned sumtime=0;
+int manual=false;
 
 void update_app()
 {
@@ -460,7 +461,10 @@ void update_app()
 	{
 		if (inputsystem::ptr->KeyPressed(KEYCODE_SPACE))
 		{
-			while (!keszvan)
+			if (manual)
+				keszvan=g_game->ch.generate();
+			else
+			while (!keszvan && !manual)
 				keszvan=g_game->ch.generate();
 		}
 	}
@@ -544,7 +548,7 @@ void update_app()
 	g_game->obj->set_worldposition(mtx);
 //	g_game->obj->render();
 */
-	g_game->sky->render();
+//	g_game->sky->render();
 	rendersystem::ptr->render();
 
 	update_time.stop();

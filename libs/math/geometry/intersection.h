@@ -1,7 +1,7 @@
 #ifndef _intersection_h_
 #define _intersection_h_
 
-#include "vec3.h"
+#include "math/vec3.h"
 
 	int line_quad_intersect(vec3& o_pos, vec3 i_s1, vec3 i_s2, vec3 i_q1, vec3 i_q2, vec3 i_q3, vec3 i_q4)
 	{

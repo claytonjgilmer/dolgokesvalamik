@@ -135,6 +135,11 @@ struct intr_circular_list
 	{
 		return first_elem;
 	}
+
+	intr_list_node* last()
+	{
+		return first_elem->prev;
+	}
 };
 #endif
 

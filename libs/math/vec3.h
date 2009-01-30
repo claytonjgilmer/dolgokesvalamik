@@ -5,6 +5,8 @@
 
 	struct vec3
 	{
+//		vec3(){}
+//		vec3(float i_xcoord, float i_ycoord, float i_zcoord){set(i_xcoord,i_ycoord,i_zcoord);}
 		float&	operator[](int i_index);
 		const float& operator[](int i_index) const;
 

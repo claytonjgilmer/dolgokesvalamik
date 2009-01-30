@@ -1,6 +1,6 @@
 #include <algorithm>
 #include "convexhullgeneration.h"
-#include "math/sorting.h"
+#include "math\sorting.h"
 #include "containers\listallocator.h"
 #include "render\rendersystem.h"
 
@@ -264,38 +264,68 @@ void convex_hull_generator::calculate_horizon(vector<gen_half_edge_t*>& edge_arr
 
 void convex_hull_generator::insert_vertex(const vector<gen_half_edge_t*>& edge_array)
 {
-	first_face=faces.size();
+	CONSISTENCY_ASSERT(edge_array.size()>2);
+	//megkeressuk a faszomsagot
 	int edge_count=edge_array.size();
-	for (int n=0; n<edge_count; ++n)
+	gen_face_t* f=edge_array[edge_count-1]->opposite->face;
+	int edge_index=0;
+	for (int n=0; n<edge_count-1; ++n)
 	{
-		gen_half_edge_t* e=edge_array[n];
+		if (edge_array[n]->opposite->face==f)
+			++edge_index;
+		else
+			break;
+	}
+
+
+	first_face=faces.size();
+	int fasszam=0;
+
+
+
+	for (int nnn=0; nnn<edge_count;)
+	{
 		gen_face_t* face=new gen_face_t();
 		faces.push_back(face);
-		int v1=e->opposite->head_vertex;
-		int v2=e->head_vertex;
+		++fasszam;
+		gen_half_edge_t* firste=edge_array[(nnn+edge_index) % edge_count];
+		int v1=firste->opposite->head_vertex;
+		gen_half_edge_t* edge1=new gen_half_edge_t(face,v1);
+		face->edges.push_back(edge1);
+
+		int fostalicska;
+
+		if (!triangle_output && check_vertex(firste->opposite->face,work_array[vertex_index])==PLANE_ON)
+			fostalicska=-1;
+		else
+			fostalicska=1;
+
+		for (; fostalicska && nnn<edge_count && edge_array[(nnn+edge_index) % edge_count]->opposite->face==firste->opposite->face; ++nnn,--fostalicska)
+		{
+			gen_half_edge_t* edge2=new gen_half_edge_t(face,edge_array[(nnn+edge_index) % edge_count]->head_vertex);
+			face->edges.push_back(edge2);
+			edge2->opposite=edge_array[(nnn+edge_index) % edge_count]->opposite;
+			edge2->opposite->opposite=edge2;
+			new_horizon.push_back(edge2);
+
+		}
+		int v2=edge_array[(nnn-1+edge_index) % edge_count]->head_vertex;
 		int v3=vertex_index;
 
-		gen_half_edge_t* edge1=new gen_half_edge_t(face,v1);
-		gen_half_edge_t* edge2=new gen_half_edge_t(face,v2);
-		edge2->opposite=e->opposite;
-		edge2->opposite->opposite=edge2;
-		new_horizon.push_back(edge2);
 		gen_half_edge_t* edge3=new gen_half_edge_t(face,v3);
 
-		face->edges.push_back(edge1);
-		face->edges.push_back(edge2);
 		face->edges.push_back(edge3);
 		face->set(work_array[v1],cross(work_array[v3]-work_array[v1],work_array[v2]-work_array[v1]));
 	}
 
-	for (int n=0; n<edge_count; ++n)
+	for (int n=0; n<fasszam; ++n)
 	{
-		int prevface=((n+edge_count-1) %edge_count)+first_face;
+		int prevface=((n+fasszam-1) %fasszam)+first_face;
 		int actface=n+first_face;
-		int nextface=((n+1) %edge_count)+first_face;
+		int nextface=((n+1) %fasszam)+first_face;
 
-		faces[actface]->edges.first()->opposite=faces[prevface]->edges.first()->prev;
-		faces[actface]->edges.first()->prev->opposite=faces[nextface]->edges.first();
+		faces[actface]->edges.first()->opposite=faces[prevface]->edges.last();
+		faces[actface]->edges.last()->opposite=faces[nextface]->edges.first();
 	}
 }
 
@@ -328,24 +358,30 @@ void convex_hull_generator::merge_faces()
 	vector<gen_half_edge_t*> nevevan;
 	for (unsigned n=0; n<new_horizon.size(); ++n)
 	{
-		gen_half_edge_t* e=new_horizon[n];
-		if (check_vertex(e->opposite->face,v)==PLANE_ON) //fos az el, meg kell szuntetni
+		gen_half_edge_t* firste=new_horizon[n];
+		if (check_vertex(firste->opposite->face,v)==PLANE_ON) //fos az el, meg kell szuntetni
 		{
-			gen_half_edge_t* preve=e->prev;
-			gen_half_edge_t* nexte=e->next;
-			preve->next=e->opposite->next;
-			nexte->prev=e->opposite->prev;
-			e->opposite->next->prev=preve;
-			e->opposite->prev->next=nexte;
+			gen_half_edge_t* preve=firste->prev;
+			gen_half_edge_t* prevnext=firste->opposite->next;
+
+			for (; n<new_horizon.size() && new_horizon[n]->opposite->face==firste->opposite->face; ++n){}
+			--n;
+			gen_half_edge_t* laste=new_horizon[n];
+
+			gen_half_edge_t* nexte=laste->next;
+			preve->next=firste->opposite->next;
+			nexte->prev=laste->opposite->prev;
+			firste->opposite->next->prev=preve;
+			laste->opposite->prev->next=nexte;
 			//most mar e-re es e->opposite-ra senki sem hivatkozik
-			e->opposite->face->edges.clear();
+			firste->opposite->face->edges.clear();
 
 			//a szomszed face eleinek face-e en leszek am
-			e->opposite->face->valid=false;
-			delete e->opposite;
-			delete e;
+			firste->opposite->face->valid=false;
+			delete firste->opposite;
+			delete firste;
 
-			e=preve->next;
+			gen_half_edge_t* e=preve->next;
 
 			do 
 			{
@@ -355,6 +391,7 @@ void convex_hull_generator::merge_faces()
 		}
 	}
 
+/*
 	//vegigmegyunk az uj face-eken, es ha van olyan el, ami csak egy face-hez tartozik, akkor toroljuk a szomszedjaval egyutt
 	for (unsigned n=first_face; n<faces.size(); ++n)
 	{
@@ -387,7 +424,7 @@ void convex_hull_generator::merge_faces()
 			//				delete opp;
 		}
 	}
-
+*/
 
 	for (unsigned n=first_face; n<faces.size(); ++n)
 //	for (unsigned n=0; n<new_horizon.size(); ++n)
@@ -419,6 +456,9 @@ void convex_hull_generator::merge_faces()
 
 		gen_half_edge_t* prev=nexte->prev;
 		gen_half_edge_t* oppprev=nexte->opposite;
+
+		if (prev==oppprev)
+			continue;
 		nexte->face->edges.erase(prev);
 		gen_half_edge_t* new_opposite=oppprev->next;
 		new_opposite->opposite=nexte;
@@ -545,7 +585,10 @@ bool convex_hull_generator::generate()
 			insert_vertex(horizon_edge_array);
 
 			if (!triangle_output)
+			{
 				state=1;
+				--vertex_index;
+			}
 //				merge_faces();
 		}
 		else
@@ -558,7 +601,6 @@ bool convex_hull_generator::generate()
 	}
 	else
 	{
-		--vertex_index;
 		merge_faces();
 		++vertex_index;
 		state=0;

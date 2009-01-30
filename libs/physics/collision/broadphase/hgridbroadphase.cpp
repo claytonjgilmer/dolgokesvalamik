@@ -1,5 +1,5 @@
 #include "hgridbroadphase.h"
-#include "math/intersection.h"
+#include "math/geometry/intersection.h"
 #include "threading/taskmanager.h"
 #include "physics/system/physicssystem.h"
 

@@ -336,11 +336,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\scripting\lualib\lua.h"
+				RelativePath=".\scripting\lua.h"
 				>
 			</File>
 			<File
-				RelativePath=".\scripting\lua.h"
+				RelativePath=".\scripting\lualib\lua.h"
 				>
 			</File>
 			<File
@@ -592,7 +592,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\math\geometry\quadedge\array.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\physics\system\body.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\math\geometry\quadedge\cell.cpp"
 				>
 			</File>
 			<File
@@ -613,6 +621,14 @@
 			</File>
 			<File
 				RelativePath=".\math\geometry\convexhullgeneration.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\math\geometry\quadedge\edge.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\math\geometry\quadedge\face.cpp"
 				>
 			</File>
 			<File
@@ -677,6 +693,10 @@
 			</File>
 			<File
 				RelativePath=".\scripting\lualib\liolib.c"
+				>
+			</File>
+			<File
+				RelativePath=".\math\geometry\quadedge\list.cpp"
 				>
 			</File>
 			<File
@@ -780,6 +800,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\math\geometry\quadedge\obj.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\render\objectmanager.cpp"
 				>
 			</File>
@@ -832,6 +856,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\math\geometry\quadedge\test.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\render\texture.cpp"
 				>
 			</File>
@@ -848,10 +876,42 @@
 				>
 			</File>
 			<File
+				RelativePath=".\math\geometry\quadedge\vertex.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\render\vertexbuffer.cpp"
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\math\geometry\quadedge\array.h"
+			>
+		</File>
+		<File
+			RelativePath=".\math\geometry\quadedge\cell.h"
+			>
+		</File>
+		<File
+			RelativePath=".\math\geometry\quadedge\edge.h"
+			>
+		</File>
+		<File
+			RelativePath=".\math\geometry\quadedge\face.h"
+			>
+		</File>
+		<File
+			RelativePath=".\math\geometry\quadedge\list.h"
+			>
+		</File>
+		<File
+			RelativePath=".\math\geometry\quadedge\obj.h"
+			>
+		</File>
+		<File
+			RelativePath=".\math\geometry\quadedge\vertex.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

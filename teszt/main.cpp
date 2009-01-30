@@ -9,7 +9,7 @@
 #include "containers/listallocator.h"
 #include "physics/system/physicssystem.h"
 
-#include "math\convexhullgeneration.h"
+#include "math\geometry\convexhullgeneration.h"
 
 
 #include "threading/thread.h"
