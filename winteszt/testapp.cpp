@@ -304,7 +304,7 @@ void init_app(HWND i_hwnd)
 			m=&b[n][1];
 		if (fabsf(b[n][2])>fabsf(*m))
 			m=&b[n][2];
-/*
+
 		int maxindex=m-&b[n][0];
 		int s=nextnumbermodulo3(maxindex);
 		int t=nextnumbermodulo3(s);
@@ -313,7 +313,7 @@ void init_app(HWND i_hwnd)
 			b[n][s]/=fabsf(b[n][s]);
 		else
 			b[n][t]/=fabsf(b[n][t]);
-*/
+
 		*m/=abs(*m);
 //		b[n].normalize();
 	}
@@ -404,26 +404,6 @@ void update_app()
 	rendersystem::ptr->draw_text(10,40,color_f(1,1,1,1),str);
 
 	//convex hull rajzolas
-/*
-	for (int n=0; n<(int)g_game->ch.vertices.size()-1; ++n)
-	{
-		int firstadj=g_game->ch.vertices[n].adj_index;
-		int adjnum=g_game->ch.vertices[n+1].adj_index-firstadj;
-
-		vec3 start=g_game->ch.vertices[n].pos;
-
-		for (int m=0; m<adjnum; ++m)
-		{
-			int vindex=g_game->ch.vertex_adjacency[firstadj+m];
-
-			if (vindex<n)
-			{
-				vec3 end=g_game->ch.vertices[vindex].pos;
-				rendersystem::ptr->draw_line(start,color_r8g8b8a8(255,255,255,255),end,color_r8g8b8a8(255,255,255,255));
-			}
-		}
-	}
-*/
 	update_time.reset();
 	inputsystem* ip=inputsystem::ptr;
 
@@ -476,9 +456,17 @@ void update_app()
 			while (!keszvan && !manual)
 				keszvan=g_game->ch.generate();
 		}
+
+		if (keszvan)
+			g_game->ch.get_result();
 	}
 
-	g_game->ch.draw();
+	if (1 || !keszvan)
+		g_game->ch.draw();
+	else
+	{
+		draw_hull(&g_game->ch.ch);
+	}
 
 
 

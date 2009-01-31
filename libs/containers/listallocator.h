@@ -206,6 +206,7 @@
 	template <typename basetype, int blocksize>
 	MLINLINE list_allocator<basetype,blocksize>::~list_allocator()
 	{
+		deallocate_all();
 		for (unsigned int n=0; n<m_allocated.size(); ++n)
 			free(m_allocated[n]);
 	}

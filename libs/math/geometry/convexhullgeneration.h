@@ -66,7 +66,7 @@ struct gen_face_t:dplane_t
 		freed=false;
 	}
 
-	~gen_face_t()
+	void delete_edges()
 	{
 		while (edges.first())
 		{
@@ -74,7 +74,11 @@ struct gen_face_t:dplane_t
 			edges.erase(edge);
 			delete edge;
 		}
+	}
 
+	~gen_face_t()
+	{
+		delete_edges();
 		freed=true;
 	}
 
@@ -111,6 +115,7 @@ struct convex_hull_generator
 	int vertex_index;
 	vector<gen_half_edge_t*> new_horizon;
 	int first_face;
+	vector<gen_face_t*> out_face_array;
 };
 
 

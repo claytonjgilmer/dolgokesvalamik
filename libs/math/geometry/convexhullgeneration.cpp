@@ -374,6 +374,7 @@ void convex_hull_generator::merge_faces()
 	for (unsigned n=0; n<new_horizon.size(); ++n)
 	{
 		gen_half_edge_t* firste=new_horizon[n];
+		int firsteindex=n;
 		if (check_vertex(firste->opposite->face,v)==PLANE_ON) //fos az el, meg kell szuntetni
 		{
 			gen_half_edge_t* preve=firste->prev;
@@ -382,6 +383,7 @@ void convex_hull_generator::merge_faces()
 			for (; n<new_horizon.size() && new_horizon[n]->opposite->face==firste->opposite->face; ++n){}
 			--n;
 			gen_half_edge_t* laste=new_horizon[n];
+			int lasteindex=n;
 
 			gen_half_edge_t* nexte=laste->next;
 			preve->next=firste->opposite->next;
@@ -393,8 +395,13 @@ void convex_hull_generator::merge_faces()
 
 			//a szomszed face eleinek face-e en leszek am
 			firste->opposite->face->valid=false;
-			delete firste->opposite;
-			delete firste;
+
+			for (int m=firsteindex; m<=lasteindex; ++m)
+			{
+				delete new_horizon[m]->opposite;
+				delete new_horizon[m];
+			}
+
 
 			gen_half_edge_t* e=preve->next;
 
@@ -408,7 +415,6 @@ void convex_hull_generator::merge_faces()
 
 
 	for (unsigned n=first_face; n<faces.size(); ++n)
-//	for (unsigned n=0; n<new_horizon.size(); ++n)
 	{
 		if (!faces[n]->valid)
 			continue;
@@ -452,31 +458,6 @@ void convex_hull_generator::merge_faces()
 		}
 		while (e!=faces[n]->edges.first());
 	}
-
-	strlen("");
-#if 0
-	for (unsigned n=0; n<nevevan.size(); ++n)
-	{
-		gen_half_edge_t* nexte=nevevan[n];
-
-		gen_half_edge_t* prev=nexte->prev;
-		gen_half_edge_t* oppprev=nexte->opposite;
-
-		if (prev==oppprev)
-			continue;
-		nexte->face->edges.erase(prev);
-		gen_half_edge_t* new_opposite=oppprev->next;
-		new_opposite->opposite=nexte;
-		nexte->opposite=new_opposite;
-
-		delete prev;
-		new_opposite->face->edges.erase(oppprev);
-		delete oppprev;
-
-		CONSISTENCY_ASSERT(nexte->face->valid);
-		CONSISTENCY_ASSERT(new_opposite->face->valid);
-	}
-#endif
 }
 
 void convex_hull_generator::init(const convex_hull_desc& hull_desc)
@@ -523,10 +504,7 @@ void convex_hull_generator::init(const convex_hull_desc& hull_desc)
 
 bool convex_hull_generator::generate()
 {
-	vector<gen_face_t*> out_face_array;
 	vector<gen_half_edge_t*> horizon_edge_array;
-//	vector<gen_half_edge_t*> new_horizon;
-//	for (unsigned int vertex_index=3; vertex_index<work_array.size(); ++vertex_index)
 
 	if (!state)
 	{
@@ -561,16 +539,6 @@ bool convex_hull_generator::generate()
 						edge=edge->next;
 					} while (!horizon_edge && edge!=act_face->edges.first());
 				}
-
-/*
-				for (gen_half_edge_t* edge=act_face->edges.first(); !horizon_edge && edge!=act_face->edges.last(); edge=edge->next)//vegigjarjuk az eleket, hogy talaljunk horizont edge-et
-				{
-					gen_face_t* otherface=edge->opposite->face;
-
-					if (check_vertex(otherface,act_vertex)!=PLANE_OUTSIDE)//ha a masik face nem laccik a vertexbol
-						horizon_edge=edge;
-				}
-*/
 			}
 		}
 
@@ -729,5 +697,3 @@ convex_hull_generator::~convex_hull_generator()
 	for (unsigned int n=0; n<faces.size(); ++n)
 		delete faces[n];
 }
-
-//todo: a 4. vertexnek messze kell lenni az elso ket haromszog sikjatol, mert ha veletlenul rajta van, akkor bukta

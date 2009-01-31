@@ -336,11 +336,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\scripting\lua.h"
+				RelativePath=".\scripting\lualib\lua.h"
 				>
 			</File>
 			<File
-				RelativePath=".\scripting\lualib\lua.h"
+				RelativePath=".\scripting\lua.h"
 				>
 			</File>
 			<File
@@ -461,6 +461,10 @@
 			</File>
 			<File
 				RelativePath=".\scene\rootobject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\physics\collision\shapeintersection\satintersection.h"
 				>
 			</File>
 			<File
@@ -617,6 +621,10 @@
 			</File>
 			<File
 				RelativePath=".\physics\collision\system\contactmanager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\math\geometry\convexhull.cpp"
 				>
 			</File>
 			<File
@@ -829,6 +837,10 @@
 			</File>
 			<File
 				RelativePath=".\scene\rootobject.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\physics\collision\shapeintersection\satintersection.cpp"
 				>
 			</File>
 			<File

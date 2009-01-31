@@ -5,6 +5,9 @@
 
 
 
+//////////////////////////////////////////////////////////////////////////
+//		intrusive list
+//////////////////////////////////////////////////////////////////////////
 template <typename intr_list_node>
 struct intr_list_node_base
 {
@@ -64,7 +67,105 @@ struct intr_list
     }
 };
 
-#if 1
+
+//////////////////////////////////////////////////////////////////////////
+//		kisebb helyigenyu intrusive lista
+//////////////////////////////////////////////////////////////////////////
+template <typename intr_list_node>
+struct intr_list_simple
+{
+	intr_list_node* first_elem, *last_elem;
+	intr_list_simple()
+	{
+		first=last=NULL;
+	}
+
+	void push_back(intr_list_node* newnode)
+	{
+		if (!last_elem)
+		{
+			newnode->next=NULL;
+			newnode->prev=NULL;
+			first_elem=last_elem=newnode;
+		}
+		else
+		{
+			insert_after(newnode,last_elem);
+		}
+	}
+
+	void insert_after(intr_list_node* node, intr_list_node* after)
+	{
+		node->prev=after;
+		node->next=after->next;
+
+		if (after->next)
+			after->next->prev=node;
+		else
+			last_elem=node;
+
+		after->next=node;
+	}
+
+	void push_front(intr_list_node* newnode)
+	{
+		if (!first_elem)
+		{
+			newnode->prev=NULL;
+			newnode->next=NULL;
+			first_elem=last_elem=newnode;
+		}
+		else
+		{
+			insert_before(newnode,first_elem);
+		}
+	}
+
+	void insert_before(intr_list_node* node, intr_list_node* before)
+	{
+		node->next=before;
+		node->prev=before->prev;
+
+		if (before->prev)
+			before->prev->next=node;
+		else
+			first_elem=node;
+
+		before->prev=node;
+	}
+
+	void erase(intr_list_node* node)
+	{
+		if (node->prev)
+			node->prev->next=node->next;
+		else
+			first_elem=node->next;
+
+		if (node->next)
+			node->next->prev=node->prev;
+		else
+			last_elem=node;
+	}
+
+	intr_list_node* first()
+	{
+		return first_elem;
+	}
+
+	intr_list_node* last()
+	{
+		return last_elem;
+	}
+};
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////
+//		circular list
+//////////////////////////////////////////////////////////////////////////
 template <typename intr_list_node>
 struct intr_circular_list
 {
@@ -141,6 +242,5 @@ struct intr_circular_list
 		return first_elem->prev;
 	}
 };
-#endif
 
 #endif // _INTR_LIST_H_
