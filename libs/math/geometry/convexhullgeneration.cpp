@@ -352,6 +352,21 @@ int convex_hull_generator::check_vertex(gen_face_t* face, const dvec3& v)
 		return PLANE_ON;
 }
 
+int get_vertexedge_count(gen_half_edge_t* startedge)
+{
+	int count=0;
+
+	gen_half_edge_t* e=startedge;
+
+	do 
+	{
+		++count;
+		e=e->opposite->prev;
+	} while (e!=startedge);
+
+	return count;
+}
+
 void convex_hull_generator::merge_faces()
 {
 	dvec3 v=work_array[vertex_index];
@@ -391,40 +406,6 @@ void convex_hull_generator::merge_faces()
 		}
 	}
 
-/*
-	//vegigmegyunk az uj face-eken, es ha van olyan el, ami csak egy face-hez tartozik, akkor toroljuk a szomszedjaval egyutt
-	for (unsigned n=first_face; n<faces.size(); ++n)
-	{
-		gen_face_t* face=faces[n];
-
-		if (!face->valid)
-			continue;
-
-		gen_half_edge_t* edge=face->edges.first();
-
-		gen_half_edge_t* to_delete[200];
-		int to_delete_count=0;
-
-		do 
-		{
-			if (edge->face==edge->opposite->face)
-			{
-				CONSISTENCY_ASSERT(edge!=edge->opposite && edge->face==face);
-				to_delete[to_delete_count++]=edge;
-			}
-			edge=edge->next;
-		} while (edge!=face->edges.first());
-
-		for (int m=0; m<to_delete_count; ++m)
-		{
-			//				gen_half_edge_t* opp=to_delete[m]->opposite;
-			face->edges.erase(to_delete[m]);
-			//				face->edges.erase(opp);
-			delete to_delete[m];
-			//				delete opp;
-		}
-	}
-*/
 
 	for (unsigned n=first_face; n<faces.size(); ++n)
 //	for (unsigned n=0; n<new_horizon.size(); ++n)
@@ -435,21 +416,45 @@ void convex_hull_generator::merge_faces()
 
 		do
 		{
-			gen_half_edge_t* nexte=e->next;
-			dvec3 v1,v2;
+			if (get_vertexedge_count(e)==2)
+			{
+#ifdef CHECK_CONSISTENCY
+				gen_half_edge_t* nexte=e->next;
+				dvec3 v1,v2;
 
-			v1=work_array[nexte->head_vertex]-work_array[e->head_vertex]; v1.normalize();
-			v2=work_array[e->head_vertex]-work_array[e->prev->head_vertex]; v2.normalize();
+				v1=work_array[nexte->head_vertex]-work_array[e->head_vertex]; v1.normalize();
+				v2=work_array[e->head_vertex]-work_array[e->prev->head_vertex]; v2.normalize();
+				double l=cross(v1,v2).squarelength();
+				CONSISTENCY_ASSERT(l<0.00001);
+#endif
+//				nevevan.push_back(nexte);
 
-			if (cross(v1,v2).squarelength()<0.00001)
-				nevevan.push_back(nexte);
+				gen_half_edge_t* prev=nexte->prev;
+				gen_half_edge_t* oppprev=nexte->opposite;
+
+				if (prev==oppprev)
+					continue;
+				nexte->face->edges.erase(prev);
+				gen_half_edge_t* new_opposite=oppprev->next;
+				new_opposite->opposite=nexte;
+				nexte->opposite=new_opposite;
+
+				delete prev;
+				new_opposite->face->edges.erase(oppprev);
+				delete oppprev;
+
+				CONSISTENCY_ASSERT(nexte->face->valid);
+				CONSISTENCY_ASSERT(new_opposite->face->valid);
+				break;
+			}
 
 			e=e->next;
 		}
 		while (e!=faces[n]->edges.first());
 	}
 
-
+	strlen("");
+#if 0
 	for (unsigned n=0; n<nevevan.size(); ++n)
 	{
 		gen_half_edge_t* nexte=nevevan[n];
@@ -471,6 +476,7 @@ void convex_hull_generator::merge_faces()
 		CONSISTENCY_ASSERT(nexte->face->valid);
 		CONSISTENCY_ASSERT(new_opposite->face->valid);
 	}
+#endif
 }
 
 void convex_hull_generator::init(const convex_hull_desc& hull_desc)

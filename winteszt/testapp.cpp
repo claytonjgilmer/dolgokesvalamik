@@ -266,7 +266,7 @@ void init_app(HWND i_hwnd)
 	}
 
 	convex_hull_desc hd;
-	hd.face_thickness=.00001;
+	hd.face_thickness=.000001;
 	hd.triangle_output=false;
 	vector<vec3>& b=hd.vertex_array;
 
@@ -288,7 +288,7 @@ void init_app(HWND i_hwnd)
 //	b[12].set(0,0,1);
 //	b[13].set(0,0,-1);
 #else
-#define buff_size 500
+#define buff_size 10000
 	b.resize(buff_size);
 
 	for (unsigned n=0; n<buff_size; ++n)
@@ -304,7 +304,16 @@ void init_app(HWND i_hwnd)
 			m=&b[n][1];
 		if (fabsf(b[n][2])>fabsf(*m))
 			m=&b[n][2];
+/*
+		int maxindex=m-&b[n][0];
+		int s=nextnumbermodulo3(maxindex);
+		int t=nextnumbermodulo3(s);
 
+		if (fabsf(b[n][s])>fabsf(b[n][t]))
+			b[n][s]/=fabsf(b[n][s]);
+		else
+			b[n][t]/=fabsf(b[n][t]);
+*/
 		*m/=abs(*m);
 //		b[n].normalize();
 	}
