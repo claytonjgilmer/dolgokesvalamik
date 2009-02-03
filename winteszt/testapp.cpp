@@ -19,6 +19,31 @@
 #include "math/geometry/convexhullgeneration.h"
 #include "utils/timer.h"
 
+void get_object_vertices(node_t* obj, vector<vec3>& vertbuf)
+{
+	if (obj->get_metaobject()->isa(object3d::get_class_metaobject()->get_typeid()))
+	{
+		object3d* obj3d=(object3d*)obj;
+
+		for (unsigned n=0; n<obj3d->get_meshnum(); ++n)
+		{
+			mesh* m=obj3d->get_mesh(n);
+			char* v=(char*)m->m_vb->lock();
+
+			for (unsigned j=0; j<m->m_vb->m_vertexnum; ++j)
+			{
+				vertbuf.push_back(*(vec3*)v);
+				v+=m->m_vb->m_vertexsize;
+			}
+		}
+	}
+
+	for (node_t* child=obj->get_child(); child; child=child->get_bro())
+	{
+		get_object_vertices(child,vertbuf);
+	}
+}
+
 void generate_sphere(vec3 o_pos[],int& o_numvertices,short o_indices[],int& o_numfaces,float i_radius, int i_depth);
 object3d* load_mmod(const char* i_filename);
 struct game
@@ -111,7 +136,7 @@ void init_app(HWND i_hwnd)
 
 	rendersystem::create(&renderdesc);
 
-	g_game->obj=	load_mmod("model/box.mmod");
+	g_game->obj=	load_mmod("model/steamtrain.MMOD");
 	g_game->sky= load_mmod("model/skyBOX.MMOD");
 
 	for (unsigned n=0; n<g_game->sky->get_meshnum();++n)
@@ -287,7 +312,7 @@ void init_app(HWND i_hwnd)
 //	b[11].set(0,-1,0);
 //	b[12].set(0,0,1);
 //	b[13].set(0,0,-1);
-#else
+#elif 0
 #define buff_size 10000
 	b.resize(buff_size);
 
@@ -317,7 +342,9 @@ void init_app(HWND i_hwnd)
 		*m/=abs(*m);
 //		b[n].normalize();
 	}
-
+#else
+//	vector<vec3> b;
+	get_object_vertices(g_game->obj,b);
 #endif
 	timer_t t;
 //	t.reset();
@@ -540,11 +567,11 @@ void update_app()
 	rendersystem::ptr->add_mesh(g_game->m_mesh.get(),mtx);
 	mtx.t.set(1,0,2.5f);
 	rendersystem::ptr->add_mesh(g_game->sphere.get(),mtx);
+	*/
 	mtx.set_euler(0,0,0);
 	mtx.t.set(0,0,22.5f);
 	g_game->obj->set_worldposition(mtx);
-//	g_game->obj->render();
-*/
+	g_game->obj->render();
 //	g_game->sky->render();
 	rendersystem::ptr->render();
 

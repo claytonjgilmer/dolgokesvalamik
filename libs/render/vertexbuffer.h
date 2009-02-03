@@ -24,6 +24,7 @@
 		LPDIRECT3DVERTEXBUFFER9 m_hwbuffer;
 		LPDIRECT3DVERTEXDECLARATION9 m_decl;
 		unsigned m_vertexsize;
+		unsigned m_vertexnum;
 
 #ifdef _DEBUG
 		const vector<vertexelem> m_vertexelems;

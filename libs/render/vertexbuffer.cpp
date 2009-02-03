@@ -18,6 +18,7 @@
 		:m_vertexelems(i_vertexelements)
 #endif
 	{
+		m_vertexnum=i_vertexnum;
 		for (int n=0; n<vertexelement_num; ++n)
 			g_decl[n].UsageIndex=0;
 
@@ -48,6 +49,7 @@
 		:m_vertexelems(i_vertexelements)
 #endif
 	{
+		m_vertexnum=i_vertexnum;
 		for (int n=0; n<vertexelement_num; ++n)
 			g_decl[n].UsageIndex=0;
 
