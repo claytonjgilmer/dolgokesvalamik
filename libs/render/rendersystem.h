@@ -62,9 +62,11 @@
 		unsigned				m_screenwidth;
 		unsigned				m_screenheight;
 		HWND					m_window;
+		color_r8g8b8a8		m_clear_color;
 
 		rendersystemdesc()
 		{
+			m_clear_color.set(23,65,96,255);
 			m_windowed=true;
 			m_backbuffercount=2;
 			m_screenheight=768;
@@ -188,6 +190,7 @@
 		LPDIRECT3D9 m_sys;
 		vector<renderqueue> m_queue;
 		HWND m_window;
+		color_r8g8b8a8 clear_color;
 
 		member(mtx4x4,viewprojection_matrix);
 		member(mtx4x4,view_matrix);

@@ -13,6 +13,7 @@
 
 	rendersystem::rendersystem(const rendersystemdesc* i_desc)
 	{
+		clear_color=i_desc->m_clear_color;
 		m_sys = Direct3DCreate9( D3D_SDK_VERSION );
 
 		D3DPRESENT_PARAMETERS d3dpp;
@@ -65,14 +66,20 @@
 
 	rendersystem::~rendersystem()
 	{
+		if (font_sprite)
+			font_sprite->Release();
+		if (font)
+			font->Release();
+
+		if (line_buffer)
+			line_buffer->Release();
+
 		if (m_device)
 			m_device->Release();
 
 		if (m_sys)
 			m_sys->Release();
 
-		if (line_buffer)
-			line_buffer->Release();
 	}
 
 	LPDIRECT3DDEVICE9 rendersystem::device() const
@@ -99,7 +106,7 @@
 	void rendersystem::flush_queues()
 	{
 		m_device->BeginScene();
-		m_device->Clear(0,0,D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER,D3DCOLOR_XRGB(23,65,96),1,0);
+		m_device->Clear(0,0,D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER,D3DCOLOR_XRGB(clear_color.r,clear_color.g,clear_color.b),1,0);
 
 
 		for (unsigned int queueindex = 0; queueindex < m_queue.size() ; queueindex++)
@@ -204,7 +211,7 @@
 			m_device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
 
 			//			m_device->SetRenderState( D3DRS_LIGHTING, FALSE );
-			m_device->SetRenderState(D3DRS_ZENABLE,D3DZB_FALSE);
+//			m_device->SetRenderState(D3DRS_ZENABLE,D3DZB_FALSE);
 
 			m_device->DrawPrimitive(D3DPT_LINELIST,0,lines.size());
 

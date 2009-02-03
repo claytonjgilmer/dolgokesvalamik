@@ -19,7 +19,40 @@
 #include "math/geometry/convexhullgeneration.h"
 #include "utils/timer.h"
 
-void get_object_vertices(node_t* obj, vector<vec3>& vertbuf)
+char* obj_names[]={
+						"model/predator_spyplane.MMOD",
+						"model/f35_raptor.MMOD",
+						"model/ef2000.MMOD",
+						"model/Boeing747_jumbo.MMOD",
+					};
+
+int obj_count=sizeof(obj_names)/4;
+
+vec3 to_vec3(float x,float y, float z)
+{
+	vec3 v; v.set(x,y,z);
+	return v;
+}
+
+void draw_grid(const vec3& campos, float gridsize, int cellnum)
+{
+	float camx=floorf(campos.x/gridsize)*gridsize;
+	float camz=floorf(campos.z/gridsize)*gridsize;
+
+
+	for (int n=-cellnum; n<cellnum; ++n)
+	{
+		for (int m=-cellnum; m<cellnum; ++m)
+		{
+			float actx=camx+n*gridsize;
+			float actz=camz+m*gridsize;
+			rendersystem::ptr->draw_line(to_vec3(actx,0,actz),color_r8g8b8a8(0,0,64,255),to_vec3(actx+gridsize,0,actz),color_r8g8b8a8(0,0,64,255));
+			rendersystem::ptr->draw_line(to_vec3(actx,0,actz),color_r8g8b8a8(0,0,64,255),to_vec3(actx,0,actz+gridsize),color_r8g8b8a8(0,0,64,255));
+		}
+	}
+}
+
+void get_object_vertices(node_t* obj, const mtx4x3& mtx, vector<vec3>& vertbuf)
 {
 	if (obj->get_metaobject()->isa(object3d::get_class_metaobject()->get_typeid()))
 	{
@@ -32,7 +65,7 @@ void get_object_vertices(node_t* obj, vector<vec3>& vertbuf)
 
 			for (unsigned j=0; j<m->m_vb->m_vertexnum; ++j)
 			{
-				vertbuf.push_back(*(vec3*)v);
+				vertbuf.push_back(mtx.transform(*(vec3*)v));
 				v+=m->m_vb->m_vertexsize;
 			}
 		}
@@ -40,7 +73,8 @@ void get_object_vertices(node_t* obj, vector<vec3>& vertbuf)
 
 	for (node_t* child=obj->get_child(); child; child=child->get_bro())
 	{
-		get_object_vertices(child,vertbuf);
+		mtx4x3 cmtx; cmtx.multiply(child->get_localposition(),mtx);
+		get_object_vertices(child,cmtx,vertbuf);
 	}
 }
 
@@ -48,8 +82,8 @@ void generate_sphere(vec3 o_pos[],int& o_numvertices,short o_indices[],int& o_nu
 object3d* load_mmod(const char* i_filename);
 struct game
 {
-	ref_ptr<mesh> m_mesh;
-	ref_ptr<mesh> sphere;
+//	ref_ptr<mesh> m_mesh;
+//	ref_ptr<mesh> sphere;
 //	mtx4x3 m_mtx;
 
 	float x,y,z;
@@ -57,8 +91,9 @@ struct game
 	vec3 camt;
 	float m_aspect;
 	vec3 light_dir;
-	object3d* obj;
+	vector<object3d*> obj;
 	object3d* sky;
+	object3d* terrain;
 #define BODY_NUM 50
 #define ROOM_SIZE 10.0f
 #define BODY_SIZE .5f
@@ -68,6 +103,7 @@ struct game
 
 //	convex_hull ch;
 	convex_hull_generator ch;
+	convex_hull_desc hd;
 
 	game()
 	{
@@ -100,6 +136,7 @@ unsigned g_time;
 vec3 g_pos[8]={{-1,-1,-1},{1,-1,-1},{1,1,-1},{-1,1,-1},{-1,-1,1},{1,-1,1},{1,1,1},{-1,1,1}};
 vec2 g_uv[]={V2(0,0),V2(1,0),V2(1,1),V2(0,1),V2(1,1),V2(0,1),V2(0,0),V2(1,0)};
 
+static int obj_index=0;
 
 void init_app(HWND i_hwnd)
 {
@@ -133,13 +170,18 @@ void init_app(HWND i_hwnd)
 	renderdesc.m_screenheight=abs(rect.bottom-rect.top);
 	renderdesc.m_window=i_hwnd;
 	renderdesc.m_windowed=true;
+	renderdesc.m_clear_color.set(64,64,255,0);
 
 	rendersystem::create(&renderdesc);
 
-	g_game->obj=	load_mmod("model/steamtrain.MMOD");
-	g_game->sky= load_mmod("model/skyBOX.MMOD");
-
-	for (unsigned n=0; n<g_game->sky->get_meshnum();++n)
+	for (int n=0; n<obj_count; ++n)
+		g_game->obj.push_back(load_mmod(obj_names[n]));
+	g_game->terrain= load_mmod("model/pearl_harbor.MMOD");
+	mtx4x3 mtx=mtx4x3::identitymtx();
+	mtx.t.y=-100;
+	g_game->terrain->set_worldposition(mtx);
+/*
+	for (unsigned n=0; n<g_game->terrain->get_meshnum();++n)
 	{
 		mesh* m=g_game->sky->get_mesh(n);
 
@@ -150,7 +192,7 @@ void init_app(HWND i_hwnd)
 			sm.set_shader(shadermanager::ptr->get_shader("nothing.fx"));
 		}
 	}
-
+*/
 
 	g_game->m_aspect=(float)renderdesc.m_screenwidth/(float)renderdesc.m_screenheight;
 
@@ -160,103 +202,11 @@ void init_app(HWND i_hwnd)
 
 //	mtx4x4 mtx; mtx.set_projectionmatrix(tan(degreetorad(45)),g_game->m_aspect,1,10000);
 
-	mesh* m=new mesh("fucka");
-
-	vector<vertexelem> ve;
-
-	ve.push_back(vertexelem(vertexelement_position,3));
-	ve.push_back(vertexelem(vertexelement_normal,3));
-	ve.push_back(vertexelem(vertexelement_uv,2));
-
-	m->m_vb=new vertexbuffer(8,ve);
-	m->m_ib=new indexbuffer(3*12);
-
-	struct vertex_t
-	{
-		vec3 pos;
-		vec3 normal;
-		vec2 uv;
-	};
-
-	vertex_t* vb=(vertex_t*)m->m_vb->lock();
-
-	for (int n=0; n<8; ++n)
-	{
-		vb[n].pos=BODY_SIZE*g_pos[n];
-		vb[n].uv=g_uv[n];
-		vb[n].normal=g_pos[n];  vb[n].normal.normalize();
-	}
-
-
-	m->m_vb->unlock();
-
-	unsigned short* ib=(unsigned short*)m->m_ib->lock();
-
-	const unsigned short buf[]={0,1,2,0,2,3,1,5,6,1,6,2,2,6,7,2,7,3,4,0,3,4,3,7,5,4,7,5,7,6,1,0,4,1,4,5};
-
-	memcpy(ib,buf,36*sizeof(short));
-
-	m->m_ib->unlock();
-
-
-	m->m_submeshbuf.resize(1);
-	submesh& ts=m->m_submeshbuf.back();
-	ts.m_firstindex=0;
-	ts.m_numindices=36;
-	ts.m_firstvertex=0;
-	ts.m_numvertices=8;
-
-	ts.set_shader(shadermanager::ptr->get_shader("posnormuv.fx"));
-	ts.bind_param("light_dir",&g_game->light_dir,3*sizeof(float));
-
-
-//	texture* txt=texturemanager::instance()->get_texture("teszt.jpg");
-	texture* txt=texturemanager::ptr->get_texture("structures_malayhouse.dds");
-	ts.m_texturebuf.push_back(txt);
 
 	g_game->x=g_game->y=g_game->z=0;
 
-	g_game->m_mesh=m;
 
 
-	vec3 pos[15000];
-	int posnum;
-	short index[16384];
-	int indexnum;
-
-	generate_sphere(pos,posnum,index,indexnum,BODY_SIZE,5);
-	g_game->sphere=new mesh("sphere");
-	g_game->sphere->m_vb=new vertexbuffer(posnum,ve);
-	g_game->sphere->m_ib=new indexbuffer(indexnum*3);
-	vb=(vertex_t*)g_game->sphere->m_vb->lock();
-
-	for (int n=0; n<posnum; ++n)
-	{
-		vb[n].pos=pos[n];
-		vb[n].normal=pos[n];
-		vb[n].normal.normalize();
-		vb[n].uv.set(0,0);
-	}
-	g_game->sphere->m_vb->unlock();
-
-	ib=(unsigned short*)g_game->sphere->m_ib->lock();
-	memcpy(ib,index,indexnum*3*sizeof(short));
-	g_game->sphere->m_ib->unlock();
-
-	g_game->sphere->m_submeshbuf.resize(1);
-	submesh& sts=g_game->sphere->m_submeshbuf.back();
-	sts.m_firstindex=0;
-	sts.m_numindices=indexnum*3;
-	sts.m_firstvertex=0;
-	sts.m_numvertices=posnum;
-
-	sts.set_shader(shadermanager::ptr->get_shader("posnormuv.fx"));
-	sts.bind_param("light_dir",&g_game->light_dir,3*sizeof(float));
-
-
-	//	texture* txt=texturemanager::instance()->get_texture("teszt.jpg");
-//	texture* txt=texturemanager::instance()->get_texture("white.bmp");
-	sts.m_texturebuf.push_back(txt);
 
 
 	bodydesc bd;
@@ -290,70 +240,13 @@ void init_app(HWND i_hwnd)
 		g_game->phb[n]->add_shape(sd);
 	}
 
-	convex_hull_desc hd;
-	hd.face_thickness=.000001;
-	hd.triangle_output=false;
-	vector<vec3>& b=hd.vertex_array;
-
-#if 0
-	b.resize(11);
-
-	b[0].set(-1,-1,-1);
-	b[1].set(-1,-1,1);
-	b[2].set(-1,1,-1);
-	b[3].set(-1,1,1);
-	b[4].set(1,-1,-1);
-	b[5].set(1,-1,1);
-	b[6].set(1,1,-1);
-	b[7].set(1,1,1);
-	b[8].set(1,0,0);
-	b[9].set(1,0,-.5f);
-	b[10].set(0,1,.5f);
-//	b[11].set(0,-1,0);
-//	b[12].set(0,0,1);
-//	b[13].set(0,0,-1);
-#elif 0
-#define buff_size 10000
-	b.resize(buff_size);
-
-	for (unsigned n=0; n<buff_size; ++n)
-	{
-		for (int m=0; m<3; ++m)
-		{
-			b[n][m]=random(-1.0f, 1.0f);
-		}
-
-		float* m=&b[n][0];
-		
-		if (fabsf(b[n][1])>fabsf(*m))
-			m=&b[n][1];
-		if (fabsf(b[n][2])>fabsf(*m))
-			m=&b[n][2];
-
-		int maxindex=m-&b[n][0];
-		int s=nextnumbermodulo3(maxindex);
-		int t=nextnumbermodulo3(s);
-
-		if (fabsf(b[n][s])>fabsf(b[n][t]))
-			b[n][s]/=fabsf(b[n][s]);
-		else
-			b[n][t]/=fabsf(b[n][t]);
-
-		*m/=abs(*m);
-//		b[n].normalize();
-	}
-#else
-//	vector<vec3> b;
-	get_object_vertices(g_game->obj,b);
-#endif
-	timer_t t;
-//	t.reset();
-//	g_game->ch=generate_convex_hull(hd);
-//	t.stop();
-	g_game->ch.init(hd);
-	PRINT("hull generation: %f sec\n",t.get_seconds());
+	g_game->hd.face_thickness=.00001;
+	g_game->hd.triangle_output=false;
 
 
+	g_game->hd.vertex_array.clear();
+	get_object_vertices(g_game->obj[0],mtx4x3::identitymtx(),g_game->hd.vertex_array);
+	g_game->ch.do_all(g_game->hd);
 
 	g_game->inited=true;
 }
@@ -440,7 +333,7 @@ void update_app()
 	float speed;
 
 	if (ip->KeyDown(KEYCODE_LSHIFT))
-		speed=10;
+		speed=20;
 	else
 		speed=3;
 
@@ -470,7 +363,9 @@ void update_app()
 	g_game->camx+=dt*(float)ip->GetMouseY()/10.0f;
 
 	cammtx.t=g_game->camt;
+	draw_grid(g_game->camt,20,20);
 
+#if 0
 	static bool keszvan=false;
 
 	if (!keszvan)
@@ -487,9 +382,19 @@ void update_app()
 		if (keszvan)
 			g_game->ch.get_result();
 	}
+#endif
 
-	if (1 || !keszvan)
-		g_game->ch.draw();
+	if (inputsystem::ptr->KeyPressed(KEYCODE_SPACE))
+	{
+		obj_index=(obj_index+1) % obj_count;
+		g_game->hd.vertex_array.clear();
+		get_object_vertices(g_game->obj[obj_index],mtx4x3::identitymtx(),g_game->hd.vertex_array);
+		g_game->ch.do_all(g_game->hd);
+	}
+
+
+	if (1)// || !keszvan)
+		g_game->ch.draw(g_game->obj[obj_index]->get_worldposition());
 	else
 	{
 		draw_hull(&g_game->ch.ch);
@@ -508,7 +413,7 @@ void update_app()
 	mtx.t.set(-1,0,2.5f);
 
 	vec3 light_dir; light_dir.set(1,1,0);
-	g_game->obj->get_worldposition().transformtransposed3x3(g_game->light_dir,light_dir);
+	g_game->obj[0]->get_worldposition().transformtransposed3x3(g_game->light_dir,light_dir);
 	g_game->light_dir.normalize();
 
 	g_game->x+=dt/10;
@@ -556,11 +461,6 @@ void update_app()
 		g_game->phb[n]->set_pos(pos);
 		g_game->phb[n]->set_vel(vel);
 
-		for (unsigned m=0; m<1; ++m)
-		{
-			rendersystem::ptr->add_mesh(g_game->sphere.get(),pos);
-			pos.t.x+=10;
-		}
 	}
 
 /*
@@ -569,10 +469,15 @@ void update_app()
 	rendersystem::ptr->add_mesh(g_game->sphere.get(),mtx);
 	*/
 	mtx.set_euler(0,0,0);
-	mtx.t.set(0,0,22.5f);
-	g_game->obj->set_worldposition(mtx);
-	g_game->obj->render();
-//	g_game->sky->render();
+	mtx.t.set(0,0,0);
+
+	for (unsigned n=0; n<g_game->obj.size(); ++n)
+	{
+		g_game->obj[n]->set_worldposition(mtx);
+		g_game->obj[n]->render();
+		mtx.t.x+=25;
+	}
+	g_game->terrain->render();
 	rendersystem::ptr->render();
 
 	update_time.stop();
@@ -588,10 +493,10 @@ void exit_app()
 	g_game->inited=false;
 	filesystem::release();
 	taskmanager::release();
-	g_game->m_mesh=NULL;
-	g_game->sphere=NULL;
-	delete g_game->obj;
-	delete g_game->sky;
+
+	for (unsigned n=0; n<g_game->obj.size(); ++n)
+		delete g_game->obj[n];
+	delete g_game->terrain;
 	shadermanager::release();
 	texturemanager::release();
 	inputsystem::release();

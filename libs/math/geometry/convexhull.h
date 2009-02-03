@@ -47,6 +47,16 @@ struct convex_hull
 
     vector<edge_data> edges;
     vector<uint16> edge_indices;
+
+	void clear()
+	{
+		vertices.clear();
+		vertex_adjacency.clear();
+		faces.clear();
+		face_indices.clear();
+		edges.clear();
+		edge_indices.clear();
+	}
 };
 
 void draw_hull(convex_hull* ch);

@@ -547,13 +547,6 @@ fixedvector<mesh*,8> MeshLODInfo::generate_mesh()
 	return res;
 }
 
-//float g_sphere_radius;
-//vec3 g_sphere_center;
-
-//vec3 g_box_min,g_box_max;
-
-//FloatArray gPrintedFloatArray;
-
 enum {
 	STAT_MODE_OFF = 0,
 	STAT_MODE_MODEL_PERF = 1<<0,

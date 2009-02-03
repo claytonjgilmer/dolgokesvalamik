@@ -56,7 +56,7 @@ void gen_face_t::operator delete(void* face)
 #define _MAX_VERTEX_DIST_ 0.01
 #define _MAX_VERTEX_DIST_SQUARE_ (_MAX_VERTEX_DIST_*_MAX_VERTEX_DIST_)
 
-void convex_hull_generator::draw()
+void convex_hull_generator::draw(const mtx4x3& mtx)
 {
 	int face_num=0;
 	for (unsigned n=0; n<faces.size(); ++n)
@@ -81,6 +81,9 @@ void convex_hull_generator::draw()
 				end.x=(float)work_array[e->head_vertex].x;
 				end.y=(float)work_array[e->head_vertex].y;
 				end.z=(float)work_array[e->head_vertex].z;
+
+				start=mtx.transform(start);
+				end=mtx.transform(end);
 				rendersystem::ptr->draw_line(start,color_r8g8b8a8(255,255,255,255),
 											 end,color_r8g8b8a8(255,255,255,255));
 			}
@@ -120,33 +123,48 @@ struct vec_sort_t
 	}
 };
 
+struct sort_array:dvec3
+{
+	int volt;
+	sort_array():volt(0){}
+	sort_array(const dvec3& v):volt(0){x=(v.x),y=(v.y),z=(v.z);}
+};
 
 void convex_hull_generator::simplify_vertex_array(const vector<vec3>& src_array)
 {
-    vector<dvec3> tmp_array; tmp_array.resize(src_array.size());
+    vector<sort_array> tmp_array; tmp_array.resize(src_array.size());
 	
 	for (unsigned n=0; n<src_array.size(); ++n)
 		tmp_array[n]=(dvec3)src_array[n];
     intro_sort(tmp_array.begin(), tmp_array.size(),vec_sort_t<0>());
 //	std::sort(tmp_array.begin(), tmp_array.end(),vec_sort_t<0>());
 
-    dvec3 sum=tmp_array[0];
-    double num=1;
-
-    for (unsigned n=1; n<tmp_array.size(); ++n)
+    for (unsigned n=0; n<tmp_array.size(); ++n)
     {
-		if ((tmp_array[n]-sum/num).squarelength()>_MAX_VERTEX_DIST_SQUARE_)
-        {
-            work_array.push_back(sum/num);
-            sum.set(0,0,0);
-            num=0;
-        }
+		if (tmp_array[n].volt)
+			continue;
 
-		sum+=tmp_array[n];
-		++num;
-    }
-    work_array.push_back(sum/num);
-    num=1;
+		dvec3 sum; sum=tmp_array[n];
+		double num=1;
+
+		for (unsigned m=n+1; m<tmp_array.size(); ++m)
+		{
+			if (tmp_array[m].volt)
+				continue;
+
+			dvec3 avg=sum/num;
+			if (fabs(tmp_array[m].x-avg.x)>_MAX_VERTEX_DIST_)
+				break;
+
+			if ((tmp_array[m]-avg).squarelength()<=_MAX_VERTEX_DIST_SQUARE_)
+			{
+				tmp_array[m].volt=1;
+				sum+=tmp_array[m];
+				++num;
+			}
+		}
+		work_array.push_back(sum/num);
+	}
 }
 
 void convex_hull_generator::set_big_face()
@@ -226,7 +244,8 @@ void convex_hull_generator::set_big_face()
 
 bool convex_hull_generator::is_horizon_edge(gen_half_edge_t* edge, const dvec3& ref_vertex) //sajat face out kell hogy legyen
 {
-	return (check_vertex(edge->opposite->face,ref_vertex)!=PLANE_OUTSIDE);
+	return (!edge->face->valid && edge->opposite->face->valid);
+//	return (check_vertex(edge->opposite->face,ref_vertex)!=PLANE_OUTSIDE);
 }
 
 gen_half_edge_t* convex_hull_generator::find_next_horizon_edge(gen_half_edge_t* edge, const dvec3& ref_vertex)
@@ -424,14 +443,13 @@ void convex_hull_generator::merge_faces()
 		{
 			if (get_vertexedge_count(e)==2)
 			{
-#ifdef CHECK_CONSISTENCY
 				gen_half_edge_t* nexte=e->next;
+#if 0//def CHECK_CONSISTENCY
 				dvec3 v1,v2;
-
 				v1=work_array[nexte->head_vertex]-work_array[e->head_vertex]; v1.normalize();
 				v2=work_array[e->head_vertex]-work_array[e->prev->head_vertex]; v2.normalize();
 				double l=cross(v1,v2).squarelength();
-				CONSISTENCY_ASSERT(l<0.00001);
+				CONSISTENCY_ASSERT(l<0.0001);
 #endif
 //				nevevan.push_back(nexte);
 
@@ -500,6 +518,15 @@ void convex_hull_generator::init(const convex_hull_desc& hull_desc)
 	vertex_index=3;
 
 	state=0;
+}
+
+void convex_hull_generator::do_all(const convex_hull_desc& hull_desc)
+{
+	clear();
+	init(hull_desc);
+
+	while(!generate());
+	get_result();
 }
 
 bool convex_hull_generator::generate()
@@ -586,6 +613,7 @@ bool convex_hull_generator::generate()
 
 void convex_hull_generator::get_result()
 {
+	ch.clear();
 	//no most mar minden vertex hozza van adagolva, mar csak ki kell vonni a zokszigentet
 	vector<int > valid_vertex;
 	valid_vertex.assign(work_array.size(),0);
@@ -692,8 +720,16 @@ void convex_hull_generator::get_result()
 #endif
 }
 
-convex_hull_generator::~convex_hull_generator()
+void convex_hull_generator::clear()
 {
 	for (unsigned int n=0; n<faces.size(); ++n)
 		delete faces[n];
+
+	faces.clear();
+	work_array.clear();
+}
+
+convex_hull_generator::~convex_hull_generator()
+{
+	clear();
 }

@@ -3,6 +3,7 @@
 
 #include "convexhull.h"
 #include "math/plane.h"
+#include "math\mtx4x3.h"
 #include "containers\intr_list.h"
 
 struct convex_hull_desc
@@ -87,14 +88,16 @@ struct gen_face_t:dplane_t
 };
 struct convex_hull_generator
 {
+	void do_all(const convex_hull_desc& hull_desc);
 	~convex_hull_generator();
 	void init(const convex_hull_desc& hull_desc);
 	bool generate();
 	void get_result();
-	void draw();
+	void draw(const mtx4x3& mtx);
 
 
 
+	void clear();
 	void simplify_vertex_array(const vector<vec3>& src_array);
 	void set_big_face();
 	void calculate_horizon(vector<gen_half_edge_t*>& edge_array, const dvec3& ref_vertex);
@@ -103,6 +106,10 @@ struct convex_hull_generator
 	int check_vertex(gen_face_t* face, const dvec3& v);
 	void insert_vertex(const vector<gen_half_edge_t*>& edge_array);
 	void merge_faces();
+
+
+
+
 	vector<dvec3> work_array;
 	vector<gen_face_t*> faces;
 	double dplane_thickness;
