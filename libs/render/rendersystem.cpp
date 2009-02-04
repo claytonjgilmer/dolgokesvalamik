@@ -61,7 +61,7 @@
 
 
 		this->m_queue.resize(1);
-		this->m_device->SetRenderState(D3DRS_CULLMODE,D3DCULL_NONE);
+		this->m_device->SetRenderState(D3DRS_CULLMODE,D3DCULL_CCW);
 	}
 
 	rendersystem::~rendersystem()
@@ -117,7 +117,7 @@
 
 			for (unsigned meshindex=0; meshindex<meshnum; ++meshindex)
 			{
-				mesh* m=buf[meshindex].m_mesh;
+				mesh_t* m=buf[meshindex].m_mesh;
 				m_device->SetStreamSource(0,m->m_vb->m_hwbuffer,0,m->m_vb->m_vertexsize);
 				m_device->SetVertexDeclaration(m->m_vb->m_decl);
 				m_device->SetIndices(m->m_ib->m_hwbuffer);
@@ -248,7 +248,7 @@
 		m_device->Present( NULL, NULL, NULL, NULL );
 	}
 
-	void rendersystem::add_mesh(mesh* i_mesh, const mtx4x3& i_mtx, unsigned i_queueindex/* =0 */)
+	void rendersystem::add_mesh(mesh_t* i_mesh, const mtx4x3& i_mtx, unsigned i_queueindex/* =0 */)
 	{
 		m_queue[i_queueindex].m_buf.push_back(queueelem(i_mesh,i_mtx));
 	}

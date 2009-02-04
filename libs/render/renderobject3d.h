@@ -13,8 +13,8 @@
 		object3d();
 		object3d(const char* i_name);
 		~object3d();
-		void add_mesh(mesh* i_mesh){m_mesh.push_back(i_mesh);}
-		mesh* get_mesh(unsigned i_index){return &*m_mesh[i_index];}
+		void add_mesh(mesh_t* i_mesh){m_mesh.push_back(i_mesh);}
+		mesh_t* get_mesh(unsigned i_index){return &*m_mesh[i_index];}
 		unsigned get_meshnum() const{return m_mesh.size();}
 
 		void render();
@@ -26,6 +26,6 @@
 		//properties
 		string m_modelname;
 //	protected:
-		fixedvector<ref_ptr<mesh>,8> m_mesh;
+		fixedvector<ref_ptr<mesh_t>,8> m_mesh;
 	};
 #endif//_renderobject3d_h_

@@ -9,9 +9,9 @@
 #include "utils/resource.h"
 #include "utils/auto_ptr.h"
 
-	struct mesh:resource
+	struct mesh_t:resource
 	{
-		mesh(const char* i_name);
+		mesh_t(const char* i_name);
 
 		void set_vertexbuffer(vertexbuffer* i_vb);
 		void set_indexbuffer(indexbuffer* i_ib);
@@ -22,6 +22,6 @@
 		vector<submesh> m_submeshbuf;
 
 
-		~mesh();
+		~mesh_t();
 	};
 #endif//_mesh_h_

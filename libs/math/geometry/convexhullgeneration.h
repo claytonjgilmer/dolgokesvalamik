@@ -10,11 +10,13 @@ struct convex_hull_desc
 {
 	vector<vec3> vertex_array;
 	double face_thickness;
+	double vertex_min_dist;
 	bool triangle_output;
 
 	convex_hull_desc()
 	{
 		face_thickness=0.000001;
+		vertex_min_dist=.01;
 		triangle_output=false;
 	}
 };
@@ -108,11 +110,15 @@ struct convex_hull_generator
 	void merge_faces();
 
 
+	double get_signed_volume(gen_face_t* face, const vec3& point);
+
+
 
 
 	vector<dvec3> work_array;
 	vector<gen_face_t*> faces;
-	double dplane_thickness;
+	double plane_thickness;
+	double vertex_min_dist;
 	bool triangle_output;
 
 	convex_hull ch;

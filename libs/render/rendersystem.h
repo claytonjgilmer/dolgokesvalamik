@@ -89,7 +89,7 @@
 		void flush_queues();
 		void render();
 
-		void add_mesh(mesh* i_mesh, const mtx4x3& i_mtx, unsigned i_queueindex=0);
+		void add_mesh(mesh_t* i_mesh, const mtx4x3& i_mtx, unsigned i_queueindex=0);
 
 #define LINENUM_MAX		100000
 		struct line_struct

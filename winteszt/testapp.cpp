@@ -60,7 +60,7 @@ void get_object_vertices(node_t* obj, const mtx4x3& mtx, vector<vec3>& vertbuf)
 
 		for (unsigned n=0; n<obj3d->get_meshnum(); ++n)
 		{
-			mesh* m=obj3d->get_mesh(n);
+			mesh_t* m=obj3d->get_mesh(n);
 			char* v=(char*)m->m_vb->lock();
 
 			for (unsigned j=0; j<m->m_vb->m_vertexnum; ++j)
@@ -82,8 +82,8 @@ void generate_sphere(vec3 o_pos[],int& o_numvertices,short o_indices[],int& o_nu
 object3d* load_mmod(const char* i_filename);
 struct game
 {
-//	ref_ptr<mesh> m_mesh;
-//	ref_ptr<mesh> sphere;
+//	ref_ptr<mesh_t> m_mesh;
+//	ref_ptr<mesh_t> sphere;
 //	mtx4x3 m_mtx;
 
 	float x,y,z;
@@ -138,6 +138,28 @@ vec2 g_uv[]={V2(0,0),V2(1,0),V2(1,1),V2(0,1),V2(1,1),V2(0,1),V2(0,0),V2(1,0)};
 
 static int obj_index=0;
 
+void bind_light(node_t* node)
+{
+	if (node->get_metaobject()->isa(object3d::get_class_metaobject()->get_typeid()))
+	{
+		object3d* obj3d=(object3d*)node;
+
+		for (unsigned n=0; n<obj3d->get_meshnum(); ++n)
+		{
+			mesh_t* mesh=obj3d->get_mesh(n);
+
+			for (unsigned int m=0; m<mesh->m_submeshbuf.size(); ++m)
+				mesh->m_submeshbuf[m].bind_param("light_dir",&g_game->light_dir,3*sizeof(float));
+		}
+	}
+
+	for (node_t* child=node->get_child(); child; child=child->get_bro())
+	{
+		bind_light(child);
+	}
+
+}
+
 void init_app(HWND i_hwnd)
 {
 	g_game=new game;
@@ -175,24 +197,20 @@ void init_app(HWND i_hwnd)
 	rendersystem::create(&renderdesc);
 
 	for (int n=0; n<obj_count; ++n)
+	{
 		g_game->obj.push_back(load_mmod(obj_names[n]));
-	g_game->terrain= load_mmod("model/pearl_harbor.MMOD");
+		bind_light(g_game->obj.back());
+	}
+
+
+#if 0
+	g_game->terrain=load_mmod("model/pearl_harbor.MMOD");
 	mtx4x3 mtx=mtx4x3::identitymtx();
 	mtx.t.y=-100;
 	g_game->terrain->set_worldposition(mtx);
-/*
-	for (unsigned n=0; n<g_game->terrain->get_meshnum();++n)
-	{
-		mesh* m=g_game->sky->get_mesh(n);
-
-		for (unsigned k=0; k<m->m_submeshbuf.size(); ++k)
-		{
-			submesh& sm=m->m_submeshbuf[k];
-
-			sm.set_shader(shadermanager::ptr->get_shader("nothing.fx"));
-		}
-	}
-*/
+#else
+	g_game->terrain=NULL;
+#endif
 
 	g_game->m_aspect=(float)renderdesc.m_screenwidth/(float)renderdesc.m_screenheight;
 
@@ -241,6 +259,7 @@ void init_app(HWND i_hwnd)
 	}
 
 	g_game->hd.face_thickness=.00001;
+	g_game->hd.vertex_min_dist=.01;
 	g_game->hd.triangle_output=false;
 
 
@@ -477,7 +496,10 @@ void update_app()
 		g_game->obj[n]->render();
 		mtx.t.x+=25;
 	}
-	g_game->terrain->render();
+
+	if (g_game->terrain)
+		g_game->terrain->render();
+
 	rendersystem::ptr->render();
 
 	update_time.stop();
@@ -496,7 +518,10 @@ void exit_app()
 
 	for (unsigned n=0; n<g_game->obj.size(); ++n)
 		delete g_game->obj[n];
-	delete g_game->terrain;
+
+	if (g_game->terrain)
+		delete g_game->terrain;
+
 	shadermanager::release();
 	texturemanager::release();
 	inputsystem::release();

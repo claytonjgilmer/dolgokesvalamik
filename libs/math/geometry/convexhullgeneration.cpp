@@ -53,8 +53,6 @@ void gen_face_t::operator delete(void* face)
 
 
 
-#define _MAX_VERTEX_DIST_ 0.01
-#define _MAX_VERTEX_DIST_SQUARE_ (_MAX_VERTEX_DIST_*_MAX_VERTEX_DIST_)
 
 void convex_hull_generator::draw(const mtx4x3& mtx)
 {
@@ -132,6 +130,32 @@ struct sort_array:dvec3
 
 void convex_hull_generator::simplify_vertex_array(const vector<vec3>& src_array)
 {
+	if (vertex_min_dist<0)
+	{
+		dvec3 bmin,bmax;
+		bmin.set(FLT_MAX,FLT_MAX,FLT_MAX);
+		bmax.set(-FLT_MAX,-FLT_MAX,-FLT_MAX);
+
+		for (unsigned n=0; n<src_array.size(); ++n)
+		{
+			for (int m=0; m<3; ++m)
+			{
+				if (src_array[n][m]<bmin[m])
+				{
+					bmin[m]=src_array[n][m];
+				}
+				if (src_array[n][m]>bmax[m])
+				{
+					bmax[m]=src_array[n][m];
+				}
+			}
+		}
+
+		dvec3 extent=bmax-bmin;
+		double* maxptr=max_elem(&extent[0],&extent[3]);
+
+		vertex_min_dist=*maxptr*(-vertex_min_dist);
+	}
     vector<sort_array> tmp_array; tmp_array.resize(src_array.size());
 	
 	for (unsigned n=0; n<src_array.size(); ++n)
@@ -153,10 +177,10 @@ void convex_hull_generator::simplify_vertex_array(const vector<vec3>& src_array)
 				continue;
 
 			dvec3 avg=sum/num;
-			if (fabs(tmp_array[m].x-avg.x)>_MAX_VERTEX_DIST_)
+			if (fabs(tmp_array[m].x-avg.x)>vertex_min_dist)
 				break;
 
-			if ((tmp_array[m]-avg).squarelength()<=_MAX_VERTEX_DIST_SQUARE_)
+			if ((tmp_array[m]-avg).squarelength()<=vertex_min_dist*vertex_min_dist)
 			{
 				tmp_array[m].volt=1;
 				sum+=tmp_array[m];
@@ -363,9 +387,9 @@ int convex_hull_generator::check_vertex(gen_face_t* face, const dvec3& v)
 {
 	double dist=face->get_distance(v);
 	g_dist=dist;
-	if (dist>dplane_thickness)
+	if (dist>plane_thickness)
 		return PLANE_OUTSIDE;
-	if (dist<-dplane_thickness)
+	if (dist<-plane_thickness)
 		return PLANE_INSIDE;
 	else
 		return PLANE_ON;
@@ -480,7 +504,8 @@ void convex_hull_generator::merge_faces()
 
 void convex_hull_generator::init(const convex_hull_desc& hull_desc)
 {
-	dplane_thickness=hull_desc.face_thickness;
+	plane_thickness=hull_desc.face_thickness;
+	vertex_min_dist=hull_desc.vertex_min_dist;
 	triangle_output=hull_desc.triangle_output;
 	simplify_vertex_array(hull_desc.vertex_array);
 	set_big_face();
@@ -527,6 +552,11 @@ void convex_hull_generator::do_all(const convex_hull_desc& hull_desc)
 
 	while(!generate());
 	get_result();
+}
+
+double convex_hull_generator::get_signed_volume(gen_face_t* face, const vec3& point)
+{
+	return 0;
 }
 
 bool convex_hull_generator::generate()

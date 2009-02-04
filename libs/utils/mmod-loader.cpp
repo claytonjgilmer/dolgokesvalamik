@@ -277,7 +277,7 @@ struct MeshLODInfo
 	void PrintSubsetChunk(MChunk& chunk);
 	void PrintLODPhasesChunk(MChunk &subchunk);
 
-	fixedvector<mesh*,8> generate_mesh();
+	fixedvector<mesh_t*,8> generate_mesh();
 	vector<vertexelem> createdecl(string i_filename);
 
 /*
@@ -479,13 +479,13 @@ vector<vertexelem> MeshLODInfo::createdecl(string i_filename)
 	return ret;
 }
 
-fixedvector<mesh*,8> MeshLODInfo::generate_mesh()
+fixedvector<mesh_t*,8> MeshLODInfo::generate_mesh()
 {
 	assertion(m_Streams.size()>0,"0 a vertexbufferek szama!");
-	fixedvector<mesh*,8> res;
+	fixedvector<mesh_t*,8> res;
 	for (unsigned streamindex=0; streamindex<m_Streams.size(); ++streamindex)
 	{
-		mesh* m=new mesh("mesh");
+		mesh_t* m=new mesh_t("mesh");
 		res.push_back(m);
 
 		if (m_32bit)
@@ -1153,11 +1153,11 @@ object3d* load_mmod(file& i_file)
 		}
 	}
 
-	vector<fixedvector<mesh*,8> > meshbuf;
+	vector<fixedvector<mesh_t*,8> > meshbuf;
 
 	for (unsigned n=0; n<gMeshLODInfoArray.size();++n)
 	{
-		fixedvector<mesh*,8> mesh;
+		fixedvector<mesh_t*,8> mesh;
 		if (gMeshLODInfoArray[n].ismesh)
 			mesh=gMeshLODInfoArray[n].generate_mesh();
 

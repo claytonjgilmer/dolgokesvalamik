@@ -9,8 +9,8 @@
 	struct queueelem
 	{
 		queueelem(){}
-		queueelem(mesh* i_mesh, const mtx4x3& i_mtx):m_mesh(i_mesh),m_mtx(i_mtx){}
-		mesh*	m_mesh;
+		queueelem(mesh_t* i_mesh, const mtx4x3& i_mtx):m_mesh(i_mesh),m_mtx(i_mtx){}
+		mesh_t*	m_mesh;
 		mtx4x3	m_mtx;
 	};
 
