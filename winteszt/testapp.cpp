@@ -17,22 +17,36 @@
 #include "physics/system/physicssystem.h"
 #include "math/geometry/convexhull.h"
 #include "math/geometry/convexhullgeneration.h"
+#include "physics/collision/shapes/convexmeshdata.h"
+#include "physics/collision/shapeintersection/satintersection.h"
+#include "physics/collision/shapeintersection/gjkintersection.h"
+#include "physics/collision/shapeintersection/deepintersection.h"
+#include "math/geometry/intersection.h"
 #include "utils/timer.h"
 
+void draw_simplex(dvec3 s[], int num)
+{
+	for (int n=0; n<num; ++n)
+		for (int m=n+1; m<num; ++m)
+		{
+			vec3 start; start.set((float)s[n].x,(float)s[n].y,(float)s[n].z);
+			vec3 end; end.set((float)s[m].x,(float)s[m].y,(float)s[m].z);
+			rendersystem::ptr->draw_line(start,color_r8g8b8a8(255,0,0,255),end,color_r8g8b8a8(255,0,0,255));
+		}
+}
+
 char* obj_names[]={
+//						"model/sphere.MMOD",
+//						"model/box.MMOD",
+//						"model/teapot.MMOD",
+//						"model/PT_Boat_Camo.MMOD",
 						"model/predator_spyplane.MMOD",
-						"model/f35_raptor.MMOD",
-						"model/ef2000.MMOD",
-						"model/Boeing747_jumbo.MMOD",
+//						"model/f35_raptor.MMOD",
+//						"model/ef2000.MMOD",
+//						"model/Boeing747_jumbo.MMOD",
 					};
 
 int obj_count=sizeof(obj_names)/4;
-
-vec3 to_vec3(float x,float y, float z)
-{
-	vec3 v; v.set(x,y,z);
-	return v;
-}
 
 void draw_grid(const vec3& campos, float gridsize, int cellnum)
 {
@@ -104,9 +118,14 @@ struct game
 //	convex_hull ch;
 	convex_hull_generator ch;
 	convex_hull_desc hd;
+	convex_mesh_data_t md;
+	convex_mesh_data_t md2;
+
+	vec3 obj_trans;
 
 	game()
 	{
+		obj_trans.set(0,5,0);
 		camz=camy=camx=0;
 		camt.set(0,0,-10);
 		inited=false;
@@ -160,8 +179,22 @@ void bind_light(node_t* node)
 
 }
 
+#define frame_count 1000
+unsigned timedeep[frame_count];
+unsigned framedeep=0;
+unsigned time1[frame_count];
+unsigned frame1=0;
+unsigned time2[frame_count];
+unsigned frame2=0;
+unsigned sumtime1=0;
+unsigned sumtime2=0;
+unsigned sumtimedeep=0;
+
 void init_app(HWND i_hwnd)
 {
+	for (int n=0; n<frame_count; ++n)
+		time1[n]=time2[n]=timedeep[n]=0;
+
 	g_game=new game;
 	filesystem::create();
 	filesystem::ptr->register_path("shader","shader\\");
@@ -266,6 +299,11 @@ void init_app(HWND i_hwnd)
 	g_game->hd.vertex_array.clear();
 	get_object_vertices(g_game->obj[0],mtx4x3::identitymtx(),g_game->hd.vertex_array);
 	g_game->ch.do_all(g_game->hd);
+	hull_to_convex_mesh(g_game->md,g_game->ch.ch);
+	hull_to_convex_mesh(g_game->md2,g_game->ch.ch);
+
+	g_game->obj_trans.y=g_game->md.half_extent.y*2;
+
 
 	g_game->inited=true;
 }
@@ -306,10 +344,16 @@ void vec3_mul(vec3& dst, const vec3& src)
 unsigned sumtime=0;
 int manual=false;
 
+vec3 to_vec3(dvec3 v)
+{
+	vec3 r; r.set((float)v.x,(float)v.y,(float)v.z); return r;
+}
+
+
 void update_app()
 {
 	timer_t update_time;
-	char str[128];
+	char str[1024];
 	g_game->t.stop();
 	float frame_time=g_game->t.get_seconds();
 	g_game->t.reset();
@@ -349,9 +393,11 @@ void update_app()
 	mtx4x3 cammtx=mtx4x3::identitymtx();
 	cammtx.set_euler(g_game->camx,g_game->camy,g_game->camz);
 
+	g_game->light_dir=-cammtx.z;
+
 	float speed;
 
-	if (ip->KeyDown(KEYCODE_LSHIFT))
+	if (ip->MouseButtonDown(0))
 		speed=20;
 	else
 		speed=3;
@@ -405,18 +451,168 @@ void update_app()
 
 	if (inputsystem::ptr->KeyPressed(KEYCODE_SPACE))
 	{
-		obj_index=(obj_index+1) % obj_count;
+		int add=inputsystem::ptr->KeyDown(KEYCODE_LSHIFT) ? -1 : 1;
+		obj_index=(obj_index+obj_count+add) % obj_count;
 		g_game->hd.vertex_array.clear();
 		get_object_vertices(g_game->obj[obj_index],mtx4x3::identitymtx(),g_game->hd.vertex_array);
 		g_game->ch.do_all(g_game->hd);
+		hull_to_convex_mesh(g_game->md,g_game->ch.ch);
+		hull_to_convex_mesh(g_game->md2,g_game->ch.ch);
+	}
+
+	static float ex=0,ey=0,ez=0;
+
+	if (inputsystem::ptr->KeyDown(KEYCODE_LSHIFT))
+	{
+		if (inputsystem::ptr->KeyDown(KEYCODE_UP))
+			ex+=dt;
+		if (inputsystem::ptr->KeyDown(KEYCODE_DOWN))
+			ex-=dt;
+		if (inputsystem::ptr->KeyDown(KEYCODE_LEFT))
+			ey-=dt;
+		if (inputsystem::ptr->KeyDown(KEYCODE_RIGHT))
+			ey+=dt;
+	}
+	else
+	{
+		if (inputsystem::ptr->KeyDown(KEYCODE_UP))
+			g_game->obj_trans.y+=dt;
+		if (inputsystem::ptr->KeyDown(KEYCODE_DOWN))
+			g_game->obj_trans.y-=dt;
+		if (inputsystem::ptr->KeyDown(KEYCODE_LEFT))
+			g_game->obj_trans.z-=dt;
+		if (inputsystem::ptr->KeyDown(KEYCODE_RIGHT))
+			g_game->obj_trans.z+=dt;
+		if (inputsystem::ptr->KeyDown(KEYCODE_NUMPAD4))
+			g_game->obj_trans.x-=dt;
+		if (inputsystem::ptr->KeyDown(KEYCODE_NUMPAD6))
+			g_game->obj_trans.x+=dt;
 	}
 
 
-	if (1)// || !keszvan)
+
+	if (0)// || !keszvan)
 		g_game->ch.draw(g_game->obj[obj_index]->get_worldposition());
 	else
 	{
-		draw_hull(&g_game->ch.ch);
+//		draw_hull(&g_game->ch.ch,g_game->obj[obj_index]->get_worldposition());
+		mtx4x3 mtx1=g_game->obj[obj_index]->get_worldposition();
+		mtx1.set_euler(ex,ey,ez);
+		mtx4x3 mtx2=mtx4x3::identitymtx(); 
+		mtx2.t=mtx1.t+g_game->obj_trans;
+		g_game->obj[obj_index]->set_worldposition(mtx1);
+
+		static bool deep_init=false;
+		static vec3 deep_init_vec=to_vec3(0,0,0);
+		static edge_data* deep_init_v1=NULL;
+		static edge_data* deep_init_v2=NULL;
+		static int deep_init_state=0;
+
+		if (inputsystem::ptr->KeyPressed(KEYCODE_F))
+		{
+			deep_init=!deep_init;
+			deep_init_vec=to_vec3(0,0,0);
+		}
+
+
+		vec3 normal;float depth;
+		timer_t t;
+		t.reset();
+		deep_intersection deep(&g_game->ch.ch,&g_game->ch.ch,mtx1,mtx2,deep_init_vec,deep_init_v1,deep_init_v2,deep_init_state);
+		t.stop();
+
+		if (deep_init && deep.result)
+		{
+			deep_init_vec=deep.normal; deep_init_vec.normalize();
+			deep_init_v1=deep.v1;
+			deep_init_v2=deep.v2;
+			deep_init_state=deep.state;
+		}
+
+		sumtimedeep-=timedeep[frame1];
+		timedeep[framedeep]=t.get_tick();
+		sumtimedeep+=timedeep[framedeep];
+		framedeep=(framedeep+1) % frame_count;
+
+		sprintf(str,"deeptime:%d iter:%d  init:%d",sumtimedeep/frame_count,deep.itnum,deep_init);
+		rendersystem::ptr->draw_text(50,130,color_f(1,1,1,1),str);
+
+		t.reset();
+		vec3 pen;
+		vec3 center=g_game->ch.ch.center;
+		vec3 extent=g_game->ch.ch.half_extent;
+		uint32 res=obb_obb_intersect(pen,center,extent,mtx1,center,extent,mtx2);
+		t.stop();
+		sprintf(str,"boxboxtime:%d,result:%d",t.get_tick(),res);
+		rendersystem::ptr->draw_text(50,150,color_f(1,1,1,1),str);
+		t.reset();
+		res=sphere_sphere_intersect(pen,mtx1.t,extent.x,mtx2.t,extent.x);
+		t.stop();
+		sprintf(str,"sphsphtime:%d,result:%d",t.get_tick(),res);
+		rendersystem::ptr->draw_text(50,170,color_f(1,1,1,1),str);
+
+		if (res)
+			rendersystem::ptr->draw_circle(mtx2.t+pen,extent.x,30,color_r8g8b8a8(255,0,255,0));
+
+
+
+		dvec3 initdir;
+		{
+			t.reset();
+			gjk_intersection gjk(&g_game->md,&g_game->md2,mtx1,mtx2);
+			t.stop();
+			sumtime1-=time1[frame1];
+			time1[frame1]=t.get_tick();
+			sumtime1+=time1[frame1];
+			frame1=(frame1+1) % frame_count;
+			float vol=0;
+			if (gjk.simplex_size==4)
+				vol=get_tetrahedron_volume(to_vec3(gjk.simplex[0]),to_vec3(gjk.simplex[1]),to_vec3(gjk.simplex[2]),to_vec3(gjk.simplex[3]));
+			sprintf(str,"gjk time:%03d, result:%d, out:%d, dir:(%g %g %g),prevdir: (%g %g %g), simplex:%d, vol:%.1f, iter:%d",
+				sumtime1/frame_count, gjk.result,gjk.out,gjk.dir.x, gjk.dir.y,gjk.dir.z,gjk.prevdir.x, gjk.prevdir.y,gjk.prevdir.z,gjk.simplex_size,vol,gjk.iteration);
+			rendersystem::ptr->draw_text(50,90,color_f(1,1,1,1),str);
+			initdir=gjk.prevdir;
+		}
+		{
+			t.reset();
+			gjk_intersection gjk(&g_game->md,&g_game->md2,mtx1,mtx2,initdir);
+			t.stop();
+			float vol=0;
+			if (gjk.simplex_size==4)
+				vol=get_tetrahedron_volume(to_vec3(gjk.simplex[0]),to_vec3(gjk.simplex[1]),to_vec3(gjk.simplex[2]),to_vec3(gjk.simplex[3]));
+			sprintf(str,"gjk time:%03d, result:%d, out:%d, dir:(%g %g %g),prevdir: (%g %g %g), simplex:%d, vol:%.1f, iter:%d",
+				t.get_tick(), gjk.result,gjk.out,gjk.dir.x, gjk.dir.y,gjk.dir.z,gjk.prevdir.x, gjk.prevdir.y,gjk.prevdir.z,gjk.simplex_size,vol,gjk.iteration);
+			rendersystem::ptr->draw_text(50,110,color_f(1,1,1,1),str);
+//		g_game->md.ph.draw(g_game->md.vert,mtx1);
+//		g_game->md2.ph.draw(g_game->md.vert,mtx2);
+
+		//		draw_hull(&g_game->md,mtx1);
+		draw_hull(&g_game->md2,mtx2);
+
+		if (deep.result)
+		{
+			mtx4x3 mtx3=mtx2;
+			mtx3.t+=deep.normal;
+			draw_hull(&g_game->md2,mtx3);
+		}
+		draw_simplex(gjk.simplex,gjk.simplex_size);
+		}
+		{
+			t.reset();
+			gjk_intersection2 gjk(&g_game->ch.ch,&g_game->ch.ch,mtx1,mtx2);//,initdir);
+			t.stop();
+			sumtime2-=time2[frame2];
+			time2[frame2]=t.get_tick();
+			sumtime2+=time2[frame2];
+			frame2=(frame2+1) % frame_count;
+			float vol=0;
+			if (gjk.simplex_size==4)
+				vol=get_tetrahedron_volume(to_vec3(gjk.simplex[0]),to_vec3(gjk.simplex[1]),to_vec3(gjk.simplex[2]),to_vec3(gjk.simplex[3]));
+			sprintf(str,"gjk2time:%03d, result:%d, out:%d, dir:(%g %g %g),prevdir: (%g %g %g), simplex:%d, vol:%.1f, iter:%d",
+				sumtime2/frame_count, gjk.result,gjk.out,gjk.dir.x, gjk.dir.y,gjk.dir.z,gjk.prevdir.x, gjk.prevdir.y,gjk.prevdir.z,gjk.simplex_size,vol,gjk.iteration);
+			rendersystem::ptr->draw_text(50,70,color_f(1,1,1,1),str);
+		}
+
 	}
 
 
@@ -431,9 +627,9 @@ void update_app()
 	mtx.set_euler(g_game->x,g_game->y,g_game->z);
 	mtx.t.set(-1,0,2.5f);
 
-	vec3 light_dir; light_dir.set(1,1,0);
-	g_game->obj[0]->get_worldposition().transformtransposed3x3(g_game->light_dir,light_dir);
-	g_game->light_dir.normalize();
+//	g_game->light_dir.set(1,1,0);
+//	g_game->obj[0]->get_worldposition().transformtransposed3x3(g_game->light_dir,light_dir);
+//	g_game->light_dir.normalize();
 
 	g_game->x+=dt/10;
 	g_game->y+=2*dt/10;
@@ -487,8 +683,10 @@ void update_app()
 	mtx.t.set(1,0,2.5f);
 	rendersystem::ptr->add_mesh(g_game->sphere.get(),mtx);
 	*/
-	mtx.set_euler(0,0,0);
-	mtx.t.set(0,0,0);
+//	mtx.set_euler(0,0,0);
+//	mtx.t.set(0,0,0);
+
+	mtx=g_game->obj[0]->get_worldposition();
 
 	for (unsigned n=0; n<g_game->obj.size(); ++n)
 	{
@@ -523,9 +721,9 @@ void exit_app()
 		delete g_game->terrain;
 
 	shadermanager::release();
-	texturemanager::release();
 	inputsystem::release();
 	rendersystem::release();
+	texturemanager::release();
 	physicssystem::release();
 
 	delete g_game;

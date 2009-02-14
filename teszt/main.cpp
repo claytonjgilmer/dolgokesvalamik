@@ -462,7 +462,7 @@ void sorttest2()
 	b[7].set(1,1,1);
 	b[8].set(1,1.5f,1);
 	timer_start(&t);
-	convex_hull h=generate_convex_hull(hd);
+	convex_hull_t h=generate_convex_hull(hd);
 	timer_stop(&t);
 	printf("%d elem convexhull generalasa:%d\n",buff_size,timer_get_tick(&t));
 /*

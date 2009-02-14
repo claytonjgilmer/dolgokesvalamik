@@ -216,6 +216,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\physics\collision\shapes\convexmeshdata.h"
+				>
+			</File>
+			<File
+				RelativePath=".\physics\collision\shapeintersection\deepintersection.h"
+				>
+			</File>
+			<File
 				RelativePath=".\math\dvec3.h"
 				>
 			</File>
@@ -233,6 +241,10 @@
 			</File>
 			<File
 				RelativePath=".\physics\collision\broadphase\gird_2d.h"
+				>
+			</File>
+			<File
+				RelativePath=".\physics\collision\shapeintersection\gjkintersection.h"
 				>
 			</File>
 			<File
@@ -632,6 +644,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\physics\collision\shapes\convexmeshdata.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\physics\collision\shapeintersection\deepintersection.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\math\geometry\quadedge\edge.cpp"
 				>
 			</File>
@@ -641,6 +661,10 @@
 			</File>
 			<File
 				RelativePath=".\file\filesystem.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\physics\collision\shapeintersection\gjkintersection.cpp"
 				>
 			</File>
 			<File
@@ -837,10 +861,6 @@
 			</File>
 			<File
 				RelativePath=".\scene\rootobject.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\physics\collision\shapeintersection\satintersection.cpp"
 				>
 			</File>
 			<File

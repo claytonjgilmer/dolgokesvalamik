@@ -4,7 +4,7 @@
 #include "vec3.h"
 #include "mtx4x3.h"
 
-	struct aabb
+	struct aabb_t
 	{
 		vec3 min;
 		vec3 max;
@@ -31,9 +31,9 @@
 		}
 	};
 
-	MLINLINE aabb transform(const mtx4x3& i_mtx, const aabb& i_src)
+	MLINLINE aabb_t transform(const mtx4x3& i_mtx, const aabb_t& i_src)
 	{
-		aabb dst;
+		aabb_t dst;
 
 		vec3 center=0.5f*(i_src.min+i_src.max);
 		vec3 extent=0.5f*(i_src.max-i_src.min);

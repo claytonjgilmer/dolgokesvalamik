@@ -8,11 +8,13 @@
 #include "texture.h"
 #include "shader.h"
 #include "math/mtx4x4.h"
+#include "texturemanager.h"
 
 	DEFINE_SINGLETON(rendersystem);
 
 	rendersystem::rendersystem(const rendersystemdesc* i_desc)
 	{
+		ptr=this;
 		clear_color=i_desc->m_clear_color;
 		m_sys = Direct3DCreate9( D3D_SDK_VERSION );
 
@@ -62,6 +64,8 @@
 
 		this->m_queue.resize(1);
 		this->m_device->SetRenderState(D3DRS_CULLMODE,D3DCULL_CCW);
+
+		this->white_texture=texturemanager::ptr->get_texture("white.bmp");
 	}
 
 	rendersystem::~rendersystem()
@@ -121,24 +125,27 @@
 				m_device->SetStreamSource(0,m->m_vb->m_hwbuffer,0,m->m_vb->m_vertexsize);
 				m_device->SetVertexDeclaration(m->m_vb->m_decl);
 				m_device->SetIndices(m->m_ib->m_hwbuffer);
-				const mtx4x4 objmtx=(mtx4x4)buf[meshindex].m_mtx;
+				mtx4x4 objmtx=(mtx4x4)buf[meshindex].m_mtx;
 				mtx4x4 faszommtx; faszommtx.multiply(objmtx,m_viewprojection_matrix);
 
 				faszommtx.transpose();
+				objmtx.transpose();
 
 				for (unsigned trisetindex=0; trisetindex<m->m_submeshbuf.size(); ++trisetindex)
 				{
 					submesh& sm=m->m_submeshbuf[trisetindex];
 
+					m_device->SetTexture(0,white_texture.get()->m_hwbuffer);
 					for (unsigned txtindex=0; txtindex<sm.m_texturebuf.size(); ++txtindex)
 					{
-						m_device->SetTexture(txtindex,sm.m_texturebuf[txtindex].get() ? sm.m_texturebuf[txtindex].get()->m_hwbuffer : NULL);
+						m_device->SetTexture(txtindex,sm.m_texturebuf[txtindex].get() ? sm.m_texturebuf[txtindex].get()->m_hwbuffer : white_texture.get()->m_hwbuffer);
 					}
 
 
 					{
 						LPD3DXEFFECT acteffect=sm.m_shader->m_effect;
 						acteffect->SetTechnique( "Technique0" );
+						acteffect->SetValue("WorldMtx",&objmtx,sizeof(mtx4x4));
 						acteffect->SetValue("worldViewProj",&faszommtx,sizeof(mtx4x4));
 						sm.set_constants();
 						unsigned numpasses;
@@ -211,7 +218,7 @@
 			m_device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
 
 			//			m_device->SetRenderState( D3DRS_LIGHTING, FALSE );
-//			m_device->SetRenderState(D3DRS_ZENABLE,D3DZB_FALSE);
+			m_device->SetRenderState(D3DRS_ZENABLE,D3DZB_FALSE);
 
 			m_device->DrawPrimitive(D3DPT_LINELIST,0,lines.size());
 

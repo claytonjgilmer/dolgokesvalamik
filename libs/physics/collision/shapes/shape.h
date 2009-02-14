@@ -26,7 +26,7 @@
 
 	struct shape_t:public intr_list_node_base<shape_t>
 	{
-		aabb bounding;
+		aabb_t bounding;
 		body_t* body;
 		shape_type type;
 		broadphaseobject* collider;

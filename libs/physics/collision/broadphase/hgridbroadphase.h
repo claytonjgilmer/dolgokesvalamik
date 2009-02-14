@@ -10,7 +10,7 @@ const unsigned NUM_BUCKETS=16384;
 
 struct hgridobject:public broadphaseobject
 {
-    hgridobject(void* i_userdata, const aabb& i_boundingworld, uint32 i_is_static);
+    hgridobject(void* i_userdata, const aabb_t& i_boundingworld, uint32 i_is_static);
     hgridobject* next_object;
     hgridobject* prev_object;
     vec3 pos;
@@ -31,7 +31,7 @@ struct hgridbroadphase
 {
     hgridbroadphase();
 
-    broadphaseobject* create_object(void* i_userdata, const aabb& i_bounding, uint32 i_static);
+    broadphaseobject* create_object(void* i_userdata, const aabb_t& i_bounding, uint32 i_static);
     void release_object(broadphaseobject*);
     void update_object(broadphaseobject*);
 

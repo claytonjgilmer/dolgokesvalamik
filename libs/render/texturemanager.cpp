@@ -20,6 +20,9 @@
 		file texturefile;
 		filesystem::ptr->open_file(texturefile,m_texturegroup.c_str(),i_texturename,"rb");
 
+		if (!texturefile.opened())
+			filesystem::ptr->open_file(texturefile,m_texturegroup.c_str(),"white.bmp","rb");
+
 		if (texturefile.opened())
 		{
 			char* buf=new char [texturefile.size()];

@@ -29,9 +29,9 @@
 				m_elem=i_elem;
 			}
 
-			basetype* operator *() const
+			basetype& operator *() const
 			{
-				return (basetype*)(&m_elem->m_data);
+				return *(basetype*)(&m_elem->m_data);
 			}
 
 			void operator++()

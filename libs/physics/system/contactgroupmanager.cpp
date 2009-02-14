@@ -8,7 +8,7 @@
 
         list_allocator<contact_t>::iterator cit;
         for (cit=contact_list.begin(); cit!=contact_list.end();++cit)
-            (*cit)->group_index=-1;
+            (*cit).group_index=-1;
 
         int group_count=0;
         this->contact_array.resize(contact_list.size());

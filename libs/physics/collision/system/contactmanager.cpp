@@ -83,8 +83,8 @@ static int hash_check[hashtable_size];
 	    {
 			next_it=it;
 			++next_it;
-            (*it)->update();
-            if (!(*it)->contact_count)
-                erase_contact((*it));
+            (*it).update();
+            if (!(*it).contact_count)
+                erase_contact(&(*it));
 	    }
 	}

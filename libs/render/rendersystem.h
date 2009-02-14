@@ -117,6 +117,20 @@
 			}
 		}
 
+		inline void draw_line(const vec3& i_start, const vec3& i_end, const color_r8g8b8a8& i_color)
+		{
+			if (draw_lines && lines.size()<LINENUM_MAX)
+			{
+				line_struct s;
+
+				s.start=i_start;
+				s.start_color=i_color;
+				s.end=i_end;
+				s.end_color=i_color;
+				lines.push_back(s);
+			}
+		}
+
 		inline void draw_line(const vec3& i_start, const vec3& i_end)
 		{
 			if (draw_lines && lines.size()<LINENUM_MAX)
@@ -131,20 +145,18 @@
 			}
 		}
 
-		inline void draw_circle(const vec3& center, float radius)
+		inline void draw_circle(const vec3& center, float radius, int section_count=10,const color_r8g8b8a8& i_color=color_r8g8b8a8(255,255,255,255))
 		{
 			vec3 x=m_view_matrix.column(0);
 			vec3 y=m_view_matrix.column(1);
 
 			vec3 start=center+radius*x;
 
-			const int section_count=10;
-
 			for (int n=0; n<section_count; ++n)
 			{
 				float angle=2*n*pi()/(section_count-1);
 				vec3 end=center+cosf(angle)*radius*x+sinf(angle)*radius*y;
-				draw_line(start,end);
+				draw_line(start,end,i_color);
 				start=end;
 			}
 		}
@@ -176,6 +188,8 @@
 				strings.push_back(s);
 			}
 		}
+
+		ref_ptr<texture> white_texture;
 
 
 

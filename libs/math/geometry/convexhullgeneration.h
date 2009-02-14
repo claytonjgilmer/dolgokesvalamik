@@ -20,13 +20,14 @@ struct convex_hull_desc
 		triangle_output=false;
 	}
 };
-convex_hull generate_convex_hull(const convex_hull_desc& hull_desc);
+convex_hull_t generate_convex_hull(const convex_hull_desc& hull_desc);
 
 
 
 struct gen_face_t;
 struct gen_half_edge_t
 {
+	int edge_index;
 	int head_vertex;
 	gen_half_edge_t* opposite;
 	gen_face_t* face;
@@ -43,6 +44,7 @@ struct gen_half_edge_t
 		prev=next=NULL;
 		freed=false;
 		opposite=NULL;
+		edge_index=-1;
 
 	}
 
@@ -62,9 +64,11 @@ struct gen_face_t:dplane_t
 	struct intr_circular_list<gen_half_edge_t> edges; //vertexek, koruljarasi sorrendben
 	bool valid;
 	bool freed;
+	int face_index;
 
 	gen_face_t()
 	{
+		face_index=-1;
 		valid=true;
 		freed=false;
 	}
@@ -121,7 +125,7 @@ struct convex_hull_generator
 	double vertex_min_dist;
 	bool triangle_output;
 
-	convex_hull ch;
+	convex_hull_t ch;
 
 	bool state;
 

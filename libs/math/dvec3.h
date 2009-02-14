@@ -1,6 +1,8 @@
 #ifndef _dvec3_h_
 #define _dvec3_h_
 
+#include "vec3.h"
+
 
 	struct dvec3
 	{

@@ -617,7 +617,7 @@ static Cell *objReadCell(istream &s, const char *streamname) {
 	    double x, y, z;
 	    s >> x >> y >> z;
 	    // cout << "verts[" << nvert << "]=" << vec3(x, y, z) << endl;
-	    verts[nvert-1].p.set(x, y, z);
+	    verts[nvert-1].p.set((float)x, (float)y, (float)z);
 	    verts[nvert-1].no = nvert;
 	    verts[nvert-1].done = 0;
 	    verts[nvert-1].vertex = 0;

@@ -7,6 +7,7 @@
 	{
 		plane_t();
 		plane_t(const vec3& i_normal, float i_dist);
+		plane_t(const vec3& i_point, const vec3& i_normal);
 
 		void set(const vec3& i_normal, float i_dist);
 		void set(const vec3& i_point, const vec3& i_normal);
@@ -25,6 +26,13 @@
 	{
 		normal=i_normal;
 		dist=i_dist;
+	}
+
+	MLINLINE plane_t::plane_t(const vec3& i_point, const vec3& i_normal)
+	{
+		normal=i_normal;
+		normal.normalize();
+		dist=-i_point.dot(normal);
 	}
 
 	MLINLINE void plane_t::set(const vec3& i_normal, float i_dist)

@@ -329,4 +329,22 @@
 
 		return sum;
 	}
+
+	MLINLINE float get_tetrahedron_volume(vec3 v1, vec3 v2, vec3 v3, vec3 v4)
+	{
+		vec3 e1,e2,e3;
+		e1=v2-v1;
+		e2=v3-v1;
+		e3=v4-v1;
+
+		return fabsf(dot(e1,cross(e2,e3)))/6;
+	}
+
+	MLINLINE vec3 to_vec3(float x,float y, float z)
+	{
+		vec3 v; v.set(x,y,z);
+		return v;
+	}
+
+
 #endif//_vec3_h_

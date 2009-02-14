@@ -1,6 +1,7 @@
 #include <algorithm>
 #include "convexhullgeneration.h"
 #include "math\sorting.h"
+#include "math/aabox.h"
 #include "containers\listallocator.h"
 #include "render\rendersystem.h"
 
@@ -372,7 +373,7 @@ void convex_hull_generator::insert_vertex(const vector<gen_half_edge_t*>& edge_a
 	}
 }
 
-convex_hull generate_convex_hull(const convex_hull_desc& hull_desc)
+convex_hull_t generate_convex_hull(const convex_hull_desc& hull_desc)
 {
 	convex_hull_generator chg;
 	chg.init(hull_desc);
@@ -644,10 +645,11 @@ bool convex_hull_generator::generate()
 void convex_hull_generator::get_result()
 {
 	ch.clear();
-	//no most mar minden vertex hozza van adagolva, mar csak ki kell vonni a zokszigentet
 	vector<int > valid_vertex;
 	valid_vertex.assign(work_array.size(),0);
 
+	//toroljuk a nem valid face-eket
+	int face_index=0;
 	for (unsigned n=0; n<faces.size(); ++n)
 	{
 		gen_face_t* face=faces[n];
@@ -661,6 +663,8 @@ void convex_hull_generator::get_result()
 			continue;
 		}
 
+		face->face_index=face_index++;
+
 		gen_half_edge_t* edge=face->edges.first();
 
 		do 
@@ -671,6 +675,7 @@ void convex_hull_generator::get_result()
 		} while (edge!=face->edges.first());
 	}
 
+	//elkeszitjuk a vertexremap tablat
 	vector<int> vertex_remap;
 	vertex_remap.resize(valid_vertex.size());
 
@@ -686,10 +691,39 @@ void convex_hull_generator::get_result()
 			vertex_remap[n]=-1;
 	}
 
-	ch.vertices.reserve(act_index+1);
 
-	int act_adj=0;
+	list_allocator<gen_half_edge_t,2048>::iterator it;
+	ch.edges.resize(edge_allocator.size());
+	{
+	int edge_index=0;
+	for (it=edge_allocator.begin(); it!=edge_allocator.end(); ++it)
+	{
+		gen_half_edge_t& edge=*it;
 
+		if (edge.edge_index==-1)
+		{
+			CONSISTENCY_ASSERT(edge.opposite->edge_index==-1);
+			edge.edge_index=edge_index;
+			edge_index++;
+			edge.opposite->edge_index=edge_index;
+			edge_index++;
+		}
+	}
+	}
+
+	for (it=edge_allocator.begin(); it!=edge_allocator.end(); ++it)
+	{
+		gen_half_edge_t& edge=*it;
+		edge_data& act_edge_data=ch.edges[edge.edge_index];
+		act_edge_data.head_vertex_index=vertex_remap[edge.head_vertex];
+		act_edge_data.next_edge=edge.next->edge_index;
+		act_edge_data.prev_edge=edge.prev->edge_index;
+		act_edge_data.opp_edge=edge.opposite->edge_index;
+		act_edge_data.face_index=edge.face->face_index;
+	}
+
+	ch.vertices.reserve(act_index);
+	aabb_t aabb;aabb.min.set(FLT_MAX,FLT_MAX,FLT_MAX); aabb.max=-aabb.min;
 	for (unsigned n=0; n<vertex_remap.size(); ++n)
 	{
 		if (valid_vertex[n])
@@ -698,56 +732,31 @@ void convex_hull_generator::get_result()
 			ch.vertices.back().pos.x=(float)work_array[n].x;
 			ch.vertices.back().pos.y=(float)work_array[n].y;
 			ch.vertices.back().pos.z=(float)work_array[n].z;
-
-			ch.vertices.back().adj_index=act_adj;
-			act_adj+=valid_vertex[n];
+			aabb.extend(ch.vertices.back().pos);
 		}
 	}
+	ch.center=.5f*(aabb.min+aabb.max);
+	ch.half_extent=.5f*(aabb.max-aabb.min);
 
-	//sentinel vertex
-	ch.vertices.push_back(vertex_data());
-	ch.vertices.back().adj_index=act_adj;
-
-	vector<int> act_adj_index;
-	act_adj_index.assign(act_index,0);
-	ch.vertex_adjacency.resize(act_adj);
-
-	ch.faces.resize(faces.size()+1);
-	ch.face_indices.reserve(faces.size());
-
-	int index=0;
-
+	ch.faces.resize(faces.size());
 	for (unsigned n=0; n<faces.size(); ++n)
 	{
 		gen_face_t* face=faces[n];
 		ch.faces[n].normal.x=(float)face->normal.x;
 		ch.faces[n].normal.y=(float)face->normal.y;
 		ch.faces[n].normal.z=(float)face->normal.z;
-		ch.faces[n].vertex_index=index;
+
+/*egyelore kiszedve
 		gen_half_edge_t* edge=face->edges.first();
+		ch.faces[n].adj_edge_index=edge->edge_index;
 
 		do 
 		{
-			int act_vertex=vertex_remap[edge->head_vertex];
-			int adj_vertex=vertex_remap[edge->opposite->head_vertex];
-
-			ch.vertex_adjacency[ch.vertices[act_vertex].adj_index+act_adj_index[act_vertex]]=adj_vertex;
-			++act_adj_index[act_vertex];
-
+			ch.vertices[vertex_remap[edge->head_vertex]].adj_edge_index=edge->edge_index;
 			edge=edge->next;
-			ch.face_indices.push_back(act_vertex);
-			++index;
 		} while (edge!=face->edges.first());
+*/
 	}
-
-	ch.faces.back().vertex_index=index;
-
-#ifdef CHECK_CONSISTENCY
-	for (int n=0; n<act_index; ++n)
-	{
-		CONSISTENCY_ASSERT(act_adj_index[n]==ch.vertices[n+1].adj_index-ch.vertices[n].adj_index);
-	}
-#endif
 }
 
 void convex_hull_generator::clear()

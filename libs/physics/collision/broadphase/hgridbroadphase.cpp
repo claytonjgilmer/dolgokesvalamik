@@ -11,7 +11,7 @@ MLINLINE unsigned compute_hash_bucket_index(int x, int y, int z)
     return unsigned (h1 * x + h2 * y + h3 * z) & (NUM_BUCKETS-1);
 }
 
-hgridobject::hgridobject(void* i_userdata, const aabb& i_bounding, uint32 i_static):
+hgridobject::hgridobject(void* i_userdata, const aabb_t& i_bounding, uint32 i_static):
 broadphaseobject(i_userdata,i_bounding,i_static)
 {
     this->pos=i_bounding.get_center();
@@ -175,7 +175,7 @@ void move_object(hgridbroadphase* hgrid, hgridobject* obj)
 }
 
 
-broadphaseobject* hgridbroadphase::create_object(void* i_userdata, const aabb& i_bounding, uint32 i_static)
+broadphaseobject* hgridbroadphase::create_object(void* i_userdata, const aabb_t& i_bounding, uint32 i_static)
 {
     hgridobject* newobj= i_static ? this->static_list.allocate_place() : this->dynamic_list.allocate_place();
     new (newobj) hgridobject(i_userdata,i_bounding,i_static);
@@ -229,10 +229,10 @@ void hgridbroadphase::update()
     if (!physicssystem::ptr->parallel_processing)
     {
         for (it=this->dynamic_list.begin(); it!=this->dynamic_list.end(); ++it)
-            move_object(this, *it);
+            move_object(this, &*it);
 
         for (it=this->dynamic_list.begin(); it!=this->dynamic_list.end(); ++it)
-            check_obj_against_grid(this, *it);
+            check_obj_against_grid(this, &*it);
     }
     else
     {
@@ -248,7 +248,7 @@ void hgridbroadphase::update()
 
         for (unsigned n=0; n<obj_count;++n,++it)
         {
-            obj_array[n]=*it;
+            obj_array[n]=&*it;
             move_object(this, obj_array[n]);
         }
 
