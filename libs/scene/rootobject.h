@@ -33,6 +33,7 @@
 	{\
 	_object_##_metaobject():metaobject(#_object_,_parent_::get_class_metaobject()){}\
 	rootobject* create() const{return new _object_;}\
+	rootobject* create(const rootobject& orig) const {return new _object_((const _object_&)orig);}\
 	void bind_properties();\
 	};\
 \

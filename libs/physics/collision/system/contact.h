@@ -43,7 +43,7 @@ MLINLINE contact_t::contact_t(body_t* i_body1, body_t* i_body2)
 {
     this->body[0]=i_body1;
     this->body[1]=i_body2;
-    this->edge[0].elem=this->edge[0].elem=this;
+    this->edge[0].elem=this->edge[1].elem=this;
     this->edge[0].other=i_body2;
     this->edge[1].other=i_body1;
 

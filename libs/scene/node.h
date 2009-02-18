@@ -40,6 +40,8 @@
 
 		virtual void on_load(){}
 
+		virtual node_t* clone();
+
 
 //	protected:
 		node_t* m_parent;

@@ -6,6 +6,7 @@
 	{
 		rootobject_metaobject():metaobject("rootobject",NULL){}
 		rootobject* create() const{return new rootobject;}
+		rootobject* create(const rootobject& orig) const {return new rootobject(orig);}
 	};
 
 	rootobject_metaobject g_rootobject_metaobject;

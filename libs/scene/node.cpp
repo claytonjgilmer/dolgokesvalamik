@@ -205,3 +205,15 @@ BIND_PROPERTY(node_t,m_localpos,"localpos",mtx4x3);
 
 		return NULL;
 	}
+
+	node_t* node_t::clone()
+	{
+		node_t* new_node=(node_t*)get_metaobject()->create(*this);
+
+		new_node->m_parent=new_node->m_bro=new_node->m_child;
+
+		for (node_t* ch=m_child; ch; ch=ch->m_bro)
+			new_node->add_child(ch->clone());
+
+		return new_node;
+	}

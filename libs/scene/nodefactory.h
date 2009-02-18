@@ -112,6 +112,7 @@
 		metaobject(const char* i_typename, metaobject* i_parent);
 
 		virtual rootobject* create() const=0;
+		virtual rootobject* create(const rootobject& orig) const=0;
 
 		metaobject* m_prev;
 		metaobject* m_next;

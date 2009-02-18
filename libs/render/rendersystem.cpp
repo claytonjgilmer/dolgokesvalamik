@@ -147,6 +147,8 @@
 						acteffect->SetTechnique( "Technique0" );
 						acteffect->SetValue("WorldMtx",&objmtx,sizeof(mtx4x4));
 						acteffect->SetValue("worldViewProj",&faszommtx,sizeof(mtx4x4));
+						if (buf[meshindex].param_array)
+							sm.m_shader->set_constants(*buf[meshindex].param_array);
 						sm.set_constants();
 						unsigned numpasses;
 						acteffect->Begin( &numpasses, D3DXFX_DONOTSAVESTATE|D3DXFX_DONOTSAVESHADERSTATE);
@@ -255,9 +257,9 @@
 		m_device->Present( NULL, NULL, NULL, NULL );
 	}
 
-	void rendersystem::add_mesh(mesh_t* i_mesh, const mtx4x3& i_mtx, unsigned i_queueindex/* =0 */)
+	void rendersystem::add_renderable(mesh_t* i_mesh, shader_param_array_t* param_array, const mtx4x3& i_mtx, unsigned i_queueindex/* =0 */)
 	{
-		m_queue[i_queueindex].m_buf.push_back(queueelem(i_mesh,i_mtx));
+		m_queue[i_queueindex].m_buf.push_back(queueelem(i_mesh,param_array,i_mtx));
 	}
 
 	void rendersystem::set_renderstate(const state& i_state)

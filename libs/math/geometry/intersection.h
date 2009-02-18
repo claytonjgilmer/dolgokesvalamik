@@ -290,14 +290,26 @@ MLINLINE uint32 spherical_segment_intersect(vec3& v, const vec3& start1, const v
 	if (dot21*dot22>=0)
 		return 0;
 
+	if (dot11*dot22<=0 || dot21*dot12<=0)
+		return 0;
+#if 0
 	vec3 v1=start1+dot21/(dot21-dot22)*(end1-start1);
 	vec3 v2=start2+dot11/(dot11-dot12)*(end2-start2);
 
 	if (dot(v1,v2)<0)
-		return false;
-
-	v=v1;
+	{
+		assertion(dot11*dot22<=0);
+		return 0;
+	}
+#endif
+	v=start1+dot21/(dot21-dot22)*(end1-start1);
 	v.normalize();
+#ifdef _DEBUG
+	vec3 v2=start2+dot11/(dot11-dot12)*(end2-start2);
+	v2.normalize();
+	float d=dot(v,v2);
+	assertion(d>0.9f);
+#endif
 	return 1;
 }
 

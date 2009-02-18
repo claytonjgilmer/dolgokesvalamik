@@ -40,3 +40,9 @@
 			m_effect=neweffect;
 		}
 	}
+
+	void shader::set_constants(const shader_param_array_t& param_array)
+	{
+		for (int n=0; n<param_array.param_count; ++n)
+			m_effect->SetValue(param_array.param_array[n].m_name.c_str(),param_array.param_array[n].m_addr,param_array.param_array[n].m_size);
+	}

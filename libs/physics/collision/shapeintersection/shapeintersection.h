@@ -22,8 +22,8 @@ MLINLINE int test_sphere_sphere_intersect(shape_t* i_sph1, const mtx4x3& i_body1
         o_contact_num=1;
         dir.normalize();
         o_normal=dir;
-        o_contact_array[0][1]=sph1_pos+sph1->radius*dir;
-        o_contact_array[0][2]=sph2_pos-sph2->radius*dir;
+        o_contact_array[0][0]=i_body1_mtx.transformtransposed(sph1_pos+sph1->radius*dir);
+        o_contact_array[0][1]=i_body2_mtx.transformtransposed(sph2_pos-sph2->radius*dir);
 
         return 1;
     }

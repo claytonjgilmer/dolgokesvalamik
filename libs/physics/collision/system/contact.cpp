@@ -113,16 +113,16 @@ void contact_t::update()
         }
         else
         {
-            vec3 tangentdir=dir=penetration*this->normal;
+            vec3 tangentdir=dir-penetration*this->normal;
             if (tangentdir.squarelength()>CONTACT_MAX_TANGENTDIST*CONTACT_MAX_TANGENTDIST)
                 this->contactarray[n]=this->contactarray[--this->contact_count];
         }
     }
 
-    if (!this->contact_count)
-    {
-        physicssystem::ptr->contact_manager.erase_contact(this);
-    }
+//    if (!this->contact_count)
+//    {
+//        physicssystem::ptr->contact_manager.erase_contact(this);
+//    }
 }
 
 

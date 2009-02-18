@@ -188,7 +188,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\utils\colorf.h"
+				RelativePath=".\utils\color.h"
 				>
 			</File>
 			<File
@@ -489,6 +489,10 @@
 			</File>
 			<File
 				RelativePath=".\render\shadermanager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\render\shaderparam.h"
 				>
 			</File>
 			<File

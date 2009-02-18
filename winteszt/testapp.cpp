@@ -35,12 +35,24 @@ void draw_simplex(dvec3 s[], int num)
 		}
 }
 
+const color_f color_black(0,0,0,1);
+const color_f color_red(1,0,0,1);
+const color_f color_green(0,1,0,1);
+const color_f color_yellow(1,1,0,1);
+const color_f color_blue(0,0,1,1);
+const color_f color_purple(1,0,1,1);
+const color_f color_cyan(0,1,1,1);
+const color_f color_white(1,1,1,1);
+
+color_f color_buf[]={color_black,color_red,color_green,color_yellow,color_blue,color_purple,color_cyan};
+
 char* obj_names[]={
+						"model/steamtrain.MMOD",
 //						"model/sphere.MMOD",
 //						"model/box.MMOD",
-//						"model/teapot.MMOD",
+//						"model/Atlanta.MMOD",
 //						"model/PT_Boat_Camo.MMOD",
-						"model/predator_spyplane.MMOD",
+//						"model/predator_spyplane.MMOD",
 //						"model/f35_raptor.MMOD",
 //						"model/ef2000.MMOD",
 //						"model/Boeing747_jumbo.MMOD",
@@ -92,7 +104,7 @@ void get_object_vertices(node_t* obj, const mtx4x3& mtx, vector<vec3>& vertbuf)
 	}
 }
 
-void generate_sphere(vec3 o_pos[],int& o_numvertices,short o_indices[],int& o_numfaces,float i_radius, int i_depth);
+//void generate_sphere(vec3 o_pos[],int& o_numvertices,short o_indices[],int& o_numfaces,float i_radius, int i_depth);
 object3d* load_mmod(const char* i_filename);
 struct game
 {
@@ -108,10 +120,12 @@ struct game
 	vector<object3d*> obj;
 	object3d* sky;
 	object3d* terrain;
+	object3d* sphere;
 #define BODY_NUM 50
 #define ROOM_SIZE 10.0f
 #define BODY_SIZE .5f
 	body_t* phb[BODY_NUM];
+	object3d* model[BODY_NUM];
 	int inited;
 	timer_t t;
 
@@ -168,7 +182,9 @@ void bind_light(node_t* node)
 			mesh_t* mesh=obj3d->get_mesh(n);
 
 			for (unsigned int m=0; m<mesh->m_submeshbuf.size(); ++m)
+			{
 				mesh->m_submeshbuf[m].bind_param("light_dir",&g_game->light_dir,3*sizeof(float));
+			}
 		}
 	}
 
@@ -235,6 +251,11 @@ void init_app(HWND i_hwnd)
 		bind_light(g_game->obj.back());
 	}
 
+	g_game->sphere=load_mmod("model/sphere.mmod");
+	bind_light(g_game->sphere);
+
+	for (int n=0; n<BODY_NUM; ++n)
+		g_game->model[n]=(object3d*)g_game->sphere->clone();
 
 #if 0
 	g_game->terrain=load_mmod("model/pearl_harbor.MMOD");
@@ -286,13 +307,13 @@ void init_app(HWND i_hwnd)
 #else
 		sphere_shape_desc sd;
 		sd.center.clear();
-		sd.radius=BODY_SIZE;
+		sd.radius=1;//BODY_SIZE;
 #endif
 		g_game->phb[n]->add_shape(sd);
 	}
 
 	g_game->hd.face_thickness=.00001;
-	g_game->hd.vertex_min_dist=.01;
+	g_game->hd.vertex_min_dist=-.1;
 	g_game->hd.triangle_output=false;
 
 
@@ -377,7 +398,7 @@ void update_app()
 
 	timer_t t;
 	t.reset();
-//	physicssystem::ptr->simulate(dt);
+	physicssystem::ptr->simulate(dt);
 	t.stop();
 	unsigned sec=t.get_tick();
 	sprintf(str,"simulation time:%d",sec);
@@ -515,7 +536,6 @@ void update_app()
 		}
 
 
-		vec3 normal;float depth;
 		timer_t t;
 		t.reset();
 		deep_intersection deep(&g_game->ch.ch,&g_game->ch.ch,mtx1,mtx2,deep_init_vec,deep_init_v1,deep_init_v2,deep_init_state);
@@ -635,7 +655,7 @@ void update_app()
 	g_game->y+=2*dt/10;
 	g_game->z+=3*dt/10;
 
-	if (0)
+	if (1)
 	for (unsigned n=0; n<BODY_NUM;++n)
 	{
 		mtx4x3 pos=g_game->phb[n]->get_pos();
@@ -676,18 +696,20 @@ void update_app()
 		g_game->phb[n]->set_pos(pos);
 		g_game->phb[n]->set_vel(vel);
 
+		g_game->model[n]->set_worldposition(pos);
+
+		if (g_game->phb[n]->group_index==-1)
+			g_game->model[n]->color=color_f(1,1,1,1);
+		else
+			g_game->model[n]->color=color_buf[g_game->phb[n]->group_index % array_elemcount(color_buf)];
+		g_game->model[n]->render();
 	}
 
-/*
-	rendersystem::ptr->add_mesh(g_game->m_mesh.get(),mtx);
-	mtx.t.set(1,0,2.5f);
-	rendersystem::ptr->add_mesh(g_game->sphere.get(),mtx);
-	*/
-//	mtx.set_euler(0,0,0);
-//	mtx.t.set(0,0,0);
+
+
+
 
 	mtx=g_game->obj[0]->get_worldposition();
-
 	for (unsigned n=0; n<g_game->obj.size(); ++n)
 	{
 		g_game->obj[n]->set_worldposition(mtx);
@@ -716,6 +738,11 @@ void exit_app()
 
 	for (unsigned n=0; n<g_game->obj.size(); ++n)
 		delete g_game->obj[n];
+
+	delete g_game->sphere;
+
+	for (int n=0; n<BODY_NUM; ++n)
+		delete g_game->model[n];
 
 	if (g_game->terrain)
 		delete g_game->terrain;

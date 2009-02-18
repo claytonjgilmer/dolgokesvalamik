@@ -21,7 +21,10 @@
 		filesystem::ptr->open_file(texturefile,m_texturegroup.c_str(),i_texturename,"rb");
 
 		if (!texturefile.opened())
+		{
+			PRINT("a %s textura nincsen meg!\n",i_texturename);
 			filesystem::ptr->open_file(texturefile,m_texturegroup.c_str(),"white.bmp","rb");
+		}
 
 		if (texturefile.opened())
 		{

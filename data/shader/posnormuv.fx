@@ -5,6 +5,7 @@
 float4x4 worldViewProj : WorldViewProjection; // This matrix will be loaded by the application
 float4x4 WorldMtx;
 float3 light_dir;
+float4 model_color;
 
 //texture testTexture; // This texture will be loaded by the application
 
@@ -59,7 +60,7 @@ VS_OUTPUT myvs( VS_INPUT IN )
 
 	OUT.hposition = mul( worldViewProj, float4(IN.position, 1) );
 
-	OUT.color = float4( .5, .5, .5, .5 ); // Pass white as a default color
+	OUT.color = model_color; // Pass white as a default color
 	OUT.hnormal=mul (WorldMtx,float4(IN.normal,0));
 //	OUT.hnormal=IN.normal;
 
@@ -78,7 +79,7 @@ PS_OUTPUT myps( VS_OUTPUT IN )
     
     float3 normal=normalize(IN.hnormal);
 
-	OUT.color = tex2D( Sampler, IN.texture0 ) * saturate(max(pow((dot(normal,light_dir)+1)/2,2),.3));
+	OUT.color = model_color*tex2D( Sampler, IN.texture0 ) * saturate(max(pow((dot(normal,light_dir)+1)/2,2),.3));
 
 	// If you uncomment the next line, the color passed to us by our
     // vertex shader and the selected texture sampler will be ignored 

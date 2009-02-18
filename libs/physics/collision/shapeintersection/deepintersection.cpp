@@ -14,6 +14,7 @@ obj2(i_obj2),
 mtx1(i_mtx1),
 mtx2(i_mtx2)
 {
+	itnum=0;
 	vec3 dir;
 	trf_1_to_2.multiplytransposed(mtx1,mtx2);
 
@@ -31,20 +32,25 @@ mtx2(i_mtx2)
 			result=false;
 			return;
 		}
-		depth=-FLT_MAX;
-		report_min_pair(v1,v2);//, state, depth,v1,v2);
 	}
 	else
 	{
 		dir=initdir;
 		v1=obj1->get_extremal_vertex(mtx1.transformtransposed3x3(dir),i_v1);
 		v2=obj2->get_extremal_vertex(mtx2.transformtransposed3x3(-dir),i_v2);
-		state=i_state;
+//		state=i_state;
 		depth=dot(dir,mtx2.transform(obj2->get_vertexpos(v2))-mtx1.transform(obj1->get_vertexpos(v1)));
+
+		if (depth>=0)
+		{
+			result=false;
+			return;
+		}
 	}
 
+	depth=-FLT_MAX;
+	report_min_pair(v1,v2);//, state, depth,v1,v2);
 
-	itnum=0;
 	bool ret=false;
 	do
 	{
@@ -125,6 +131,7 @@ mtx2(i_mtx2)
 bool deep_intersection::report_min_pair(edge_data* i_v1, edge_data* i_v2)//, int& o_state, float& o_depth,edge_data*& o_s1, edge_data*& o_s2)
 {
 	edge_data* e;
+	bool ret=false;
 
 //	o_depth=-FLT_MAX;
 
@@ -151,7 +158,7 @@ bool deep_intersection::report_min_pair(edge_data* i_v1, edge_data* i_v2)//, int
 				state=face_vertex;
 				v1=e;
 				v2=i_v2;
-				return true;
+				ret=true;
 			}
 		}
 		e=obj1->get_rot_edge(e);
@@ -177,7 +184,7 @@ bool deep_intersection::report_min_pair(edge_data* i_v1, edge_data* i_v2)//, int
 				state=vertex_face;
 				v1=i_v1;
 				v2=e;
-				return true;
+				ret=true;
 			}
 		}
 		e=obj2->get_rot_edge(e);
@@ -204,7 +211,7 @@ bool deep_intersection::report_min_pair(edge_data* i_v1, edge_data* i_v2)//, int
 					state=edge_edge;
 					v1=e;
 					v2=e2;
-					return true;
+					ret=true;
 				}
 			}
 			e2=obj2->get_rot_edge(e2);
@@ -212,7 +219,7 @@ bool deep_intersection::report_min_pair(edge_data* i_v1, edge_data* i_v2)//, int
 		e=obj1->get_rot_edge(e);
 	} while (e!=i_v1);
 
-	return false;
+	return ret;
 }
 
 

@@ -15,46 +15,11 @@
 #include "vertexelements.h"
 
 #include "utils/singleton.h"
+#include "utils/color.h"
 #include "math/mtx4x4.h"
 #include <d3d9.h>
 #include <d3dx9.h>
 
-	struct color_f
-	{
-		float r,g,b,a;
-		color_f(){}
-		color_f(float i_r,float i_g,float i_b,float i_a):r(i_r),g(i_g),b(i_b),a(i_a){}
-	};
-
-	struct color_r8g8b8a8
-	{
-		uint8 r;
-		uint8 g;
-		uint8 b;
-		uint8 a;
-
-		color_r8g8b8a8()
-		{
-		}
-
-		color_r8g8b8a8(uint8 i_r, uint8 i_g, uint8 i_b, uint8 i_a):
-		r(i_r),
-		g(i_g),
-		b(i_b),
-		a(i_a)
-		{
-		}
-
-		void set(uint8 i_r, uint8 i_g, uint8 i_b, uint8 i_a)
-		{
-			a=i_a;
-			r=i_r;
-			g=i_g;
-			b=i_b;
-		}
-
-
-	};
 	struct rendersystemdesc
 	{
 		int					m_windowed;
@@ -89,7 +54,7 @@
 		void flush_queues();
 		void render();
 
-		void add_mesh(mesh_t* i_mesh, const mtx4x3& i_mtx, unsigned i_queueindex=0);
+		void add_renderable(mesh_t* i_mesh, shader_param_array_t* param_array, const mtx4x3& i_mtx, unsigned i_queueindex=0);
 
 #define LINENUM_MAX		100000
 		struct line_struct

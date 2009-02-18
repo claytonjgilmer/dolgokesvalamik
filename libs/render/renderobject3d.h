@@ -4,7 +4,9 @@
 #include "scene/node.h"
 #include "render/mesh.h"
 #include "utils/auto_ptr.h"
+#include "utils/color.h"
 #include "containers/fixedvector.h"
+#include "shaderparam.h"
 
 	struct object3d:public node_t
 	{
@@ -16,6 +18,7 @@
 		void add_mesh(mesh_t* i_mesh){m_mesh.push_back(i_mesh);}
 		mesh_t* get_mesh(unsigned i_index){return &*m_mesh[i_index];}
 		unsigned get_meshnum() const{return m_mesh.size();}
+		node_t* clone();
 
 		void render();
 
@@ -25,7 +28,8 @@
 
 		//properties
 		string m_modelname;
-//	protected:
 		fixedvector<ref_ptr<mesh_t>,8> m_mesh;
+		color_f color;
+		shader_param_array_t param_array;
 	};
 #endif//_renderobject3d_h_

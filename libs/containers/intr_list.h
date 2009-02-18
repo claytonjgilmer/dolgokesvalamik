@@ -22,6 +22,11 @@ struct intr_list
     char _head_buf[sizeof(intr_list_node)];
     char _end_buf[sizeof(intr_list_node)];
 
+#ifdef _DEBUG
+	intr_list_node* head_ptr;
+	intr_list_node* end_ptr;
+#endif//_DEBUG
+
 #define _intr_list_head (*(intr_list_node*)_head_buf)
 #define _intr_list_end (*(intr_list_node*)_end_buf)
 
@@ -32,6 +37,11 @@ struct intr_list
 
         _intr_list_end.next=0;
         _intr_list_end.prev=&_intr_list_head;
+
+#ifdef _DEBUG
+		head_ptr=(intr_list_node*)_head_buf;
+		end_ptr=(intr_list_node*)_end_buf;
+#endif//_DEBUG
     }
 
     void push_back(intr_list_node* newnode)
