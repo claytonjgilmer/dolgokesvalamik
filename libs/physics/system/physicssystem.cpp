@@ -18,6 +18,7 @@ desc(*i_desc)
     ZeroMemory(this->intersect_fn,sizeof(this->intersect_fn));
     this->intersect_fn[shape_type_sphere][shape_type_sphere]=&test_sphere_sphere_intersect;
     this->parallel_processing=TRUE;
+	this->frame_count=0;
 }
 
 body_t* physicssystem::create_body(const bodydesc& i_desc)
@@ -51,6 +52,7 @@ void physicssystem::release_bodies(body_t* i_body_array[], bodystate i_state, un
 
 void physicssystem::simulate(float i_dt)
 {
+	++this->frame_count;
     kill_deads();
 
     broadphase();
@@ -165,7 +167,7 @@ struct near_struct
                             shape2->body->set_vel(vel2-velmag*normal);
                         }
 */
-                        contact_t* c=ptr->contact_manager.get_contact(shape1->body,shape2->body);
+                        contact_surface_t* c=ptr->contact_manager.get_contact(shape1->body,shape2->body);
 
                         c->normal=normal;
                         vec3 normal_body1; body1_mtx.transformtransposed3x3(normal_body1,normal);

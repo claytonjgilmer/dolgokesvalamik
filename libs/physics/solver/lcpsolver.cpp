@@ -1,4 +1,5 @@
 #include "lcpsolver.h"
+#include "threading/taskmanager.h"
 
 
 /*
@@ -17,56 +18,104 @@
 
 */
 
-struct jacobi
+
+//#define lcp_data_size (sizeof(jacobi)+sizeof(jacobi)+sizeof(body_index_t)+6*sizeof(float))
+
+void lcp_solver_t::allocate_buffer()
 {
-    vec3 v1;
-    vec3 w1;
-    vec3 v2;
-    vec3 w2;
-};
+	//maximum 4 kontaktpont/kontakt, 1 contactconstraint+1 frictionconstraint/kontaktpont
 
-struct body_index_t
-{
-    short i[2];
-};
-
-
-struct lcp_data
-{
-    jacobi* J;
-    jacobi* B;
-    body_index_t*
-            body_index;
-    float*  right_side;
-    float*  right_side_poscorr;
-    float*  diag;
-    float*  lambda;
-    float*  lambda_poscorr;
-    float*  friction_coeff;
-
-
-};
-
-#define lcp_data_size (sizeof(jacobi)+sizeof(jacobi)+sizeof(body_index_t)+6*sizeof(float))
-
-void* allocate_buffer(int contact_count)
-{
-    //maximum 4 kontaktpont/kontakt, 1 contactconstraint+1 frictionconstraint/kontaktpont
-
-    int buf_size=contact_count*(8*lcp_data_size);
-    return malloc(buf_size);
+	lcp_data.J=new jacobi[8*contact_count];
+	lcp_data.B=new jacobi[8*contact_count];
+	lcp_data.body_index=new body_index_t[8*contact_count];
+	lcp_data.right_side=new float[8*contact_count];
+	lcp_data.right_side_poscorr=new float[8*contact_count];
+	lcp_data.diag=new float[8*contact_count];
+	lcp_data.lambda=new float[8*contact_count];
+	lcp_data.lambda_poscorr=new float[8*contact_count];
+	lcp_data.friction_coeff=new float[8*contact_count];
 }
 
-void pre_step(lcp_solver_t* solver, contact_t* contact_array, int contact_count, float dt)
+void lcp_solver_t::set_solver_index(body_t* body[])
 {
+	if (body[0]->is_static)
+	{
+		body[0]->solver_index=0;
+	}
+	else if (body[0]->solver_stamp!=physicssystem::ptr->frame_count)
+	{
+		body[0]->solver_stamp=physicssystem::ptr->frame_count;
+		body[0]->solver_index=++body_count;
+	}
+	if (body[1]->is_static)
+	{
+		body[1]->solver_index=0;
+	}
+	else if (body[1]->solver_stamp!=physicssystem::ptr->frame_count)
+	{
+		body[1]->solver_stamp=physicssystem::ptr->frame_count;
+		body[1]->solver_index=++body_count;
+	}
 }
 
-void solve(lcp_solver_t* solver, contact_t* contact_array[], int contact_count)
+struct solver_pre_step_contacts
+{
+	lcp_solver_t* solver;
+	solver_pre_step_contacts(lcp_solver_t* i_solver): solver(i_solver){}
+
+	void operator()(unsigned start, unsigned count)
+	{
+		int data_index=8*start;
+		lcp_data_t* lcp_data=&solver->lcp_data;
+		for (unsigned n=start; n<start+count; ++n)
+		{
+			contact_surface_t* act_contact=solver->contact_array+n;
+			solver->set_solver_index(act_contact->body);
+
+			body_t* body1(act_contact->body[0]);
+			body_t* body2(act_contact->body[1]);
+			nbody* nbody1=physicssystem::ptr->bodystate_array+body1->is_static;
+			nbody* nbody2=physicssystem::ptr->bodystate_array+body2->is_static;
+			int state_index1=body1->array_index;
+			int state_index2=body2->array_index;
+
+			const int solver_index1=body1->solver_index;
+			const int solver_index2=body2->solver_index;
+
+			for (int k=0; k<act_contact->contact_count; ++k,++data_index)
+			{
+				contact_point_t* act_cp=act_contact->contactarray+k;
+				lcp_data->lambda[data_index]=act_cp->cached_lambda;
+				lcp_data->lambda_poscorr[data_index]=0;
+				lcp_data->body_index[data_index].i[0]=solver_index1;
+				lcp_data->body_index[data_index].i[1]=solver_index2;
+			}
+		}
+	}
+};
+
+void lcp_solver_t::pre_step_contacts()
+{
+	body_count=0;
+	physicssystem* ptr=physicssystem::ptr;
+	if (ptr->parallel_processing)
+	{
+		taskmanager::ptr->process_buffer(contact_count,10,solver_pre_step_contacts(this));
+	}
+	else
+	{
+		solver_pre_step_contacts spc(this);
+		spc(0,contact_count);
+	}
+
+}
+
+void lcp_solver_t::solve_contacts()
 {
     physicssystem* ptr=physicssystem::ptr;
     for (int contact_index=0; contact_index<contact_count; ++contact_index)
     {
-        contact_t* actcontact=contact_array[contact_index];
+        contact_surface_t* actcontact=contact_array+contact_index;
 
         int body[2]={actcontact->body[0]->array_index,actcontact->body[1]->array_index};
         int is_static[2]={actcontact->body[0]->is_static,actcontact->body[1]->is_static};
@@ -79,9 +128,16 @@ void solve(lcp_solver_t* solver, contact_t* contact_array[], int contact_count)
     }
 }
 
-void lcp_solver_t::process(contact_t* contact_array, int contact_count, float dt)
+void lcp_solver_t::process(contact_surface_t* i_contact_array, int i_contact_count, float i_dt)
 {
-    pre_step(this,contact_array,contact_count, dt);
-//    solve(this);
+	contact_array=i_contact_array;
+	contact_count=i_contact_count;
+	dt=i_dt;
+
+
+	allocate_buffer();
+	pre_step_contacts();
+	solve_contacts();
+	clean();
 }
 

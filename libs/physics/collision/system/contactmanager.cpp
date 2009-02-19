@@ -29,12 +29,12 @@ static int hash_check[hashtable_size];
 #endif
 	}
 
-	contact_t* contactmanager::get_contact(body_t* i_body1, body_t* i_body2)
+	contact_surface_t* contactmanager::get_contact(body_t* i_body1, body_t* i_body2)
     {
 		uint32 index=get_hashindex(i_body1,i_body2);
 
 		blocklocker bl(this->cm);
-//		contact_t* ptr=this->contact_hash[index];
+//		contact_surface_t* ptr=this->contact_hash[index];
 		contact_edge* ptr;
 		for (ptr=i_body1->contacts.first(); ptr!=i_body1->contacts.last() && ptr->other!=i_body2; ptr=ptr->next);
 
@@ -42,8 +42,8 @@ static int hash_check[hashtable_size];
 			return ptr->elem;
 
 		++hash_check[index];
-		contact_t* c=this->contact_list.allocate_place();
-		new (c) contact_t(i_body1,i_body2);
+		contact_surface_t* c=this->contact_list.allocate_place();
+		new (c) contact_surface_t(i_body1,i_body2);
 
 //			ptr->prev=0;
 //			ptr->next=this->contact_hash[index];
@@ -55,7 +55,7 @@ static int hash_check[hashtable_size];
 		return c;
 	}
 
-	void contactmanager::erase_contact(contact_t* i_contact)
+	void contactmanager::erase_contact(contact_surface_t* i_contact)
 	{
 #if 0
 		if (i_contact->next)
@@ -77,7 +77,7 @@ static int hash_check[hashtable_size];
 
 	void contactmanager::update_contacts()
 	{
-	    list_allocator<contact_t>::iterator it,next_it;
+	    list_allocator<contact_surface_t>::iterator it,next_it;
 
 	    for (it=this->contact_list.begin(); it!=this->contact_list.end(); it=next_it)
 	    {

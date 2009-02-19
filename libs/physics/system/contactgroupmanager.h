@@ -16,12 +16,12 @@ struct contact_group
 
 struct contact_group_manager_t
 {
-    vector<contact_t*> contact_array;
+    vector<contact_surface_t*> contact_array;
     vector<contact_group> group_array;
 
 
 
-    void create_contact_groups(body_t* dynbody_array[], int dynbody_count,list_allocator<contact_t>& contact_list);
+    void create_contact_groups(body_t* dynbody_array[], int dynbody_count,list_allocator<contact_surface_t>& contact_list);
 };
 
 #endif//_contactgroupmanager_h_

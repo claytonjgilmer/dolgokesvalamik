@@ -8,28 +8,29 @@
 #define MAX_CONTACTNUM_PER_BODYPAIR 4
 #define CONTACTBUFFER_SIZE 8
 
-struct one_contact
+struct contact_point_t
 {
 	vec3 rel_pos[2];
+	vec3 abs_pos[2];
+	float penetration;
 	float cached_lambda;
 };
 
 #define CONTACT_MIN_PENETRATION 0.01f
 #define CONTACT_MAX_TANGENTDIST 0.05f
 
-struct contact_t
+struct contact_surface_t
 {
     body_t* body[2];
     contact_edge edge[2];
-    one_contact contactarray[CONTACTBUFFER_SIZE];
+    contact_point_t contactarray[CONTACTBUFFER_SIZE];
     vec3 normal;
-//    contact_t* prev,*next;
 
     char contact_count;
     int group_index;
 
-    contact_t(body_t* i_body1, body_t* i_body2);
-    ~contact_t();
+    contact_surface_t(body_t* i_body1, body_t* i_body2);
+    ~contact_surface_t();
 
     void add_contact(const vec3 relpos[][2], int contact_count, const vec3& normal_body1);
     void update();
@@ -39,7 +40,7 @@ struct contact_t
 
 
 
-MLINLINE contact_t::contact_t(body_t* i_body1, body_t* i_body2)
+MLINLINE contact_surface_t::contact_surface_t(body_t* i_body1, body_t* i_body2)
 {
     this->body[0]=i_body1;
     this->body[1]=i_body2;
@@ -56,7 +57,7 @@ MLINLINE contact_t::contact_t(body_t* i_body1, body_t* i_body2)
     	this->contactarray[n].cached_lambda=0;
 }
 
-MLINLINE contact_t::~contact_t()
+MLINLINE contact_surface_t::~contact_surface_t()
 {
     //kifuzzuk a ket test kontakt-listajabol
     this->body[0]->contacts.erase(this->edge);

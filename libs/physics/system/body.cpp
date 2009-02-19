@@ -3,9 +3,10 @@
 #include "utils/assert.h"
 #include "physics\collision\system\contact.h"
 
-	body_t::body_t()
-	{
-	}
+body_t::body_t():
+solver_stamp(-1)
+{
+}
 	body_t::~body_t()
 	{
 	    while(this->contacts.first()!=this->contacts.last())

@@ -1,7 +1,7 @@
 #include "contact.h"
 #include "physics/system/physicssystem.h"
 
-int get_contact_index(contact_t* contact, const vec3 relpos[2])
+int get_contact_index(contact_surface_t* contact, const vec3 relpos[2])
 {
     const float contact_threshhold=0.05f;
     int contact_index;
@@ -22,7 +22,7 @@ int get_contact_index(contact_t* contact, const vec3 relpos[2])
     return contact_index;
 }
 
-void contact_t::add_contact(const vec3 relpos[][2], int contact_count,const vec3& normal_body1)
+void contact_surface_t::add_contact(const vec3 relpos[][2], int contact_count,const vec3& normal_body1)
 {
 	int contact_count_tmp=this->contact_count;
 	for (int n=0; n<contact_count; ++n)
@@ -52,7 +52,7 @@ void contact_t::add_contact(const vec3 relpos[][2], int contact_count,const vec3
 		axis[1].cross(normal_body1,axis[0]);
 		float minv[2]={FLT_MAX,FLT_MAX};
 		float maxv[2]={-FLT_MAX,-FLT_MAX};
-		one_contact data[4];
+		contact_point_t data[4];
 		for (int n=0; n<contact_count_tmp; ++n)
 		{
 			float v=dot(axis[0],this->contactarray[n].rel_pos[0]);
@@ -94,35 +94,30 @@ void contact_t::add_contact(const vec3 relpos[][2], int contact_count,const vec3
     1. nempenetralo kontaktok
     2. tangensiranyban eltavolodott kontaktok
 */
-void contact_t::update()
+void contact_surface_t::update()
 {
     physicssystem* ptr=physicssystem::ptr;
     const mtx4x3&body1_pos=ptr->bodystate_array[this->body[0]->is_static].pos[this->body[0]->array_index];
     const mtx4x3&body2_pos=ptr->bodystate_array[this->body[1]->is_static].pos[this->body[1]->array_index];
     for (int n=0; n<this->contact_count; ++n)
     {
-        vec3 abs_pos[2];
-        body1_pos.transform(abs_pos[0],this->contactarray[n].rel_pos[0]);
-        body2_pos.transform(abs_pos[1],this->contactarray[n].rel_pos[1]);
-        vec3 dir=abs_pos[1]-abs_pos[0];
+		contact_point_t* act_contact=contactarray+n;
+        body1_pos.transform(act_contact->abs_pos[0],act_contact->rel_pos[0]);
+        body2_pos.transform(act_contact->abs_pos[1],act_contact->rel_pos[1]);
+        vec3 dir=act_contact->abs_pos[1]-act_contact->abs_pos[0];
 
-        float penetration=dot(this->normal,dir);
-        if (penetration>CONTACT_MIN_PENETRATION)
+        act_contact->penetration=dot(this->normal,dir);
+        if (act_contact->penetration>CONTACT_MIN_PENETRATION)
         {
             this->contactarray[n]=this->contactarray[--this->contact_count];
         }
         else
         {
-            vec3 tangentdir=dir-penetration*this->normal;
+            vec3 tangentdir=dir-act_contact->penetration*this->normal;
             if (tangentdir.squarelength()>CONTACT_MAX_TANGENTDIST*CONTACT_MAX_TANGENTDIST)
                 this->contactarray[n]=this->contactarray[--this->contact_count];
         }
     }
-
-//    if (!this->contact_count)
-//    {
-//        physicssystem::ptr->contact_manager.erase_contact(this);
-//    }
 }
 
 

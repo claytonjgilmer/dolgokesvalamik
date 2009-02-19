@@ -10,16 +10,16 @@
 	struct contactmanager
 	{
 		contactmanager();
-		contact_t* get_contact(body_t* i_body1, body_t* i_body2);
-		void erase_contact(contact_t* i_contact);
+		contact_surface_t* get_contact(body_t* i_body1, body_t* i_body2);
+		void erase_contact(contact_surface_t* i_contact);
 
 
 		void update_contacts();
 
 
-		list_allocator<contact_t> contact_list;
-//		vector<contact_t*> contact_array;
-//		contact_t* contact_hash[hashtable_size];
+		list_allocator<contact_surface_t> contact_list;
+//		vector<contact_surface_t*> contact_array;
+//		contact_surface_t* contact_hash[hashtable_size];
 		mutex cm;
 	};
 #endif//_contactmanager_h_

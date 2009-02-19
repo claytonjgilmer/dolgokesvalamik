@@ -60,6 +60,7 @@
 		hgridbroadphase broad_phase;
 
 		uint32 parallel_processing;
+		int frame_count;
 
 		DECLARE_SINGLETON_DESC(physicssystem,physicssystemdesc);
 	};

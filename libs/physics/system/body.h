@@ -40,11 +40,11 @@
 		}
 	};
 
-struct contact_t;
+struct contact_surface_t;
 struct contact_edge:intr_list_node_base<contact_edge>
 {
 	body_t* other;
-	contact_t* elem;
+	contact_surface_t* elem;
 };
 
 	struct body_t
@@ -72,6 +72,8 @@ struct contact_edge:intr_list_node_base<contact_edge>
 
         intr_list<shape_t> shapes;
         int group_index;
+		int solver_stamp;
+		int solver_index;
 
 	};
 #endif

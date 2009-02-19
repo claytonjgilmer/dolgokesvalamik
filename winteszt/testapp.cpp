@@ -370,9 +370,63 @@ vec3 to_vec3(dvec3 v)
 	vec3 r; r.set((float)v.x,(float)v.y,(float)v.z); return r;
 }
 
+//static double sinsum=0;
+static double var=3.141592653589793238462643383279;
+#define Pi 3.141592653589793238462643383279
+
+double sajsin(double y)
+{
+//	if (y>Pi) y-=2*Pi;
+//	else if (y<-Pi) y+=2*Pi;
+	while (y>Pi) y-=2*Pi;
+	while (y<-Pi) y+=2*Pi;
+//	x=fmod(x,Pi);
+#define B (4/Pi)
+#define C (-4/(Pi*Pi))
+
+//	double y = B * x + C * x * fabs(x);
+	y*=(B  + C * fabs(y));
+
+#if 1//def EXTRA_PRECISION
+	//  const float Q = 0.775;
+#define P 0.225
+
+	y *= (P *(fabs(y) - 1) + 1);   // Q * y + P * y * abs(y)
+#endif
+
+	return y;
+#undef B
+#undef C
+#undef P
+}
 
 void update_app()
 {
+	timer_t ttt;
+
+#define itcount 100000
+	ttt.reset();
+	var=Pi/2;
+	for (int n=0; n<itcount; ++n)
+		var=(sin(2*var)*var+(sin(var)+sqr(sin(var/2))*2)*var)/2;
+
+	ttt.stop();
+	PRINT("%d  %f\n",ttt.get_tick(),var);
+
+
+	var=Pi/2;
+	ttt.reset();
+	for (int n=0; n<itcount; ++n)
+		var=(sajsin(2*var)+(sajsin(var)+sqr(sajsin(var/2))*2)*var)/2;
+
+	ttt.stop();
+	PRINT("%d  %f\n\n\n\n\n",ttt.get_tick(),var);
+	PRINT("sin(pi)=%f,sin(pi/2)=%f,sin(pi/4)=%f,sin(0)=%f\n",sajsin(Pi),sajsin(Pi/2),sajsin(Pi/4),sajsin(0));
+	PRINT("sin(pi)=%f,sin(pi/2)=%f,sin(pi/4)=%f,sin(0)=%f\n",sin(Pi),sin(Pi/2),sin(Pi/4),sin(0.0));
+
+
+
+
 	timer_t update_time;
 	char str[1024];
 	g_game->t.stop();
@@ -758,7 +812,7 @@ void exit_app()
 
 void generate_tetrahedron(vec3 o_pos[],float i_radius)
 {
-	float Pi = 3.141592653589793238462643383279502884197f;
+//	float Pi = 3.141592653589793238462643383279502884197f;
 
 	float phiaa  = -19.471220333f; /* the phi angle needed for generation */
 
