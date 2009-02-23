@@ -16,7 +16,7 @@ body_t* g_world=NULL;
 
 void create_world_body(physicssystem* ptr)
 {
-	g_world=ptr->body_list.allocate();
+	g_world=new (ptr->body_list.allocate_place()) body_t;
 	ptr->bodystate_array.add_world();
 }
 
@@ -33,7 +33,7 @@ desc(*i_desc)
 
 body_t* physicssystem::create_body(const bodydesc& i_desc)
 {
-    body_t* b=this->body_list.allocate();
+    body_t* b= new (this->body_list.allocate_place()) body_t;
 //    b->sta=i_desc.is_static;
 
     this->bodystate_array.add_body(&i_desc,&b,1);
@@ -49,7 +49,7 @@ void physicssystem::release_body(body_t* i_body)
 void physicssystem::create_bodies(body_t* o_body_array[], const bodydesc i_desc[], unsigned i_bodynum)
 {
     for (unsigned n=0; n<i_bodynum;++n)
-        o_body_array[n]=this->body_list.allocate();
+        o_body_array[n]=new (this->body_list.allocate_place()) body_t;
 
     this->bodystate_array.add_body(i_desc,o_body_array,i_bodynum);
 }
@@ -82,7 +82,10 @@ void kill_deads()
     {
         sys->bodystate_array.release_body(&*sys->killed.begin(),sys->killed.size());
         for (uint32 n=0; n<sys->killed.size(); ++n)
-            sys->body_list.deallocate(sys->killed[n]);
+		{
+            sys->body_list.deallocate_place(sys->killed[n]);
+			sys->killed[n]->~body_t();
+		}
     }
 }
 

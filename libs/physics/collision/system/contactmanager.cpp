@@ -42,8 +42,7 @@ static int hash_check[hashtable_size];
 			return ptr->elem;
 
 		++hash_check[index];
-		contact_surface_t* c=this->contact_list.allocate_place();
-		new (c) contact_surface_t(i_body1,i_body2);
+		
 
 //			ptr->prev=0;
 //			ptr->next=this->contact_hash[index];
@@ -52,7 +51,7 @@ static int hash_check[hashtable_size];
 
 //			this->contact_hash[index]=ptr;
 
-		return c;
+		return new (this->contact_list.allocate_place()) contact_surface_t(i_body1,i_body2);;
 	}
 
 	void contactmanager::erase_contact(contact_surface_t* i_contact)
@@ -71,7 +70,8 @@ static int hash_check[hashtable_size];
 			this->contact_hash[index]=this->contact_hash[index]->next;
 		}
 #endif
-		contact_list.deallocate(i_contact);
+		contact_list.deallocate_place(i_contact);
+		i_contact->~contact_surface_t();
 	}
 
 
@@ -83,8 +83,9 @@ static int hash_check[hashtable_size];
 	    {
 			next_it=it;
 			++next_it;
-            (*it).update();
-            if (!(*it).contact_count)
-                erase_contact(&(*it));
+			contact_surface_t* contact_surface=(contact_surface_t*)*it;
+            contact_surface->update();
+            if (!contact_surface->contact_count)
+                erase_contact(contact_surface);
 	    }
 	}

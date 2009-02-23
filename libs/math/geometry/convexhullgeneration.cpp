@@ -9,7 +9,7 @@ const int PLANE_OUTSIDE=1;
 const int PLANE_INSIDE=-1;
 const int PLANE_ON=0;
 
-list_allocator<gen_half_edge_t,2048> edge_allocator;
+list_allocator<sizeof(gen_half_edge_t),2048> edge_allocator;
 
 void* gen_half_edge_t::operator new(size_t size)
 {
@@ -22,7 +22,7 @@ void gen_half_edge_t::operator delete(void* edge)
 }
 
 
-list_allocator<gen_face_t,2048> face_allocator;
+list_allocator<sizeof(gen_face_t),2048> face_allocator;
 
 #define CHECK_CONSISTENCY
 
@@ -692,13 +692,13 @@ void convex_hull_generator::get_result()
 	}
 
 
-	list_allocator<gen_half_edge_t,2048>::iterator it;
+	list_allocator<sizeof(gen_half_edge_t),2048>::iterator it;
 	ch.edges.resize(edge_allocator.size());
 	{
 	int edge_index=0;
 	for (it=edge_allocator.begin(); it!=edge_allocator.end(); ++it)
 	{
-		gen_half_edge_t& edge=*it;
+		gen_half_edge_t& edge=*(gen_half_edge_t*)*it;
 
 		if (edge.edge_index==-1)
 		{
@@ -713,7 +713,7 @@ void convex_hull_generator::get_result()
 
 	for (it=edge_allocator.begin(); it!=edge_allocator.end(); ++it)
 	{
-		gen_half_edge_t& edge=*it;
+		gen_half_edge_t& edge=*(gen_half_edge_t*)*it;
 		edge_data& act_edge_data=ch.edges[edge.edge_index];
 		act_edge_data.head_vertex_index=vertex_remap[edge.head_vertex];
 		act_edge_data.next_edge=edge.next->edge_index;

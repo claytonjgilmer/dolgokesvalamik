@@ -24,7 +24,7 @@
 				m_elem=i_elem;
 			}
 
-			void* operator->()
+			void* operator*()
 			{
 				return m_elem->m_data;
 			}
@@ -52,8 +52,8 @@
 			elem_t* m_elem;
 		};
 
-		iterator begin(){return m_head->m_next;}
-		iterator end(){return m_end;}
+		iterator begin(){return iterator(m_head.m_next);}
+		iterator end(){return iterator(&m_end);}
 
 		list_allocator();
 		~list_allocator();

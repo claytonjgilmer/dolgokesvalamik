@@ -38,7 +38,7 @@
 		} ;
 
 		stringmap<groupstruct,128> m_pathmap;
-		list_allocator<groupstruct> m_groupbuf;
+		list_allocator<sizeof(groupstruct)> m_groupbuf;
 	};
 
 
@@ -73,7 +73,8 @@
 			if (group->m_pathbuf.empty())
 			{
 				m_pathmap.remove_data(i_group);
-				m_groupbuf.deallocate(group);
+				m_groupbuf.deallocate_place(group);
+				group->~groupstruct();
 			}
 		}
 	}

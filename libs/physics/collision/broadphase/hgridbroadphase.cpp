@@ -177,7 +177,7 @@ void move_object(hgridbroadphase* hgrid, hgridobject* obj)
 
 broadphaseobject* hgridbroadphase::create_object(void* i_userdata, const aabb_t& i_bounding, uint32 i_static)
 {
-    hgridobject* newobj= i_static ? this->static_list.allocate_place() : this->dynamic_list.allocate_place();
+    hgridobject* newobj=(hgridobject*)(i_static ? this->static_list.allocate_place() : this->dynamic_list.allocate_place());
     new (newobj) hgridobject(i_userdata,i_bounding,i_static);
     add_object_to_hgrid(this, newobj);
 
@@ -191,9 +191,11 @@ void hgridbroadphase::release_object(broadphaseobject* i_object)
     remove_object_from_hgrid(this, obj);
 
     if (i_object->is_static)
-        this->static_list.deallocate(obj);
+        this->static_list.deallocate_place(obj);
     else
-        this->dynamic_list.deallocate(obj);
+        this->dynamic_list.deallocate_place(obj);
+
+	obj->~hgridobject();
 
 }
 
@@ -224,15 +226,15 @@ void hgridbroadphase::update()
 {
     this->pair_num=0;
 
-    list_allocator<hgridobject>::iterator it;
+    list_allocator<sizeof(hgridobject)>::iterator it;
 
     if (!physicssystem::ptr->parallel_processing)
     {
         for (it=this->dynamic_list.begin(); it!=this->dynamic_list.end(); ++it)
-            move_object(this, &*it);
+            move_object(this, (hgridobject*)*it);
 
         for (it=this->dynamic_list.begin(); it!=this->dynamic_list.end(); ++it)
-            check_obj_against_grid(this, &*it);
+            check_obj_against_grid(this, (hgridobject*)*it);
     }
     else
     {
@@ -244,11 +246,11 @@ void hgridbroadphase::update()
         hgridobject* obj_array[obj_count];
 #endif
 
-        list_allocator<hgridobject>::iterator it=this->dynamic_list.begin();
+        list_allocator<sizeof(hgridobject)>::iterator it=this->dynamic_list.begin();
 
         for (unsigned n=0; n<obj_count;++n,++it)
         {
-            obj_array[n]=&*it;
+            obj_array[n]=(hgridobject*)*it;
             move_object(this, obj_array[n]);
         }
 
