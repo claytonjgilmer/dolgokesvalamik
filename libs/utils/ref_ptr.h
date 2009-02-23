@@ -15,16 +15,6 @@
 		void operator=(const ref_ptr& i_other);
 		void operator=(REF* i_object);
 
-		const REF* get() const
-		{
-			return m_ptr;
-		}
-
-		REF* get()
-		{
-			return m_ptr;
-		}
-
 		REF& operator*()
 		{
 			return *m_ptr;
@@ -33,6 +23,11 @@
 		const REF& operator*() const
 		{
 			return *m_ptr;
+		}
+
+		REF* get()
+		{
+			return m_ptr;
 		}
 
 		REF* operator->()

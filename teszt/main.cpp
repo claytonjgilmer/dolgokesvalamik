@@ -502,7 +502,107 @@ void sorttest2()
 }
 }
 
+allocator_list_elem* allocator_list_elem::s_allocator_pool_head=NULL;
+
+void allocator_gc(allocator_list_elem* ptr)
+{
+	while (ptr)
+	{
+		ptr->garbage_collection();
+		ptr=ptr->next;
+	}
+}
+
+#include "containers/listallocator.h"
+
+int szam_beker(const char* szoveg)
+{
+	printf(szoveg);
+	char szamstr[128];
+
+	gets(szamstr);
+
+	return atoi(szamstr);
+}
+
+
+
 int _cdecl main()
 {
-	lofasz::sorttest2();
+//	lofasz::sorttest2();
+
+/*
+	pool_allocator<32,64> pa[4];
+
+	vector<void*> ptr[4];
+
+
+	for (int n=0; n<1000; ++n)
+	{
+		for (int k=0; k<4; ++k)
+		{
+			if (random(0,10)<5)
+				ptr[k].push_back(pa[k].alloc());
+		}
+	}
+
+	for (int k=0; k<4; ++k)
+	{
+		for (int n=0; n<ptr[k].size(); ++n)
+			pa[k].free(ptr[k][n]);
+	}
+
+	allocator_gc(allocator_list_elem::s_allocator_pool_head);
+*/
+
+	int hoadd[]={0,3,3,6,1,4,6,2,5,0,3,5};
+
+	char* napstr[]={"vasarnap","hetfo","kedd","szerda","csutortok","pentek","szombat"};
+
+	while (1)
+	{
+		int ev=szam_beker("evszam:");
+		int ho=szam_beker("honap:");
+		int nap=szam_beker("nap:");
+
+		int ret=(ev-1900)+(ev-1900)/4+hoadd[(ho+11) % 12]+nap;
+		if (!(ev % 4) && ho<3) --ret;
+		ret%=7;
+		printf("%d.%02d.%02d. %s.\n\n",ev,ho,nap,napstr[ret]);
+	}
+	return 0;
+
+
+	while (1)
+	{
+		int sz=szam_beker("irj be egy egynel nagyobb pozitiv szamot:");
+
+		if (sz==-1)
+			return 0;
+
+		if (sz<=1)
+		{
+			printf("buzi-e vagy???\n");
+		}
+
+		printf ("%d=",sz);
+
+		int oszto=2;
+//		int gyok=(int)sqrtf((float)sz);
+		while (oszto<=(int)sqrtf((float)sz))
+		{
+			if (!(sz%oszto))
+			{
+				printf("%d*",oszto);
+				sz/=oszto;
+			}
+			else
+				oszto+=1;
+		}
+
+		printf("%d\n",sz);
+	}
+	return 0;
+	printf("faszkalap");
+	return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;return 0;
 }

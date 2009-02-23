@@ -1,12 +1,12 @@
 #include "contactgroupmanager.h"
 
     void create_one_group(contact_group_manager_t* gm, body_t* b, int group_index);
-    void contact_group_manager_t::create_contact_groups(body_t* dynbody_array[], int dynbody_count,list_allocator<contact_surface_t>& contact_list)
+    void contact_group_manager_t::create_contact_groups(body_t* dynbody_array[], int dynbody_count,list_allocator<sizeof(contact_surface_t)>& contact_list)
     {
         for (int n=0; n<dynbody_count; ++n)
             dynbody_array[n]->group_index=-1;
 
-        list_allocator<contact_surface_t>::iterator cit;
+        list_allocator<sizeof(contact_surface_t)>::iterator cit;
         for (cit=contact_list.begin(); cit!=contact_list.end();++cit)
             (*cit).group_index=-1;
 
@@ -50,7 +50,7 @@
                 c->group_index=group_index;
                 gm->contact_array[group->first_contact+group->contact_count]=c;
                 ++group->contact_count;
-                if (!e->other->is_static && e->other->group_index==-1)
+                if (e->other->array_index && e->other->group_index==-1)
                     create_one_group(gm,e->other,group_index);
             }
         }

@@ -36,22 +36,14 @@ void lcp_solver_t::allocate_buffer()
 	lcp_data.friction_coeff=new float[8*contact_count];
 }
 
-void lcp_solver_t::set_solver_index(body_t* body[])
+void lcp_solver_t::set_solver_index(body_t* body[2])
 {
-	if (body[0]->is_static)
-	{
-		body[0]->solver_index=0;
-	}
-	else if (body[0]->solver_stamp!=physicssystem::ptr->frame_count)
+	if (body[0]->array_index && body[0]->solver_stamp!=physicssystem::ptr->frame_count)
 	{
 		body[0]->solver_stamp=physicssystem::ptr->frame_count;
 		body[0]->solver_index=++body_count;
 	}
-	if (body[1]->is_static)
-	{
-		body[1]->solver_index=0;
-	}
-	else if (body[1]->solver_stamp!=physicssystem::ptr->frame_count)
+	if (body[1]->array_index && body[1]->solver_stamp!=physicssystem::ptr->frame_count)
 	{
 		body[1]->solver_stamp=physicssystem::ptr->frame_count;
 		body[1]->solver_index=++body_count;
@@ -74,13 +66,16 @@ struct solver_pre_step_contacts
 
 			body_t* body1(act_contact->body[0]);
 			body_t* body2(act_contact->body[1]);
-			nbody* nbody1=physicssystem::ptr->bodystate_array+body1->is_static;
-			nbody* nbody2=physicssystem::ptr->bodystate_array+body2->is_static;
+
+			nbody_t* nbody=&physicssystem::ptr->bodystate_array;
+
 			int state_index1=body1->array_index;
 			int state_index2=body2->array_index;
 
 			const int solver_index1=body1->solver_index;
 			const int solver_index2=body2->solver_index;
+
+			vec3 d;
 
 			for (int k=0; k<act_contact->contact_count; ++k,++data_index)
 			{
@@ -89,6 +84,22 @@ struct solver_pre_step_contacts
 				lcp_data->lambda_poscorr[data_index]=0;
 				lcp_data->body_index[data_index].i[0]=solver_index1;
 				lcp_data->body_index[data_index].i[1]=solver_index2;
+
+				vec3 relpos1=act_cp->abs_pos[0]-nbody->pos[state_index1].t;
+				vec3 relpos2=act_cp->abs_pos[1]-nbody->pos[state_index2].t;
+
+
+				lcp_data->J[data_index].v1=-act_contact->normal;
+				lcp_data->J[data_index].w1.cross(act_contact->normal,relpos1);
+				lcp_data->J[data_index].v2=act_contact->normal;
+				lcp_data->J[data_index].w2.cross(relpos2,act_contact->normal);
+
+				lcp_data->B[data_index].v1=nbody->invmass[state_index1]*lcp_data->J[data_index].v1;
+				lcp_data->B[data_index].w1=nbody->invinertia_abs[state_index1].transform3x3(lcp_data->J[data_index].w1);
+				lcp_data->B[data_index].v2=nbody->invmass[state_index2]*lcp_data->J[data_index].v2;
+				lcp_data->B[data_index].w2=nbody->invinertia_abs[state_index2].transform3x3(lcp_data->J[data_index].w2);
+
+//				vec3 dvel=
 			}
 		}
 	}
@@ -118,11 +129,10 @@ void lcp_solver_t::solve_contacts()
         contact_surface_t* actcontact=contact_array+contact_index;
 
         int body[2]={actcontact->body[0]->array_index,actcontact->body[1]->array_index};
-        int is_static[2]={actcontact->body[0]->is_static,actcontact->body[1]->is_static};
         for (int n=0; n<actcontact->contact_count; ++n)
         {
-            ptr->bodystate_array[is_static[0]].vel[body[0]];
-            ptr->bodystate_array[is_static[1]].vel[body[1]];
+            ptr->bodystate_array.vel[body[0]];
+            ptr->bodystate_array.vel[body[1]];
             //vec3 body[0]->get_vel()
         }
     }

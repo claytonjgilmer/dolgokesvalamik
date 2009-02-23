@@ -9,10 +9,10 @@
 										state_num++
 
 
-void realloc(nbody*, unsigned i_newcapacity);
+void realloc(nbody_t*, unsigned i_newcapacity);
 
 
-	nbody::nbody():
+	nbody_t::nbody_t():
 	state_size_sum(0),
 	state_num(0),
 	size(0),
@@ -31,13 +31,13 @@ void realloc(nbody*, unsigned i_newcapacity);
 		realloc(this,NBODY_MIN_CAPACITY);
 	}
 
-	nbody::~nbody()
+	nbody_t::~nbody_t()
 	{
 		void* firstaddress=*((void**)this);
 		free(firstaddress);
 	}
 
-	void realloc(nbody* nb, unsigned i_newcapacity)
+	void realloc(nbody_t* nb, unsigned i_newcapacity)
 	{
 		nb->capacity=i_newcapacity;
 		char* newbuf=(char*)malloc(nb->state_size_sum*i_newcapacity);
@@ -63,7 +63,25 @@ void realloc(nbody*, unsigned i_newcapacity);
 		}
 	}
 
-	void nbody::add_body(const bodydesc i_desc[], body_t* i_body_array[], unsigned i_bodynum)
+	void nbody_t::add_world()
+	{
+		if (size+1>capacity)
+			realloc(this,nextpoweroftwo(size));
+
+		g_world->array_index=0;
+		pos[0].identity();
+		vel[0].clear();
+		rotvel[0].clear();
+		invmass[0]=0;
+		invinertia_rel[0].clear();
+		force[0].clear();
+		torque[0].clear();
+		body[0]=g_world;
+
+		++size;
+	}
+
+	void nbody_t::add_body(const bodydesc i_desc[], body_t* i_body_array[], unsigned i_bodynum)
 	{
 		if (size+i_bodynum>capacity)
 			realloc(this,nextpoweroftwo(size+i_bodynum));
@@ -75,17 +93,8 @@ void realloc(nbody*, unsigned i_newcapacity);
 			this->vel[index]=i_desc[n].vel;
 			this->rotvel[index]=i_desc[n].rotvel;
 
-			if (i_desc[n].is_static)
-			{
-				this->invmass[index]=0;
-				this->invinertia_rel[index].clear();
-			}
-			else
-			{
-				this->invmass[index]=1/i_desc[n].mass;
-				this->invinertia_rel[index].invert3x3(i_desc[n].inertia);
-			}
-
+			this->invmass[index]=1/i_desc[n].mass;
+			this->invinertia_rel[index].invert3x3(i_desc[n].inertia);
 			this->force[index].clear();
 			this->torque[index].clear();
 			this->body[index]=i_body_array[n];
@@ -95,7 +104,7 @@ void realloc(nbody*, unsigned i_newcapacity);
 
 	}
 
-	void nbody::release_body(body_t* i_body_array[], unsigned i_bodynum)
+	void nbody_t::release_body(body_t* i_body_array[], unsigned i_bodynum)
 	{
 		for (uint32 n=0; n<i_bodynum; ++n)
 		{

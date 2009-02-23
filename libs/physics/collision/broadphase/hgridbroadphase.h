@@ -30,6 +30,10 @@ const int HGRID_MAX_LEVELS=31;
 struct hgridbroadphase
 {
     hgridbroadphase();
+	~hgridbroadphase()
+	{
+		int a=0;
+	}
 
     broadphaseobject* create_object(void* i_userdata, const aabb_t& i_bounding, uint32 i_static);
     void release_object(broadphaseobject*);
@@ -51,8 +55,8 @@ struct hgridbroadphase
 
     int tick;
 
-    list_allocator<hgridobject> static_list;
-    list_allocator<hgridobject> dynamic_list;
+    list_allocator<sizeof(hgridobject)> static_list;
+    list_allocator<sizeof(hgridobject)> dynamic_list;
 
 //		vector<broadphasepair> pair_array;
     broadphasepair pair_array[65536];

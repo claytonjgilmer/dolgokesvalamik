@@ -284,8 +284,6 @@ void init_app(HWND i_hwnd)
 	bodydesc bd;
 	bd.mass=1;
 	bd.inertia.identity();
-	bd.is_static=BODYSTATE_DYNAMIC;
-
 
 	for (unsigned n=0; n<BODY_NUM;++n)
 	{
@@ -402,6 +400,7 @@ double sajsin(double y)
 
 void update_app()
 {
+/*
 	timer_t ttt;
 
 #define itcount 100000
@@ -423,7 +422,7 @@ void update_app()
 	PRINT("%d  %f\n\n\n\n\n",ttt.get_tick(),var);
 	PRINT("sin(pi)=%f,sin(pi/2)=%f,sin(pi/4)=%f,sin(0)=%f\n",sajsin(Pi),sajsin(Pi/2),sajsin(Pi/4),sajsin(0));
 	PRINT("sin(pi)=%f,sin(pi/2)=%f,sin(pi/4)=%f,sin(0)=%f\n",sin(Pi),sin(Pi/2),sin(Pi/4),sin(0.0));
-
+*/
 
 
 
@@ -816,8 +815,8 @@ void generate_tetrahedron(vec3 o_pos[],float i_radius)
 
 	float phiaa  = -19.471220333f; /* the phi angle needed for generation */
 
-	float phia = Pi*phiaa/180.0f; /* 1 set of three points */
-	float the120 = Pi*120.0f/180.0f;
+	float phia = (float)(Pi*phiaa/180.0f); /* 1 set of three points */
+	float the120 = (float)(Pi*120.0f/180.0f);
 	o_pos[0][0] = 0.0f;
 	o_pos[0][1] = 0.0f;
 	o_pos[0][2] = i_radius;

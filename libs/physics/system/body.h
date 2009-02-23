@@ -12,22 +12,23 @@
 	struct shape_t;
 	struct shape_desc;
 
+/*
 	enum bodystate
 	{
 		BODYSTATE_DYNAMIC,
-		BODYSTATE_STATIC
+		BODYSTATE_KINEMATIC
 	};
-
+*/
 	struct bodydesc
 	{
 		mtx4x3	pos;
-		vec3		vel;
-		vec3		rotvel;
+		vec3	vel;
+		vec3	rotvel;
 
-		float			mass;
+		float	mass;
 		mtx3x3	inertia;
 
-		bodystate		is_static;
+//		bodystate	state;
 
 		bodydesc()
 		{
@@ -36,7 +37,7 @@
 			rotvel.clear();
 			mass=1.0f;
 			inertia.identity();
-			is_static=BODYSTATE_DYNAMIC;
+//			state=BODYSTATE_DYNAMIC;
 		}
 	};
 
@@ -65,8 +66,6 @@ struct contact_edge:intr_list_node_base<contact_edge>
 		~body_t();
 
 		uint16 array_index;
-		bodystate  is_static;
-
 		intr_list<contact_edge> contacts;
 		intr_list<constraint_edge> joints;
 
@@ -74,7 +73,23 @@ struct contact_edge:intr_list_node_base<contact_edge>
         int group_index;
 		int solver_stamp;
 		int solver_index;
-
 	};
+
+	extern body_t* g_world;
 #endif
+
+/*
+ami kell minden bodynak:
+pozicio
+shape-ek
+jointok
+contactok
+
+ami csak a dinamikusoknak kell:
+sebesseg
+tomeg
+inertia
+ero
+forgatonyomatek
+*/
 

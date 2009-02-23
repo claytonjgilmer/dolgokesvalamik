@@ -17,7 +17,7 @@
 		void update_contacts();
 
 
-		list_allocator<contact_surface_t> contact_list;
+		list_allocator<sizeof(contact_surface_t)> contact_list;
 //		vector<contact_surface_t*> contact_array;
 //		contact_surface_t* contact_hash[hashtable_size];
 		mutex cm;

@@ -38,7 +38,7 @@ struct lcp_solver_t
     void process(contact_surface_t* i_contact_array, int i_contact_count, float i_dt);
 
 	void allocate_buffer();
-	void set_solver_index(body_t* body[]);
+	void set_solver_index(body_t* body[2]);
 	void pre_step_contacts();
 	void solve_contacts();
 	void clean();

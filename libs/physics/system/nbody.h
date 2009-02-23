@@ -8,7 +8,11 @@
 #include "body.h"
 
 #define NBODY_MIN_CAPACITY 512
-	struct nbody
+/*
+minek ez a sok szar a statikus testeknek? nekik nem kell, csak pozicio
+vagy meg asse
+*/
+	struct nbody_t
 	{
 		mtx4x3* pos;
 		vec3* vel;
@@ -25,9 +29,10 @@
 		unsigned capacity;
 		unsigned size;
 
-		nbody();
-		~nbody();
+		nbody_t();
+		~nbody_t();
 
+		void add_world();
 		void add_body(const bodydesc i_desc[], body_t* i_body_array[], unsigned i_bodynum);
 		void release_body(body_t* i_body_array[], unsigned i_bodynum);
 

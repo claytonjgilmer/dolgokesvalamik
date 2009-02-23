@@ -33,9 +33,9 @@
 	{
 		//body krealas/megszuntetes
 		body_t* create_body(const bodydesc& i_desc);
-		void create_bodies(body_t* o_body_array[], bodystate i_state, const bodydesc i_desc[], unsigned i_bodynum);
+		void create_bodies(body_t* o_body_array[], const bodydesc i_desc[], unsigned i_bodynum);
 		void release_body(body_t*);
-		void release_bodies(body_t* i_body_array[], bodystate i_state, unsigned i_bodynum);
+		void release_bodies(body_t* i_body_array[], unsigned i_bodynum);
 
 
 		//eztet kell hivni
@@ -49,10 +49,10 @@
 		physicssystem(const physicssystemdesc* i_desc);
 
 		physicssystemdesc desc;
-		nbody bodystate_array[2];
+		nbody_t bodystate_array;
 
-		list_allocator<body_t> body_list;
-		vector<body_t*> killed[2];
+		list_allocator<sizeof(body_t)> body_list;
+		vector<body_t*> killed;
 
 		contactmanager contact_manager;
 		contact_group_manager_t contact_group_manager;

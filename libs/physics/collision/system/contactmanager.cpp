@@ -77,7 +77,7 @@ static int hash_check[hashtable_size];
 
 	void contactmanager::update_contacts()
 	{
-	    list_allocator<contact_surface_t>::iterator it,next_it;
+	    list_allocator<sizeof(contact_surface_t)>::iterator it,next_it;
 
 	    for (it=this->contact_list.begin(); it!=this->contact_list.end(); it=next_it)
 	    {

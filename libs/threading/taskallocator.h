@@ -19,12 +19,11 @@
 		void deallocate(void* i_buf)
 		{
 			m.lock();
-			m_taskalloc.deallocate((tplaceholder*)i_buf);
+			m_taskalloc.deallocate_place(i_buf);
 			m.unlock();
 		}
 
-		struct tplaceholder{char c[256];};
-		list_allocator<tplaceholder> m_taskalloc;
+		list_allocator<256> m_taskalloc;
 		mutex m;
 	};
 
