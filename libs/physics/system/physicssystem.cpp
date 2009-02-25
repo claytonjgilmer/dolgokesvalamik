@@ -25,7 +25,12 @@ desc(*i_desc)
 {
     ZeroMemory(this->intersect_fn,sizeof(this->intersect_fn));
     this->intersect_fn[shape_type_sphere][shape_type_sphere]=&test_sphere_sphere_intersect;
-    this->parallel_processing=TRUE;
+    this->parallel_boudingupdate=
+		parallel_broadphase=
+		parallel_nearphase=
+		parallel_update=
+		parallel_inertia=
+		i_desc->parallel_processing;
 	this->frame_count=0;
 
 	create_world_body(this);
@@ -116,7 +121,7 @@ void broadphase()
     physicssystem* ptr=physicssystem::ptr;
     const nbody_t& nb=ptr->bodystate_array;
 
-    if (ptr->parallel_processing)
+    if (ptr->parallel_boudingupdate)
     {
         taskmanager::ptr->process_buffer(nb.size-1,10,update_bounding());
     }
@@ -190,7 +195,7 @@ void near_phase()
 {
     physicssystem* ptr=physicssystem::ptr;
 
-    if (ptr->parallel_processing)
+    if (ptr->parallel_nearphase)
     {
 		if (ptr->broad_phase.pair_num)
 			taskmanager::ptr->process_buffer(ptr->broad_phase.pair_num,10,near_struct());
@@ -241,7 +246,7 @@ void update_bodies(float i_dt)
 {
     physicssystem* ptr=physicssystem::ptr;
     nbody_t* b=&ptr->bodystate_array;
-    if (ptr->parallel_processing)
+    if (ptr->parallel_update)
     {
         taskmanager::ptr->process_buffer(b->size-1,10,update_process(b,i_dt,ptr->desc.gravity));
     }
@@ -279,7 +284,7 @@ void update_inertia()
     physicssystem* ptr=physicssystem::ptr;
     nbody_t* b=&ptr->bodystate_array;
 
-    if (ptr->parallel_processing)
+    if (ptr->parallel_inertia)
     {
         taskmanager::ptr->process_buffer(b->size-1,10,inertia_process(b));
     }

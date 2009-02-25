@@ -17,12 +17,14 @@
 		vec3 gravity;
 		float timestep;
 		uint8 maxsubstepcount;
+		uint8 parallel_processing;
 
 		physicssystemdesc()
 		{
 			gravity.set(0,-10,0);
 			timestep=0.01f;
 			maxsubstepcount=10;
+			parallel_processing=0;
 		}
 	};
 
@@ -59,7 +61,13 @@
 		intersectfn intersect_fn[shape_type_num][shape_type_num];
 		hgridbroadphase broad_phase;
 
-		uint32 parallel_processing;
+//		uint32 parallel_processing;
+
+		uint32 parallel_boudingupdate;
+		uint32 parallel_broadphase;
+		uint32 parallel_nearphase;
+		uint32 parallel_update;
+		uint32 parallel_inertia;
 		int frame_count;
 
 		DECLARE_SINGLETON_DESC(physicssystem,physicssystemdesc);

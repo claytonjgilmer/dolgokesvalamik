@@ -109,7 +109,7 @@ void lcp_solver_t::pre_step_contacts()
 {
 	body_count=0;
 	physicssystem* ptr=physicssystem::ptr;
-	if (ptr->parallel_processing)
+	if (ptr->parallel_nearphase)
 	{
 		taskmanager::ptr->process_buffer(contact_count,10,solver_pre_step_contacts(this));
 	}

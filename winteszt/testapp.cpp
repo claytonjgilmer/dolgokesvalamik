@@ -121,8 +121,8 @@ struct game
 	object3d* sky;
 	object3d* terrain;
 	object3d* sphere;
-#define BODY_NUM 50
-#define ROOM_SIZE 10.0f
+#define BODY_NUM 500
+#define ROOM_SIZE 100.0f
 #define BODY_SIZE .5f
 	body_t* phb[BODY_NUM];
 	object3d* model[BODY_NUM];
@@ -217,7 +217,7 @@ void init_app(HWND i_hwnd)
 	filesystem::ptr->register_path("texture","texture\\");
 
 	taskmanagerdesc tdesc;
-	tdesc.m_threadnum=4;
+	tdesc.m_threadnum=3;
 	taskmanager::create(&tdesc);
 
 	shadermanagerdesc shaderdesc("shader");
@@ -231,6 +231,7 @@ void init_app(HWND i_hwnd)
 
 	physicssystemdesc pd;
 	pd.gravity.set(0,0,0);
+	pd.parallel_processing=1;
 	physicssystem::create(&pd);
 
 	rendersystemdesc renderdesc;
@@ -432,6 +433,29 @@ void update_app()
 	float frame_time=g_game->t.get_seconds();
 	g_game->t.reset();
 
+	{
+		if (inputsystem::ptr->KeyPressed(KEYCODE_1))
+			physicssystem::ptr->parallel_boudingupdate=1-physicssystem::ptr->parallel_boudingupdate;
+		if (inputsystem::ptr->KeyPressed(KEYCODE_2))
+			physicssystem::ptr->parallel_broadphase=1-physicssystem::ptr->parallel_broadphase;
+		if (inputsystem::ptr->KeyPressed(KEYCODE_3))
+			physicssystem::ptr->parallel_nearphase=1-physicssystem::ptr->parallel_nearphase;
+		if (inputsystem::ptr->KeyPressed(KEYCODE_4))
+			physicssystem::ptr->parallel_inertia=1-physicssystem::ptr->parallel_inertia;
+		if (inputsystem::ptr->KeyPressed(KEYCODE_5))
+			physicssystem::ptr->parallel_update=1-physicssystem::ptr->parallel_update;
+		sprintf(str,"bounding:%d",physicssystem::ptr->parallel_boudingupdate);
+		rendersystem::ptr->draw_text(10,400,color_f(1,1,1,1),str);
+		sprintf(str,"broadphs:%d",physicssystem::ptr->parallel_broadphase);
+		rendersystem::ptr->draw_text(10,420,color_f(1,1,1,1),str);
+		sprintf(str,"nearphas:%d",physicssystem::ptr->parallel_nearphase);
+		rendersystem::ptr->draw_text(10,440,color_f(1,1,1,1),str);
+		sprintf(str,"inertia :%d",physicssystem::ptr->parallel_inertia);
+		rendersystem::ptr->draw_text(10,460,color_f(1,1,1,1),str);
+		sprintf(str,"update  :%d",physicssystem::ptr->parallel_update);
+		rendersystem::ptr->draw_text(10,480,color_f(1,1,1,1),str);
+	}
+
 	sprintf(str,"FPS:%.1d",(int)(1/frame_time));
 	rendersystem::ptr->draw_text(800,10,color_f(1,1,0,1),str);
 	taskmanager::ptr->flush();
@@ -453,8 +477,9 @@ void update_app()
 	t.reset();
 	physicssystem::ptr->simulate(dt);
 	t.stop();
-	unsigned sec=t.get_tick();
-	sprintf(str,"simulation time:%d",sec);
+	unsigned tick=t.get_tick();
+	float sec=t.get_seconds();
+	sprintf(str,"simulation time:%d tick, %f sec",tick,sec);
 	rendersystem::ptr->draw_text(10,10,color_f(1,1,1,1),str);
 
 	sprintf(str,"pairnum:%d",physicssystem::ptr->broad_phase.pair_num);

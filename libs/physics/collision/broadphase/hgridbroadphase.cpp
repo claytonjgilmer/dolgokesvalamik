@@ -228,7 +228,7 @@ void hgridbroadphase::update()
 
     list_allocator<sizeof(hgridobject)>::iterator it;
 
-    if (!physicssystem::ptr->parallel_processing)
+    if (!physicssystem::ptr->parallel_broadphase)
     {
         for (it=this->dynamic_list.begin(); it!=this->dynamic_list.end(); ++it)
             move_object(this, (hgridobject*)*it);

@@ -32,7 +32,6 @@ struct hgridbroadphase
     hgridbroadphase();
 	~hgridbroadphase()
 	{
-		int a=0;
 	}
 
     broadphaseobject* create_object(void* i_userdata, const aabb_t& i_bounding, uint32 i_static);
