@@ -2,9 +2,11 @@
 #define _list_allocator_h_
 
 #include "vector.h"
+#include "threading/mutex.h"
 
 	template <int elemsize, int blocksize=128> struct list_allocator //blocksize kettohatvany!
 	{
+		mutex cs;
 		struct elem_t
 		{
 			char m_data[elemsize];
@@ -89,6 +91,7 @@
 	template <int elemsize,int blocksize>
 	MLINLINE void* list_allocator<elemsize,blocksize>::allocate_place()
 	{
+		blocklocker bl(cs);
 		elem_t* newelem;
 
 		if (!m_free)

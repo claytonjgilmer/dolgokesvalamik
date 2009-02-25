@@ -6,6 +6,7 @@
 #include "physics/collision/system/constraint.h"
 //#include "physics/collision/system/contact.h"
 #include "physics\collision\shapes\shape.h"
+#include "threading\mutex.h"
 
 	struct physicssystem;
 	struct constraint_t;
@@ -69,10 +70,12 @@ struct contact_edge:intr_list_node_base<contact_edge>
 		intr_list<contact_edge> contacts;
 		intr_list<constraint_edge> joints;
 
-        intr_list<shape_t> shapes;
+        intr_list_simple<shape_t> shapes;
         int group_index;
 		int solver_stamp;
 		int solver_index;
+
+		mutex contact_lock;
 	};
 
 	extern body_t* g_world;

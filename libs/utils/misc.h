@@ -1,7 +1,7 @@
 #ifndef _misc_h_
 #define _misc_h_
 
-#define MLINLINE inline
+#define MLINLINE __forceinline
 
 #ifndef NULL
 #define  NULL 0

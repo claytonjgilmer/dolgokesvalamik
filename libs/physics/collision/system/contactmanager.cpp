@@ -31,9 +31,10 @@ static int hash_check[hashtable_size];
 
 	contact_surface_t* contactmanager::get_contact(body_t* i_body1, body_t* i_body2)
     {
-		uint32 index=get_hashindex(i_body1,i_body2);
+//		uint32 index=get_hashindex(i_body1,i_body2);
 
-		blocklocker bl(this->cm);
+		blocklocker bl1(i_body1->contact_lock);
+		blocklocker bl2(i_body2->contact_lock);
 //		contact_surface_t* ptr=this->contact_hash[index];
 		contact_edge* ptr;
 		for (ptr=i_body1->contacts.first(); ptr!=i_body1->contacts.last() && ptr->other!=i_body2; ptr=ptr->next);
@@ -41,7 +42,7 @@ static int hash_check[hashtable_size];
 		if (ptr!=i_body1->contacts.last())
 			return ptr->elem;
 
-		++hash_check[index];
+//		++hash_check[index];
 		
 
 //			ptr->prev=0;
@@ -56,20 +57,6 @@ static int hash_check[hashtable_size];
 
 	void contactmanager::erase_contact(contact_surface_t* i_contact)
 	{
-#if 0
-		if (i_contact->next)
-			i_contact->next->prev=i_contact->prev;
-
-		if (i_contact->prev)
-		{
-			i_contact->prev->next=i_contact->next;
-		}
-		else //ha nincs elozoje, akkor o az elso a hashtablaban
-		{
-			uint32 index=get_hashindex(i_contact->shape[0],i_contact->shape[1]);
-			this->contact_hash[index]=this->contact_hash[index]->next;
-		}
-#endif
 		contact_list.deallocate_place(i_contact);
 		i_contact->~contact_surface_t();
 	}

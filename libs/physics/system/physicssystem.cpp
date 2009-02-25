@@ -105,9 +105,9 @@ struct update_bounding
         uint32 end=i_start+i_num;
         for (uint32 n=i_start; n<end; ++n)
         {
-            shape_t* s,*endit;
-            endit=nb.body[n]->shapes.last();
-            for (s=nb.body[n]->shapes.first(); s!=endit; s=s->next)
+            shape_t* s;//,*endit;
+//            endit=nb.body[n]->shapes.last();
+            for (s=nb.body[n]->shapes.first(); s; s=s->next)
             {
 				s->collider->bounding_world=transform(nb.pos[n],s->bounding);
             }
@@ -167,18 +167,6 @@ struct near_struct
 
                     if (intersect)
                     {
-/*
-                        vec3 vel1=shape1->body->get_vel();
-                        vec3 vel2=shape2->body->get_vel();
-
-                        float velmag=0.5f*dot(vel2-vel1,normal);
-
-                        if (velmag<0)
-                        {
-                            shape1->body->set_vel(vel1+velmag*normal);
-                            shape2->body->set_vel(vel2-velmag*normal);
-                        }
-*/
                         contact_surface_t* c=ptr->contact_manager.get_contact(shape1->body,shape2->body);
 
                         c->normal=normal;
