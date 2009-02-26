@@ -9,22 +9,22 @@
 	{
 		void* allocate()
 		{
-			m.lock();
+//			m.lock();
 			void* r=(void*)m_taskalloc.allocate_place();
-			m.unlock();
+//			m.unlock();
 			return r;
 		}
 
 
 		void deallocate(void* i_buf)
 		{
-			m.lock();
+//			m.lock();
 			m_taskalloc.deallocate_place(i_buf);
-			m.unlock();
+//			m.unlock();
 		}
 
 		list_allocator<256> m_taskalloc;
-		mutex m;
+//		mutex m;
 	};
 
 inline void* operator new(size_t i_size, taskallocator& i_alloc)

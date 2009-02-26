@@ -12,6 +12,9 @@
 #include "physics/collision/shapeintersection/shapeintersection.h"
 #include "physics/collision/broadphase/hgridbroadphase.h"
 
+extern unsigned g_bph,g_nph,g_in,g_up,g_frc;
+
+
 	struct physicssystemdesc
 	{
 		vec3 gravity;

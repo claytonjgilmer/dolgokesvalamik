@@ -433,29 +433,6 @@ void update_app()
 	float frame_time=g_game->t.get_seconds();
 	g_game->t.reset();
 
-	{
-		if (inputsystem::ptr->KeyPressed(KEYCODE_1))
-			physicssystem::ptr->parallel_boudingupdate=1-physicssystem::ptr->parallel_boudingupdate;
-		if (inputsystem::ptr->KeyPressed(KEYCODE_2))
-			physicssystem::ptr->parallel_broadphase=1-physicssystem::ptr->parallel_broadphase;
-		if (inputsystem::ptr->KeyPressed(KEYCODE_3))
-			physicssystem::ptr->parallel_nearphase=1-physicssystem::ptr->parallel_nearphase;
-		if (inputsystem::ptr->KeyPressed(KEYCODE_4))
-			physicssystem::ptr->parallel_inertia=1-physicssystem::ptr->parallel_inertia;
-		if (inputsystem::ptr->KeyPressed(KEYCODE_5))
-			physicssystem::ptr->parallel_update=1-physicssystem::ptr->parallel_update;
-		sprintf(str,"bounding:%d",physicssystem::ptr->parallel_boudingupdate);
-		rendersystem::ptr->draw_text(10,400,color_f(1,1,1,1),str);
-		sprintf(str,"broadphs:%d",physicssystem::ptr->parallel_broadphase);
-		rendersystem::ptr->draw_text(10,420,color_f(1,1,1,1),str);
-		sprintf(str,"nearphas:%d",physicssystem::ptr->parallel_nearphase);
-		rendersystem::ptr->draw_text(10,440,color_f(1,1,1,1),str);
-		sprintf(str,"inertia :%d",physicssystem::ptr->parallel_inertia);
-		rendersystem::ptr->draw_text(10,460,color_f(1,1,1,1),str);
-		sprintf(str,"update  :%d",physicssystem::ptr->parallel_update);
-		rendersystem::ptr->draw_text(10,480,color_f(1,1,1,1),str);
-	}
-
 	sprintf(str,"FPS:%.1d",(int)(1/frame_time));
 	rendersystem::ptr->draw_text(800,10,color_f(1,1,0,1),str);
 	taskmanager::ptr->flush();
@@ -477,6 +454,32 @@ void update_app()
 	t.reset();
 	physicssystem::ptr->simulate(dt);
 	t.stop();
+
+	{
+		if (inputsystem::ptr->KeyPressed(KEYCODE_1))
+			physicssystem::ptr->parallel_boudingupdate=1-physicssystem::ptr->parallel_boudingupdate;
+		if (inputsystem::ptr->KeyPressed(KEYCODE_2))
+			physicssystem::ptr->parallel_broadphase=1-physicssystem::ptr->parallel_broadphase;
+		if (inputsystem::ptr->KeyPressed(KEYCODE_3))
+			physicssystem::ptr->parallel_nearphase=1-physicssystem::ptr->parallel_nearphase;
+		if (inputsystem::ptr->KeyPressed(KEYCODE_4))
+			physicssystem::ptr->parallel_inertia=1-physicssystem::ptr->parallel_inertia;
+		if (inputsystem::ptr->KeyPressed(KEYCODE_5))
+			physicssystem::ptr->parallel_update=1-physicssystem::ptr->parallel_update;
+		sprintf(str,"bounding:%d",physicssystem::ptr->parallel_boudingupdate);
+		rendersystem::ptr->draw_text(10,400,color_f(1,1,1,1),str);
+		sprintf(str,"broadphs:%d %d",physicssystem::ptr->parallel_broadphase,g_bph/g_frc);
+		rendersystem::ptr->draw_text(10,420,color_f(1,1,1,1),str);
+		sprintf(str,"nearphas:%d %d",physicssystem::ptr->parallel_nearphase,g_nph/g_frc);
+		rendersystem::ptr->draw_text(10,440,color_f(1,1,1,1),str);
+		sprintf(str,"inertia :%d %d",physicssystem::ptr->parallel_inertia,g_in/g_frc);
+		rendersystem::ptr->draw_text(10,460,color_f(1,1,1,1),str);
+		sprintf(str,"update  :%d %d",physicssystem::ptr->parallel_update,g_up/g_frc);
+		rendersystem::ptr->draw_text(10,480,color_f(1,1,1,1),str);
+	}
+
+
+
 	unsigned tick=t.get_tick();
 	float sec=t.get_seconds();
 	sprintf(str,"simulation time:%d tick, %f sec",tick,sec);

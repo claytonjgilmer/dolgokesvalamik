@@ -1,5 +1,6 @@
 #include "physicssystem.h"
 #include "threading/taskmanager.h"
+#include "utils/timer.h"
 
 DEFINE_SINGLETON(physicssystem);
 
@@ -65,17 +66,43 @@ void physicssystem::release_bodies(body_t* i_body_array[], unsigned i_bodynum)
         this->killed.push_back(i_body_array[n]);
 }
 
+unsigned g_bph=0,g_nph=0,g_in=0,g_up=0,g_frc=0;
+
 void physicssystem::simulate(float i_dt)
 {
+	if (g_frc==1000)
+	{
+		g_frc=0;
+		g_bph=0;
+		g_nph=0;
+		g_in=0;
+		g_up=0;
+	}
+
+	timer_t t;
 	++this->frame_count;
     kill_deads();
 
+
+	t.reset();
     broadphase();
+	t.stop();
+	g_bph+=t.get_tick();
+	t.reset();
     near_phase();
+	t.stop();
+	g_nph+=t.get_tick();
     update_contacts();
     create_contact_groups();
+	t.reset();
     update_inertia();
+	t.stop();
+	g_in+=t.get_tick();
+	t.reset();
     update_bodies(i_dt);
+	t.stop();
+	g_up+=t.get_tick();
+	++g_frc;
 }
 
 

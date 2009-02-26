@@ -109,12 +109,12 @@
 		{
 
 			unsigned start=0;
-			unsigned elemnumpertask=max((unsigned)(i_elemnum/(m_threadbuf.size()+5)),(unsigned)i_grainsize);
+			unsigned elemnumpertask=max((unsigned)(i_elemnum/(m_threadbuf.size()+1)),(unsigned)i_grainsize);
 
 			unsigned tnum=0;
 			const unsigned n=i_elemnum/elemnumpertask+1;
 #ifdef _MSC_VER
-			proc_range<S>** tasks=(proc_range<S>**)alloca(n*sizeof(proc_range<S>*));
+			proc_range<S>* tasks[100];//=(proc_range<S>**)alloca(n*sizeof(proc_range<S>*));
 #else
 			proc_range<S>* tasks[n];
 #endif

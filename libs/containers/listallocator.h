@@ -113,6 +113,7 @@
 	template <int elemsize, int blocksize>
 	MLINLINE void list_allocator<elemsize,blocksize>::deallocate_place(void* i_data)
 	{
+		blocklocker bl(cs);
 		elem_t* actelem=(elem_t*)i_data;
 
 		actelem->m_next->m_prev=actelem->m_prev;
