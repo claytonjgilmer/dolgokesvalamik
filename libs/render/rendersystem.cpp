@@ -38,7 +38,7 @@
 		d3dpp.PresentationInterval=D3DPRESENT_INTERVAL_IMMEDIATE;
 
 		this->m_sys->CreateDevice(	D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, this->m_window,
-			D3DCREATE_HARDWARE_VERTEXPROCESSING|D3DCREATE_MULTITHREADED,
+			D3DCREATE_HARDWARE_VERTEXPROCESSING,
 			&d3dpp, &this->m_device);
 
 		if (!this->m_device)

@@ -32,12 +32,23 @@
 		broadphaseobject* collider;
 
 		shape_t():type(shape_type_invalid){}
+
+		float friction;
+		float restitution;
+		int owner_flag;
+		int  collision_mask;
 	};
 
 	struct shape_desc
 	{
 		shape_type type;
-		shape_desc():type(shape_type_invalid){}
+		shape_desc():type(shape_type_invalid)
+		{
+			owner_flag=-1;
+			collision_mask=0;
+			friction=0;
+			restitution=0;
+		}
 
 		int owner_flag;
 		int collision_mask;
@@ -45,6 +56,9 @@
 		fricition
 		restitution kulon tablazatban
 		*/
+
+		float friction;
+		float restitution;
 	};
 
 

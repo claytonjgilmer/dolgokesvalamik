@@ -31,8 +31,11 @@ desc(*i_desc)
 		parallel_nearphase=
 		parallel_update=
 		parallel_inertia=
+		parallel_pre_step=
+		parallel_init_accel=
 		i_desc->parallel_processing;
 	this->frame_count=0;
+	this->solver_position_correction_rate=i_desc->solver_positioncorrection_rate;
 
 	create_world_body(this);
 }
@@ -177,7 +180,7 @@ struct near_struct
 
             assertion(shape1!=shape2);
 
-            if (shape1->body!=shape2->body)
+            if (shape1->body!=shape2->body && ((shape1->owner_flag & shape2->collision_mask) || (shape2->owner_flag & shape1->collision_mask)))
             {
                 if (ptr->intersect_fn[shape1->type][shape2->type])
                 {
@@ -196,6 +199,8 @@ struct near_struct
                     {
                         contact_surface_t* c=ptr->contact_manager.get_contact(shape1->body,shape2->body);
 
+						c->friction=shape1->friction*shape2->friction;
+						c->restitution=shape1->restitution*shape2->restitution;
                         c->normal=normal;
                         vec3 normal_body1; body1_mtx.transformtransposed3x3(normal_body1,normal);
 						c->add_contact(contact,contact_count,normal_body1);

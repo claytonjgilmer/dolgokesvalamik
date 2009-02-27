@@ -60,6 +60,8 @@ solver_index(0)
 	shape_t* body_t::add_shape(const shape_desc& i_desc)
 	{
 		shape_t* s;
+//		assertion(i_desc.owner_flag!=-1);
+		assertion(ispoweroftwo(i_desc.owner_flag));
 
 		switch (i_desc.type)
 		{
@@ -84,6 +86,11 @@ solver_index(0)
 		this->shapes.push_front(s);
         aabb_t aabb=transform(physicssystem::ptr->bodystate_array.pos[this->array_index],s->bounding);
         s->collider=physicssystem::ptr->broad_phase.create_object(s,aabb,!this->array_index);
+
+		s->friction=i_desc.friction;
+		s->restitution=i_desc.restitution;
+		s->owner_flag=i_desc.owner_flag;
+		s->collision_mask=i_desc.collision_mask;
 
 		return s;
 	}

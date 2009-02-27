@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="winmm.lib"
+				AdditionalDependencies="winmm.lib &quot;c:\Program Files\AMD\CodeAnalyst\lib\CAProfAPI32.lib&quot;"
 				OutputFile="..\data\winteszt_d.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
@@ -138,7 +138,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="winmm.lib"
+				AdditionalDependencies="winmm.lib &quot;c:\Program Files\AMD\CodeAnalyst\lib\CAProfAPI32.lib&quot;"
 				OutputFile="..\data\winteszt.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"

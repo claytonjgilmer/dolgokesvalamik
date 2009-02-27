@@ -14,6 +14,8 @@ struct contact_point_t
 	vec3 abs_pos[2];
 	float penetration;
 	float cached_lambda;
+
+	contact_point_t():cached_lambda(0){}
 };
 
 #define CONTACT_MIN_PENETRATION 0.01f
@@ -28,6 +30,9 @@ struct contact_surface_t
 
     char contact_count;
     int group_index;
+
+	float friction;
+	float restitution;
 
     contact_surface_t(body_t* i_body1, body_t* i_body2);
     ~contact_surface_t();

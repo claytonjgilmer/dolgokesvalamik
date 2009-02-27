@@ -86,4 +86,7 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		AMDCaProjectFile = C:\Lacika\thingsandsomethings\CodeAnalyst\teszt.caw
+	EndGlobalSection
 EndGlobal

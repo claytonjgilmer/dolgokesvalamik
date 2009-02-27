@@ -29,8 +29,15 @@ struct lcp_data_t
 	float*  lambda;
 	float*  lambda_poscorr;
 	float*  friction_coeff;
+	char* constraintnum;
+};
 
-
+struct accel_t
+{
+	vec3 v;
+	vec3 w;
+	vec3 p;
+	vec3 o;
 };
 
 struct lcp_solver_t
@@ -39,11 +46,20 @@ struct lcp_solver_t
 
 	void allocate_buffer();
 	void set_solver_index(body_t* body[2]);
-	void pre_step_contacts();
+	void pre_step();
+	void pre_step_contacts_and_frictions();
+	void solve_constraints();
 	void solve_contacts();
+	void solve_frictions();
 	void clean();
 
-	lcp_data_t lcp_data;
+	void init_acceleration();
+
+	accel_t* accel;
+
+	lcp_data_t lcp_data_contact;
+	lcp_data_t lcp_data_friction;
+	lcp_data_t lcp_data_joint;
 	contact_surface_t* contact_array;
 	int contact_count;
 	float dt;

@@ -23,6 +23,7 @@
 #include "physics/collision/shapeintersection/deepintersection.h"
 #include "math/geometry/intersection.h"
 #include "utils/timer.h"
+#include <Caprofapi.h>
 
 void draw_simplex(dvec3 s[], int num)
 {
@@ -47,9 +48,9 @@ const color_f color_white(1,1,1,1);
 color_f color_buf[]={color_black,color_red,color_green,color_yellow,color_blue,color_purple,color_cyan};
 
 char* obj_names[]={
-						"model/steamtrain.MMOD",
+//						"model/steamtrain.MMOD",
 //						"model/sphere.MMOD",
-//						"model/box.MMOD",
+						"model/box.MMOD",
 //						"model/Atlanta.MMOD",
 //						"model/PT_Boat_Camo.MMOD",
 //						"model/predator_spyplane.MMOD",
@@ -217,7 +218,7 @@ void init_app(HWND i_hwnd)
 	filesystem::ptr->register_path("texture","texture\\");
 
 	taskmanagerdesc tdesc;
-	tdesc.m_threadnum=3;
+	tdesc.m_threadnum=1;
 	taskmanager::create(&tdesc);
 
 	shadermanagerdesc shaderdesc("shader");
@@ -480,6 +481,8 @@ void update_app()
 
 
 
+CAProfResume();
+	CAProfPause();
 	unsigned tick=t.get_tick();
 	float sec=t.get_seconds();
 	sprintf(str,"simulation time:%d tick, %f sec",tick,sec);

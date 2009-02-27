@@ -21,6 +21,7 @@ extern unsigned g_bph,g_nph,g_in,g_up,g_frc;
 		float timestep;
 		uint8 maxsubstepcount;
 		uint8 parallel_processing;
+		float solver_positioncorrection_rate;
 
 		physicssystemdesc()
 		{
@@ -28,6 +29,7 @@ extern unsigned g_bph,g_nph,g_in,g_up,g_frc;
 			timestep=0.01f;
 			maxsubstepcount=10;
 			parallel_processing=0;
+			solver_positioncorrection_rate=0.1f;
 		}
 	};
 
@@ -71,7 +73,10 @@ extern unsigned g_bph,g_nph,g_in,g_up,g_frc;
 		uint32 parallel_nearphase;
 		uint32 parallel_update;
 		uint32 parallel_inertia;
+		uint32 parallel_pre_step;
+		uint32 parallel_init_accel;
 		int frame_count;
+		float solver_position_correction_rate;
 
 		DECLARE_SINGLETON_DESC(physicssystem,physicssystemdesc);
 	};
