@@ -520,6 +520,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\containers\staticset.h"
+				>
+			</File>
+			<File
 				RelativePath=".\containers\string.h"
 				>
 			</File>

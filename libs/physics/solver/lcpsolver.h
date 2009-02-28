@@ -54,6 +54,8 @@ struct lcp_solver_t
 	void clean();
 
 	void init_acceleration();
+	void update_velocity();
+	void cache_lambda();
 
 	accel_t* accel;
 

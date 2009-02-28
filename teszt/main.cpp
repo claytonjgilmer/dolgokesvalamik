@@ -526,9 +526,48 @@ int szam_beker(const char* szoveg)
 }
 
 
+#include "containers/staticset.h"
 
 int _cdecl main()
 {
+#define bufsize 16
+#define setcount 4
+	static_set<int,bufsize,setcount> set;
+
+	for (int n=0; n<16; ++n)
+	{
+		int elem=random(0,10);
+		int set_index=random(0,1)*2;
+
+		printf ("%d elem a %d halmazba\n",elem,set_index);
+		set.push(elem,set_index);
+
+		for (int m=0; m<setcount; ++m)
+		{
+			printf("%d halmaz: ",m);
+
+			if (set.empty(m))
+			{
+				printf("ures\n");
+			}
+			else
+			{
+				for (int k=set.set_bottom[m]; k!=((set.set_top[m]+1) & (bufsize-1)); k=((k+1) & (bufsize-1)))
+				{
+					printf("%d  ",set.buffer[k]);
+				}
+
+				printf("\n");
+			}
+		}
+	}
+
+
+
+
+
+
+
 //	lofasz::sorttest2();
 
 /*

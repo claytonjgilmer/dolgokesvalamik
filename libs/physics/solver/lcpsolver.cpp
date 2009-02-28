@@ -310,6 +310,8 @@ void lcp_solver_t::process(contact_surface_t* i_contact_array, int i_contact_cou
 	allocate_buffer();
 	pre_step();
 	solve_constraints();
+	update_velocity();
+	cache_lambda();
 	clean();
 }
 
@@ -330,26 +332,26 @@ struct init_accel_process
 		{
 			const int body1=solver->lcp_data_contact.body_index[constraint_index].i[0];
 			const int body2=solver->lcp_data_contact.body_index[constraint_index].i[1];
-			const int constraint_count=solver->lcp_data_contact.constraintnum[n];
+			const int constraint_count=solver->lcp_data_contact.constraintnum[actcontact];
 
-			jacobi* bptr=solver->lcp_data_contact.B[constraint_index];
+			jacobi* bptr=solver->lcp_data_contact.B+constraint_index;
 			int constraint_index_save=constraint_index;
 			for (int actconstraint=0; actconstraint<constraint_count; ++actconstraint,++constraint_index)
 			{
 				const float lambda=solver->lcp_data_contact.lambda[constraint_index];
 				const float lambdaposcorr=solver->lcp_data_contact.lambda_poscorr[constraint_index];
 
-				solver->accel[body1].v+=lambda*bptr[actconstraint].m_V1;
-				solver->accel[body1].m_W+=lambda*bptr[actconstraint].m_W1;
+				solver->accel[body1].v+=lambda*bptr[actconstraint].v1;
+				solver->accel[body1].w+=lambda*bptr[actconstraint].w1;
 
-				solver->accel[body2].m_V+=lambda*bptr[actconstraint].m_V2;
-				solver->accel[body2].m_W+=lambda*bptr[actconstraint].m_W2;
+				solver->accel[body2].v+=lambda*bptr[actconstraint].v2;
+				solver->accel[body2].w+=lambda*bptr[actconstraint].w2;
 
-				solver->accel[body1].m_P+=lambdaposcorr*bptr[actconstraint].m_V1;
-				solver->accel[body1].m_O+=lambdaposcorr*bptr[actconstraint].m_W1;
+				solver->accel[body1].p+=lambdaposcorr*bptr[actconstraint].v1;
+				solver->accel[body1].o+=lambdaposcorr*bptr[actconstraint].w1;
 
-				solver->accel[body2].m_P+=lambdaposcorr*bptr[actconstraint].m_V2;
-				solver->accel[body2].m_O+=lambdaposcorr*bptr[actconstraint].m_W2;
+				solver->accel[body2].p+=lambdaposcorr*bptr[actconstraint].v2;
+				solver->accel[body2].o+=lambdaposcorr*bptr[actconstraint].w2;
 			}
 
 			constraint_index=constraint_index_save+4;
@@ -379,35 +381,13 @@ void lcp_solver_t::init_acceleration()
 	{
 		init_accel_process s(this); s(0,contact_count);
 	}
-
-	for (int actcontact=0; actcontact<contact_count; actcontact++)
-	{
-		const int indexBody1=m_ContactBodyIndex[actcontact][0];
-		const int indexBody2=m_ContactBodyIndex[actcontact][1];
-
-		const int numconstraints=m_ContactConstraintNum[actcontact];
-
-		JacobiStruct* bptr=m_ContactBMatrix[actcontact];
-		for (int actconstraint=0; actconstraint<numconstraints; ++actconstraint)
-		{
-			const float lambda=m_LambdaContact[actcontact][actconstraint];
-			const float lambdaposcorr=m_LambdaContactPosCorr[actcontact][actconstraint];
-
-			m_Acceleration[indexBody1].m_V+=lambda*bptr[actconstraint].m_V1;
-			m_Acceleration[indexBody1].m_W+=lambda*bptr[actconstraint].m_W1;
-
-			m_Acceleration[indexBody2].m_V+=lambda*bptr[actconstraint].m_V2;
-			m_Acceleration[indexBody2].m_W+=lambda*bptr[actconstraint].m_W2;
-
-			m_Acceleration[indexBody1].m_P+=lambdaposcorr*bptr[actconstraint].m_V1;
-			m_Acceleration[indexBody1].m_O+=lambdaposcorr*bptr[actconstraint].m_W1;
-
-			m_Acceleration[indexBody2].m_P+=lambdaposcorr*bptr[actconstraint].m_V2;
-			m_Acceleration[indexBody2].m_O+=lambdaposcorr*bptr[actconstraint].m_W2;
-		}
-	}
-
-
 }
 
 
+void lcp_solver_t::update_velocity()
+{
+	for (int n=1; n<body_count; ++n)
+	{
+//		lcp_data_contact->body_index
+	}
+}

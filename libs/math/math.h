@@ -325,7 +325,8 @@ typedef char int8;
 
 	MLINLINE int  random(int i_min, int i_max)
 	{
-		return (rand())*(i_max-i_min)/RAND_MAX+i_min;
+		return (rand() % (i_max+1-i_min))+i_min;
+//		return (rand())*(i_max-i_min)/RAND_MAX+i_min;
 	}
 
 	MLINLINE float med3(float a1,float a2,float a3)
