@@ -3,9 +3,7 @@
 #include "utils/assert.h"
 #include "physics\collision\system\contact.h"
 
-body_t::body_t():
-solver_stamp(-1),
-solver_index(0)
+body_t::body_t()
 {
 }
 	body_t::~body_t()

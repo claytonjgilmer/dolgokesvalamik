@@ -72,8 +72,6 @@ struct contact_edge:intr_list_node_base<contact_edge>
 
         intr_list_simple<shape_t> shapes;
         int group_index;
-		int solver_stamp;
-		int solver_index;
 
 		mutex contact_lock;
 	};

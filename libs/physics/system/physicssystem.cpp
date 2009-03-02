@@ -1,6 +1,7 @@
 #include "physicssystem.h"
 #include "threading/taskmanager.h"
 #include "utils/timer.h"
+#include "physics/solver/lcpsolver.h"
 
 DEFINE_SINGLETON(physicssystem);
 
@@ -11,6 +12,7 @@ void broadphase();
 void near_phase();
 void create_contact_groups();
 void update_contacts();
+void solve_constraints(float dt);
 
 body_t* g_world=NULL;
 
@@ -102,6 +104,7 @@ void physicssystem::simulate(float i_dt)
 	t.stop();
 	g_in+=t.get_tick();
 	t.reset();
+	solve_constraints();
     update_bodies(i_dt);
 	t.stop();
 	g_up+=t.get_tick();
@@ -242,10 +245,12 @@ struct update_process
 		uint32 end=i_start+i_num;
 		for (uint32 n=i_start; n<end; ++n)
 		{
-			b->vel[n]+=dt*(b->invmass[n]*b->force[n]+gravity);
-			b->rotvel[n]+=dt*b->invinertia_abs[n].transform3x3(b->torque[n]);
+			b->vel[n]+=dt*(b->invmass[n]*b->force[n]+gravity)+lcp_solver_t::accel[n].v;
+			b->rotvel[n]+=dt*b->invinertia_abs[n].transform3x3(b->torque[n])+lcp_solver_t::accel[n].w;
 
-			b->pos[n].t+=dt*b->vel[n];
+			b->pos[n].t+=dt*b->vel[n]+lcp_solver_t::accel->p;
+
+			vec3 axis=b->rotvel[n]+lcp_solver_t::accel[n].o;
 
 			float angle=b->rotvel[n].length();
 
@@ -254,6 +259,10 @@ struct update_process
 				vec3 axis=b->rotvel[n]/angle;
 				b->pos[n].rotate(b->pos[n],axis,dt*angle);
 			}
+
+			b->force[n].clear();
+			b->torque[n].clear();
+			lcp_solver_t::accel[n].clear();
 		}
 	}
 
@@ -275,6 +284,30 @@ void update_bodies(float i_dt)
         update_process p(b,i_dt,ptr->desc.gravity);
         p(0,b->size-1);
     }
+}
+
+
+struct constraint_solver_t
+{
+	float dt;
+	constraint_solver_t(float i_dt):dt(i_dt){}
+
+	void operator()(unsigned start, unsigned num) const
+	{
+		physicssystem* ptr=physicssystem::ptr;
+		for (int n=start; n<start+num; ++n)
+		{
+			lcp_solver_t solver;
+			solver.process()
+		}
+		
+	}
+};
+
+
+void solve_constraints(float dt)
+{
+	physicssystem* ptr=physicssystem::ptr;
 }
 
 struct inertia_process
