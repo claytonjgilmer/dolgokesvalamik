@@ -3,6 +3,7 @@
 
 #include "physics/system/physicssystem.h"
 #include "physics\collision\system\contact.h"
+#include "containers\vector.h"
 struct jacobi
 {
 	vec3 v1;
@@ -19,6 +20,18 @@ struct body_index_t
 
 struct lcp_data_t
 {
+	vector<jacobi> J;
+	vector<jacobi> B;
+	vector<body_index_t>	body_index;
+	vector<float>  right_side;
+	vector<float>  right_side_poscorr;
+	vector<float>  diag;
+	vector<float>  lambda;
+	vector<float>  lambda_poscorr;
+	vector<float>  friction_coeff;
+	vector<char> constraintnum;
+
+#if 0
 	jacobi* J;
 	jacobi* B;
 	body_index_t*	body_index;
@@ -29,27 +42,12 @@ struct lcp_data_t
 	float*  lambda_poscorr;
 	float*  friction_coeff;
 	char* constraintnum;
-};
-
-struct accel_t
-{
-	vec3 v;
-	vec3 w;
-	vec3 p;
-	vec3 o;
-
-	void clear()
-	{
-		v.clear();
-		w.clear();
-		p.clear();
-		o.clear();
-	}
+#endif
 };
 
 struct lcp_solver_t
 {
-    void process(contact_surface_t* i_contact_array, int i_contact_count, float i_dt);
+    void process(contact_surface_t** i_contact_array, int i_contact_count, float i_dt);
 
 	void allocate_buffer();
 	void pre_step();
@@ -61,12 +59,12 @@ struct lcp_solver_t
 
 	void cache_lambda();
 
-	static accel_t accel[65536];
+//	static accel_t accel[65536];
 
 	lcp_data_t lcp_data_contact;
 	lcp_data_t lcp_data_friction;
 	lcp_data_t lcp_data_joint;
-	contact_surface_t* contact_array;
+	contact_surface_t** contact_array;
 	int contact_count;
 	float dt;
 

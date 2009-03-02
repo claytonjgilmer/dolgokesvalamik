@@ -34,7 +34,7 @@ desc(*i_desc)
 		parallel_update=
 		parallel_inertia=
 		parallel_pre_step=
-		parallel_init_accel=
+		parallel_solver=
 		i_desc->parallel_processing;
 	this->frame_count=0;
 	this->solver_position_correction_rate=i_desc->solver_positioncorrection_rate;
@@ -104,7 +104,7 @@ void physicssystem::simulate(float i_dt)
 	t.stop();
 	g_in+=t.get_tick();
 	t.reset();
-	solve_constraints();
+	solve_constraints(i_dt);
     update_bodies(i_dt);
 	t.stop();
 	g_up+=t.get_tick();
@@ -245,24 +245,24 @@ struct update_process
 		uint32 end=i_start+i_num;
 		for (uint32 n=i_start; n<end; ++n)
 		{
-			b->vel[n]+=dt*(b->invmass[n]*b->force[n]+gravity)+lcp_solver_t::accel[n].v;
-			b->rotvel[n]+=dt*b->invinertia_abs[n].transform3x3(b->torque[n])+lcp_solver_t::accel[n].w;
+			b->vel[n]+=dt*(b->invmass[n]*b->force[n]+gravity)+b->constraint_accel[n].v;
+			b->rotvel[n]+=dt*b->invinertia_abs[n].transform3x3(b->torque[n])+b->constraint_accel[n].w;
 
-			b->pos[n].t+=dt*b->vel[n]+lcp_solver_t::accel->p;
+			b->pos[n].t+=dt*(b->vel[n]+b->constraint_accel[n].p);
 
-			vec3 axis=b->rotvel[n]+lcp_solver_t::accel[n].o;
+			vec3 axis=b->rotvel[n]+b->constraint_accel[n].o;
 
-			float angle=b->rotvel[n].length();
+			float angle=axis.length();
 
 			if (angle>0.001f)
 			{
-				vec3 axis=b->rotvel[n]/angle;
-				b->pos[n].rotate(b->pos[n],axis,dt*angle);
+				vec3 axis2=axis/angle;
+				b->pos[n].rotate(b->pos[n],axis2,dt*angle);
 			}
 
 			b->force[n].clear();
 			b->torque[n].clear();
-			lcp_solver_t::accel[n].clear();
+			b->constraint_accel[n].clear();
 		}
 	}
 
@@ -295,12 +295,13 @@ struct constraint_solver_t
 	void operator()(unsigned start, unsigned num) const
 	{
 		physicssystem* ptr=physicssystem::ptr;
-		for (int n=start; n<start+num; ++n)
+		contact_group_manager_t* cgm=&ptr->contact_group_manager;
+		contact_surface_t** contact_array=&(cgm->contact_array[0]);
+		for (unsigned n=start; n<start+num; ++n)
 		{
 			lcp_solver_t solver;
-			solver.process()
+			solver.process(contact_array+cgm->group_array[n].first_contact,cgm->group_array[n].contact_count,dt);
 		}
-		
 	}
 };
 
@@ -308,6 +309,20 @@ struct constraint_solver_t
 void solve_constraints(float dt)
 {
 	physicssystem* ptr=physicssystem::ptr;
+
+	if (ptr->contact_group_manager.group_array.size()==0)
+		return;
+
+	if (ptr->contact_group_manager.group_array.size()==1)
+		return;
+	if (ptr->parallel_solver)
+	{
+		taskmanager::ptr->process_buffer(ptr->contact_group_manager.group_array.size()-1,1,constraint_solver_t(dt));
+	}
+	else
+	{
+		constraint_solver_t cs(dt); cs(0,ptr->contact_group_manager.group_array.size()-1);
+	}
 }
 
 struct inertia_process
@@ -352,8 +367,9 @@ void update_inertia()
 void create_contact_groups()
 {
     physicssystem* ptr=physicssystem::ptr;
-    ptr->contact_group_manager.create_contact_groups(ptr->bodystate_array.body,
-                                                    ptr->bodystate_array.size,
+
+    ptr->contact_group_manager.create_contact_groups(ptr->bodystate_array.body+1,
+                                                    ptr->bodystate_array.size-1,
                                                     ptr->contact_manager.contact_list);
 }
 

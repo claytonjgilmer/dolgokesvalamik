@@ -12,6 +12,23 @@
 minek ez a sok szar a statikus testeknek? nekik nem kell, csak pozicio
 vagy meg asse
 */
+struct accel_t
+{
+	vec3 v;
+	vec3 w;
+	vec3 p;
+	vec3 o;
+
+	void clear()
+	{
+		v.clear();
+		w.clear();
+		p.clear();
+		o.clear();
+	}
+};
+
+
 	struct nbody_t
 	{
 		mtx4x3* pos;
@@ -20,6 +37,8 @@ vagy meg asse
 
 		vec3* force;
 		vec3* torque;
+		accel_t* constraint_accel;
+
 		float* invmass;
 		mtx3x3* invinertia_rel;
 		mtx3x3* invinertia_abs;

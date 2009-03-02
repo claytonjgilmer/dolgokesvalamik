@@ -6,6 +6,10 @@
         for (int n=0; n<dynbody_count; ++n)
             dynbody_array[n]->group_index=-1;
 
+		if (!contact_list.size())
+			return;
+
+
         list_allocator<sizeof(contact_surface_t)>::iterator cit;
         for (cit=contact_list.begin(); cit!=contact_list.end();++cit)
             ((contact_surface_t*)(*cit))->group_index=-1;

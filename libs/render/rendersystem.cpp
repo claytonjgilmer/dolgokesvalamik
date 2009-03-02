@@ -117,7 +117,7 @@
 		{
 			renderqueue& q=m_queue[queueindex];
 			const unsigned meshnum=q.m_buf.size();
-			const queueelem* buf=q.m_buf;
+			const queueelem* buf=q.m_buf.m_buf;
 
 			for (unsigned meshindex=0; meshindex<meshnum; ++meshindex)
 			{
@@ -171,7 +171,7 @@
 		{
 			void* buf;
 			line_buffer->Lock(0,this->lines.size()*sizeof(line_struct),&buf,0);
-			memcpy(buf,this->lines,this->lines.size()*sizeof(line_struct));
+			memcpy(buf,this->lines.m_buf,this->lines.size()*sizeof(line_struct));
 			this->line_buffer->Unlock();
 
 			D3DMATERIAL9 mat;

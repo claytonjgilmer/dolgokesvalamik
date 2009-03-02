@@ -226,7 +226,7 @@ struct Stream_t
 
 	float* GetVertices()
 	{
-		return m_Vertices;
+		return &m_Vertices[0];
 	}
 
 	int			m_FloatPerVertices;
@@ -493,13 +493,13 @@ fixedvector<mesh_t*,8> MeshLODInfo::generate_mesh()
 			m->m_ib=new indexbuffer(m_32bitIndices.size(),true);
 			int* ib=(int*)m->m_ib->lock();
 
-			memcpy(ib,m_32bitIndices,m_32bitIndices.size()*sizeof(int));
+			memcpy(ib,m_32bitIndices.m_buf,m_32bitIndices.size()*sizeof(int));
 		}
 		else
 		{
 			m->m_ib=new indexbuffer(m_Indices.size(),false);
 			unsigned short* ib=(unsigned short*)m->m_ib->lock();
-			memcpy(ib,m_Indices,m_Indices.size()*sizeof(short));
+			memcpy(ib,m_Indices.m_buf,m_Indices.size()*sizeof(short));
 			m->m_ib->unlock();
 		}
 

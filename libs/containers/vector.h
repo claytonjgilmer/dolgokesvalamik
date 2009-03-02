@@ -46,7 +46,7 @@
 		int empty() const;
 		void reserve(unsigned i_capacity);
 
-#if 1//ndef _DEBUG
+#ifndef _DEBUG
 		operator basetype* ();
 		operator const basetype* () const;
 #else
@@ -345,7 +345,7 @@
 		m_size=i_newsize;
 
 	}
-#if 0//def _DEBUG
+#ifdef _DEBUG
 	template<typename basetype>
 	MLINLINE basetype& vector<basetype>::operator[](unsigned i_index)
 	{

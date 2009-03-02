@@ -45,7 +45,7 @@ const color_f color_purple(1,0,1,1);
 const color_f color_cyan(0,1,1,1);
 const color_f color_white(1,1,1,1);
 
-color_f color_buf[]={color_black,color_red,color_green,color_yellow,color_blue,color_purple,color_cyan};
+color_f color_buf[]={color_red,color_green,color_yellow,color_blue,color_purple,color_cyan,color_black};
 
 char* obj_names[]={
 //						"model/steamtrain.MMOD",
@@ -122,8 +122,8 @@ struct game
 	object3d* sky;
 	object3d* terrain;
 	object3d* sphere;
-#define BODY_NUM 500
-#define ROOM_SIZE 100.0f
+#define BODY_NUM 20
+#define ROOM_SIZE 10.0f
 #define BODY_SIZE .5f
 	body_t* phb[BODY_NUM];
 	object3d* model[BODY_NUM];
@@ -231,8 +231,8 @@ void init_app(HWND i_hwnd)
 	texturemanager::create(&textdesc);
 
 	physicssystemdesc pd;
-	pd.gravity.set(0,0,0);
-	pd.parallel_processing=1;
+	pd.gravity.set(0,-10,0);
+	pd.parallel_processing=0;
 	physicssystem::create(&pd);
 
 	rendersystemdesc renderdesc;
@@ -297,6 +297,8 @@ void init_app(HWND i_hwnd)
 		y=0;//random(-3.0f,3.0f);
 		z=random(-3.0f,3.0f);
 		bd.vel.set(x,y,z);
+		bd.vel.normalize();
+		bd.vel*=3;
 //		bd.rotvel.set(x/3,y/3,z/3);
 
 		g_game->phb[n]=physicssystem::ptr->create_body(bd);
@@ -309,6 +311,9 @@ void init_app(HWND i_hwnd)
 		sd.center.clear();
 		sd.radius=1;//BODY_SIZE;
 #endif
+		sd.owner_flag=1;
+		sd.collision_mask=1;
+		sd.restitution=1;
 		g_game->phb[n]->add_shape(sd);
 	}
 

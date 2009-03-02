@@ -23,11 +23,13 @@ void realloc(nbody_t*, unsigned i_newcapacity);
 		DECLARE_STATE(this->rotvel,vec3);
 		DECLARE_STATE(this->force,vec3);
 		DECLARE_STATE(this->torque,vec3);
+		DECLARE_STATE(this->constraint_accel,accel_t);
 		DECLARE_STATE(this->invmass,float);
 		DECLARE_STATE(this->invinertia_rel,mtx3x3);
 		DECLARE_STATE(this->invinertia_abs,mtx3x3);
 		DECLARE_STATE(this->body,body_t*);
 
+		pos=NULL;
 		realloc(this,NBODY_MIN_CAPACITY);
 	}
 
@@ -39,6 +41,7 @@ void realloc(nbody_t*, unsigned i_newcapacity);
 
 	void realloc(nbody_t* nb, unsigned i_newcapacity)
 	{
+		void* firstaddress=*((void**)nb);
 		nb->capacity=i_newcapacity;
 		char* newbuf=(char*)malloc(nb->state_size_sum*i_newcapacity);
 
@@ -47,7 +50,6 @@ void realloc(nbody_t*, unsigned i_newcapacity);
 			unsigned act_offset=0;
 			for (unsigned n=0; n<nb->state_num; ++n)
 			{
-//				void* srcaddress=(void*)*(((char*)this)+4*n);
 				void* srcaddress=*(((void**)nb)+n);
 				memcpy(newbuf+act_offset,srcaddress,nb->size*nb->state_size[n]);
 				act_offset+=nb->state_size[n]*nb->capacity;
@@ -61,6 +63,8 @@ void realloc(nbody_t*, unsigned i_newcapacity);
 			srcaddress=newbuf+act_offset;
 			act_offset+=nb->state_size[n]*nb->capacity;
 		}
+		if (firstaddress)
+			free(firstaddress);
 	}
 
 	void nbody_t::add_world()
@@ -77,6 +81,7 @@ void realloc(nbody_t*, unsigned i_newcapacity);
 		force[0].clear();
 		torque[0].clear();
 		body[0]=g_world;
+		constraint_accel[0].clear();
 
 		++size;
 	}
@@ -97,6 +102,7 @@ void realloc(nbody_t*, unsigned i_newcapacity);
 			this->invinertia_rel[index].invert3x3(i_desc[n].inertia);
 			this->force[index].clear();
 			this->torque[index].clear();
+			this->constraint_accel[index].clear();
 			this->body[index]=i_body_array[n];
 		}
 
@@ -116,6 +122,7 @@ void realloc(nbody_t*, unsigned i_newcapacity);
 			this->rotvel[index]=this->rotvel[this->size];
 			this->force[index]=this->force[this->size];
 			this->torque[index]=this->torque[this->size];
+			//constraint_accel egy frame-ig el, nem kell masolni
 			this->invmass[index]=this->invmass[this->size];
 			this->invinertia_rel[index]=this->invinertia_rel[this->size];//ugy gondolom az abszolut inerciat nem kell masolni, mert menet kozben nem torlunk
 			this->body[index]=this->body[this->size];

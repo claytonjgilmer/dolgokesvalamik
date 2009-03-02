@@ -74,7 +74,7 @@ extern unsigned g_bph,g_nph,g_in,g_up,g_frc;
 		uint32 parallel_update;
 		uint32 parallel_inertia;
 		uint32 parallel_pre_step;
-		uint32 parallel_init_accel;
+		uint32 parallel_solver;
 		int frame_count;
 		float solver_position_correction_rate;
 
