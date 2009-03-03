@@ -39,7 +39,7 @@ struct accel_t
 		vec3* torque;
 		accel_t* constraint_accel;
 
-		float* invmass;
+		f32* invmass;
 		mtx3x3* invinertia_rel;
 		mtx3x3* invinertia_abs;
 
@@ -55,7 +55,7 @@ struct accel_t
 		void add_body(const bodydesc i_desc[], body_t* i_body_array[], unsigned i_bodynum);
 		void release_body(body_t* i_body_array[], unsigned i_bodynum);
 
-		void predict(float i_dt);
+		void predict(f32 i_dt);
 
 		unsigned state_size[100];
 		unsigned state_size_sum;

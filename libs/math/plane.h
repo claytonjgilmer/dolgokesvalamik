@@ -6,23 +6,23 @@
 	struct plane_t
 	{
 		plane_t();
-		plane_t(const vec3& i_normal, float i_dist);
+		plane_t(const vec3& i_normal, f32 i_dist);
 		plane_t(const vec3& i_point, const vec3& i_normal);
 
-		void set(const vec3& i_normal, float i_dist);
+		void set(const vec3& i_normal, f32 i_dist);
 		void set(const vec3& i_point, const vec3& i_normal);
 
-		float get_distance(const vec3& i_point) const;
+		f32 get_distance(const vec3& i_point) const;
 
 		vec3 normal;
-		float dist;
+		f32 dist;
 	};
 
 	MLINLINE plane_t::plane_t()
 	{
 	}
 
-	MLINLINE plane_t::plane_t(const vec3& i_normal, float i_dist)
+	MLINLINE plane_t::plane_t(const vec3& i_normal, f32 i_dist)
 	{
 		normal=i_normal;
 		dist=i_dist;
@@ -35,7 +35,7 @@
 		dist=-i_point.dot(normal);
 	}
 
-	MLINLINE void plane_t::set(const vec3& i_normal, float i_dist)
+	MLINLINE void plane_t::set(const vec3& i_normal, f32 i_dist)
 	{
 		normal=i_normal;
 		dist=i_dist;
@@ -48,7 +48,7 @@
 		dist=-i_point.dot(normal);
 	}
 
-	MLINLINE float plane_t::get_distance(const vec3& i_point) const
+	MLINLINE f32 plane_t::get_distance(const vec3& i_point) const
 	{
 		return i_point.dot(normal)+dist;
 	}

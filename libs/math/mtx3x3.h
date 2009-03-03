@@ -9,7 +9,11 @@
 
 	
 	struct mtx3x3;
+#ifdef _DEBUG
 	void check_mtx3x3(const mtx3x3& m);
+#else
+#define check_mtx3x3(_M_)
+#endif
 	struct mtx3x3
 	{
 		mtx3x3();
@@ -19,8 +23,8 @@
 		void transpose3x3(const mtx3x3& i_src);
 		void transpose3x3(const mtx3x3* __restrict i_src);
 
-		operator float* ();
-		operator const float* () const;
+		operator f32* ();
+		operator const f32* () const;
 
 		vec3& axis(int i_index);
 		const vec3& axis(int i_index) const;
@@ -28,8 +32,8 @@
 		void identity();
 		void clear();
 
-		void from_euler(float i_xangle, float i_yangle, float i_zangle);
-		void get_euler(float& o_xangle, float& o_yangle, float& o_zangle) const;
+		void from_euler(f32 i_xangle, f32 i_yangle, f32 i_zangle);
+		void get_euler(f32& o_xangle, f32& o_yangle, f32& o_zangle) const;
 
 		void transform3x3(vec3& o_dst, const vec3& i_src) const;
 		vec3 transform3x3(const vec3& i_src) const;
@@ -50,9 +54,9 @@
 		{
 			struct
 			{
-				float	_11,_12,_13;
-				float	_21,_22,_23;
-				float	_31,_32,_33;
+				f32	_11,_12,_13;
+				f32	_21,_22,_23;
+				f32	_31,_32,_33;
 			};
 
 			struct
@@ -73,12 +77,12 @@
 		z=i_z;
 	}
 
-	inline mtx3x3::operator float* ()
+	inline mtx3x3::operator f32* ()
 	{
 		return &_11;
 	}
 
-	inline mtx3x3::operator const float* () const
+	inline mtx3x3::operator const f32* () const
 	{
 		return &_11;
 	}
@@ -113,7 +117,7 @@
 		check_vec3(o_dst);
 	}
 
-	inline vec3 mtx3x3::transform3x3(const vec3& i_src) const
+	MLINLINE vec3 mtx3x3::transform3x3(const vec3& i_src) const
 	{
 	    vec3 t;
 	    t.set
@@ -146,7 +150,7 @@
 
 	inline void mtx3x3::transpose3x3()
 	{
-		float tmp;
+		f32 tmp;
 		tmp=this->_12; this->_12=this->_21; this->_21=tmp;
 		tmp=this->_13; this->_13=this->_31; this->_31=tmp;
 		tmp=this->_23; this->_23=this->_32; this->_32=tmp;
@@ -170,14 +174,14 @@
 
 	inline void mtx3x3::invert3x3(const mtx3x3& i_src)
 	{
-		float d11 = i_src._22*i_src._33 - i_src._23*i_src._32;
-		float d12 = i_src._23*i_src._31 - i_src._21*i_src._33;
-		float d13 = i_src._21*i_src._32 - i_src._22*i_src._31;
-		float det = i_src._11*d11 + i_src._12*d12 + i_src._13*d13;
-		float id = 1.0f / det;
-		float id_11 = id * i_src._11;
-		float id_12 = id * i_src._12;
-		float id_13 = id * i_src._13;
+		f32 d11 = i_src._22*i_src._33 - i_src._23*i_src._32;
+		f32 d12 = i_src._23*i_src._31 - i_src._21*i_src._33;
+		f32 d13 = i_src._21*i_src._32 - i_src._22*i_src._31;
+		f32 det = i_src._11*d11 + i_src._12*d12 + i_src._13*d13;
+		f32 id = 1.0f / det;
+		f32 id_11 = id * i_src._11;
+		f32 id_12 = id * i_src._12;
+		f32 id_13 = id * i_src._13;
 		_11 = id * d11;
 		_12 = id_13*i_src._32 - id_12*i_src._33;
 		_13 = id_12*i_src._23 - id_13*i_src._22;
@@ -235,20 +239,20 @@
 		i_src2transposed.transformtransposed3x3(this->z,i_src1.z);
 	}
 
-	inline void mtx3x3::from_euler(float i_xangle, float i_yangle, float i_zangle)
+	inline void mtx3x3::from_euler(f32 i_xangle, f32 i_yangle, f32 i_zangle)
 	{
-		float sx=(sin(i_xangle)), cx=(cos(i_xangle));
-		float sy=(sin(i_yangle)), cy=(cos(i_yangle));
-		float sz=(sin(i_zangle)), cz=(cos(i_zangle));
+		f32 sx=(sin(i_xangle)), cx=(cos(i_xangle));
+		f32 sy=(sin(i_yangle)), cy=(cos(i_yangle));
+		f32 sz=(sin(i_zangle)), cz=(cos(i_zangle));
 
 		_11 = cz*cy+sz*sx*sy;	_12 = sz*cx;	_13 = sz*sx*cy-cz*sy;
 		_21 = cz*sx*sy-sz*cy;	_22 = cz*cx;	_23 = sz*sy+cz*sx*cy;
 		_31 = cx*sy;			_32 = -sx;		_33 = cx*cy;
 	}
 
-	inline void mtx3x3::get_euler(float& o_xangle, float& o_yangle, float& o_zangle) const
+	inline void mtx3x3::get_euler(f32& o_xangle, f32& o_yangle, f32& o_zangle) const
 	{
-		float a;
+		f32 a;
 		o_xangle = asin(this->z.y);
 		a = cos( o_xangle );
 
@@ -263,11 +267,12 @@
 			o_yangle=atan2f(this->y.x, this->x.x);
 		}
 	}
-
+#ifdef _DEBUG
 	MLINLINE void check_mtx3x3(const mtx3x3& m)
 	{
 		check_vec3(m.x);
 		check_vec3(m.y);
 		check_vec3(m.z);
 	}
+#endif
 #endif//_mtx3x3_h_

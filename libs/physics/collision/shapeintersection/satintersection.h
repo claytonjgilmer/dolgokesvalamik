@@ -43,7 +43,7 @@ struct partial_hull
 
 bool test_sat_intersection(convex_mesh_data_t* i_data1, const mtx4x3& i_mtx1,
 						   convex_mesh_data_t* i_data2, const mtx4x3& i_mtx2,
-						   vec3& o_normal, float& o_depth);
+						   vec3& o_normal, f32& o_depth);
 
 struct convex_mesh_shape_t:shape_t
 {

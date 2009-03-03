@@ -267,28 +267,28 @@ void proba()
 
 int _cdecl compareq(const void * a,const void * b)
 {
-	return (int)(*(float*)b-*(float*)a);
+	return (int)(*(f32*)b-*(f32*)a);
 }
 
-int compare(float a,float b)
+int compare(f32 a,f32 b)
 {
 	return a>b;
 }
 
 struct stdcomp
 {
-	bool operator()(float a,float b) const
+	bool operator()(f32 a,f32 b) const
 	{
 		return a<b;
 	}
 };
 
-int compare2(float a,float b)
+int compare2(f32 a,f32 b)
 {
 	return a<b;
 }
 
-unsigned get_radix_key(float f)
+unsigned get_radix_key(f32 f)
 {
 	return FloatToUnsigned(f);
 }
@@ -300,77 +300,77 @@ unsigned get_radix_key(float f)
 void sorttest()
 {
 	const int elem_count=20000;
-	float* array=new float[elem_count];
-	float* arraystd=new float[elem_count];
-	float* arrayquick=new float[elem_count];
-	float* tmparray=new float[elem_count];
+	f32* array=new f32[elem_count];
+	f32* arraystd=new f32[elem_count];
+	f32* arrayquick=new f32[elem_count];
+	f32* tmparray=new f32[elem_count];
 
 	for (int n=0; n<elem_count; ++n)
 		tmparray[n]=0;
-//		tmparray[n]=(float)random(0,100000);
-//		tmparray[n]=float(elem_count-n);
-//		tmparray[n]=float(n);
+//		tmparray[n]=(f32)random(0,100000);
+//		tmparray[n]=f32(elem_count-n);
+//		tmparray[n]=f32(n);
 
-	memcpy(array,tmparray,elem_count*sizeof(float));
+	memcpy(array,tmparray,elem_count*sizeof(f32));
 
 	timer_t t;
 
 	t.reset();
-	qsort(array,elem_count,sizeof(float),&compareq);
+	qsort(array,elem_count,sizeof(f32),&compareq);
 	t.stop();
 	unsigned tickqqq=t.get_tick();
-	memcpy(array,tmparray,elem_count*sizeof(float));
+	memcpy(array,tmparray,elem_count*sizeof(f32));
 
 	t.reset();
 	quicksortfloat(array,0,elem_count-1);
 	t.stop();
 	unsigned tickq3=t.get_tick();
 
-	memcpy(array,tmparray,elem_count*sizeof(float));
+	memcpy(array,tmparray,elem_count*sizeof(f32));
 	t.reset();
 	std::sort(array,array+elem_count,&compare);
 	t.stop();
 	unsigned tickstd=t.get_tick();
 
-	memcpy(arraystd,tmparray,elem_count*sizeof(float));
+	memcpy(arraystd,tmparray,elem_count*sizeof(f32));
 	t.reset();
 	std::sort(arraystd,arraystd+elem_count,stdcomp());
 	t.stop();
 	unsigned tickstd2=t.get_tick();
 
-	memcpy(array,tmparray,elem_count*sizeof(float));
+	memcpy(array,tmparray,elem_count*sizeof(f32));
 
 	t.reset();
-	q_sort<float ,&compare>(array,0,elem_count-1);
+	q_sort<f32 ,&compare>(array,0,elem_count-1);
 	t.stop();
 	unsigned tickquick=t.get_tick();
 
-	memcpy(arrayquick,tmparray,elem_count*sizeof(float));
+	memcpy(arrayquick,tmparray,elem_count*sizeof(f32));
 	t.reset();
-//	q_sort_rec<float ,&compare>(arrayquick,0,elem_count-1);
+//	q_sort_rec<f32 ,&compare>(arrayquick,0,elem_count-1);
 	qf(arrayquick,0,elem_count-1);
 	t.stop();
 	unsigned tickquickrec=t.get_tick();
 
-	int eredmeny=memcmp(arraystd,arrayquick,elem_count*sizeof(float));
+	int eredmeny=memcmp(arraystd,arrayquick,elem_count*sizeof(f32));
 
 	printf("eredmeny:%d\n",eredmeny);
 
-	memcpy(array,tmparray,elem_count*sizeof(float));
+	memcpy(array,tmparray,elem_count*sizeof(f32));
 	t.reset();
-	insertion_sort<float,&compare>(array,elem_count);
+	insertion_sort<f32,&compare>(array,elem_count);
 	t.stop();
 	unsigned tickins=t.get_tick();
 
-	memcpy(array,tmparray,elem_count*sizeof(float));
+	memcpy(array,tmparray,elem_count*sizeof(f32));
 	t.reset();
-	merge_sort<float,&compare>(array,elem_count);
+	merge_sort<f32,&compare>(array,elem_count);
 	t.stop();
 	unsigned tickmer=t.get_tick();
 
-	memcpy(array,tmparray,elem_count*sizeof(float));
+	memcpy(array,tmparray,elem_count*sizeof(f32));
 	t.reset();
-	radixsort<float,&get_radix_key>(array,elem_count);
+	radixsort<f32,&get_radix_key>(array,elem_count);
 	t.stop();
 	unsigned tickrad=t.get_tick();
 
@@ -627,8 +627,8 @@ int _cdecl main()
 		printf ("%d=",sz);
 
 		int oszto=2;
-//		int gyok=(int)sqrtf((float)sz);
-		while (oszto<=(int)sqrtf((float)sz))
+//		int gyok=(int)sqrtf((f32)sz);
+		while (oszto<=(int)sqrtf((f32)sz))
 		{
 			if (!(sz%oszto))
 			{

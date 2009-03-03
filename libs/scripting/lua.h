@@ -86,19 +86,19 @@ extern "C"
 
 			// Simple
 			int GetBool() const;
-			float GetFloat() const;
+			f32 GetFloat() const;
 			int GetInt() const;
 			const char *GetString() const;
 			void *GetPtr() const;
 			const void *GetFunction() const;
 			vec3 GetVector3() const;
 			void GetIntArray(int* o_Array, int i_Num) const;
-			void GetFloatArray(float* o_Array, int i_Num) const;
+			void GetFloatArray(f32* o_Array, int i_Num) const;
 			//			 ColorFloat GetColRGBAf() const;
 			//			 ColorA8R8G8B8 GetColARGB() const;
 
 			int GetBool(int i_DefBool) const;
-			float GetFloat(float i_DefFloat) const;
+			f32 GetFloat(f32 i_DefFloat) const;
 			int GetInt(int i_DefInt) const;
 			string GetString(const char *i_DefString) const;
 			vec3 GetVector3(const vec3 &i_DefVector3) const;
@@ -124,7 +124,7 @@ extern "C"
 
 			void PushNil();
 			void PushBool(int i_Bool);
-			void PushFloat(float i_Float);
+			void PushFloat(f32 i_Float);
 			void PushInt(int i_Int);
 
 			void PushString(const string &i_String);
@@ -133,7 +133,7 @@ extern "C"
 
 			void PushNil(int i_KeyInt);
 			void PushBool(int i_KeyInt, int i_Bool);
-			void PushFloat(int i_KeyInt, float i_Float);
+			void PushFloat(int i_KeyInt, f32 i_Float);
 			void PushInt(int i_KeyInt, int i_Int);
 			void PushString(int i_KeyInt, const string &i_String);
 			void PushPtr(int i_KeyInt, void *i_Ptr);
@@ -142,7 +142,7 @@ extern "C"
 
 			void PushNil(const string &i_KeyString);
 			void PushBool(const string &i_KeyString, int i_Bool);
-			void PushFloat(const string &i_KeyString, float i_Float);
+			void PushFloat(const string &i_KeyString, f32 i_Float);
 			void PushInt(const string &i_KeyString, int i_Int);
 			void PushString(const string &i_KeyString, const string &i_String);
 			void PushPtr(const string &i_KeyString, void *i_Ptr);

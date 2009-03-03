@@ -12,8 +12,8 @@ struct contact_point_t
 {
 	vec3 rel_pos[2];
 	vec3 abs_pos[2];
-	float penetration;
-	float cached_lambda;
+	f32 penetration;
+	f32 cached_lambda;
 
 	contact_point_t():cached_lambda(0){}
 };
@@ -28,11 +28,12 @@ struct contact_surface_t
     contact_point_t contactarray[CONTACTBUFFER_SIZE];
     vec3 normal;
 
-    char contact_count;
     int group_index;
 
-	float friction;
-	float restitution;
+	f32 friction;
+	f32 restitution;
+	char contact_count;
+	char updated;
 
     contact_surface_t(body_t* i_body1, body_t* i_body2);
     ~contact_surface_t();
@@ -57,6 +58,7 @@ MLINLINE contact_surface_t::contact_surface_t(body_t* i_body1, body_t* i_body2)
     this->body[0]->contacts.push_front(this->edge);
     this->body[1]->contacts.push_front(this->edge+1);
     this->contact_count=0;
+	this->updated=0;
 
 //    for (int n=0; n<CONTACTBUFFER_SIZE; ++n)
 //    	this->contactarray[n].cached_lambda=0;

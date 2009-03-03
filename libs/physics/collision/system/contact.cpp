@@ -3,11 +3,11 @@
 
 int get_contact_index(contact_surface_t* contact, const vec3 relpos[2])
 {
-    const float contact_threshhold=0.05f;
+    const f32 contact_threshhold=0.05f;
     int contact_index;
     for (contact_index=0; contact_index<contact->contact_count; ++contact_index)
     {
-        float dist2;
+        f32 dist2;
         dist2=(contact->contactarray[contact_index].rel_pos[0]-relpos[0]).squarelength();
 
         if (dist2<contact_threshhold*contact_threshhold)
@@ -50,12 +50,12 @@ void contact_surface_t::add_contact(const vec3 relpos[][2], int contact_count,co
 		vec3 axis[2];
 		axis[0].cross(normal_body1,tmp);
 		axis[1].cross(normal_body1,axis[0]);
-		float minv[2]={FLT_MAX,FLT_MAX};
-		float maxv[2]={-FLT_MAX,-FLT_MAX};
+		f32 minv[2]={FLT_MAX,FLT_MAX};
+		f32 maxv[2]={-FLT_MAX,-FLT_MAX};
 		contact_point_t data[4];
 		for (int n=0; n<contact_count_tmp; ++n)
 		{
-			float v=dot(axis[0],this->contactarray[n].rel_pos[0]);
+			f32 v=dot(axis[0],this->contactarray[n].rel_pos[0]);
 			if (v<minv[0])
 			{
 				minv[0]=v;
@@ -101,21 +101,23 @@ void contact_surface_t::update()
     const mtx4x3&body2_pos=ptr->bodystate_array.pos[this->body[1]->array_index];
     for (int n=0; n<this->contact_count; ++n)
     {
+		this->updated=1;
 		contact_point_t* act_contact=contactarray+n;
         body1_pos.transform(act_contact->abs_pos[0],act_contact->rel_pos[0]);
         body2_pos.transform(act_contact->abs_pos[1],act_contact->rel_pos[1]);
+		assertion(act_contact->abs_pos[0].x<1000);
         vec3 dir=act_contact->abs_pos[1]-act_contact->abs_pos[0];
 
         act_contact->penetration=dot(this->normal,dir);
         if (act_contact->penetration>CONTACT_MIN_PENETRATION)
         {
-            this->contactarray[n]=this->contactarray[--this->contact_count];
+            this->contactarray[n--]=this->contactarray[--this->contact_count];
         }
         else
         {
             vec3 tangentdir=dir-act_contact->penetration*this->normal;
             if (tangentdir.squarelength()>CONTACT_MAX_TANGENTDIST*CONTACT_MAX_TANGENTDIST)
-                this->contactarray[n]=this->contactarray[--this->contact_count];
+                this->contactarray[n--]=this->contactarray[--this->contact_count];
         }
     }
 }

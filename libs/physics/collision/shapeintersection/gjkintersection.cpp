@@ -13,7 +13,7 @@
 
 void get_extremal_vertex(convex_mesh_data_t* obj, const dvec3& dir, const mtx4x3& mtx, dvec3& support)
 {
-	vec3 localdir; localdir.set((float)dir.x,(float)dir.y,(float)dir.z);
+	vec3 localdir; localdir.set((f32)dir.x,(f32)dir.y,(f32)dir.z);
 	localdir=mtx.transformtransposed3x3(localdir);
 	vec3 localsupport;
 	get_extremal_vertex(obj,localdir,localsupport);
@@ -23,7 +23,7 @@ void get_extremal_vertex(convex_mesh_data_t* obj, const dvec3& dir, const mtx4x3
 
 void get_extremal_vertex(convex_hull_t* obj, const dvec3& dir, const mtx4x3& mtx, dvec3& support)
 {
-	vec3 localdir; localdir.set((float)dir.x,(float)dir.y,(float)dir.z);
+	vec3 localdir; localdir.set((f32)dir.x,(f32)dir.y,(f32)dir.z);
 	localdir=mtx.transformtransposed3x3(localdir);
 	vec3 localsupport;
 	obj->get_extremal_vertex(localdir,localsupport);

@@ -33,7 +33,7 @@
 		return unsigned (stop_tick-start_tick);
 	}
 
-	float timer_t::get_seconds() const
+	f32 timer_t::get_seconds() const
 	{
-		return float(double(stop_tick-start_tick)/freqd);
+		return f32(double(stop_tick-start_tick)/freqd);
 	}

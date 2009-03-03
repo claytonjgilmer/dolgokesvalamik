@@ -9,7 +9,7 @@
 
 	struct stringmapstat
 	{
-		float m_avg;
+		f32 m_avg;
 		int m_max;
 	};
 	template <typename T, unsigned bufsize=1024>
@@ -130,14 +130,14 @@
 					++act;
 				}
 
-				stat.m_avg+=(float)act;
+				stat.m_avg+=(f32)act;
 
 				if (stat.m_max<act)
 					stat.m_max=act;
 			}
 		}
 
-		stat.m_avg/=(float)count;
+		stat.m_avg/=(f32)count;
 		return stat;
 	}
 #endif//_stringmap_h_

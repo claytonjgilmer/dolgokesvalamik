@@ -18,7 +18,7 @@ struct hashgrid_2d
 {
 	hashgrid_2d();
 	~hashgrid_2d();
-	void insert_object(const T& obj, float bounding_min[2], float bounding_max[2]);
+	void insert_object(const T& obj, f32 bounding_min[2], f32 bounding_max[2]);
 	void remove_object(const T& obj);
 };
 #endif// if 0

@@ -51,11 +51,11 @@
 			return (int&)(*((char*)(i_object)+m_offset));
 		}
 
-		float get_float(rootobject* i_object) const
+		f32 get_float(rootobject* i_object) const
 		{
 			assertion(m_type==prop_float);
 
-			return (float&)(*((char*)(i_object)+m_offset));
+			return (f32&)(*((char*)(i_object)+m_offset));
 		}
 
 		vec3 get_vec3(rootobject* i_object) const
@@ -175,9 +175,9 @@
 			case prop_mtx4x3:
 			{
 				mtx4x3 mtx((*(mtx4x3*)i_data));
-				float rx,ry,rz;
-				float sx,sy,sz;
-				float tx,ty,tz;
+				f32 rx,ry,rz;
+				f32 sx,sy,sz;
+				f32 tx,ty,tz;
 				sx=mtx.x.length();
 				sy=mtx.y.length();
 				sz=mtx.z.length();

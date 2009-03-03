@@ -14,7 +14,7 @@
 	union propvalue
 	{
 		int* m_intvalue;
-		float* m_floatvalue;
+		f32* m_floatvalue;
 		string* m_stringvalue;
 		vec3* m_vec3value;
 		vec2* m_vec2value;
@@ -27,7 +27,7 @@
 		propvalue m_val;
 
 		_define_prop_(int,m_intvalue)
-		_define_prop_(float,m_floatvalue)
+		_define_prop_(f32,m_floatvalue)
 		_define_prop_(string,m_stringvalue)
 		_define_prop_(vec3,m_vec3value)
 		_define_prop_(vec2,m_vec2value)

@@ -17,19 +17,161 @@ typedef int int32;
 typedef short int16;
 typedef char int8;
 
+#ifdef _DEBUG
+MLINLINE void check_float(float value)
+{
+	int s, e;
+	unsigned long src;
+	long f; 
+	unsigned int *srcptr = (unsigned int *)&value;
 
+	src = *srcptr;
+
+	s = (src & 0x80000000UL) >> 31;
+	e = (src & 0x7F800000UL) >> 23;
+	f = (src & 0x007FFFFFUL);
+
+	if (value==9872)
+	{
+		assertion(0);
+	}
+	if (e == 255 && f != 0) 
+	{
+		assertion(0);
+	}
+	else if (e == 255 && f == 0 && s == 1) 
+	{
+		assertion(0);
+	}
+	else if (e == 255 && f == 0 && s == 0) 
+	{
+		assertion(0);
+	}
+}
+#else
+#define check_float(_A_)
+#endif
+
+
+#if 0//def _DEBUG
+struct f32
+{
+	float f;
+
+	f32()
+	{
+		f=9872;
+	}
+	f32(const f32& fl)
+	{
+		check_float(fl.f);
+		f=fl.f;
+	}
+	f32(const float& fl)
+	{
+		check_float(fl);
+		f=fl;
+	}
+
+	f32& operator=(const f32& fl)
+	{
+		check_float(fl.f);
+		f=fl.f;
+		return *this;
+//		return f;
+	}
+	void operator/=(const f32& fl)
+	{
+		check_float(f);
+		check_float(fl.f);
+		f/=fl.f;
+	}
+	void operator*=(const f32& fl)
+	{
+		check_float(f);
+		check_float(fl.f);
+		f*=fl.f;
+	}
+	void operator+=(const f32& fl)
+	{
+		check_float(f);
+		check_float(fl.f);
+		f+=fl.f;
+		//		return f;
+	}
+	void operator-=(const f32& fl)
+	{
+		check_float(f);
+		check_float(fl.f);
+		f=fl.f;
+	}
+
+	operator float() const
+	{
+		return f;
+	}
+
+/*
+	float operator+(const f32& fl) const
+	{
+		check_float(fl.f);
+		return f+fl.f;
+	}
+	float operator-(const f32& fl) const
+	{
+		check_float(fl.f);
+		return f-fl.f;
+	}
+	float operator*(const f32&  fl) const
+	{
+		check_float(fl.f);
+		return f*fl.f;
+	}
+	float operator/(const f32& fl) const
+	{
+		check_float(fl.f);
+		return f/fl.f;
+	}
+
+	void operator+=(const f32& fl)
+	{
+		check_float(fl.f);
+		f+=fl.f;
+	}
+	void operator-=(const f32& fl)
+	{
+		check_float(fl.f);
+		f-=fl.f;
+	}
+	void operator*=(const f32& fl)
+	{
+		check_float(fl.f);
+		f*=fl.f;
+	}
+	void operator/=(const f32& fl)
+	{
+		check_float(fl.f);
+		f/=fl.f;
+	}
+*/
+};
+#else
+typedef float f32;
+#endif
+
+/*
 	union floattounsigned
 	{
 		float f;
 		unsigned i;
 
-		floattounsigned(float i_value)
+		floattounsigned(f32 i_value)
 		{
 			f=i_value;
 			i^=((~(i >> 31))+1) | 0x80000000;
 		}
 
-		void operator =(float i_value)
+		void operator =(f32 i_value)
 		{
 			f=i_value;
 			i^=((~(i >> 31))+1) | 0x80000000;
@@ -54,60 +196,60 @@ typedef char int8;
 			return i;
 		}
 	};
+*/
 
 
-
-	MLINLINE float pi()
+	MLINLINE f32 pi()
 	{
 		return 3.1415926536f;
 	}
 
-	MLINLINE float twopi()
+	MLINLINE f32 twopi()
 	{
 		return 2.0f*pi();
 	}
 
-	MLINLINE float pihalf()
+	MLINLINE f32 pihalf()
 	{
 		return 0.5f*pi();
 	}
 /*
-	MLINLINE float sin(float i_value)
+	MLINLINE f32 sin(f32 i_value)
 	{
 		return sinf(i_value);
 	}
 
-	MLINLINE float cos(float i_value)
+	MLINLINE f32 cos(f32 i_value)
 	{
 		return cosf(i_value);
 	}
 
-	MLINLINE float abs(float i_value)
+	MLINLINE f32 abs(f32 i_value)
 	{
 		return fabsf(i_value);
 	}
 
-	MLINLINE float asin(float i_value)
+	MLINLINE f32 asin(f32 i_value)
 	{
 		return asinf(i_value);
 	}
 
-	MLINLINE float acos(float i_value)
+	MLINLINE f32 acos(f32 i_value)
 	{
 		return acosf(i_value);
 	}
 
-	MLINLINE float atan2(float i_value1,float i_value2)
+	MLINLINE f32 atan2(f32 i_value1,f32 i_value2)
 	{
 		return atan2f(i_value1,i_value2);
 	}
 
-	MLINLINE float sqrt(float i_value)
+	MLINLINE f32 sqrt(f32 i_value)
 	{
 		return sqrtf(i_value);
 	}
 
-	MLINLINE float pow(float i_value, float i_power)
+	MLINLINE f32 pow(f32 i_value, f32 i_power)
 	{
 		return powf(i_value,i_power);
 	}
@@ -118,12 +260,12 @@ typedef char int8;
 		return i_value*i_value;
 	}
 
-	MLINLINE float radtodegree(float i_radian)
+	MLINLINE f32 radtodegree(f32 i_radian)
 	{
 		return i_radian*(180.0f/pi());
 	}
 
-	MLINLINE float degreetorad(float i_degree)
+	MLINLINE f32 degreetorad(f32 i_degree)
 	{
 		return i_degree*(pi()/180.0f);
 	}
@@ -149,8 +291,19 @@ typedef char int8;
 		return i_src;
 
 	}
+	MLINLINE f32 clamp(f32 i_src, f32 i_minvalue, f32 i_maxvalue)
+	{
+		if (i_src<i_minvalue)
+			return i_minvalue;
 
-	MLINLINE float sign(float i_value)
+		if (i_src>i_maxvalue)
+			return i_maxvalue;
+
+		return i_src;
+
+	}
+
+	MLINLINE f32 sign(f32 i_value)
 	{
 		return i_value>0.0f ? 1.0f : -1.0f;
 	}
@@ -168,7 +321,7 @@ typedef char int8;
 		io_value1^=io_value2;
 	}
 
-	MLINLINE void swap(float& io_value1, float& io_value2)
+	MLINLINE void swap(f32& io_value1, f32& io_value2)
 	{
 		swap((int&)io_value1,(int&)io_value2);
 	}
@@ -239,16 +392,16 @@ typedef char int8;
 		return ((v2-v1)/(p2-p1))*(x-p1)+v1;
 	}
 
-	template<typename t> t interpolate(float x, const t& v1, const t& v2)
+	template<typename t> t interpolate(f32 x, const t& v1, const t& v2)
 	{
 		return (v2-v1)*x+v1;
 	}
-
-	MLINLINE float inv_sqrt(float i_val)
+/*
+	MLINLINE f32 inv_sqrt(f32 i_val)
 	{
-		union {float f;int i;} val;
+		union {f32 f;int i;} val;
 		val.f=i_val;
-		float xhalf=0.5f*i_val;
+		f32 xhalf=0.5f*i_val;
 
 //		val.i=0x5f3fba86-(val.i>>1);
 //		val.i=0x5f3fba86-(val.i>>1);
@@ -257,11 +410,11 @@ typedef char int8;
 		return val.f*(1.5f-xhalf*val.f*val.f);
 	}
 
-	MLINLINE float fast_sqrt(float i_val)
+	MLINLINE f32 fast_sqrt(f32 i_val)
 	{
-		union {float f;int i;} val;
+		union {f32 f;int i;} val;
 		val.f=i_val;
-		float xhalf=0.5f*i_val;
+		f32 xhalf=0.5f*i_val;
 
 		//		val.i=0x5f3fba86-(val.i>>1);
 		//		val.i=0x5f3fba86-(val.i>>1);
@@ -271,7 +424,7 @@ typedef char int8;
 	}
 	template <int n> MLINLINE int logn(){return 1+logn<(n >> 1)>();}
 	template<> MLINLINE int logn<1>(){return 0;}
-
+*/
 	MLINLINE unsigned greatest_common_divisor(unsigned a1, unsigned a2)
 	{
 		while (a1!=a2)
@@ -319,9 +472,9 @@ typedef char int8;
 	}
 
 
-	MLINLINE float random(float i_min, float i_max)
+	MLINLINE f32 random(f32 i_min, f32 i_max)
 	{
-		return (float)rand()/(float)RAND_MAX*(i_max-i_min)+i_min;
+		return (f32)rand()/(f32)RAND_MAX*(i_max-i_min)+i_min;
 	}
 
 	MLINLINE int  random(int i_min, int i_max)
@@ -330,7 +483,7 @@ typedef char int8;
 //		return (rand())*(i_max-i_min)/RAND_MAX+i_min;
 	}
 
-	MLINLINE float med3(float a1,float a2,float a3)
+	MLINLINE f32 med3(f32 a1,f32 a2,f32 a3)
 	{
 		if (a1<a2)
 		{
@@ -347,31 +500,5 @@ typedef char int8;
 		}
 	}
 
-	MLINLINE void check_float(float value)
-	{
-		int s, e;
-		unsigned long src;
-		long f; 
-		unsigned int *srcptr = (unsigned int *)&value;
-
-		src = *srcptr;
-
-		s = (src & 0x80000000UL) >> 31;
-		e = (src & 0x7F800000UL) >> 23;
-		f = (src & 0x007FFFFFUL);
-
-		if (e == 255 && f != 0) 
-		{
-			assertion(0);
-		}
-		else if (e == 255 && f == 0 && s == 1) 
-		{
-			assertion(0);
-		}
-		else if (e == 255 && f == 0 && s == 0) 
-		{
-			assertion(0);
-		}
-	}
 
 #endif// _math_h_

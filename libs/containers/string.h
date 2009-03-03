@@ -6,6 +6,7 @@
 #include <float.h>
 #include "utils/assert.h"
 #include "utils/misc.h"
+#include "math/math.h"
 
 	template <unsigned TSTRING_MIN_CAPACITY=16>
 	struct tstring
@@ -36,11 +37,11 @@
 
 		tstring& operator+=(const char* i_str);
 		tstring& operator+=(int i_num);
-		tstring& operator+=(float i_num);
+		tstring& operator+=(f32 i_num);
 
 		tstring operator+(const char* i_str) const;
 		tstring operator+(int i_num) const;
-		tstring operator+(float i_num) const;
+		tstring operator+(f32 i_num) const;
 
 		friend
 		tstring operator+(const char* i_str, const tstring& i_ts)
@@ -248,7 +249,7 @@
 	}
 
 	template <unsigned TSTRING_MIN_CAPACITY>
-	MLINLINE tstring<TSTRING_MIN_CAPACITY>& tstring<TSTRING_MIN_CAPACITY>::operator+=(float i_num)
+	MLINLINE tstring<TSTRING_MIN_CAPACITY>& tstring<TSTRING_MIN_CAPACITY>::operator+=(f32 i_num)
 	{
 		char strtmp[16];
 		sprintf(strtmp,"%f",i_num);
@@ -273,7 +274,7 @@
 	}
 
 	template <unsigned TSTRING_MIN_CAPACITY>
-	MLINLINE tstring<TSTRING_MIN_CAPACITY> tstring<TSTRING_MIN_CAPACITY>::operator+(float i_num) const
+	MLINLINE tstring<TSTRING_MIN_CAPACITY> tstring<TSTRING_MIN_CAPACITY>::operator+(f32 i_num) const
 	{
 		tstring strmp(*this);
 		strmp+=i_num;

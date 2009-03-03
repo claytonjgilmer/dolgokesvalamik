@@ -3,12 +3,17 @@
 #include "threading/taskmanager.h"
 #include "physics/system/physicssystem.h"
 
+#define h1  2376512323u
+#define h2  3625334849u
+#define h3  3407524639u
 MLINLINE unsigned compute_hash_bucket_index(int x, int y, int z)
 {
-    const unsigned h1 = 2376512323u;
-    const unsigned h2 = 3625334849u;
-    const unsigned h3 = 3407524639u;
     return unsigned (h1 * x + h2 * y + h3 * z) & (NUM_BUCKETS-1);
+}
+
+MLINLINE unsigned compute_hash_bucket_index(float x, float y, float z)
+{
+	return unsigned (h1 * floorf(x) + h2 * floorf(y) + h3 * floorf(z)) & (NUM_BUCKETS-1);
 }
 
 hgridobject::hgridobject(void* i_userdata, const aabb_t& i_bounding, uint32 i_static):
@@ -21,7 +26,7 @@ broadphaseobject(i_userdata,i_bounding,i_static)
 
 hgridbroadphase::hgridbroadphase()
 {
-    float size=MIN_CELL_SIZE;
+    f32 size=MIN_CELL_SIZE;
     for (int n=0; n<HGRID_MAX_LEVELS;++n)
     {
         size*=CELL_TO_CELL_RATIO;
@@ -44,14 +49,15 @@ hgridbroadphase::hgridbroadphase()
 void add_object_to_hgrid(hgridbroadphase* hgrid, hgridobject *obj)
 {
     int level;
-    float diameter = 2.0f * obj->radius;
+    f32 diameter = 2.0f * obj->radius;
 
     for (level = 0 ; SPHERE_TO_CELL_RATIO < diameter*hgrid->oo_cell_size[level] ; level++){}
 
     assertion(level < HGRID_MAX_LEVELS);
 
-    const float oosize=hgrid->oo_cell_size[level];
-    int bucket = compute_hash_bucket_index((int)(obj->pos.x *oosize), (int)(obj->pos.y *oosize), (int)(obj->pos.z *oosize));
+    const f32 oosize=hgrid->oo_cell_size[level];
+//    int bucket = compute_hash_bucket_index((int)(obj->pos.x *oosize), (int)(obj->pos.y *oosize), (int)(obj->pos.z *oosize));
+	int bucket = compute_hash_bucket_index((int)(obj->pos.x *oosize), (int)(obj->pos.y *oosize), (int)(obj->pos.z *oosize));
     obj->bucket= bucket;
     obj->level = level;
     obj->next_object= hgrid->object_bucket[level][bucket];
@@ -110,8 +116,8 @@ void check_obj_against_grid(hgridbroadphase* hgrid, hgridobject* obj) //csak tel
         if ((loccupiedLevelsMask & 1) == 0)
             continue;
 
-        const float ooSize = hgrid->oo_cell_size[level];
-//			float ooSize = 1.0f / this->cell_size[level];
+        const f32 ooSize = hgrid->oo_cell_size[level];
+//			f32 ooSize = 1.0f / this->cell_size[level];
 
         const int xs = (int)((pos.x-halfextent.x)*ooSize-SPHERE_TO_CELL_RATIO);
         const int ys = (int)((pos.y-halfextent.y)*ooSize-SPHERE_TO_CELL_RATIO);
@@ -153,7 +159,7 @@ void move_object(hgridbroadphase* hgrid, hgridobject* obj)
     obj->pos=obj->bounding_world.get_center();
 
     const int level=obj->level;
-    const float oosize= hgrid->oo_cell_size[level];
+    const f32 oosize= hgrid->oo_cell_size[level];
     int bucket = compute_hash_bucket_index((int)(obj->pos.x *oosize), (int)(obj->pos.y *oosize), (int)(obj->pos.z *oosize));
 
     if (bucket==obj->bucket)
@@ -289,7 +295,7 @@ void HGridBroadPhase::GetObjectsInRange(Dyn::vector<BroadPhaseObject*>& o_ObjLis
         if ((loccupiedLevelsMask & 1) == 0)
             continue;
 
-        float ooSize = 1.0f / m_CellSize[level];
+        f32 ooSize = 1.0f / m_CellSize[level];
 
         const int xs = (int)((pos.x-halfextent.x)*ooSize-SPHERE_TO_CELL_RATIO);
         const int ys = (int)((pos.y-halfextent.y)*ooSize-SPHERE_TO_CELL_RATIO);

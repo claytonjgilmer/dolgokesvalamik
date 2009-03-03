@@ -18,10 +18,10 @@ extern unsigned g_bph,g_nph,g_in,g_up,g_frc,g_sol;
 	struct physicssystemdesc
 	{
 		vec3 gravity;
-		float timestep;
+		f32 timestep;
 		uint8 maxsubstepcount;
 		uint8 parallel_processing;
-		float solver_positioncorrection_rate;
+		f32 solver_positioncorrection_rate;
 
 		physicssystemdesc()
 		{
@@ -46,7 +46,7 @@ extern unsigned g_bph,g_nph,g_in,g_up,g_frc,g_sol;
 
 
 		//eztet kell hivni
-		void simulate(float i_dt);
+		void simulate(f32 i_dt);
 
 
 
@@ -76,7 +76,7 @@ extern unsigned g_bph,g_nph,g_in,g_up,g_frc,g_sol;
 		uint32 parallel_pre_step;
 		uint32 parallel_solver;
 		int frame_count;
-		float solver_position_correction_rate;
+		f32 solver_position_correction_rate;
 
 		DECLARE_SINGLETON_DESC(physicssystem,physicssystemdesc);
 	};

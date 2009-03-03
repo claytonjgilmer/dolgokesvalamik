@@ -8,8 +8,12 @@
 	//			mtx4x3
 	//////////////////////////////////////////////////////////////////////////
 
+#ifdef _DEBUG
 	struct mtx4x3;
 	void check_mtx4x3(const mtx4x3& m);
+#else
+#define  check_mtx4x3(_M_)
+#endif
 	struct mtx4x3:mtx3x3
 	{
 		void identity();
@@ -27,18 +31,19 @@
 		void invert(const mtx4x3& i_src);
 		void linearinvert(const mtx4x3& i_src);
 
-		void interpolate(const mtx4x3& i_src1, const mtx4x3& i_src2, float i_time);
+		void interpolate(const mtx4x3& i_src1, const mtx4x3& i_src2, f32 i_time);
 
 		void normalize();
-		void rotate(const mtx4x3& i_src, const vec3& i_axis, float i_angle);
+		void rotate(const mtx4x3& i_src, const vec3& i_axis, f32 i_angle);
+		void rotate(const vec3& i_axis, f32 i_angle);
 
-		void set_euler(float i_x,float i_y, float i_z);
+		void set_euler(f32 i_x,f32 i_y, f32 i_z);
 
 		union
 		{
 			struct
 			{
-				float	_41,_42,_43;
+				f32	_41,_42,_43;
 			};
 
 			struct
@@ -139,14 +144,14 @@
 
 	MLINLINE void mtx4x3::invert(const mtx4x3& i_src)
 	{
-		float d11 = i_src._22*i_src._33 - i_src._23*i_src._32;
-		float d12 = i_src._23*i_src._31 - i_src._21*i_src._33;
-		float d13 = i_src._21*i_src._32 - i_src._22*i_src._31;
-		float det = i_src._11*d11 + i_src._12*d12 + i_src._13*d13;
-		float id = 1.0f / det;
-		float id_11 = id * i_src._11;
-		float id_12 = id * i_src._12;
-		float id_13 = id * i_src._13;
+		f32 d11 = i_src._22*i_src._33 - i_src._23*i_src._32;
+		f32 d12 = i_src._23*i_src._31 - i_src._21*i_src._33;
+		f32 d13 = i_src._21*i_src._32 - i_src._22*i_src._31;
+		f32 det = i_src._11*d11 + i_src._12*d12 + i_src._13*d13;
+		f32 id = 1.0f / det;
+		f32 id_11 = id * i_src._11;
+		f32 id_12 = id * i_src._12;
+		f32 id_13 = id * i_src._13;
 		_11 = id * d11;
 		_12 = id_13*i_src._32 - id_12*i_src._33;
 		_13 = id_12*i_src._23 - id_13*i_src._22;
@@ -181,7 +186,7 @@
 
 	}
 
-	MLINLINE void mtx4x3::rotate(const mtx4x3& i_src, const vec3& i_axis, float i_angle)
+	MLINLINE void mtx4x3::rotate(const mtx4x3& i_src, const vec3& i_axis, f32 i_angle)
 	{
 		this->z.rotate(i_src.z,i_axis,i_angle);
 		this->y.rotate(i_src.y,i_axis,i_angle);
@@ -189,7 +194,17 @@
 		check_mtx4x3(*this);
 	}
 
-	MLINLINE void mtx4x3::interpolate(const mtx4x3& i_src1, const mtx4x3& i_src2, float i_time)
+	MLINLINE void mtx4x3::rotate(const vec3& i_axis, f32 i_angle)
+	{
+		f32 cosangle=cosf(i_angle);
+		f32 sinangle=sinf(i_angle);
+		this->y.rotate(i_axis,sinangle,cosangle);
+		this->z.rotate(i_axis,sinangle,cosangle);
+		normalize();
+//		check_mtx4x3(*this);
+	}
+
+	MLINLINE void mtx4x3::interpolate(const mtx4x3& i_src1, const mtx4x3& i_src2, f32 i_time)
 	{
 		this->x.interpolate(i_src1.x, i_src2.x, i_time);
 		this->y.interpolate(i_src1.y, i_src2.y, i_time);
@@ -197,22 +212,24 @@
 		this->t.interpolate(i_src1.t, i_src2.t, i_time);
 	}
 
-	MLINLINE void mtx4x3::set_euler(float i_x,float i_y, float i_z)
+	MLINLINE void mtx4x3::set_euler(f32 i_x,f32 i_y, f32 i_z)
 	{
-		float sx=(sin(i_x)), cx=(cos(i_x));
-		float sy=(sin(i_y)), cy=(cos(i_y));
-		float sz=(sin(i_z)), cz=(cos(i_z));
+		f32 sx=(sin(i_x)), cx=(cos(i_x));
+		f32 sy=(sin(i_y)), cy=(cos(i_y));
+		f32 sz=(sin(i_z)), cz=(cos(i_z));
 
 		_11 = cz*cy-sz*sx*sy;	_12 = sz*cx;	_13 = -sz*sx*cy-cz*sy;
 		_21 = -cz*sx*sy-sz*cy;	_22 = cz*cx;	_23 = sz*sy-cz*sx*cy;
 		_31 = cx*sy;			_32 = sx;		_33 = cx*cy;
 	}
 
+#ifdef _DEBUG
 	MLINLINE void check_mtx4x3(const mtx4x3& m)
 	{
 		check_mtx3x3(m);
 		check_vec3(m.t);
 	}
+#endif
 
 
 #endif//_mtx4x3_h_

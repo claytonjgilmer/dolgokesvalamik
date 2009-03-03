@@ -23,7 +23,7 @@ struct deep_intersection
 	int state;
 
 	bool result;
-	float depth;
+	f32 depth;
 
 	deep_intersection(convex_hull_t* i_obj1, convex_hull_t* i_obj2, const mtx4x3& i_mtx1, const mtx4x3& i_mtx2, const vec3& initdir=to_vec3(0,0,0),edge_data* i_v1=NULL,edge_data* i_v2=NULL, int state=0);
 	bool report_min_pair(edge_data* i_v1, edge_data* i_v2);

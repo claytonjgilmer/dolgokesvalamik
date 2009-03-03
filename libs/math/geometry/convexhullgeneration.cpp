@@ -73,13 +73,13 @@ void convex_hull_generator::draw(const mtx4x3& mtx)
 			if (e->prev->head_vertex>e->head_vertex)
 			{
 				vec3 start;
-				start.x=(float)work_array[e->prev->head_vertex].x;
-				start.y=(float)work_array[e->prev->head_vertex].y;
-				start.z=(float)work_array[e->prev->head_vertex].z;
+				start.x=(f32)work_array[e->prev->head_vertex].x;
+				start.y=(f32)work_array[e->prev->head_vertex].y;
+				start.z=(f32)work_array[e->prev->head_vertex].z;
 				vec3 end;
-				end.x=(float)work_array[e->head_vertex].x;
-				end.y=(float)work_array[e->head_vertex].y;
-				end.z=(float)work_array[e->head_vertex].z;
+				end.x=(f32)work_array[e->head_vertex].x;
+				end.y=(f32)work_array[e->head_vertex].y;
+				end.z=(f32)work_array[e->head_vertex].z;
 
 				start=mtx.transform(start);
 				end=mtx.transform(end);
@@ -91,10 +91,10 @@ void convex_hull_generator::draw(const mtx4x3& mtx)
 	}
 
 	vec3 center;
-	center.x=(float)work_array[vertex_index].x;
-	center.y=(float)work_array[vertex_index].y;
-	center.z=(float)work_array[vertex_index].z;
-	float radius=0.1f;
+	center.x=(f32)work_array[vertex_index].x;
+	center.y=(f32)work_array[vertex_index].y;
+	center.z=(f32)work_array[vertex_index].z;
+	f32 radius=0.1f;
 	rendersystem::ptr->draw_circle(center,radius);
 
 	char str[256];
@@ -729,9 +729,9 @@ void convex_hull_generator::get_result()
 		if (valid_vertex[n])
 		{
 			ch.vertices.push_back(vertex_data());
-			ch.vertices.back().pos.x=(float)work_array[n].x;
-			ch.vertices.back().pos.y=(float)work_array[n].y;
-			ch.vertices.back().pos.z=(float)work_array[n].z;
+			ch.vertices.back().pos.x=(f32)work_array[n].x;
+			ch.vertices.back().pos.y=(f32)work_array[n].y;
+			ch.vertices.back().pos.z=(f32)work_array[n].z;
 			aabb.extend(ch.vertices.back().pos);
 		}
 	}
@@ -742,9 +742,9 @@ void convex_hull_generator::get_result()
 	for (unsigned n=0; n<faces.size(); ++n)
 	{
 		gen_face_t* face=faces[n];
-		ch.faces[n].normal.x=(float)face->normal.x;
-		ch.faces[n].normal.y=(float)face->normal.y;
-		ch.faces[n].normal.z=(float)face->normal.z;
+		ch.faces[n].normal.x=(f32)face->normal.x;
+		ch.faces[n].normal.y=(f32)face->normal.y;
+		ch.faces[n].normal.z=(f32)face->normal.z;
 
 /*egyelore kiszedve
 		gen_half_edge_t* edge=face->edges.first();

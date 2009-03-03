@@ -66,6 +66,8 @@
 		this->m_device->SetRenderState(D3DRS_CULLMODE,D3DCULL_CCW);
 
 		this->white_texture=texturemanager::ptr->get_texture("white.bmp");
+		this->m_view_matrix.identity();
+		this->m_viewprojection_matrix.identity();
 	}
 
 	rendersystem::~rendersystem()
@@ -274,7 +276,7 @@
 			m_queue[n].m_name=i_queuenames[n];
 	}
 
-	void rendersystem::set_projection_params(float i_fov, float i_aspect, float i_nearz, float i_farz, const mtx4x4& i_viewmatrix)
+	void rendersystem::set_projection_params(f32 i_fov, f32 i_aspect, f32 i_nearz, f32 i_farz, const mtx4x4& i_viewmatrix)
 	{
 		m_view_matrix=i_viewmatrix;
 		m_projection_matrix.set_projectionmatrix(tan(i_fov/2), i_aspect,i_nearz,i_farz);

@@ -62,7 +62,7 @@ mtx2(i_mtx2)
 
 //		edge_data* s11,*s12,*s21,*s22;
 //		edge_data* s1,*s2;
-//		float depth1,depth2;
+//		f32 depth1,depth2;
 //		int state1,state2;
 		switch(state)
 		{
@@ -128,7 +128,7 @@ mtx2(i_mtx2)
 	result=(depth<=0);
 }
 
-bool deep_intersection::report_min_pair(edge_data* i_v1, edge_data* i_v2)//, int& o_state, float& o_depth,edge_data*& o_s1, edge_data*& o_s2)
+bool deep_intersection::report_min_pair(edge_data* i_v1, edge_data* i_v2)//, int& o_state, f32& o_depth,edge_data*& o_s1, edge_data*& o_s2)
 {
 	edge_data* e;
 	bool ret=false;
@@ -149,7 +149,7 @@ bool deep_intersection::report_min_pair(edge_data* i_v1, edge_data* i_v2)//, int
 		vec3 facenormal=trf_1_to_2.transform3x3(-obj1->get_face(e)->normal);
 		if (obj2->is_extremal_vertex(facenormal,i_v2)) //ha a face belul van a poligonon, akkor megnezzuk, hogy arra milyen messze van a kifele
 		{
-			float dist=dot(facenormal,dir12);
+			f32 dist=dot(facenormal,dir12);
 
 			if (dist>depth+.0001)
 			{
@@ -175,7 +175,7 @@ bool deep_intersection::report_min_pair(edge_data* i_v1, edge_data* i_v2)//, int
 
 		if (obj1->is_extremal_vertex(facenormal,i_v1))
 		{
-			float dist=dot(facenormal,dir12);
+			f32 dist=dot(facenormal,dir12);
 
 			if (dist>depth+.0001)
 			{
@@ -202,7 +202,7 @@ bool deep_intersection::report_min_pair(edge_data* i_v1, edge_data* i_v2)//, int
 			if (spherical_segment_intersect(edge_edge_normal,obj1->get_face_normal(e),obj1->get_opposite_face_normal(e),
 															 -trf_1_to_2.transformtransposed3x3(obj2->get_face_normal(e2)),-trf_1_to_2.transformtransposed3x3(obj2->get_opposite_face_normal(e2))))
 			{
-				float dist=dot(edge_edge_normal,trf_1_to_2.transformtransposed(obj2->get_vertexpos(e2))-obj1->get_vertexpos(e));
+				f32 dist=dot(edge_edge_normal,trf_1_to_2.transformtransposed(obj2->get_vertexpos(e2))-obj1->get_vertexpos(e));
 
 				if (dist>depth+.0001)
 				{
@@ -223,7 +223,7 @@ bool deep_intersection::report_min_pair(edge_data* i_v1, edge_data* i_v2)//, int
 }
 
 
-bool deep_intersection::report_min_pair_face(edge_data* i_v1, edge_data* i_v2)//, int& o_state, float& o_depth,edge_data*& o_s1, edge_data*& o_s2)
+bool deep_intersection::report_min_pair_face(edge_data* i_v1, edge_data* i_v2)//, int& o_state, f32& o_depth,edge_data*& o_s1, edge_data*& o_s2)
 {
 	edge_data* e;
 
@@ -241,7 +241,7 @@ bool deep_intersection::report_min_pair_face(edge_data* i_v1, edge_data* i_v2)//
 		vec3 facenormal=trf_1_to_2.transform3x3(-obj1->get_face(e)->normal);
 		if (obj2->is_extremal_vertex(facenormal,i_v2)) //ha a face belul van a poligonon, akkor megnezzuk, hogy arra milyen messze van a kifele
 		{
-			float dist=dot(facenormal,dir12);
+			f32 dist=dot(facenormal,dir12);
 
 			if (dist>depth+.0001)
 			{
@@ -267,7 +267,7 @@ bool deep_intersection::report_min_pair_face(edge_data* i_v1, edge_data* i_v2)//
 
 		if (obj1->is_extremal_vertex(facenormal,i_v1))
 		{
-			float dist=dot(facenormal,dir12);
+			f32 dist=dot(facenormal,dir12);
 
 			if (dist>depth+.0001)
 			{
@@ -299,7 +299,7 @@ bool deep_intersection::report_min_pair_edge(edge_data* i_v1, edge_data* i_v2)
 			if (spherical_segment_intersect(edge_edge_normal,obj1->get_face_normal(e),obj1->get_opposite_face_normal(e),
 				-trf_1_to_2.transformtransposed3x3(obj2->get_face_normal(e2)),-trf_1_to_2.transformtransposed3x3(obj2->get_opposite_face_normal(e2))))
 			{
-				float dist=dot(edge_edge_normal,trf_1_to_2.transformtransposed(obj2->get_vertexpos(e2))-obj1->get_vertexpos(e));
+				f32 dist=dot(edge_edge_normal,trf_1_to_2.transformtransposed(obj2->get_vertexpos(e2))-obj1->get_vertexpos(e));
 
 				if (dist>depth+.0001)
 				{

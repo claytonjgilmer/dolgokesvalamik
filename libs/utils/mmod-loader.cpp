@@ -20,7 +20,7 @@ int all_vertexcount=0;
 ////////////////////////////////////////////////////////////////////////////////
 typedef vector<unsigned short> IndexArray;
 typedef vector<string> StringArray;
-typedef vector<float> FloatArray;
+typedef vector<f32> FloatArray;
 
 
 struct SubsetInfo
@@ -36,8 +36,8 @@ struct SubsetInfo
 
 struct LODInfo
 {
-	float minLODError;
-	float maxLODError;
+	f32 minLODError;
+	f32 maxLODError;
 	int startSubset;
 	int endSubset;
 };
@@ -53,7 +53,7 @@ struct Stream_t
 //		std::copy(i_FloatArr.begin(), i_FloatArr.end(), std::back_inserter(m_Vertices));
 	}
 
-	const float* GetFloat(int vertexIndex) const
+	const f32* GetFloat(int vertexIndex) const
 	{
 		size_t i = vertexIndex * m_FloatPerVertices;
 
@@ -211,7 +211,7 @@ struct Stream_t
 
 	unsigned GetVertexBufferSize() const
 	{
-		return m_Vertices.size()*sizeof(float);
+		return m_Vertices.size()*sizeof(f32);
 	}
 
 	unsigned GetVertexCount() const
@@ -224,7 +224,7 @@ struct Stream_t
 		m_VertexCount=i_vc;
 	}
 
-	float* GetVertices()
+	f32* GetVertices()
 	{
 		return &m_Vertices[0];
 	}
@@ -241,6 +241,7 @@ struct HItem
 	{
 		parent=-1;
 		mesh=-1;
+		mtx.identity();
 	}
 	string name;
 	int parent;
@@ -366,7 +367,7 @@ struct MeshLODInfo
 	int			m_RefCount;
 
 	vec3 m_sphere_center;
-	float m_sphere_radius;
+	f32 m_sphere_radius;
 	vec3 m_box_min;
 	vec3 m_box_max;
 };
@@ -507,9 +508,9 @@ fixedvector<mesh_t*,8> MeshLODInfo::generate_mesh()
 
 		{
 			vector<vertexelem> vdecl=createdecl(m_Streams[streamindex].GetMVF());
-			m->m_vb=new vertexbuffer(m_Streams[streamindex].GetVertexCount(),vdecl,m_Streams[streamindex].GetFloatPerVertices()*sizeof(float));
+			m->m_vb=new vertexbuffer(m_Streams[streamindex].GetVertexCount(),vdecl,m_Streams[streamindex].GetFloatPerVertices()*sizeof(f32));
 			void* vb=m->m_vb->lock();
-			memcpy(vb,m_Streams[streamindex].GetVertices(),m_Streams[streamindex].GetVertexCount()*m_Streams[streamindex].GetFloatPerVertices()*sizeof(float));
+			memcpy(vb,m_Streams[streamindex].GetVertices(),m_Streams[streamindex].GetVertexCount()*m_Streams[streamindex].GetFloatPerVertices()*sizeof(f32));
 			m->m_vb->unlock();
 		}
 
@@ -558,16 +559,16 @@ enum {
 
 vector<string> gResourceTypeNames;
 
-const float	gStepZ = 0.1f; // in meter
-float gWaveSternAvgZ;
+const f32	gStepZ = 0.1f; // in meter
+f32 gWaveSternAvgZ;
 
-inline void Extend(float& valMin, float& valMax, float val)
+inline void Extend(f32& valMin, f32& valMax, f32 val)
 {
 	valMin = min(valMin, val);
 	valMax = max(valMax, val);
 }
 
-inline float Limit(float x, float a, float b)
+inline f32 Limit(f32 x, f32 a, f32 b)
 {
 	if (x < a)
 		x = a;
@@ -577,12 +578,12 @@ inline float Limit(float x, float a, float b)
 	return x;
 }
 
-inline int InInterval(float x, float a, float b)
+inline int InInterval(f32 x, f32 a, f32 b)
 {
 	return a<=x && x<=b;
 }
 
-inline int InIntervalSafe(float x, float a, float b)
+inline int InIntervalSafe(f32 x, f32 a, f32 b)
 {
 	if (a <= b)
 		return InInterval(x, a, b);
@@ -644,7 +645,7 @@ void PrintFloats(FloatArray& o_floats, MChunk& chunk, int count)
 
 	for (int i = 0; i < count; ++i)
 	{
-		float fl = chunk.ReadFloat();
+		f32 fl = chunk.ReadFloat();
 		o_floats.push_back(fl);
 	}
 }
@@ -804,8 +805,8 @@ void PrintCompressedVertexFormatDataChunk(MChunk& chunk)
 
 	for (int i=0;i<Size/32;i++)
 	{
-		float bias[4];
-		float scale[4];
+		f32 bias[4];
+		f32 scale[4];
 
 		scale[0]= chunk.ReadFloat();
 		scale[1]= chunk.ReadFloat();
@@ -1020,7 +1021,7 @@ void PrintHierarchyItemChunk(MChunk& chunk)
 		}
 		else if (subchunkname == "Matrix")
 		{
-			float* ptr=(float*)&item.mtx;
+			f32* ptr=(f32*)&item.mtx;
 
 			for (int n=0; n<16; ++n)
 			{
@@ -1097,17 +1098,17 @@ static inline void Limit(T& x, const T a, const T b)
 		x = a;
 }
 
-static float DistToLODErr(float dist, float mulRad, float centerZ)
+static f32 DistToLODErr(f32 dist, f32 mulRad, f32 centerZ)
 {
-	float lodErr = mulRad / (centerZ + dist);
+	f32 lodErr = mulRad / (centerZ + dist);
 	lodErr = 1.f - lodErr;
 	Limit(lodErr, 0.f, 1.f);
 	return lodErr;
 }
 
-static float LODErrToDist(float lodErr, float mulRad, float centerZ)
+static f32 LODErrToDist(f32 lodErr, f32 mulRad, f32 centerZ)
 {
-	float e = 1.f - lodErr;
+	f32 e = 1.f - lodErr;
 	return (mulRad / e) - centerZ;
 }
 

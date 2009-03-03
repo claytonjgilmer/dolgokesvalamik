@@ -7,7 +7,7 @@
 
 	struct vec4
 	{
-		float x,y,z,w;
+		f32 x,y,z,w;
 	};//vec4
 
 	MLINLINE void clear(vec4& v)
@@ -16,7 +16,7 @@
 		v.w=1.0f; //???
 	}
 
-	MLINLINE void set(vec4& v, float i_xcoord, float i_ycoord, float i_zcoord, float i_wcoord=1.0f)
+	MLINLINE void set(vec4& v, f32 i_xcoord, f32 i_ycoord, f32 i_zcoord, f32 i_wcoord=1.0f)
 	{
 		v.x=i_xcoord;
 		v.y=i_ycoord;
@@ -33,24 +33,24 @@
 		dst.w=1.0f;
 	}
 
-	MLINLINE float dot4(const vec4& i_v1, const vec4& i_v2)
+	MLINLINE f32 dot4(const vec4& i_v1, const vec4& i_v2)
 	{
 		return i_v1.x*i_v2.x+i_v1.y*i_v2.y+i_v1.z*i_v2.z+i_v1.w*i_v2.w;
 	}
 
-	MLINLINE float	get_squarelength(const vec4& v)
+	MLINLINE f32	get_squarelength(const vec4& v)
 	{
 		return v.x*v.x+v.y*v.y+v.z*v.z;
 	}
 
-	MLINLINE float	get_length(const vec4& v)
+	MLINLINE f32	get_length(const vec4& v)
 	{
 		return sqrt(get_squarelength(v));
 	}
 
 	MLINLINE void	normalize(vec4& v)
 	{
-		float length=get_length(v);
+		f32 length=get_length(v);
 
 		v.x/=length;
 		v.y/=length;
@@ -59,11 +59,11 @@
 
 	MLINLINE void	normalizesafe(vec4 &v)
 	{
-		float squarelength=get_squarelength(v);
+		f32 squarelength=get_squarelength(v);
 
 		if (squarelength>0.000001f)
 		{
-			float length=sqrt(squarelength);
+			f32 length=sqrt(squarelength);
 
 			v.x/=length;
 			v.y/=length;
@@ -106,21 +106,21 @@
 		return v;
 	}
 
-	MLINLINE vec4	operator/(const vec4& v, float i_scalar)
+	MLINLINE vec4	operator/(const vec4& v, f32 i_scalar)
 	{
 	    vec4 d;
 		set(d, v.x/i_scalar,v.y/i_scalar,v.z/i_scalar);
 		return d;
 	}
 
-	MLINLINE vec4 operator*(float s, const vec4& v)
+	MLINLINE vec4 operator*(f32 s, const vec4& v)
 	{
 	    vec4 m;
 	    set(m, s*v.x, s*v.y, s*v.z);
 		return m;
 	}
 
-	MLINLINE vec4& operator*=(vec4& v, float i_scalar)
+	MLINLINE vec4& operator*=(vec4& v, f32 i_scalar)
 	{
 		v.x*=i_scalar;
 		v.y*=i_scalar;
@@ -128,7 +128,7 @@
 		return v;
 	}
 
-	MLINLINE vec4& operator/=(vec4& v, float i_scalar)
+	MLINLINE vec4& operator/=(vec4& v, f32 i_scalar)
 	{
 		v.x/=i_scalar;
 		v.y/=i_scalar;

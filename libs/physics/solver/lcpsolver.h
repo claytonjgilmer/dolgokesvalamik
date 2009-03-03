@@ -23,31 +23,31 @@ struct lcp_data_t
 	vector<jacobi> J;
 	vector<jacobi> B;
 	vector<body_index_t>	body_index;
-	vector<float>  right_side;
-	vector<float>  right_side_poscorr;
-	vector<float>  diag;
-	vector<float>  lambda;
-	vector<float>  lambda_poscorr;
-	vector<float>  friction_coeff;
+	vector<f32>  right_side;
+	vector<f32>  right_side_poscorr;
+	vector<f32>  diag;
+	vector<f32>  lambda;
+	vector<f32>  lambda_poscorr;
+	vector<f32>  friction_coeff;
 	vector<char> constraintnum;
 
 #if 0
 	jacobi* J;
 	jacobi* B;
 	body_index_t*	body_index;
-	float*  right_side;
-	float*  right_side_poscorr;
-	float*  diag;
-	float*  lambda;
-	float*  lambda_poscorr;
-	float*  friction_coeff;
+	f32*  right_side;
+	f32*  right_side_poscorr;
+	f32*  diag;
+	f32*  lambda;
+	f32*  lambda_poscorr;
+	f32*  friction_coeff;
 	char* constraintnum;
 #endif
 };
 
 struct lcp_solver_t
 {
-    void process(contact_surface_t** i_contact_array, int i_contact_count, float i_dt);
+    void process(contact_surface_t** i_contact_array, int i_contact_count, f32 i_dt);
 
 	void allocate_buffer();
 	void pre_step();
@@ -66,7 +66,7 @@ struct lcp_solver_t
 	lcp_data_t lcp_data_joint;
 	contact_surface_t** contact_array;
 	int contact_count;
-	float dt;
+	f32 dt;
 
 	int body_count;
 };

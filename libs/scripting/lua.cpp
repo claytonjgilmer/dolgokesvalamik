@@ -362,7 +362,7 @@
 	{
 		if (!IsFloat())
 			return false;
-		float F = GetFloat();
+		f32 F = GetFloat();
 		return (F == (int)F);
 	}
 
@@ -403,7 +403,7 @@
 	}
 
 	//--------------------------------------------------------------------------
-	float lua::Variable::GetFloat() const
+	f32 lua::Variable::GetFloat() const
 	{
 		return lua_tonumber(GetState(), m_StackIndex);
 	}
@@ -450,7 +450,7 @@
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::GetFloatArray(float* o_Array, int i_Num) const
+	void lua::Variable::GetFloatArray(f32* o_Array, int i_Num) const
 	{
 		for (int n=1; n<=i_Num; ++n)
 			o_Array[n-1]= GetVariable(n).GetFloat();
@@ -468,7 +468,7 @@
 	}
 
 	//--------------------------------------------------------------------------
-	float lua::Variable::GetFloat(float i_DefFloat) const
+	f32 lua::Variable::GetFloat(f32 i_DefFloat) const
 	{
 		if (IsFloat())
 			return GetFloat();
@@ -628,7 +628,7 @@
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushFloat(float i_Float)
+	void lua::Variable::PushFloat(f32 i_Float)
 	{
 		lua_pushnumber(GetState(),i_Float);
 	}
@@ -669,7 +669,7 @@
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushFloat(int i_KeyInt, float i_Float)
+	void lua::Variable::PushFloat(int i_KeyInt, f32 i_Float)
 	{
 		lua_pushnumber(GetState(), lua_Number(i_KeyInt));
 		lua_pushnumber(GetState(), i_Float);
@@ -733,7 +733,7 @@
 	}
 
 	//--------------------------------------------------------------------------
-	void lua::Variable::PushFloat(const string &i_KeyString, float i_Float)
+	void lua::Variable::PushFloat(const string &i_KeyString, f32 i_Float)
 	{
 		lua_pushlstring(GetState(), i_KeyString.c_str(), i_KeyString.size());
 		lua_pushnumber(GetState(), i_Float);

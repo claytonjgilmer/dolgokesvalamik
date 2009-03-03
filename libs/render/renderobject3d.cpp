@@ -10,14 +10,14 @@
 	color(1,1,1,1)
 	{
 		m_flags|=nodeflag_dont_save;
-		param_array.bind_param("model_color",&color,4*sizeof(float));
+		param_array.bind_param("model_color",&color,4*sizeof(f32));
 	}
 
 	node_t* object3d::clone()
 	{
 		object3d* obj=(object3d*)node_t::clone();
 		obj->param_array.param_count=0;
-		obj->param_array.bind_param("model_color",&obj->color,4*sizeof(float));
+		obj->param_array.bind_param("model_color",&obj->color,4*sizeof(f32));
 
 		return obj;
 	}
@@ -26,7 +26,7 @@
 	node_t(i_name),
 	color(1,1,1,1)
 	{
-		param_array.bind_param("model_color",&color,4*sizeof(float));
+		param_array.bind_param("model_color",&color,4*sizeof(f32));
 	}
 
 	object3d::~object3d()

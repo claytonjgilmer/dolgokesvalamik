@@ -19,13 +19,19 @@
 
 			return res;
 		}
-		void set_projectionmatrix(float i_tgfovhalf, float i_aspect, float i_nearz, float i_farz);
+		void set_projectionmatrix(f32 i_tgfovhalf, f32 i_aspect, f32 i_nearz, f32 i_farz);
 		void multiply(const mtx4x4& i_src1, const mtx4x4& i_src2);
 		void multiply_transposed(const mtx4x4& i_src1, const mtx4x4& i_src2t);
 		void transform(vec4& o_dst, const vec4& i_src) const;
 		void transform_transposed(vec4& o_dst, const vec4& i_src) const;
 		void transpose();
 		void invert(const mtx4x4& i_src);
+
+		void identity()
+		{
+			memset(this,0,64);
+			_11=_22=_33=_44=1;
+		}
 
 		const vec3& axis(int n)
 		{
@@ -43,10 +49,10 @@
 		{
 			struct
 			{
-				float _11,_12,_13,_14;
-				float _21,_22,_23,_24;
-				float _31,_32,_33,_34;
-				float _41,_42,_43,_44;
+				f32 _11,_12,_13,_14;
+				f32 _21,_22,_23,_24;
+				f32 _31,_32,_33,_34;
+				f32 _41,_42,_43,_44;
 			};
 
 			struct
@@ -56,7 +62,7 @@
 
 			struct
 			{
-				float m[16];
+				f32 m[16];
 			};
 		};
 	};
@@ -82,9 +88,9 @@
 		o_dst.w=_14*i_src.x+_24*i_src.y+_34*i_src.z+_44*i_src.w;
 	}
 
-	MLINLINE void mtx4x4::set_projectionmatrix(float i_tgfovhalf, float i_aspect, float i_nearz, float i_farz)
+	MLINLINE void mtx4x4::set_projectionmatrix(f32 i_tgfovhalf, f32 i_aspect, f32 i_nearz, f32 i_farz)
 	{
-		float    h, w, Q;
+		f32    h, w, Q;
 
 		w = 1/(i_tgfovhalf*i_aspect);
 		h = 1/i_tgfovhalf;
@@ -129,20 +135,20 @@
 
 	MLINLINE void mtx4x4::invert(const mtx4x4& i_src)
 	{
-		float fA0 = i_src.m[ 0]*i_src.m[ 5] - i_src.m[ 1]*i_src.m[ 4];
-		float fA1 = i_src.m[ 0]*i_src.m[ 6] - i_src.m[ 2]*i_src.m[ 4];
-		float fA2 = i_src.m[ 0]*i_src.m[ 7] - i_src.m[ 3]*i_src.m[ 4];
-		float fA3 = i_src.m[ 1]*i_src.m[ 6] - i_src.m[ 2]*i_src.m[ 5];
-		float fA4 = i_src.m[ 1]*i_src.m[ 7] - i_src.m[ 3]*i_src.m[ 5];
-		float fA5 = i_src.m[ 2]*i_src.m[ 7] - i_src.m[ 3]*i_src.m[ 6];
-		float fB0 = i_src.m[ 8]*i_src.m[13] - i_src.m[ 9]*i_src.m[12];
-		float fB1 = i_src.m[ 8]*i_src.m[14] - i_src.m[10]*i_src.m[12];
-		float fB2 = i_src.m[ 8]*i_src.m[15] - i_src.m[11]*i_src.m[12];
-		float fB3 = i_src.m[ 9]*i_src.m[14] - i_src.m[10]*i_src.m[13];
-		float fB4 = i_src.m[ 9]*i_src.m[15] - i_src.m[11]*i_src.m[13];
-		float fB5 = i_src.m[10]*i_src.m[15] - i_src.m[11]*i_src.m[14];
+		f32 fA0 = i_src.m[ 0]*i_src.m[ 5] - i_src.m[ 1]*i_src.m[ 4];
+		f32 fA1 = i_src.m[ 0]*i_src.m[ 6] - i_src.m[ 2]*i_src.m[ 4];
+		f32 fA2 = i_src.m[ 0]*i_src.m[ 7] - i_src.m[ 3]*i_src.m[ 4];
+		f32 fA3 = i_src.m[ 1]*i_src.m[ 6] - i_src.m[ 2]*i_src.m[ 5];
+		f32 fA4 = i_src.m[ 1]*i_src.m[ 7] - i_src.m[ 3]*i_src.m[ 5];
+		f32 fA5 = i_src.m[ 2]*i_src.m[ 7] - i_src.m[ 3]*i_src.m[ 6];
+		f32 fB0 = i_src.m[ 8]*i_src.m[13] - i_src.m[ 9]*i_src.m[12];
+		f32 fB1 = i_src.m[ 8]*i_src.m[14] - i_src.m[10]*i_src.m[12];
+		f32 fB2 = i_src.m[ 8]*i_src.m[15] - i_src.m[11]*i_src.m[12];
+		f32 fB3 = i_src.m[ 9]*i_src.m[14] - i_src.m[10]*i_src.m[13];
+		f32 fB4 = i_src.m[ 9]*i_src.m[15] - i_src.m[11]*i_src.m[13];
+		f32 fB5 = i_src.m[10]*i_src.m[15] - i_src.m[11]*i_src.m[14];
 
-		float fDet = fA0*fB5-fA1*fB4+fA2*fB3+fA3*fB2-fA4*fB1+fA5*fB0;
+		f32 fDet = fA0*fB5-fA1*fB4+fA2*fB3+fA3*fB2-fA4*fB1+fA5*fB0;
 		m[ 0] =+ i_src.m[ 5]*fB5 - i_src.m[ 6]*fB4 + i_src.m[ 7]*fB3;
 		m[ 4] =- i_src.m[ 4]*fB5 + i_src.m[ 6]*fB2 - i_src.m[ 7]*fB1;
 		m[ 8] =+ i_src.m[ 4]*fB4 - i_src.m[ 5]*fB2 + i_src.m[ 7]*fB0;
@@ -160,7 +166,7 @@
 		m[11] =- i_src.m[ 8]*fA4 + i_src.m[ 9]*fA2 - i_src.m[11]*fA0;
 		m[15] =+ i_src.m[ 8]*fA3 - i_src.m[ 9]*fA1 + i_src.m[10]*fA0;
 
-		float fInvDet = ((float)1.0)/fDet;
+		f32 fInvDet = ((f32)1.0)/fDet;
 		m[ 0] *= fInvDet;
 		m[ 1] *= fInvDet;
 		m[ 2] *= fInvDet;

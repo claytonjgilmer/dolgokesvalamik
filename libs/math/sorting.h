@@ -62,11 +62,11 @@ inline void q_sort(T numbers[], int left, int right)
 
 //#include <algorithm>
 
-inline void qf(float a[], int l, int r)
+inline void qf(f32 a[], int l, int r)
 {
 	int i = l-1, j = r, p = l-1, q = r;
-	float v = a[r];
-//	float v = a[(l+r)/2];
+	f32 v = a[r];
+//	f32 v = a[(l+r)/2];
 
 	if (r <= l) return;
 	for (;;)
@@ -122,10 +122,10 @@ inline void q_sort_rec(T numbers[], int left, int right)
 		q_sort_rec<T,comparefn>(numbers, left, r_hold);
 }
 
-inline void quicksortfloat(float a[], int lo, int hi)
+inline void quicksortfloat(f32 a[], int lo, int hi)
 {
 	int i=lo, j=hi;
-	float x=med3(a[lo],a[hi],a[(lo+hi)/2]);
+	f32 x=med3(a[lo],a[hi],a[(lo+hi)/2]);
 
 	do
 	{
@@ -133,7 +133,7 @@ inline void quicksortfloat(float a[], int lo, int hi)
 		while (a[j]>x) j--;
 		if (i<=j)
 		{
-			float h;
+			f32 h;
 			h=a[i]; a[i]=a[j]; a[j]=h;
 			i++; j--;
 		}
@@ -144,11 +144,11 @@ inline void quicksortfloat(float a[], int lo, int hi)
 	if (i<hi) quicksortfloat(a, i, hi);
 }
 
-inline void quick4(float a[], int lo, int hi)
+inline void quick4(f32 a[], int lo, int hi)
 {
 	int i=lo, j=hi;
-//	float x=med3(a[lo],a[hi],a[(lo+hi)/2]);
-	float x=a[(lo+hi)/2];
+//	f32 x=med3(a[lo],a[hi],a[(lo+hi)/2]);
+	f32 x=a[(lo+hi)/2];
 
 	while (i<j)
 	{
@@ -167,7 +167,7 @@ inline void quick4(float a[], int lo, int hi)
 
 		if (!volt)
 		{
-			float h;
+			f32 h;
 			h=a[i]; a[i]=a[j]; a[j]=h;
 			i++; j--;
 		}
@@ -307,13 +307,13 @@ union FloatToUnsigned
 	float f;
 	unsigned i;
 
-	FloatToUnsigned(float i_Value)
+	FloatToUnsigned(f32 i_Value)
 	{
 		f=i_Value;
 		i^=((~(i >> 31))+1) | 0x80000000;
 	}
 
-	void operator =(float i_Value)
+	void operator =(f32 i_Value)
 	{
 		f=i_Value;
 		i^=((~(i >> 31))+1) | 0x80000000;

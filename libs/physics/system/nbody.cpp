@@ -24,7 +24,7 @@ void realloc(nbody_t*, unsigned i_newcapacity);
 		DECLARE_STATE(this->force,vec3);
 		DECLARE_STATE(this->torque,vec3);
 		DECLARE_STATE(this->constraint_accel,accel_t);
-		DECLARE_STATE(this->invmass,float);
+		DECLARE_STATE(this->invmass,f32);
 		DECLARE_STATE(this->invinertia_rel,mtx3x3);
 		DECLARE_STATE(this->invinertia_abs,mtx3x3);
 		DECLARE_STATE(this->body,body_t*);

@@ -23,14 +23,15 @@
 #include "physics/collision/shapeintersection/deepintersection.h"
 #include "math/geometry/intersection.h"
 #include "utils/timer.h"
+#include <CAPROFAPI.h>
 
 void draw_simplex(dvec3 s[], int num)
 {
 	for (int n=0; n<num; ++n)
 		for (int m=n+1; m<num; ++m)
 		{
-			vec3 start; start.set((float)s[n].x,(float)s[n].y,(float)s[n].z);
-			vec3 end; end.set((float)s[m].x,(float)s[m].y,(float)s[m].z);
+			vec3 start; start.set((f32)s[n].x,(f32)s[n].y,(f32)s[n].z);
+			vec3 end; end.set((f32)s[m].x,(f32)s[m].y,(f32)s[m].z);
 			rendersystem::ptr->draw_line(start,color_r8g8b8a8(255,0,0,255),end,color_r8g8b8a8(255,0,0,255));
 		}
 }
@@ -60,18 +61,18 @@ char* obj_names[]={
 
 int obj_count=sizeof(obj_names)/4;
 
-void draw_grid(const vec3& campos, float gridsize, int cellnum)
+void draw_grid(const vec3& campos, f32 gridsize, int cellnum)
 {
-	float camx=floorf(campos.x/gridsize)*gridsize;
-	float camz=floorf(campos.z/gridsize)*gridsize;
+	f32 camx=floorf(campos.x/gridsize)*gridsize;
+	f32 camz=floorf(campos.z/gridsize)*gridsize;
 
 
 	for (int n=-cellnum; n<cellnum; ++n)
 	{
 		for (int m=-cellnum; m<cellnum; ++m)
 		{
-			float actx=camx+n*gridsize;
-			float actz=camz+m*gridsize;
+			f32 actx=camx+n*gridsize;
+			f32 actz=camz+m*gridsize;
 			rendersystem::ptr->draw_line(to_vec3(actx,0,actz),color_r8g8b8a8(0,0,64,255),to_vec3(actx+gridsize,0,actz),color_r8g8b8a8(0,0,64,255));
 			rendersystem::ptr->draw_line(to_vec3(actx,0,actz),color_r8g8b8a8(0,0,64,255),to_vec3(actx,0,actz+gridsize),color_r8g8b8a8(0,0,64,255));
 		}
@@ -104,7 +105,8 @@ void get_object_vertices(node_t* obj, const mtx4x3& mtx, vector<vec3>& vertbuf)
 	}
 }
 
-//void generate_sphere(vec3 o_pos[],int& o_numvertices,short o_indices[],int& o_numfaces,float i_radius, int i_depth);
+//#define twobody
+//void generate_sphere(vec3 o_pos[],int& o_numvertices,short o_indices[],int& o_numfaces,f32 i_radius, int i_depth);
 object3d* load_mmod(const char* i_filename);
 struct game
 {
@@ -112,17 +114,21 @@ struct game
 //	ref_ptr<mesh_t> sphere;
 //	mtx4x3 m_mtx;
 
-	float x,y,z;
-	float camx,camy,camz;
+	f32 x,y,z;
+	f32 camx,camy,camz;
 	vec3 camt;
-	float m_aspect;
+	f32 m_aspect;
 	vec3 light_dir;
 	vector<object3d*> obj;
 	object3d* sky;
 	object3d* terrain;
 	object3d* sphere;
-#define BODY_NUM 2
-#define ROOM_SIZE 10.0f
+#ifdef twobody
+#define  BODY_NUM 2
+#else
+#define BODY_NUM 1
+#endif
+#define ROOM_SIZE 1.0f
 #define BODY_SIZE .5f
 	body_t* phb[BODY_NUM];
 	object3d* model[BODY_NUM];
@@ -155,7 +161,7 @@ void change_screen_size(unsigned i_newwidth, unsigned i_newheight)
 		return;
 
 	if (g_game)
-		g_game->m_aspect=i_newwidth/(float)i_newheight;
+		g_game->m_aspect=i_newwidth/(f32)i_newheight;
 }
 
 
@@ -183,7 +189,7 @@ void bind_light(node_t* node)
 
 			for (unsigned int m=0; m<mesh->m_submeshbuf.size(); ++m)
 			{
-				mesh->m_submeshbuf[m].bind_param("light_dir",&g_game->light_dir,3*sizeof(float));
+				mesh->m_submeshbuf[m].bind_param("light_dir",&g_game->light_dir,3*sizeof(f32));
 			}
 		}
 	}
@@ -217,7 +223,7 @@ void init_app(HWND i_hwnd)
 	filesystem::ptr->register_path("texture","texture\\");
 
 	taskmanagerdesc tdesc;
-	tdesc.m_threadnum=1;
+	tdesc.m_threadnum=0;
 	taskmanager::create(&tdesc);
 
 	shadermanagerdesc shaderdesc("shader");
@@ -267,7 +273,7 @@ void init_app(HWND i_hwnd)
 	g_game->terrain=NULL;
 #endif
 
-	g_game->m_aspect=(float)renderdesc.m_screenwidth/(float)renderdesc.m_screenheight;
+	g_game->m_aspect=(f32)renderdesc.m_screenwidth/(f32)renderdesc.m_screenheight;
 
 	::GetWindowRect(i_hwnd,&g_rect);
 	g_time=timeGetTime();
@@ -280,28 +286,40 @@ void init_app(HWND i_hwnd)
 
 
 
+	//adjunk egy boxot a vilaghoz
+	box_shape_desc bsd;
+	bsd.pos.identity();
+	bsd.pos.t.set(0,-20,0);
+	bsd.extent.set(1000,5,1000);
+	bsd.owner_flag=1;
+	bsd.collision_mask=1;
+	g_world->add_shape(bsd);
+
 
 
 	bodydesc bd;
 	bd.mass=1;
 	bd.inertia.identity();
 
-	static vec3 posok[]={{0,0,0},{0,0.5f,0}};
+	static vec3 posok[]={{0,0,0},{.5f,0.5f,0}};
 
 	for (unsigned n=0; n<BODY_NUM;++n)
 	{
-//		float x=random(-ROOM_SIZE,ROOM_SIZE);
-//		float y=0;//random(-ROOM_SIZE,ROOM_SIZE);
-//		float z=random(-ROOM_SIZE,ROOM_SIZE);
-//		bd.pos.t.set(x,y,z);
+#ifndef twobody
+		f32 x=random(-ROOM_SIZE,ROOM_SIZE);
+		f32 y=0;//random(-ROOM_SIZE,ROOM_SIZE);
+		f32 z=random(-ROOM_SIZE,ROOM_SIZE);
+		bd.pos.t.set(x,y,z);
+		x=random(-3.0f,3.0f);
+		y=0;//random(-3.0f,3.0f);
+		z=random(-3.0f,3.0f);
+		bd.vel.set(x,y,z);
+		bd.vel.normalize();
+		bd.vel*=3;
+		bd.rotvel.set(x/3,y/3,z/3);
+#else
 		bd.pos.t=posok[n];
-//		x=random(-3.0f,3.0f);
-//		y=0;//random(-3.0f,3.0f);
-//		z=random(-3.0f,3.0f);
-//		bd.vel.set(x,y,z);
-//		bd.vel.normalize();
-//		bd.vel*=3;
-//		bd.rotvel.set(x/3,y/3,z/3);
+#endif
 
 		g_game->phb[n]=physicssystem::ptr->create_body(bd);
 #if 0
@@ -354,7 +372,7 @@ void vec3_sub(vec3& dst, const vec3& src)
     dst.z-=src.z;
 }
 
-void vec3_mul_scalar(vec3& dst, float s)
+void vec3_mul_scalar(vec3& dst, f32 s)
 {
     dst.x*=s;
     dst.y*=s;
@@ -374,7 +392,7 @@ int manual=false;
 
 vec3 to_vec3(dvec3 v)
 {
-	vec3 r; r.set((float)v.x,(float)v.y,(float)v.z); return r;
+	vec3 r; r.set((f32)v.x,(f32)v.y,(f32)v.z); return r;
 }
 
 //static double sinsum=0;
@@ -395,7 +413,7 @@ double sajsin(double y)
 	y*=(B  + C * fabs(y));
 
 #if 1//def EXTRA_PRECISION
-	//  const float Q = 0.775;
+	//  const f32 Q = 0.775;
 #define P 0.225
 
 	y *= (P *(fabs(y) - 1) + 1);   // Q * y + P * y * abs(y)
@@ -438,7 +456,7 @@ void update_app()
 	timer_t update_time;
 	char str[1024];
 	g_game->t.stop();
-	float frame_time=g_game->t.get_seconds();
+	f32 frame_time=g_game->t.get_seconds();
 	g_game->t.reset();
 
 	sprintf(str,"FPS:%.1d",(int)(1/frame_time));
@@ -448,7 +466,7 @@ void update_app()
 	unsigned deltatime=min(acttime-g_time,100u);
 	g_time=acttime;
 	sumtime+=deltatime;
-	float dt=(float)deltatime/1000.0f;
+	f32 dt=(f32)deltatime/1000.0f;
 
 	if (sumtime>33)
 	{
@@ -460,9 +478,16 @@ void update_app()
 
 	timer_t t;
 	t.reset();
-	physicssystem::ptr->simulate(dt);
+
+	if (dt>0)
+	{
+		CAProfResume();
+		physicssystem::ptr->simulate(dt);
+		CAProfPause();
+	}
 	t.stop();
 
+	if (dt>0)
 	{
 		if (inputsystem::ptr->KeyPressed(KEYCODE_1))
 			physicssystem::ptr->parallel_boudingupdate=1-physicssystem::ptr->parallel_boudingupdate;
@@ -493,7 +518,7 @@ void update_app()
 
 
 	unsigned tick=t.get_tick();
-	float sec=t.get_seconds();
+	f32 sec=t.get_seconds();
 	sprintf(str,"simulation time:%d tick, %f sec",tick,sec);
 	rendersystem::ptr->draw_text(10,10,color_f(1,1,1,1),str);
 
@@ -509,7 +534,7 @@ void update_app()
 
 	g_game->light_dir=-cammtx.z;
 
-	float speed;
+	f32 speed;
 
 	if (ip->MouseButtonDown(0))
 		speed=20;
@@ -538,8 +563,8 @@ void update_app()
 	int my=ip->GetMouseY();
 
 
-	g_game->camy+=dt*(float)ip->GetMouseX()/10.0f;
-	g_game->camx+=dt*(float)ip->GetMouseY()/10.0f;
+	g_game->camy+=dt*(f32)ip->GetMouseX()/10.0f;
+	g_game->camx+=dt*(f32)ip->GetMouseY()/10.0f;
 
 	cammtx.t=g_game->camt;
 	draw_grid(g_game->camt,20,20);
@@ -574,7 +599,7 @@ void update_app()
 		hull_to_convex_mesh(g_game->md2,g_game->ch.ch);
 	}
 
-	static float ex=0,ey=0,ez=0;
+	static f32 ex=0,ey=0,ez=0;
 
 	if (inputsystem::ptr->KeyDown(KEYCODE_LSHIFT))
 	{
@@ -678,7 +703,7 @@ void update_app()
 			time1[frame1]=t.get_tick();
 			sumtime1+=time1[frame1];
 			frame1=(frame1+1) % frame_count;
-			float vol=0;
+			f32 vol=0;
 			if (gjk.simplex_size==4)
 				vol=get_tetrahedron_volume(to_vec3(gjk.simplex[0]),to_vec3(gjk.simplex[1]),to_vec3(gjk.simplex[2]),to_vec3(gjk.simplex[3]));
 			sprintf(str,"gjk time:%03d, result:%d, out:%d, dir:(%g %g %g),prevdir: (%g %g %g), simplex:%d, vol:%.1f, iter:%d",
@@ -690,7 +715,7 @@ void update_app()
 			t.reset();
 			gjk_intersection gjk(&g_game->md,&g_game->md2,mtx1,mtx2,initdir);
 			t.stop();
-			float vol=0;
+			f32 vol=0;
 			if (gjk.simplex_size==4)
 				vol=get_tetrahedron_volume(to_vec3(gjk.simplex[0]),to_vec3(gjk.simplex[1]),to_vec3(gjk.simplex[2]),to_vec3(gjk.simplex[3]));
 			sprintf(str,"gjk time:%03d, result:%d, out:%d, dir:(%g %g %g),prevdir: (%g %g %g), simplex:%d, vol:%.1f, iter:%d",
@@ -718,7 +743,7 @@ void update_app()
 			time2[frame2]=t.get_tick();
 			sumtime2+=time2[frame2];
 			frame2=(frame2+1) % frame_count;
-			float vol=0;
+			f32 vol=0;
 			if (gjk.simplex_size==4)
 				vol=get_tetrahedron_volume(to_vec3(gjk.simplex[0]),to_vec3(gjk.simplex[1]),to_vec3(gjk.simplex[2]),to_vec3(gjk.simplex[3]));
 			sprintf(str,"gjk2time:%03d, result:%d, out:%d, dir:(%g %g %g),prevdir: (%g %g %g), simplex:%d, vol:%.1f, iter:%d",
@@ -751,7 +776,9 @@ void update_app()
 	if (1)
 	for (unsigned n=0; n<BODY_NUM;++n)
 	{
-		mtx4x3 pos=g_game->phb[n]->get_pos();
+		const mtx4x3& pos=g_game->phb[n]->get_pos();
+
+#if 0
 		vec3 vel=g_game->phb[n]->get_vel();
 
 		if (pos.t.x<-ROOM_SIZE)
@@ -785,9 +812,9 @@ void update_app()
 			pos.t.z=ROOM_SIZE;
 			vel.z=-fabsf(vel.z);
 		}
-
-		g_game->phb[n]->set_pos(pos);
 		g_game->phb[n]->set_vel(vel);
+		g_game->phb[n]->set_pos(pos);
+#endif
 
 		g_game->model[n]->set_worldposition(pos);
 
@@ -849,18 +876,18 @@ void exit_app()
 	delete g_game;
 }
 
-void generate_tetrahedron(vec3 o_pos[],float i_radius)
+void generate_tetrahedron(vec3 o_pos[],f32 i_radius)
 {
-//	float Pi = 3.141592653589793238462643383279502884197f;
+//	f32 Pi = 3.141592653589793238462643383279502884197f;
 
-	float phiaa  = -19.471220333f; /* the phi angle needed for generation */
+	f32 phiaa  = -19.471220333f; /* the phi angle needed for generation */
 
-	float phia = (float)(Pi*phiaa/180.0f); /* 1 set of three points */
-	float the120 = (float)(Pi*120.0f/180.0f);
+	f32 phia = (f32)(Pi*phiaa/180.0f); /* 1 set of three points */
+	f32 the120 = (f32)(Pi*120.0f/180.0f);
 	o_pos[0][0] = 0.0f;
 	o_pos[0][1] = 0.0f;
 	o_pos[0][2] = i_radius;
-	float the = 0.0f;
+	f32 the = 0.0f;
 	for(int i=1; i<4; i++)
 	{
 		o_pos[i][0]=i_radius*cos(the)*cos(phia);
@@ -870,7 +897,7 @@ void generate_tetrahedron(vec3 o_pos[],float i_radius)
 	}
 }
 
-void generate_sphere(vec3 o_pos[],int& o_numvertices,short o_indices[],int& o_numfaces,float i_radius, int i_depth)
+void generate_sphere(vec3 o_pos[],int& o_numvertices,short o_indices[],int& o_numfaces,f32 i_radius, int i_depth)
 {
 	generate_tetrahedron(o_pos,i_radius);
 

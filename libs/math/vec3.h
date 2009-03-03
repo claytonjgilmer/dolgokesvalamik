@@ -4,32 +4,37 @@
 #include "math.h"
 
 	struct vec3;
+#ifdef _DEBUG
 	void check_vec3(const vec3& v);
+#else
+#define check_vec3(_V_)
+#endif
 	struct vec3
 	{
 //		vec3(){}
-//		vec3(float i_xcoord, float i_ycoord, float i_zcoord){set(i_xcoord,i_ycoord,i_zcoord);}
-		float&	operator[](int i_index);
-		const float& operator[](int i_index) const;
+//		vec3(f32 i_xcoord, f32 i_ycoord, f32 i_zcoord){set(i_xcoord,i_ycoord,i_zcoord);}
+		f32&	operator[](int i_index);
+		const f32& operator[](int i_index) const;
 
 		void	clear();
-		void	set(float i_xcoord, float i_ycoord, float i_zcoord);
+		void	set(f32 i_xcoord, f32 i_ycoord, f32 i_zcoord);
 
 		void	cross(const vec3& i_src1, const vec3& i_src2);
 		friend
 		vec3 cross(const vec3& i_src1, const vec3& i_src2);
 		vec3 cross(const vec3& i_other) const;
 
-		float	dot(const vec3& i_other) const;
+		f32	dot(const vec3& i_other) const;
 		friend
-		float	dot(const vec3& i_v1, const vec3& i_v2);
+		f32	dot(const vec3& i_v1, const vec3& i_v2);
 
-		float	squarelength() const;
-		float	length() const;
+		f32	squarelength() const;
+		f32	length() const;
 		void	normalize();
 		void	normalizesafe();
 
-		void rotate(const vec3& i_src, const vec3& i_axis, float i_angle);
+		void rotate(const vec3& i_src, const vec3& i_axis, f32 i_angle);
+		void rotate(const vec3& i_axis, f32 sinangle, f32 cosangle);
 
 		void	abs(const vec3& i_src);
 
@@ -41,20 +46,19 @@
 		void operator=(const vec3& v)
 		{
 			check_vec3(v);
-			check_vec3(*this);
 			x=v.x;
 			y=v.y;
 			z=v.z;
 		}
 
-		vec3	operator*(float i_scalar) const;
-		vec3	operator/(float i_scalar) const;
+		vec3	operator*(f32 i_scalar) const;
+		vec3	operator/(f32 i_scalar) const;
 
 		friend
-		vec3 operator*(float i_scalar, const vec3& i_vector);
+		vec3 operator*(f32 i_scalar, const vec3& i_vector);
 
-		void	operator*=(float i_scalar);
-		void	operator/=(float i_scalar);
+		void	operator*=(f32 i_scalar);
+		void	operator/=(f32 i_scalar);
 
 		vec3	operator-() const;
 
@@ -63,20 +67,20 @@
 		void set_min(const vec3& i_v1, const vec3& i_v2);
 		void set_min(const vec3& i_other);
 
-		float maxelem() const;
+		f32 maxelem() const;
 
-		void interpolate(const vec3& i_src1, const vec3& i_src2, float i_time);
+		void interpolate(const vec3& i_src1, const vec3& i_src2, f32 i_time);
 
 
-		float x,y,z;
+		f32 x,y,z;
 	};//vec3
 
-	MLINLINE float& vec3::operator[](int i_index)
+	MLINLINE f32& vec3::operator[](int i_index)
 	{
 		return *(&x+i_index);
 	}
 
-	MLINLINE const float& vec3::operator[](int i_index) const
+	MLINLINE const f32& vec3::operator[](int i_index) const
 	{
 		return *(&x+i_index);
 	}
@@ -87,7 +91,7 @@
 		x=y=z=0.0f;
 	}
 
-	MLINLINE void vec3::set(float i_xcoord, float i_ycoord, float i_zcoord)
+	MLINLINE void vec3::set(f32 i_xcoord, f32 i_ycoord, f32 i_zcoord)
 	{
 		x=i_xcoord;
 		y=i_ycoord;
@@ -119,29 +123,29 @@
 		return ::cross(*this,i_other);
 	}
 
-	MLINLINE float	vec3::dot(const vec3& i_other) const
+	MLINLINE f32	vec3::dot(const vec3& i_other) const
 	{
 		return x*i_other.x+y*i_other.y+z*i_other.z;
 	}
 
-	MLINLINE float dot(const vec3& i_v1, const vec3& i_v2)
+	MLINLINE f32 dot(const vec3& i_v1, const vec3& i_v2)
 	{
 		return i_v1.x*i_v2.x+i_v1.y*i_v2.y+i_v1.z*i_v2.z;
 	}
 
-	MLINLINE float	vec3::squarelength() const
+	MLINLINE f32	vec3::squarelength() const
 	{
 		return x*x+y*y+z*z;
 	}
 
-	MLINLINE float	vec3::length() const
+	MLINLINE f32	vec3::length() const
 	{
 		return sqrt(squarelength());
 	}
 
 	MLINLINE void	vec3::normalize()
 	{
-		float l=length();
+		f32 l=length();
 
 		x/=l;
 		y/=l;
@@ -150,11 +154,11 @@
 
 	MLINLINE void	vec3::normalizesafe()
 	{
-		float sqlength=squarelength();
+		f32 sqlength=squarelength();
 
 		if (sqlength>0.000001f)
 		{
-			float l=sqrt(sqlength);
+			f32 l=sqrt(sqlength);
 
 			x/=l;
 			y/=l;
@@ -194,32 +198,32 @@
 		z-=i_other.z;
 	}
 
-	MLINLINE vec3	vec3::operator*(float i_scalar) const
+	MLINLINE vec3	vec3::operator*(f32 i_scalar) const
 	{
 		vec3 m; m.set(x*i_scalar,y*i_scalar,z*i_scalar);
 		return m;
 	}
 
-	MLINLINE vec3	vec3::operator/(float i_scalar) const
+	MLINLINE vec3	vec3::operator/(f32 i_scalar) const
 	{
 		vec3 d;
 		d.set(x/i_scalar,y/i_scalar,z/i_scalar);
 		return d;
 	}
 
-	MLINLINE vec3 operator*(float i_scalar, const vec3& i_vector)
+	MLINLINE vec3 operator*(f32 i_scalar, const vec3& i_vector)
 	{
 		return i_vector*i_scalar;
 	}
 
-	MLINLINE void	vec3::operator*=(float i_scalar)
+	MLINLINE void	vec3::operator*=(f32 i_scalar)
 	{
 		x*=i_scalar;
 		y*=i_scalar;
 		z*=i_scalar;
 	}
 
-	MLINLINE void	vec3::operator/=(float i_scalar)
+	MLINLINE void	vec3::operator/=(f32 i_scalar)
 	{
 		x/=i_scalar;
 		y/=i_scalar;
@@ -255,9 +259,9 @@
 			z=i_other.z;
 	}
 
-	MLINLINE float vec3::maxelem() const
+	MLINLINE f32 vec3::maxelem() const
 	{
-		float r=x;
+		f32 r=x;
 		if (y>r) r=y;
 		if (z>r) r=z;
 
@@ -281,7 +285,7 @@
 			z=i_other.z;
 	}
 
-	MLINLINE void vec3::rotate(const vec3& i_src, const vec3& i_axis, float i_angle)
+	MLINLINE void vec3::rotate(const vec3& i_src, const vec3& i_axis, f32 i_angle)
 	{
 		vec3 a=i_src.dot(i_axis)*i_axis;
 		vec3 b=i_src-a;
@@ -289,13 +293,21 @@
 		*this=b*cosf(i_angle)+c*sinf(i_angle)+a;
 	}
 
+	MLINLINE void vec3::rotate(const vec3& i_axis, f32 sinangle, f32 cosangle)
+	{
+		vec3 a=this->dot(i_axis)*i_axis;
+		vec3 b=*this-a;
+		vec3 c; c.cross(i_axis,b);
+		*this=b*cosangle+c*sinangle+a;
+	}
+
 	MLINLINE void getorthogonalaxes(vec3& o_axis1, vec3& o_axis2, const vec3& i_axissrc)
 	{
 		if ((i_axissrc.z) > 0.707f || i_axissrc.z<-0.707f)
 		{
 			// y-z plane
-			float  a = i_axissrc.y*i_axissrc.y + i_axissrc.z*i_axissrc.z;
-			float k = 1/sqrt(a);
+			f32  a = i_axissrc.y*i_axissrc.y + i_axissrc.z*i_axissrc.z;
+			f32 k = 1/sqrt(a);
 			o_axis1.x = 0;
 			o_axis1.y = -i_axissrc.z*k;
 			o_axis1.z = i_axissrc.y*k;
@@ -307,8 +319,8 @@
 		else
 		{
 			// x-y plane
-			float a = i_axissrc.x*i_axissrc.x + i_axissrc.y*i_axissrc.y;
-			float k = 1/sqrt(a);
+			f32 a = i_axissrc.x*i_axissrc.x + i_axissrc.y*i_axissrc.y;
+			f32 k = 1/sqrt(a);
 			o_axis1.x = -i_axissrc.y*k;
 			o_axis1.y = i_axissrc.x*k;
 			o_axis1.z = 0;
@@ -319,14 +331,14 @@
 		}
 	}
 
-	MLINLINE void vec3::interpolate(const vec3& i_src1, const vec3& i_src2, float i_time)
+	MLINLINE void vec3::interpolate(const vec3& i_src1, const vec3& i_src2, f32 i_time)
 	{
 		x=i_src1.x+i_time*(i_src2.x-i_src1.x);
 		y=i_src1.y+i_time*(i_src2.y-i_src1.y);
 		z=i_src1.z+i_time*(i_src2.z-i_src1.z);
 	}
 
-	MLINLINE float scalartriple(vec3 i_v1, vec3 i_v2, vec3 i_v3)
+	MLINLINE f32 scalartriple(vec3 i_v1, vec3 i_v2, vec3 i_v3)
 	{
 		return dot(i_v1,cross(i_v2,i_v3));
 	}
@@ -341,7 +353,7 @@
 		return sum;
 	}
 
-	MLINLINE float get_tetrahedron_volume(vec3 v1, vec3 v2, vec3 v3, vec3 v4)
+	MLINLINE f32 get_tetrahedron_volume(vec3 v1, vec3 v2, vec3 v3, vec3 v4)
 	{
 		vec3 e1,e2,e3;
 		e1=v2-v1;
@@ -351,16 +363,18 @@
 		return fabsf(dot(e1,cross(e2,e3)))/6;
 	}
 
-	MLINLINE vec3 to_vec3(float x,float y, float z)
+	MLINLINE vec3 to_vec3(f32 x,f32 y, f32 z)
 	{
 		vec3 v; v.set(x,y,z);
 		return v;
 	}
 
+#ifdef _DEBUG
 	MLINLINE void check_vec3(const vec3& v)
 	{
 		check_float(v.x),check_float(v.y),check_float(v.z);
 	}
+#endif
 
 
 #endif//_vec3_h_

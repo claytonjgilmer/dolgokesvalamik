@@ -99,10 +99,10 @@ void MChunkHandle::Skip()
 	mStream = 0;
 }
 
-float MChunkHandle::ReadFloat()
+f32 MChunkHandle::ReadFloat()
 {
 	assertion(mStream!=NULL, "Reading from closed chunk");
-	float f = mStream->ReadFloat(mSizeLeft);
+	f32 f = mStream->ReadFloat(mSizeLeft);
 //	assertion(mSizeLeft >= 0, "Reading past end of chunk");
 	return f;
 }
@@ -183,9 +183,9 @@ void MChunk::Skip()
 	ptr->Skip();
 }
 
-float MChunk::ReadFloat()
+f32 MChunk::ReadFloat()
 {
-	float f = ptr->ReadFloat();
+	f32 f = ptr->ReadFloat();
 	return f;
 }
 
@@ -224,7 +224,7 @@ MChunk MChunk::GetChunk()
 	return MChunk(new MChunkHandle(&*ptr));
 }
 
-MChunk& MChunk::operator>> (float& f)
+MChunk& MChunk::operator>> (f32& f)
 {
 	f = ReadFloat();
 	return *this;
@@ -264,10 +264,10 @@ MChunk MChunkStream::GetTopChunk()
 	return MChunk(new MChunkHandle(this));
 }
 
-float MChunkStream::ReadFloat(unsigned& ucs)
+f32 MChunkStream::ReadFloat(unsigned& ucs)
 {
 //	assertion(!m_Istream.fail());
-	float f = 0;
+	f32 f = 0;
 //	m_Istream.read((char*)&f, 4);
 	m_file.read_bytes((char*)&f, 4);
 	ucs -= 4;

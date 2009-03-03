@@ -32,7 +32,7 @@ struct MChunkStream
 	void PopChunk(MChunkHandle*);
 
 	/// these are intended to be used from MChunk only
-	float ReadFloat(unsigned& ucs);
+	f32 ReadFloat(unsigned& ucs);
 	int ReadInt(unsigned& ucs);
 	char ReadChar(unsigned& ucs);
 	unsigned ReadUnsigned(unsigned& ucs);
@@ -73,8 +73,8 @@ struct MChunkHandle
 	// read functions
 	//--------------------------------------------------------------------------------
 
-	/// read a float from the current chunk
-	float ReadFloat();
+	/// read a f32 from the current chunk
+	f32 ReadFloat();
 
 	/// read an int from the current chunk
 	int ReadInt();
@@ -133,8 +133,8 @@ struct MChunk
 	// read functions
 	//--------------------------------------------------------------------------------
 
-	/// read a float from the current chunk
-	float ReadFloat();
+	/// read a f32 from the current chunk
+	f32 ReadFloat();
 
 	/// read an int from the current chunk
 	int ReadInt();
@@ -157,8 +157,8 @@ struct MChunk
 	// stream-like read functions
 	//--------------------------------------------------------------------------------
 
-	/// read a float from the current chunk
-	MChunk& operator>> (float& f);
+	/// read a f32 from the current chunk
+	MChunk& operator>> (f32& f);
 
 	/// read an int from the current chunk
 	MChunk& operator>> (int& i);

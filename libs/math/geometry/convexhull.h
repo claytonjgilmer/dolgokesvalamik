@@ -8,6 +8,10 @@
 struct vertex_data
 {
     vec3 pos;
+	vertex_data()
+	{
+		pos.clear();
+	}
 //    uint16 adj_vertex_map_index;
 //	uint16 adj_edge_index;
 };
@@ -116,15 +120,15 @@ struct convex_hull_t
 //		static edge_data* starte=&edges[0];
 
 		edge_data* starte=get_opposite(&edges[0]);//(get_edge(&vertices[0]));
-		float max_dist=dot(get_vertexpos(&edges[0]),dir);
-//		float max_dist=dot(get_tailvertexpos(starte),dir);
+		f32 max_dist=dot(get_vertexpos(&edges[0]),dir);
+//		f32 max_dist=dot(get_tailvertexpos(starte),dir);
 		edge_data* ende=starte;
 _fasszom:
 		edge_data* e=starte;
 
 		do 
 		{
-			float actdist=dot(get_vertexpos(e),dir);
+			f32 actdist=dot(get_vertexpos(e),dir);
 
 			if (actdist>max_dist)
 			{
@@ -142,17 +146,17 @@ _fasszom:
 	edge_data* get_extremal_vertex(const vec3& dir)
 	{
 		//		static edge_data* starte=&edges[0];
-//		float max_dist=dot(vertices[0].pos,dir);
+//		f32 max_dist=dot(vertices[0].pos,dir);
 
 		edge_data* starte=get_opposite(&edges[0]);//(get_edge(&vertices[0]));
-		float max_dist=dot(get_vertexpos(&edges[0]),dir);
+		f32 max_dist=dot(get_vertexpos(&edges[0]),dir);
 		edge_data* ende=starte;
 _fasszom:
 		edge_data* e=starte;
 
 		do 
 		{
-			float actdist=dot(get_vertexpos(e),dir);
+			f32 actdist=dot(get_vertexpos(e),dir);
 
 			if (actdist>max_dist)
 			{
@@ -170,14 +174,14 @@ _fasszom:
 	edge_data* get_extremal_vertex(const vec3& dir,edge_data* start_vertex)
 	{
 		edge_data* starte=get_opposite(start_vertex);
-		float max_dist=dot(get_vertexpos(start_vertex),dir);
+		f32 max_dist=dot(get_vertexpos(start_vertex),dir);
 		edge_data* ende=starte;
 _fasszom:
 		edge_data* e=starte;
 
 		do 
 		{
-			float actdist=dot(get_vertexpos(e),dir);
+			f32 actdist=dot(get_vertexpos(e),dir);
 
 			if (actdist>max_dist+.0001)
 			{
@@ -195,7 +199,7 @@ _fasszom:
 	bool is_extremal_vertex(const vec3& dir, edge_data* vedge)
 	{
 		//		static edge_data* starte=&edges[0];
-		float max_dist=dot(get_vertexpos(vedge),dir);
+		f32 max_dist=dot(get_vertexpos(vedge),dir);
 
 		edge_data* starte=get_opposite(vedge);
 		edge_data* ende=starte;
@@ -203,7 +207,7 @@ _fasszom:
 
 		do 
 		{
-			float actdist=dot(get_vertexpos(e),dir);
+			f32 actdist=dot(get_vertexpos(e),dir);
 			if (actdist>max_dist+0.0001)
 				return false;
 			e=get_tailrot_edge(e);

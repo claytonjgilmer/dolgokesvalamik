@@ -26,7 +26,7 @@
 		vec3	vel;
 		vec3	rotvel;
 
-		float	mass;
+		f32	mass;
 		mtx3x3	inertia;
 
 //		bodystate	state;

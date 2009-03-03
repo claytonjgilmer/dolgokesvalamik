@@ -7,12 +7,12 @@ DEFINE_SINGLETON(physicssystem);
 
 void kill_deads();
 void update_inertia();
-void update_bodies(float dt);
+void update_bodies(f32 dt);
 void broadphase();
 void near_phase();
 void create_contact_groups();
 void update_contacts();
-void solve_constraints(float dt);
+void solve_constraints(f32 dt);
 
 body_t* g_world=NULL;
 
@@ -28,6 +28,8 @@ desc(*i_desc)
 {
     ZeroMemory(this->intersect_fn,sizeof(this->intersect_fn));
     this->intersect_fn[shape_type_sphere][shape_type_sphere]=&test_sphere_sphere_intersect;
+	this->intersect_fn[shape_type_box][shape_type_sphere]=&test_sphere_box_intersect;
+	this->intersect_fn[shape_type_sphere][shape_type_box]=&test_sphere_box_intersect;
     this->parallel_boudingupdate=
 		parallel_broadphase=
 		parallel_nearphase=
@@ -73,7 +75,7 @@ void physicssystem::release_bodies(body_t* i_body_array[], unsigned i_bodynum)
 
 unsigned g_bph=0,g_nph=0,g_in=0,g_up=0,g_frc=0,g_sol=0;
 
-void physicssystem::simulate(float i_dt)
+void physicssystem::simulate(f32 i_dt)
 {
 	if (g_frc==1000)
 	{
@@ -242,7 +244,7 @@ void near_phase()
 
 struct update_process
 {
-    update_process(nbody_t* i_b,float i_dt,vec3 i_gravity):
+    update_process(nbody_t* i_b,f32 i_dt,vec3 i_gravity):
 	b(i_b),
 	dt(i_dt),
 	gravity(i_gravity)
@@ -262,12 +264,12 @@ struct update_process
 
 			vec3 axis=b->rotvel[n]+b->constraint_accel[n].o;
 
-			float angle=axis.length();
+			f32 angle=axis.length();
 
 			if (angle>0.001f)
 			{
-				vec3 axis2=axis/angle;
-				b->pos[n].rotate(b->pos[n],axis2,dt*angle);
+//				vec3 axis2=;
+				b->pos[n].rotate(axis/angle,dt*angle);
 			}
 
 			b->force[n].clear();
@@ -277,11 +279,11 @@ struct update_process
 	}
 
 	nbody_t* b;
-	float dt;
+	f32 dt;
 	vec3 gravity;
 };
 
-void update_bodies(float i_dt)
+void update_bodies(f32 i_dt)
 {
     physicssystem* ptr=physicssystem::ptr;
     nbody_t* b=&ptr->bodystate_array;
@@ -299,8 +301,8 @@ void update_bodies(float i_dt)
 
 struct constraint_solver_t
 {
-	float dt;
-	constraint_solver_t(float i_dt):dt(i_dt){}
+	f32 dt;
+	constraint_solver_t(f32 i_dt):dt(i_dt){}
 
 	void operator()(unsigned start, unsigned num) const
 	{
@@ -316,7 +318,7 @@ struct constraint_solver_t
 };
 
 
-void solve_constraints(float dt)
+void solve_constraints(f32 dt)
 {
 	physicssystem* ptr=physicssystem::ptr;
 

@@ -1,12 +1,14 @@
 #ifndef _timer_h_
 #define _timer_h_
 
+#include "math/math.h"
+
 	struct timer_t
 	{
 		void reset();
 		void stop();
 		unsigned get_tick() const;
-		float get_seconds() const;
+		f32 get_seconds() const;
 
 	private:
 

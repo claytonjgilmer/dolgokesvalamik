@@ -110,7 +110,7 @@
 			}
 		}
 
-		inline void draw_circle(const vec3& center, float radius, int section_count=10,const color_r8g8b8a8& i_color=color_r8g8b8a8(255,255,255,255))
+		inline void draw_circle(const vec3& center, f32 radius, int section_count=10,const color_r8g8b8a8& i_color=color_r8g8b8a8(255,255,255,255))
 		{
 			vec3 x=m_view_matrix.column(0);
 			vec3 y=m_view_matrix.column(1);
@@ -119,7 +119,7 @@
 
 			for (int n=0; n<section_count; ++n)
 			{
-				float angle=2*n*pi()/(section_count-1);
+				f32 angle=2*n*pi()/(section_count-1);
 				vec3 end=center+cosf(angle)*radius*x+sinf(angle)*radius*y;
 				draw_line(start,end,i_color);
 				start=end;
@@ -160,7 +160,7 @@
 
 		void init_queues(const vector<string> i_queuenames);
 
-		void set_projection_params(float i_fov, float i_aspect, float i_nearz, float i_farz, const mtx4x4& i_viewmatrix);
+		void set_projection_params(f32 i_fov, f32 i_aspect, f32 i_nearz, f32 i_farz, const mtx4x4& i_viewmatrix);
 
 
 		LPDIRECT3DDEVICE9 device() const;

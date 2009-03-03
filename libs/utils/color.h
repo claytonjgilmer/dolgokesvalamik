@@ -3,9 +3,9 @@
 
 	struct color_f
 	{
-		float r,g,b,a;
+		f32 r,g,b,a;
 		color_f(){}
-		color_f(float i_r,float i_g,float i_b,float i_a):r(i_r),g(i_g),b(i_b),a(i_a){}
+		color_f(f32 i_r,f32 i_g,f32 i_b,f32 i_a):r(i_r),g(i_g),b(i_b),a(i_a){}
 	};
 
 	struct color_r8g8b8a8

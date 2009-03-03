@@ -33,8 +33,8 @@
 
 		shape_t():type(shape_type_invalid){}
 
-		float friction;
-		float restitution;
+		f32 friction;
+		f32 restitution;
 		int owner_flag;
 		int  collision_mask;
 	};
@@ -57,8 +57,8 @@
 		restitution kulon tablazatban
 		*/
 
-		float friction;
-		float restitution;
+		f32 friction;
+		f32 restitution;
 	};
 
 
@@ -68,7 +68,7 @@
 	struct sphere_shape_desc:public shape_desc
 	{
 		vec3 center;
-		float radius;
+		f32 radius;
 
 		sphere_shape_desc()
 		{
@@ -79,7 +79,7 @@
 	struct sphere_shape:public shape_t
 	{
 		vec3 center;
-		float radius;
+		f32 radius;
 
 		sphere_shape(const sphere_shape_desc& i_desc):
 			center(i_desc.center),

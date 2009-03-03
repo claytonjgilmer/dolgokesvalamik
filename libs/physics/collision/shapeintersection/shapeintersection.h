@@ -30,6 +30,8 @@ MLINLINE int test_sphere_sphere_intersect(shape_t* i_sph1, const mtx4x3& i_body1
     return 0;
 }
 
+
+#error gondoljuk csak at eztet meg egyszer
 MLINLINE int test_sphere_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx,
                                        shape_t* i_shape2, const mtx4x3& i_body2_mtx,
                                        vec3 o_contact_array[][2],
@@ -39,10 +41,10 @@ MLINLINE int test_sphere_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_
     int flip;
     vec3 box_extent;
     vec3 sphere_center;
-    float sphere_radius;
+    f32 sphere_radius;
+	mtx4x3 box_mtx;
     if (i_shape1->type==shape_type_box)
     {
-        mtx4x3 box_mtx;
         flip=TRUE;
         box_extent=((box_shape*)i_shape1)->extent;
         box_mtx.multiply(((box_shape*)i_shape1)->pos,i_body1_mtx);
@@ -52,7 +54,6 @@ MLINLINE int test_sphere_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_
     }
     else
     {
-        mtx4x3 box_mtx;
         flip=FALSE;
         box_extent=((box_shape*)i_shape2)->extent;
         box_mtx.multiply(((box_shape*)i_shape2)->pos,i_body2_mtx);
@@ -75,7 +76,7 @@ MLINLINE int test_sphere_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_
             penetration[n]=0;
     }
 
-    float dist2=penetration.squarelength();
+    f32 dist2=penetration.squarelength();
 
     if (dist2>sphere_radius*sphere_radius)
         return 0;
@@ -85,22 +86,34 @@ MLINLINE int test_sphere_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_
 
     o_contact_num=1;
 
+	//a box koordinatarendszereben vagyunk
+
     if (dist2>0)
     {
-        o_normal=penetration;
+        box_mtx.transform3x3(o_normal,penetration);
         o_normal.normalize();
-        o_contact_array[0][0]=sphere_center-penetration;
-        o_contact_array[0][1]=sphere_center-sphere_radius*o_normal;
+
+		if (!flip) //0:sphere 1:box
+		{
+			o_normal=-o_normal;
+			o_contact_array[0][0]=sphere_center-penetration;
+			o_contact_array[0][1]=sphere_center-sphere_radius*o_normal;
+		}
+		else//0:box 1 sphere
+		{
+			o_contact_array[0][0]=sphere_center-penetration;
+			o_contact_array[0][1]=sphere_center-sphere_radius*o_normal;
+		}
 
     }
     else
     {
         //a sphere kozeppontja belul van a boxon, meg kell keresni a legrovidebb kiutat
-        float dist=FLT_MAX;
+        f32 dist=FLT_MAX;
         int index;
         for (int n=0; n<3; ++n)
         {
-            float d;
+            f32 d;
             d=box_extent[n]-fabsf(sphere_center[n]);
             if (d<dist)
             {

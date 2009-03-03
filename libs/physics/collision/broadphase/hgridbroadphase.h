@@ -6,7 +6,11 @@
 #include "containers/listallocator.h"
 #include "threading/mutex.h"
 
-const unsigned NUM_BUCKETS=16384;
+#define NUM_BUCKETS 16384
+#define SPHERE_TO_CELL_RATIO  0.5f
+#define CELL_TO_CELL_RATIO 1.5f
+#define  MIN_CELL_SIZE 1.0f
+#define HGRID_MAX_LEVELS 31
 
 struct hgridobject:public broadphaseobject
 {
@@ -14,17 +18,11 @@ struct hgridobject:public broadphaseobject
     hgridobject* next_object;
     hgridobject* prev_object;
     vec3 pos;
-    float radius;
+    f32 radius;
     int bucket;
     int level;
 };
 
-const float SPHERE_TO_CELL_RATIO = 0.5f;
-
-const float CELL_TO_CELL_RATIO = 1.5f;
-
-const float MIN_CELL_SIZE=1.0f;
-const int HGRID_MAX_LEVELS=31;
 
 
 struct hgridbroadphase
@@ -48,7 +46,7 @@ struct hgridbroadphase
     unsigned occupied_levels_mask;
 
     int objects_at_level[HGRID_MAX_LEVELS];
-    float oo_cell_size[HGRID_MAX_LEVELS];
+    f32 oo_cell_size[HGRID_MAX_LEVELS];
     hgridobject* object_bucket[HGRID_MAX_LEVELS][NUM_BUCKETS];
     int time_stamp[HGRID_MAX_LEVELS][NUM_BUCKETS];
 

@@ -13,21 +13,21 @@ MLINLINE int line_quad_intersect(vec3& o_pos, vec3 i_s1, vec3 i_s2, vec3 i_q1, v
 
 	// Determine which triangle to test against by testing against diagonal first
 	vec3 m = cross(pq3, psegment);
-	float v = dot(pq1, m); // scalartriple(psegment, pq1, pq3);
+	f32 v = dot(pq1, m); // scalartriple(psegment, pq1, pq3);
 
 	if (v >= 0.0f)
 	{
 		//q1-q3-q3 haromszog
-		float u = -dot(pq2, m); // scalartriple(psegment, pq3, pq2);
+		f32 u = -dot(pq2, m); // scalartriple(psegment, pq3, pq2);
 
 		if (u < 0.0f)
 			return 0;
 
-		float w = scalartriple(psegment, pq2, pq1);
+		f32 w = scalartriple(psegment, pq2, pq1);
 
 		if (w < 0.0f)
 			return 0;
-		float denom = 1.0f / (u + v + w);
+		f32 denom = 1.0f / (u + v + w);
 		u *= denom;
 		v *= denom;
 		w *= denom;
@@ -37,19 +37,19 @@ MLINLINE int line_quad_intersect(vec3& o_pos, vec3 i_s1, vec3 i_s2, vec3 i_q1, v
 	{
 		//q4-q1-q3
 		vec3 pq4 = i_q4 - i_s1;
-		float u = dot(pq4, m); // scalartriple(psegment, pq4, pq3);
+		f32 u = dot(pq4, m); // scalartriple(psegment, pq4, pq3);
 
 		if (u < 0.0f)
 			return 0;
 
-		float w = scalartriple(psegment, pq1, pq4);
+		f32 w = scalartriple(psegment, pq1, pq4);
 
 		if (w < 0.0f)
 			return 0;
 
 		v = -v;
 		// Compute r, r = u*a + v*d + w*c, from barycentric coordinates (u, v, w)
-		float denom = 1.0f / (u + v + w);
+		f32 denom = 1.0f / (u + v + w);
 		u *= denom;
 		v *= denom;
 		w *= denom; // w = 1.0f - u - v;
@@ -58,22 +58,22 @@ MLINLINE int line_quad_intersect(vec3& o_pos, vec3 i_s1, vec3 i_s2, vec3 i_q1, v
 	return 1;
 }
 
-MLINLINE int segment_sphere_intersect(float& o_t, const vec3& i_s1, const vec3& i_s2, const vec3& i_spherecenter, float i_radius)
+MLINLINE int segment_sphere_intersect(f32& o_t, const vec3& i_s1, const vec3& i_s2, const vec3& i_spherecenter, f32 i_radius)
 {
 	vec3 m = i_s1 - i_spherecenter;
-	vec3 d=i_s2-i_s1; float l=d.length(); d/=l;
-	float b = dot(m, d);
-	float c = dot(m, m) - i_radius*i_radius;
+	vec3 d=i_s2-i_s1; f32 l=d.length(); d/=l;
+	f32 b = dot(m, d);
+	f32 c = dot(m, m) - i_radius*i_radius;
 
 	if (c > 0.0f && b > 0.0f)
 		return 0;
 
-	float discr = b*b - c;
+	f32 discr = b*b - c;
 
 	if (discr < 0.0f)
 		return 0;
 
-	float t;
+	f32 t;
 
 	t = -b - sqrtf(discr);
 
@@ -89,12 +89,12 @@ MLINLINE int segment_sphere_intersect(float& o_t, const vec3& i_s1, const vec3& 
 
 
 
-MLINLINE int segment_cylinder_intersect(float& o_t, const vec3& i_s1, const vec3& i_s2, const vec3& i_c1, const vec3& i_c2, float i_radius)
+MLINLINE int segment_cylinder_intersect(f32& o_t, const vec3& i_s1, const vec3& i_s2, const vec3& i_c1, const vec3& i_c2, f32 i_radius)
 {
 	vec3 d = i_c2-i_c1, m = i_s1-i_c1, n = i_s2-i_s1;
-	float md = dot(m, d);
-	float nd = dot(n, d);
-	float dd = dot(d, d);
+	f32 md = dot(m, d);
+	f32 nd = dot(n, d);
+	f32 dd = dot(d, d);
 
 	if (md < 0.0f && md + nd < 0.0f)
 		return 0;
@@ -102,12 +102,12 @@ MLINLINE int segment_cylinder_intersect(float& o_t, const vec3& i_s1, const vec3
 	if (md > dd && md + nd > dd)
 		return 0;
 
-	float nn = dot(n, n);
-	float mn = dot(m, n);
-	float a = dd * nn-nd * nd;
-	float k = dot(m, m) - i_radius * i_radius;
-	float c = dd * k - md * md;
-	float t;
+	f32 nn = dot(n, n);
+	f32 mn = dot(m, n);
+	f32 a = dd * nn-nd * nd;
+	f32 k = dot(m, m) - i_radius * i_radius;
+	f32 c = dd * k - md * md;
+	f32 t;
 
 	if (fabsf(a) < 0.00001f)
 	{
@@ -125,8 +125,8 @@ MLINLINE int segment_cylinder_intersect(float& o_t, const vec3& i_s1, const vec3
 		return 1;
 	}
 
-	float b = dd * mn - nd * md;
-	float discr = b * b - a * c;
+	f32 b = dd * mn - nd * md;
+	f32 discr = b * b - a * c;
 
 	if (discr < 0.0f)
 		return 0;
@@ -157,12 +157,12 @@ MLINLINE int segment_cylinder_intersect(float& o_t, const vec3& i_s1, const vec3
 	return 1;
 }
 
-MLINLINE int segment_capsule_intersect(float& o_t, const vec3& i_s1, const vec3& i_s2, const vec3& i_c1, const vec3& i_c2, float i_radius)
+MLINLINE int segment_capsule_intersect(f32& o_t, const vec3& i_s1, const vec3& i_s2, const vec3& i_c1, const vec3& i_c2, f32 i_radius)
 {
 	vec3 d = i_c2-i_c1, m = i_s1-i_c1, n = i_s2-i_s1;
-	float md = dot(m, d);
-	float nd = dot(n, d);
-	float dd = dot(d, d);
+	f32 md = dot(m, d);
+	f32 nd = dot(n, d);
+	f32 dd = dot(d, d);
 
 	if (md < 0.0f && md + nd < 0.0f)
 		return 0;
@@ -170,12 +170,12 @@ MLINLINE int segment_capsule_intersect(float& o_t, const vec3& i_s1, const vec3&
 	if (md > dd && md + nd > dd)
 		return 0;
 
-	float nn = dot(n, n);
-	float mn = dot(m, n);
-	float a = dd * nn-nd * nd;
-	float k = dot(m, m) - i_radius * i_radius;
-	float c = dd * k - md * md;
-	float t;
+	f32 nn = dot(n, n);
+	f32 mn = dot(m, n);
+	f32 a = dd * nn-nd * nd;
+	f32 k = dot(m, m) - i_radius * i_radius;
+	f32 c = dd * k - md * md;
+	f32 t;
 
 	if (fabsf(a) < 0.00001f)
 	{
@@ -193,8 +193,8 @@ MLINLINE int segment_capsule_intersect(float& o_t, const vec3& i_s1, const vec3&
 		return 1;
 	}
 
-	float b = dd * mn - nd * md;
-	float discr = b * b - a * c;
+	f32 b = dd * mn - nd * md;
+	f32 discr = b * b - a * c;
 
 	if (discr < 0.0f)
 		return 0;
@@ -225,14 +225,14 @@ MLINLINE int segment_capsule_intersect(float& o_t, const vec3& i_s1, const vec3&
 	return 1;
 }
 
-MLINLINE int segment_triangle_intersect(float& o_t,vec3 p, vec3 q, vec3 a, vec3 b, vec3 c)
+MLINLINE int segment_triangle_intersect(f32& o_t,vec3 p, vec3 q, vec3 a, vec3 b, vec3 c)
 {
-	float v,w,t;
+	f32 v,w,t;
 	vec3 ab = b - a;
 	vec3 ac = c - a;
 	vec3 qp = p - q;
 	vec3 n = cross(ab, ac);
-	float d = dot(qp, n);
+	f32 d = dot(qp, n);
 
 	if (d <= 0.0f)
 		return 0;
@@ -277,15 +277,15 @@ MLINLINE uint32 aabb_aabb_intersect(aabb_t i_box1, aabb_t i_box2)
 MLINLINE uint32 spherical_segment_intersect(vec3& v, const vec3& start1, const vec3& end1, const vec3& start2, const vec3& end2)
 {
 	vec3 cross1; cross1.cross(start1,end1);
-	float dot11=dot(cross1,start2);
-	float dot12=dot(cross1,end2);
+	f32 dot11=dot(cross1,start2);
+	f32 dot12=dot(cross1,end2);
 
 	if (dot11*dot12>=0)
 		return 0;
 
 	vec3 cross2; cross2.cross(start2,end2);
-	float dot21=dot(cross2,start1);
-	float dot22=dot(cross2,end1);
+	f32 dot21=dot(cross2,start1);
+	f32 dot22=dot(cross2,end1);
 
 	if (dot21*dot22>=0)
 		return 0;
@@ -307,7 +307,7 @@ MLINLINE uint32 spherical_segment_intersect(vec3& v, const vec3& start1, const v
 #ifdef _DEBUG
 	vec3 v2=start2+dot11/(dot11-dot12)*(end2-start2);
 	v2.normalize();
-	float d=dot(v,v2);
+	f32 d=dot(v,v2);
 	assertion(d>0.9f);
 #endif
 	return 1;
@@ -321,15 +321,15 @@ MLINLINE uint32 obb_obb_intersect(vec3& v, const vec3& center1, const vec3& exte
 	vec3 centerdir1=mtx1.transformtransposed3x3(centerdir);
 	vec3 centerdir2=mtx2.transformtransposed3x3(centerdir);
 
-	float pen=-FLT_MAX;
+	f32 pen=-FLT_MAX;
 	vec3 normal;
 
 	for (int n=0; n<3; ++n)
 	{
-		float size1=extent1[n];
-		float size2=extent2[0]*fabsf(trf_1_to_2.x[n])+extent2[1]*fabsf(trf_1_to_2.y[n])+extent2[2]*fabsf(trf_1_to_2.z[n]);
+		f32 size1=extent1[n];
+		f32 size2=extent2[0]*fabsf(trf_1_to_2.x[n])+extent2[1]*fabsf(trf_1_to_2.y[n])+extent2[2]*fabsf(trf_1_to_2.z[n]);
 
-		float dist=fabsf(centerdir1[n])-(size1+size2);
+		f32 dist=fabsf(centerdir1[n])-(size1+size2);
 		if (dist>0)
 			return 0;
 		if (dist>pen)
@@ -340,10 +340,10 @@ MLINLINE uint32 obb_obb_intersect(vec3& v, const vec3& center1, const vec3& exte
 	}
 	for (int n=0; n<3; ++n)
 	{
-		float size1=extent2[n];
-		float size2=extent1[0]*fabsf(trf_1_to_2.axis(n).x)+extent1[1]*fabsf(trf_1_to_2.axis(n).y)+extent1[2]*fabsf(trf_1_to_2.axis(n).z);
+		f32 size1=extent2[n];
+		f32 size2=extent1[0]*fabsf(trf_1_to_2.axis(n).x)+extent1[1]*fabsf(trf_1_to_2.axis(n).y)+extent1[2]*fabsf(trf_1_to_2.axis(n).z);
 
-		float dist=fabsf(centerdir2[n])-(size1+size2);
+		f32 dist=fabsf(centerdir2[n])-(size1+size2);
 		if (dist>0)
 			return 0;
 		if (dist>pen)
@@ -363,21 +363,21 @@ MLINLINE uint32 obb_obb_intersect(vec3& v, const vec3& center1, const vec3& exte
 
 			vec3 actaxis; actaxis.cross(box1axis,box2axis);
 
-			float axislength=actaxis.squarelength();
+			f32 axislength=actaxis.squarelength();
 
 			if (axislength<0.00001f)
 				continue;
 
-			float projectedsizebox1=extent1.x*fabsf(dot(actaxis,mtx1.x))+
+			f32 projectedsizebox1=extent1.x*fabsf(dot(actaxis,mtx1.x))+
 				extent1.y*fabsf(dot(actaxis,mtx1.y))+
 				extent1.z*fabsf(dot(actaxis,mtx1.z));
 
-			float projectedsizebox2=extent2.x*fabsf(dot(actaxis,mtx2.x))+
+			f32 projectedsizebox2=extent2.x*fabsf(dot(actaxis,mtx2.x))+
 				extent2.y*fabsf(dot(actaxis,mtx2.y))+
 				extent2.z*fabsf(dot(actaxis,mtx2.z));
 
-			float projecteddist=dot(actaxis,centerdir);
-			float separation=fabsf(projecteddist)-(projectedsizebox1+projectedsizebox2);
+			f32 projecteddist=dot(actaxis,centerdir);
+			f32 separation=fabsf(projecteddist)-(projectedsizebox1+projectedsizebox2);
 
 			if (separation>0)
 				return 0;
@@ -399,10 +399,10 @@ MLINLINE uint32 obb_obb_intersect(vec3& v, const vec3& center1, const vec3& exte
 	return 1;
 }
 
-MLINLINE uint32 sphere_sphere_intersect(vec3& v,const vec3& center1, float radius1, const vec3& center2, float radius2)
+MLINLINE uint32 sphere_sphere_intersect(vec3& v,const vec3& center1, f32 radius1, const vec3& center2, f32 radius2)
 {
 	vec3 dir=center2-center1;
-	float sql=dir.squarelength();
+	f32 sql=dir.squarelength();
 	if (sql>sqr(radius1+radius2))
 		return 0;
 	v=dir; v.normalize(); v*=radius1+radius2-sqrtf(sql);
