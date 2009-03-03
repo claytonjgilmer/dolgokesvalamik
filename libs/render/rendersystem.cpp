@@ -53,9 +53,9 @@
 			&this->line_buffer,
 			NULL );
 
-		D3DXCreateFont( this->m_device, 16, 0, FW_BOLD, 1, FALSE, DEFAULT_CHARSET,
-			OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE,
-			"Times New Roman", &this->font );
+		D3DXCreateFont( this->m_device, 12, 8, FW_THIN, 1, FALSE, DEFAULT_CHARSET,
+			OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, FIXED_PITCH | FF_DONTCARE,
+			"Courier", &this->font );
 		D3DXCreateSprite( this->m_device, &this->font_sprite);
 
 		this->draw_lines=TRUE;

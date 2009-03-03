@@ -71,7 +71,7 @@ void physicssystem::release_bodies(body_t* i_body_array[], unsigned i_bodynum)
         this->killed.push_back(i_body_array[n]);
 }
 
-unsigned g_bph=0,g_nph=0,g_in=0,g_up=0,g_frc=0;
+unsigned g_bph=0,g_nph=0,g_in=0,g_up=0,g_frc=0,g_sol=0;
 
 void physicssystem::simulate(float i_dt)
 {
@@ -82,6 +82,7 @@ void physicssystem::simulate(float i_dt)
 		g_nph=0;
 		g_in=0;
 		g_up=0;
+		g_sol=0;
 	}
 
 	timer_t t;
@@ -93,21 +94,30 @@ void physicssystem::simulate(float i_dt)
     broadphase();
 	t.stop();
 	g_bph+=t.get_tick();
+
 	t.reset();
     near_phase();
 	t.stop();
 	g_nph+=t.get_tick();
+
     update_contacts();
     create_contact_groups();
+
 	t.reset();
     update_inertia();
 	t.stop();
 	g_in+=t.get_tick();
+
 	t.reset();
 	solve_constraints(i_dt);
+	t.stop();
+	g_sol+=t.get_tick();
+
+	t.reset();
     update_bodies(i_dt);
 	t.stop();
 	g_up+=t.get_tick();
+
 	++g_frc;
 }
 
@@ -339,8 +349,10 @@ struct inertia_process
         for (uint32 n=i_start; n<end; ++n)
         {
             mtx3x3 invpos; invpos.transpose3x3(b->pos[n]);
-            mtx3x3 tmp; tmp.multiply3x3(invpos,b->invinertia_rel[n]);
-            b->invinertia_abs[n].multiply3x3(tmp,b->pos[n]);
+//            mtx3x3 tmp; tmp.multiply3x3(invpos,b->invinertia_rel[n]);
+			mtx3x3 tmp; tmp.multiply3x3(&invpos,b->invinertia_rel+n);
+//            b->invinertia_abs[n].multiply3x3(tmp,b->pos[n]);
+			b->invinertia_abs[n].multiply3x3(&tmp,b->pos+n);
         }
     }
 

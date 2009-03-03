@@ -300,9 +300,9 @@ void lcp_solver_t::solve_contacts()
 			if (newLambda<0)
 				newLambda=0;
 
-			deltaLambda=newLambda-lcp_data_contact.lambda_poscorr[actconstraint];
+			deltaLambda=newLambda-lcp_data_contact.lambda_poscorr[constraint_index];
 
-			lcp_data_contact.lambda_poscorr[actconstraint]=newLambda;
+			lcp_data_contact.lambda_poscorr[constraint_index]=newLambda;
 
 			accPtr[body1].p+=deltaLambda*bPtr[actconstraint].v1;
 			accPtr[body1].o+=deltaLambda*bPtr[actconstraint].w1;

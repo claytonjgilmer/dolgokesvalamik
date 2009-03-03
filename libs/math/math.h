@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <float.h>
 #include "..\utils\misc.h"
+#include "utils\assert.h"
 
 typedef unsigned __int64 uint64;
 typedef unsigned uint32;
@@ -345,4 +346,32 @@ typedef char int8;
 			return a2; //a3-a2-a1
 		}
 	}
+
+	MLINLINE void check_float(float value)
+	{
+		int s, e;
+		unsigned long src;
+		long f; 
+		unsigned int *srcptr = (unsigned int *)&value;
+
+		src = *srcptr;
+
+		s = (src & 0x80000000UL) >> 31;
+		e = (src & 0x7F800000UL) >> 23;
+		f = (src & 0x007FFFFFUL);
+
+		if (e == 255 && f != 0) 
+		{
+			assertion(0);
+		}
+		else if (e == 255 && f == 0 && s == 1) 
+		{
+			assertion(0);
+		}
+		else if (e == 255 && f == 0 && s == 0) 
+		{
+			assertion(0);
+		}
+	}
+
 #endif// _math_h_

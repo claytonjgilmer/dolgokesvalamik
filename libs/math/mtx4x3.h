@@ -8,6 +8,8 @@
 	//			mtx4x3
 	//////////////////////////////////////////////////////////////////////////
 
+	struct mtx4x3;
+	void check_mtx4x3(const mtx4x3& m);
 	struct mtx4x3:mtx3x3
 	{
 		void identity();
@@ -184,6 +186,7 @@
 		this->z.rotate(i_src.z,i_axis,i_angle);
 		this->y.rotate(i_src.y,i_axis,i_angle);
 		normalize();
+		check_mtx4x3(*this);
 	}
 
 	MLINLINE void mtx4x3::interpolate(const mtx4x3& i_src1, const mtx4x3& i_src2, float i_time)
@@ -204,4 +207,12 @@
 		_21 = -cz*sx*sy-sz*cy;	_22 = cz*cx;	_23 = sz*sy-cz*sx*cy;
 		_31 = cx*sy;			_32 = sx;		_33 = cx*cy;
 	}
+
+	MLINLINE void check_mtx4x3(const mtx4x3& m)
+	{
+		check_mtx3x3(m);
+		check_vec3(m.t);
+	}
+
+
 #endif//_mtx4x3_h_

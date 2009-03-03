@@ -7,6 +7,9 @@
 	//			mtx3x3
 	//////////////////////////////////////////////////////////////////////////
 
+	
+	struct mtx3x3;
+	void check_mtx3x3(const mtx3x3& m);
 	struct mtx3x3
 	{
 		mtx3x3();
@@ -14,6 +17,7 @@
 
 		void transpose3x3();
 		void transpose3x3(const mtx3x3& i_src);
+		void transpose3x3(const mtx3x3* __restrict i_src);
 
 		operator float* ();
 		operator const float* () const;
@@ -38,6 +42,7 @@
 		void abs(const mtx3x3& i_src);
 
 		void multiply3x3(const mtx3x3& i_src1, const mtx3x3& i_src2);
+		void multiply3x3(const mtx3x3* __restrict i_src1, const mtx3x3* __restrict i_src2);
 		void multiplytransposed3x3(const mtx3x3& i_src1, const mtx3x3& i_src2transposed);
 
 
@@ -105,6 +110,7 @@
 		o_dst.x=i_src.x*this->_11+i_src.y*this->_21+i_src.z*this->_31;
 		o_dst.y=i_src.x*this->_12+i_src.y*this->_22+i_src.z*this->_32;
 		o_dst.z=i_src.x*this->_13+i_src.y*this->_23+i_src.z*this->_33;
+		check_vec3(o_dst);
 	}
 
 	inline vec3 mtx3x3::transform3x3(const vec3& i_src) const
@@ -146,12 +152,20 @@
 		tmp=this->_23; this->_23=this->_32; this->_32=tmp;
 	}
 
-	inline void mtx3x3::transpose3x3(const mtx3x3& i_src)
+	__forceinline void mtx3x3::transpose3x3(const mtx3x3& i_src)
 	{
 		_11=i_src._11; _12=i_src._21; _13=i_src._31;
 		_21=i_src._12; _22=i_src._22; _23=i_src._32;
 		_31=i_src._13; _32=i_src._23; _33=i_src._33;
 	}
+
+	__forceinline void mtx3x3::transpose3x3(const mtx3x3* __restrict i_src)
+	{
+		_11=i_src->_11; _12=i_src->_21; _13=i_src->_31;
+		_21=i_src->_12; _22=i_src->_22; _23=i_src->_32;
+		_31=i_src->_13; _32=i_src->_23; _33=i_src->_33;
+	}
+
 
 
 	inline void mtx3x3::invert3x3(const mtx3x3& i_src)
@@ -183,7 +197,7 @@
 
 	}
 
-	inline void mtx3x3::multiply3x3(const mtx3x3& i_src1, const mtx3x3& i_src2)
+	__forceinline void mtx3x3::multiply3x3(const mtx3x3& i_src1, const mtx3x3& i_src2)
 	{
 		_11=i_src1._11*i_src2._11+i_src1._12*i_src2._21+i_src1._13*i_src2._31;
 		_12=i_src1._11*i_src2._12+i_src1._12*i_src2._22+i_src1._13*i_src2._32;
@@ -196,6 +210,22 @@
 		_31=i_src1._31*i_src2._11+i_src1._32*i_src2._21+i_src1._33*i_src2._31;
 		_32=i_src1._31*i_src2._12+i_src1._32*i_src2._22+i_src1._33*i_src2._32;
 		_33=i_src1._31*i_src2._13+i_src1._32*i_src2._23+i_src1._33*i_src2._33;
+		check_mtx3x3(*this);
+	}
+
+	__forceinline void mtx3x3::multiply3x3(const mtx3x3* __restrict i_src1, const mtx3x3* __restrict i_src2)
+	{
+		_11=i_src1->_11*i_src2->_11+i_src1->_12*i_src2->_21+i_src1->_13*i_src2->_31;
+		_12=i_src1->_11*i_src2->_12+i_src1->_12*i_src2->_22+i_src1->_13*i_src2->_32;
+		_13=i_src1->_11*i_src2->_13+i_src1->_12*i_src2->_23+i_src1->_13*i_src2->_33;
+
+		_21=i_src1->_21*i_src2->_11+i_src1->_22*i_src2->_21+i_src1->_23*i_src2->_31;
+		_22=i_src1->_21*i_src2->_12+i_src1->_22*i_src2->_22+i_src1->_23*i_src2->_32;
+		_23=i_src1->_21*i_src2->_13+i_src1->_22*i_src2->_23+i_src1->_23*i_src2->_33;
+
+		_31=i_src1->_31*i_src2->_11+i_src1->_32*i_src2->_21+i_src1->_33*i_src2->_31;
+		_32=i_src1->_31*i_src2->_12+i_src1->_32*i_src2->_22+i_src1->_33*i_src2->_32;
+		_33=i_src1->_31*i_src2->_13+i_src1->_32*i_src2->_23+i_src1->_33*i_src2->_33;
 	}
 
 	inline void mtx3x3::multiplytransposed3x3(const mtx3x3& i_src1, const mtx3x3& i_src2transposed)
@@ -232,5 +262,12 @@
 			o_zangle=0.0f;
 			o_yangle=atan2f(this->y.x, this->x.x);
 		}
+	}
+
+	MLINLINE void check_mtx3x3(const mtx3x3& m)
+	{
+		check_vec3(m.x);
+		check_vec3(m.y);
+		check_vec3(m.z);
 	}
 #endif//_mtx3x3_h_

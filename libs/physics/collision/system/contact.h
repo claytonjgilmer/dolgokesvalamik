@@ -58,8 +58,8 @@ MLINLINE contact_surface_t::contact_surface_t(body_t* i_body1, body_t* i_body2)
     this->body[1]->contacts.push_front(this->edge+1);
     this->contact_count=0;
 
-    for (int n=0; n<CONTACTBUFFER_SIZE; ++n)
-    	this->contactarray[n].cached_lambda=0;
+//    for (int n=0; n<CONTACTBUFFER_SIZE; ++n)
+//    	this->contactarray[n].cached_lambda=0;
 }
 
 MLINLINE contact_surface_t::~contact_surface_t()

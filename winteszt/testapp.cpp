@@ -23,7 +23,6 @@
 #include "physics/collision/shapeintersection/deepintersection.h"
 #include "math/geometry/intersection.h"
 #include "utils/timer.h"
-#include <Caprofapi.h>
 
 void draw_simplex(dvec3 s[], int num)
 {
@@ -122,7 +121,7 @@ struct game
 	object3d* sky;
 	object3d* terrain;
 	object3d* sphere;
-#define BODY_NUM 20
+#define BODY_NUM 2
 #define ROOM_SIZE 10.0f
 #define BODY_SIZE .5f
 	body_t* phb[BODY_NUM];
@@ -287,18 +286,21 @@ void init_app(HWND i_hwnd)
 	bd.mass=1;
 	bd.inertia.identity();
 
+	static vec3 posok[]={{0,0,0},{0,0.5f,0}};
+
 	for (unsigned n=0; n<BODY_NUM;++n)
 	{
-		float x=random(-ROOM_SIZE,ROOM_SIZE);
-		float y=0;//random(-ROOM_SIZE,ROOM_SIZE);
-		float z=random(-ROOM_SIZE,ROOM_SIZE);
-		bd.pos.t.set(x,y,z);
-		x=random(-3.0f,3.0f);
-		y=0;//random(-3.0f,3.0f);
-		z=random(-3.0f,3.0f);
-		bd.vel.set(x,y,z);
-		bd.vel.normalize();
-		bd.vel*=3;
+//		float x=random(-ROOM_SIZE,ROOM_SIZE);
+//		float y=0;//random(-ROOM_SIZE,ROOM_SIZE);
+//		float z=random(-ROOM_SIZE,ROOM_SIZE);
+//		bd.pos.t.set(x,y,z);
+		bd.pos.t=posok[n];
+//		x=random(-3.0f,3.0f);
+//		y=0;//random(-3.0f,3.0f);
+//		z=random(-3.0f,3.0f);
+//		bd.vel.set(x,y,z);
+//		bd.vel.normalize();
+//		bd.vel*=3;
 //		bd.rotvel.set(x/3,y/3,z/3);
 
 		g_game->phb[n]=physicssystem::ptr->create_body(bd);
@@ -471,6 +473,8 @@ void update_app()
 		if (inputsystem::ptr->KeyPressed(KEYCODE_4))
 			physicssystem::ptr->parallel_inertia=1-physicssystem::ptr->parallel_inertia;
 		if (inputsystem::ptr->KeyPressed(KEYCODE_5))
+			physicssystem::ptr->parallel_solver=1-physicssystem::ptr->parallel_solver;
+		if (inputsystem::ptr->KeyPressed(KEYCODE_6))
 			physicssystem::ptr->parallel_update=1-physicssystem::ptr->parallel_update;
 		sprintf(str,"bounding:%d",physicssystem::ptr->parallel_boudingupdate);
 		rendersystem::ptr->draw_text(10,400,color_f(1,1,1,1),str);
@@ -480,14 +484,14 @@ void update_app()
 		rendersystem::ptr->draw_text(10,440,color_f(1,1,1,1),str);
 		sprintf(str,"inertia :%d %d",physicssystem::ptr->parallel_inertia,g_in/g_frc);
 		rendersystem::ptr->draw_text(10,460,color_f(1,1,1,1),str);
-		sprintf(str,"update  :%d %d",physicssystem::ptr->parallel_update,g_up/g_frc);
+		sprintf(str,"solver  :%d %d",physicssystem::ptr->parallel_solver,g_sol/g_frc);
 		rendersystem::ptr->draw_text(10,480,color_f(1,1,1,1),str);
+		sprintf(str,"update  :%d %d",physicssystem::ptr->parallel_update,g_up/g_frc);
+		rendersystem::ptr->draw_text(10,500,color_f(1,1,1,1),str);
 	}
 
 
 
-CAProfResume();
-	CAProfPause();
 	unsigned tick=t.get_tick();
 	float sec=t.get_seconds();
 	sprintf(str,"simulation time:%d tick, %f sec",tick,sec);

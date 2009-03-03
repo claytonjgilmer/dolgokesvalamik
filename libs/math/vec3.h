@@ -3,6 +3,8 @@
 
 #include "math.h"
 
+	struct vec3;
+	void check_vec3(const vec3& v);
 	struct vec3
 	{
 //		vec3(){}
@@ -35,6 +37,15 @@
 		vec3	operator-(const vec3& i_other) const;
 		void	operator+=(const vec3& i_other);
 		void	operator-=(const vec3& i_other);
+
+		void operator=(const vec3& v)
+		{
+			check_vec3(v);
+			check_vec3(*this);
+			x=v.x;
+			y=v.y;
+			z=v.z;
+		}
 
 		vec3	operator*(float i_scalar) const;
 		vec3	operator/(float i_scalar) const;
@@ -344,6 +355,11 @@
 	{
 		vec3 v; v.set(x,y,z);
 		return v;
+	}
+
+	MLINLINE void check_vec3(const vec3& v)
+	{
+		check_float(v.x),check_float(v.y),check_float(v.z);
 	}
 
 
