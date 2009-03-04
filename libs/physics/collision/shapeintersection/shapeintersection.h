@@ -31,36 +31,27 @@ MLINLINE int test_sphere_sphere_intersect(shape_t* i_sph1, const mtx4x3& i_body1
 }
 
 
-#error gondoljuk csak at eztet meg egyszer
+//#error gondoljuk csak at eztet meg egyszer
 MLINLINE int test_sphere_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx,
                                        shape_t* i_shape2, const mtx4x3& i_body2_mtx,
                                        vec3 o_contact_array[][2],
                                        vec3& o_normal,
                                        uint32& o_contact_num)
 {
-    int flip;
-    vec3 box_extent;
-    vec3 sphere_center;
-    f32 sphere_radius;
-	mtx4x3 box_mtx;
-    if (i_shape1->type==shape_type_box)
-    {
-        flip=TRUE;
-        box_extent=((box_shape*)i_shape1)->extent;
-        box_mtx.multiply(((box_shape*)i_shape1)->pos,i_body1_mtx);
-        vec3 sphere_abs_center; i_body2_mtx.transform(sphere_abs_center,((sphere_shape*)i_shape2)->center);
-        box_mtx.transformtransposed(sphere_center,sphere_abs_center);
-        sphere_radius=((sphere_shape*)i_shape2)->radius;
-    }
-    else
-    {
-        flip=FALSE;
-        box_extent=((box_shape*)i_shape2)->extent;
-        box_mtx.multiply(((box_shape*)i_shape2)->pos,i_body2_mtx);
-        vec3 sphere_abs_center; i_body1_mtx.transform(sphere_abs_center,((sphere_shape*)i_shape1)->center);
-        box_mtx.transformtransposed(sphere_center,sphere_abs_center);
-        sphere_radius=((sphere_shape*)i_shape1)->radius;
-    }
+	assertion(i_shape1->type=shape_type_sphere && i_shape2->type==shape_type_box);
+
+	box_shape* box=(box_shape*)i_shape2;
+	sphere_shape* sphere=(sphere_shape*)i_shape1;
+
+	const mtx4x3& sphere_mtx=i_body1_mtx;
+	mtx4x3 box_mtx; box_mtx.multiply(box->pos,i_body2_mtx);
+
+
+    vec3 box_extent=box->extent;
+    vec3 sphere_abs_center; sphere_mtx.transform(sphere_abs_center,sphere->center);
+	vec3 sphere_rel_center;
+    box_mtx.transformtransposed(sphere_rel_center,sphere_abs_center);
+    f32 sphere_radius=sphere->radius;
 
     vec3 penetration;
 
@@ -68,10 +59,10 @@ MLINLINE int test_sphere_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_
 
     for (int n=0; n<3; ++n)
     {
-        if (sphere_center[n]>box_extent[n])
-            penetration[n]=sphere_center[n]-box_extent[n];
-        else if (sphere_center[n]<-box_extent[n])
-            penetration[n]=sphere_center[n]+box_extent[n];
+        if (sphere_rel_center[n]>box_extent[n])
+            penetration[n]=box_extent[n]-sphere_rel_center[n];
+        else if (sphere_rel_center[n]<-box_extent[n])
+            penetration[n]=-box_extent[n]-sphere_rel_center[n];
         else
             penetration[n]=0;
     }
@@ -90,21 +81,12 @@ MLINLINE int test_sphere_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_
 
     if (dist2>0)
     {
+		penetration.normalize();
         box_mtx.transform3x3(o_normal,penetration);
-        o_normal.normalize();
+		vec3 contact_sphere_world=box_mtx.transform(sphere_rel_center-penetration);
 
-		if (!flip) //0:sphere 1:box
-		{
-			o_normal=-o_normal;
-			o_contact_array[0][0]=sphere_center-penetration;
-			o_contact_array[0][1]=sphere_center-sphere_radius*o_normal;
-		}
-		else//0:box 1 sphere
-		{
-			o_contact_array[0][0]=sphere_center-penetration;
-			o_contact_array[0][1]=sphere_center-sphere_radius*o_normal;
-		}
-
+		o_contact_array[0][0]=sphere_mtx.transformtransposed(contact_sphere_world);
+		o_contact_array[0][1]=sphere_rel_center-sphere_radius*penetration;
     }
     else
     {
@@ -114,7 +96,7 @@ MLINLINE int test_sphere_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_
         for (int n=0; n<3; ++n)
         {
             f32 d;
-            d=box_extent[n]-fabsf(sphere_center[n]);
+            d=box_extent[n]-fabsf(sphere_rel_center[n]);
             if (d<dist)
             {
                 index=n;
@@ -122,17 +104,12 @@ MLINLINE int test_sphere_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_
             }
         }
 
-        penetration[index]=dist;
+        penetration[index]=dist*sign(sphere_rel_center[index]);
         o_normal=penetration;
         o_normal.normalize();
+
         o_contact_array[0][0]=sphere_center+penetration;
         o_contact_array[0][1]=sphere_center+sphere_radius*o_normal;
-    }
-
-    if (flip)
-    {
-        o_normal=-o_normal;
-        swap(o_contact_array[0][0],o_contact_array[0][1]);
     }
     return 1;
 }

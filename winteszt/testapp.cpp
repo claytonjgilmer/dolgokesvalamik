@@ -23,7 +23,7 @@
 #include "physics/collision/shapeintersection/deepintersection.h"
 #include "math/geometry/intersection.h"
 #include "utils/timer.h"
-#include <CAPROFAPI.h>
+//#include <CAPROFAPI.h>
 
 void draw_simplex(dvec3 s[], int num)
 {
@@ -481,9 +481,9 @@ void update_app()
 
 	if (dt>0)
 	{
-		CAProfResume();
+//		CAProfResume();
 		physicssystem::ptr->simulate(dt);
-		CAProfPause();
+//		CAProfPause();
 	}
 	t.stop();
 
