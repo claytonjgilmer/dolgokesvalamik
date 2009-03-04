@@ -78,6 +78,7 @@ void realloc(nbody_t*, unsigned i_newcapacity);
 		rotvel[0].clear();
 		invmass[0]=0;
 		invinertia_rel[0].clear();
+		invinertia_abs[0].clear();
 		force[0].clear();
 		torque[0].clear();
 		body[0]=g_world;

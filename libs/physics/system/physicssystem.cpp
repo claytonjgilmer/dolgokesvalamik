@@ -28,7 +28,7 @@ desc(*i_desc)
 {
     ZeroMemory(this->intersect_fn,sizeof(this->intersect_fn));
     this->intersect_fn[shape_type_sphere][shape_type_sphere]=&test_sphere_sphere_intersect;
-	this->intersect_fn[shape_type_box][shape_type_sphere]=&test_sphere_box_intersect;
+	this->intersect_fn[shape_type_box][shape_type_sphere]=&test_box_sphere_intersect;
 	this->intersect_fn[shape_type_sphere][shape_type_box]=&test_sphere_box_intersect;
     this->parallel_boudingupdate=
 		parallel_broadphase=

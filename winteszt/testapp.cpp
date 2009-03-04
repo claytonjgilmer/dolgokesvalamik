@@ -126,9 +126,9 @@ struct game
 #ifdef twobody
 #define  BODY_NUM 2
 #else
-#define BODY_NUM 1
+#define BODY_NUM 100
 #endif
-#define ROOM_SIZE 1.0f
+#define ROOM_SIZE 20.0f
 #define BODY_SIZE .5f
 	body_t* phb[BODY_NUM];
 	object3d* model[BODY_NUM];
@@ -293,6 +293,7 @@ void init_app(HWND i_hwnd)
 	bsd.extent.set(1000,5,1000);
 	bsd.owner_flag=1;
 	bsd.collision_mask=1;
+	bsd.restitution=1;
 	g_world->add_shape(bsd);
 
 
@@ -310,6 +311,7 @@ void init_app(HWND i_hwnd)
 		f32 y=0;//random(-ROOM_SIZE,ROOM_SIZE);
 		f32 z=random(-ROOM_SIZE,ROOM_SIZE);
 		bd.pos.t.set(x,y,z);
+/*
 		x=random(-3.0f,3.0f);
 		y=0;//random(-3.0f,3.0f);
 		z=random(-3.0f,3.0f);
@@ -317,6 +319,7 @@ void init_app(HWND i_hwnd)
 		bd.vel.normalize();
 		bd.vel*=3;
 		bd.rotvel.set(x/3,y/3,z/3);
+*/
 #else
 		bd.pos.t=posok[n];
 #endif
