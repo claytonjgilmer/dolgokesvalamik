@@ -160,10 +160,10 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 
 
 	float penetration=-FLT_MAX;
-	vec3 normal;
 	int collision_code;
 	const vec3& e1=box1->extent;
 	const vec3& e2=box2->extent;
+	float dist;
 
 	// Test axes L = A0, L = A1, L = A2
 	for (int i = 0; i < 3; i++)
@@ -179,7 +179,7 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 			e2.y * abs_R.axis(1)[i] +
 			e2.z * abs_R.axis(2)[i];
 
-		float dist=fabs(t[i])-(ra + rb);
+		dist=fabs(t[i])-(ra + rb);
 		if (dist>0)
 			return 0;
 
@@ -198,7 +198,7 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 			e1.z*abs_R.axis(i).z;
 		rb = e2[i];
 
-		float dist=fabs(dot(t,R.axis(i))) -(ra + rb);
+		dist=fabs(dot(t,R.axis(i))) -(ra + rb);
 		if (dist>0) return 0;
 
 		if (dist>penetration)
@@ -208,59 +208,107 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 		}
 	}
 
-	// Test axis L = A0 x B0
-	ra = e1[1] * abs_R.axis(0)[2] + e1[2] * abs_R.axis(0)[1];
-	rb = e2[1] * abs_R.axis(2)[0] + e2[2] * abs_R.axis(1)[0];
-	float dist=fabs(t[2] * R.axis(0)[1] - t[1] * R.axis(0)[2]) -(ra + rb);
-	if (dist>0) return 0;
-	if (dist>penetration)
+	if (!parallel_edge_pair)
 	{
-		penetration=dist;
-		collision_code=6;
+		// Test axis L = A0 x B0
+		ra = e1[1] * abs_R.axis(0)[2] + e1[2] * abs_R.axis(0)[1];
+		rb = e2[1] * abs_R.axis(2)[0] + e2[2] * abs_R.axis(1)[0];
+		dist=fabs(t[2] * R.axis(0)[1] - t[1] * R.axis(0)[2]) -(ra + rb);
+		if (dist>0) return 0;
+		if (dist>penetration)
+		{
+			penetration=dist;
+			collision_code=6;
+		}
+
+		// Test axis L = A0 x B1
+		ra = e1[1] * abs_R.axis(1)[2] + e1[2] * abs_R.axis(1)[1];
+		rb = e2[0] * abs_R.axis(2)[0] + e2[2] * abs_R.axis(0)[0];
+		dist=fabs(t[2] * R.axis(1)[1] - t[1] * R.axis(1)[2]) -( ra + rb);
+		if (dist>0) return 0;
+		if (dist>penetration)
+		{
+			penetration=dist;
+			collision_code=7;
+		}
+
+		// Test axis L = A0 x B2
+		ra = e1[1] * abs_R.axis(2)[2] + e1[2] * abs_R.axis(2)[1];
+		rb = e2[0] * abs_R.axis(1)[0] + e2[1] * abs_R.axis(0)[0];
+		dist=fabs(t[2] * R.axis(2)[1] - t[1] * R.axis(2)[2]) - (ra + rb);
+		if (dist>0) return 0;
+		if (dist>penetration)
+		{
+			penetration=dist;
+			collision_code=8;
+		}
+
+		// Test axis L = A1 x B0
+		ra = e1[0] * abs_R.axis(0)[2] + e1[2] * abs_R.axis(0)[0];
+		rb = e2[1] * abs_R.axis(2)[1] + e2[2] * abs_R.axis(1)[1];
+		dist=fabs(t[0] * R.axis(0)[2] - t[2] * R.axis(0)[0]) -( ra + rb);
+		if (dist>0) return 0;
+		if (dist>penetration)
+		{
+			penetration=dist;
+			collision_code=9;
+		}
+
+		// Test axis L = A1 x B1
+		ra = e1[0] * abs_R.axis(1)[2] + e1[2] * abs_R.axis(1)[0];
+		rb = e2[0] * abs_R.axis(2)[1] + e2[2] * abs_R.axis(0)[1];
+		dist=fabs(t[0] * R.axis(1)[2] - t[2] * R.axis(1)[0]) - (ra + rb);
+		if (dist>0) return 0;
+		if (dist>penetration)
+		{
+			penetration=dist;
+			collision_code=10;
+		}
+
+		// Test axis L = A1 x B2
+		ra = e1[0] * abs_R.axis(2)[2] + e1[2] * abs_R.axis(2)[0];
+		rb = e2[0] * abs_R.axis(1)[1] + e2[1] * abs_R.axis(0)[1];
+		dist=fabs(t[0] * R.axis(2)[2] - t[2] * R.axis(2)[0]) - (ra + rb);
+		if (dist>0) return 0;
+		if (dist>penetration)
+		{
+			penetration=dist;
+			collision_code=11;
+		}
+
+		// Test axis L = A2 x B0
+		ra = e1[0] * abs_R.axis(0)[1] + e1[1] * abs_R.axis(0)[0];
+		rb = e2[1] * abs_R.axis(2)[2] + e2[2] * abs_R.axis(1)[2];
+		dist=fabs(t[1] * R.axis(0)[0] - t[0] * R.axis(0)[1]) -(ra + rb);
+		if (dist>0) return 0;
+		if (dist>penetration)
+		{
+			penetration=dist;
+			collision_code=12;
+		}
+
+		// Test axis L = A2 x B1
+		ra = e1[0] * abs_R.axis(1)[1] + e1[1] * abs_R.axis(1)[0];
+		rb = e2[0] * abs_R.axis(2)[2] + e2[2] * abs_R.axis(0)[2];
+		dist=fabs(t[1] * R.axis(1)[0] - t[0] * R.axis(1)[1]) - (ra + rb);
+		if (dist>0) return 0;
+		if (dist>penetration)
+		{
+			penetration=dist;
+			collision_code=13;
+		}
+
+		// Test axis L = A2 x B2
+		ra = e1[0] * abs_R.axis(2)[1] + e1[1] * abs_R.axis(2)[0];
+		rb = e2[0] * abs_R.axis(1)[2] + e2[1] * abs_R.axis(0)[2];
+		dist=fabs(t[1] * R.axis(2)[0] - t[0] * R.axis(2)[1]) - (ra + rb);
+		if (dist>0) return 0;
+		if (dist>penetration)
+		{
+			penetration=dist;
+			collision_code=14;
+		}
 	}
-
-	// Test axis L = A0 x B1
-	ra = e1[1] * abs_R.axis(1)[2] + e1[2] * abs_R.axis(1)[1];
-	rb = e2[0] * abs_R.axis(2)[0] + e2[2] * abs_R.axis(0)[0];
-	if (fabs(t[2] * R[1][1] - t[1] * R[2][1]) > ra + rb) return 0;
-
-	// Test axis L = A0 x B2
-	ra = e1[1] * abs_R.axis(2)[2] + e1[2] * abs_R.axis(2)[1];
-	rb = e2[0] * abs_R[0][1] + e2[1] * abs_R[0][0];
-	if (fabs(t[2] * R[1][2] - t[1] * R[2][2]) > ra + rb) return 0;
-
-	// Test axis L = A1 x B0
-	ra = e1[0] * abs_R.axis(0)[2] + e1[2] * abs_R.axis(0)[0];
-	rb = e2[1] * abs_R.axis(2)[1] + e2[2] * abs_R.axis(1)[1];
-	if (fabs(t[0] * R[2][0] - t[2] * R[0][0]) > ra + rb) return 0;
-
-	// Test axis L = A1 x B1
-	ra = e1[0] * abs_R.axis(1)[2] + e1[2] * abs_R.axis(1)[0];
-	rb = e2[0] * abs_R.axis(2)[1] + e2[2] * abs_R.axis(0)[1];
-	if (fabs(t[0] * R[2][1] - t[2] * R[0][1]) > ra + rb) return 0;
-
-	// Test axis L = A1 x B2
-	ra = e1[0] * abs_R.axis(2)[2] + e1[2] * abs_R.axis(2)[0];
-	rb = e2[0] * abs_R.axis(1)[1] + e2[1] * abs_R.axis(0)[1];
-	if (fabs(t[0] * R[2][2] - t[2] * R[0][2]) > ra + rb) return 0;
-
-	// Test axis L = A2 x B0
-	ra = e1[0] * abs_R.axis(0)[1] + e1[1] * abs_R.axis(0)[0];
-	rb = e2[1] * abs_R.axis(2)[2] + e2[2] * abs_R.axis(1)[2];
-	if (fabs(t[1] * R[0][0] - t[0] * R[1][0]) > ra + rb) return 0;
-
-	// Test axis L = A2 x B1
-	ra = e1[0] * abs_R.axis(1)[1] + e1[1] * abs_R.axis(1)[0];
-	rb = e2[0] * abs_R.axis(2)[2] + e2[2] * abs_R.axis(0)[2];
-	if (fabs(t[1] * R[0][1] - t[0] * R[1][1]) > ra + rb) return 0;
-
-	// Test axis L = A2 x B2
-	ra = e1[0] * abs_R.axis(2)[1] + e1[1] * abs_R.axis(2)[0];
-	rb = e2[0] * abs_R.axis(1)[2] + e2[1] * abs_R.axis(0)[2];
-	if (fabs(t[1] * R[0][2] - t[0] * R[1][2]) > ra + rb) return 0;
-
-	// Since no separating axis found, the OBBs must be intersecting
-	return 1;
 
 	return 1;
 }
