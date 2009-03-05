@@ -409,4 +409,29 @@ MLINLINE uint32 sphere_sphere_intersect(vec3& v,const vec3& center1, f32 radius1
 	return 1;
 
 }
+
+MLINLINE void line_line_closest_points(const vec3& p1,const vec3& d1, const vec3& p2, const vec3& d2, vec3& v1, vec3& v2)
+{
+	vec3 p=p2-p1;
+
+	float uaub=dot(d1,d2);
+	float q1=dot(d1,p);
+	float q2=dot(d2,p);
+
+	float d=1-uaub*uaub;
+//	float t1,t2;
+
+	if (d<0.0001f)
+	{
+		v1=p1+q1*d;
+		v2=p2;
+	}
+	else
+	{
+		d=1.0f/d;
+
+		v1=p1+(q1-uaub*q2)*d*d1;
+		v2=p2+(uaub*q1-q2)*d*d2;
+	}
+}
 #endif//_intersection_h_

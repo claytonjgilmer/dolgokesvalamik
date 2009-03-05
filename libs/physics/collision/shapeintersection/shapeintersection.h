@@ -310,6 +310,26 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 		}
 	}
 
+	if (collision_code<3)
+	{
+		o_normal=box1_mtx.axis(collision_code);
+		o_normal*=dot(o_normal,box2_mtx.t-box1_mtx.t);
+	}
+	else if (collision_code<6)
+	{
+		o_normal=box2_mtx.axis(collision_code-3);
+		o_normal*=dot(o_normal,box2_mtx.t-box1_mtx.t);
+
+	}
+	else
+	{
+		int axis_1=(collision_code-6) / 3;
+		int axis_2=(collision_code-6) % 3;
+
+		o_normal.cross(box1_mtx.axis(axis_1),box2_mtx.axis(axis_2));
+		o_normal*=dot(o_normal,box2_mtx.t-box1_mtx.t);
+	}
+
 	return 1;
 }
 
