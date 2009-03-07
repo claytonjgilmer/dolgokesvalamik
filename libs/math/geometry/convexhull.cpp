@@ -37,7 +37,7 @@ void hull_to_convex_mesh(convex_mesh_data_t& obj, convex_hull_t& hull)
 
 	for (unsigned n=0; n<obj.vert.size(); ++n)
 	{
-		obj.vert[n]=hull.vertices[n].pos;
+		obj.vert[n]=hull.vertices[n];
 		aabb.extend(obj.vert[n]);
 	}
 	obj.center=.5f*(aabb.min+aabb.max);

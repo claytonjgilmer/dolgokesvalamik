@@ -729,10 +729,10 @@ void convex_hull_generator::get_result()
 		if (valid_vertex[n])
 		{
 			ch.vertices.push_back(vertex_data());
-			ch.vertices.back().pos.x=(f32)work_array[n].x;
-			ch.vertices.back().pos.y=(f32)work_array[n].y;
-			ch.vertices.back().pos.z=(f32)work_array[n].z;
-			aabb.extend(ch.vertices.back().pos);
+			ch.vertices.back().x=(f32)work_array[n].x;
+			ch.vertices.back().y=(f32)work_array[n].y;
+			ch.vertices.back().z=(f32)work_array[n].z;
+			aabb.extend(ch.vertices.back());
 		}
 	}
 	ch.center=.5f*(aabb.min+aabb.max);

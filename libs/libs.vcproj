@@ -180,6 +180,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\math\geometry\bsp.h"
+				>
+			</File>
+			<File
 				RelativePath=".\utils\chunkstream.h"
 				>
 			</File>
@@ -424,6 +428,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\math\geometry\polyhedron.h"
+				>
+			</File>
+			<File
 				RelativePath=".\containers\poolalloc.h"
 				>
 			</File>
@@ -617,6 +625,10 @@
 			>
 			<File
 				RelativePath=".\physics\system\body.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\math\geometry\bsp.cpp"
 				>
 			</File>
 			<File
@@ -825,6 +837,10 @@
 			</File>
 			<File
 				RelativePath=".\physics\system\physicssystem.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\math\geometry\polyhedron.cpp"
 				>
 			</File>
 			<File

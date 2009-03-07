@@ -423,7 +423,7 @@ MLINLINE void line_line_closest_points(const vec3& p1,const vec3& d1, const vec3
 
 	if (d<0.0001f)
 	{
-		v1=p1+q1*d;
+		v1=p1+q1*d1;
 		v2=p2;
 	}
 	else
