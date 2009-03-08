@@ -593,7 +593,7 @@ int _cdecl main()
 
 	allocator_gc(allocator_list_elem::s_allocator_pool_head);
 */
-
+	printf("malac\nmalac");
 	int hoadd[]={0,3,3,6,1,4,6,2,5,0,3,5};
 
 	char* napstr[]={"vasarnap","hetfo","kedd","szerda","csutortok","pentek","szombat"};

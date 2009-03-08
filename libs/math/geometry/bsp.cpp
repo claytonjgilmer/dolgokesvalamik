@@ -2,6 +2,15 @@
 #include "polyhedron.h"
 #include "containers/vector.h"
 
+
+void insert_face(bsp_tree_node*act, bsp_tree_node* prev, bool left, vec3* face, int vnum, plane_t& p)
+{
+	if (!act)
+	{
+
+	}
+}
+
 bsp_tree::bsp_tree(const vec3* vert, int vcount, const uint16* index, int icount)
 {
 	assertion(!(icount %3));
