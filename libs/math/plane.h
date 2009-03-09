@@ -13,6 +13,7 @@
 		void set(const vec3& i_point, const vec3& i_normal);
 
 		f32 get_distance(const vec3& i_point) const;
+		int classify_point(const vec3&p, float thickness) const;
 
 		vec3 normal;
 		f32 dist;
@@ -51,6 +52,17 @@
 	MLINLINE f32 plane_t::get_distance(const vec3& i_point) const
 	{
 		return i_point.dot(normal)+dist;
+	}
+
+	MLINLINE int plane_t::classify_point(const vec3&p, float thickness) const
+	{
+		float dist=get_distance(p);
+
+		if (dist>thickness)
+			return 1;
+		if (dist<-thickness)
+			return -1;
+		return 0;
 	}
 
 

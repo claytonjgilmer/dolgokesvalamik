@@ -104,7 +104,7 @@ struct polyhedron_t
 };
 
 void generate_from_triangle_soup(polyhedron_t& p, const vec3* v, const unsigned short* f);
-void simplify_vertex_array(vector<vec3>& dst, vector<uint16>& remap, const vec3* src, int vcount, float vertex_min_dist);
+void simplify_vertex_array(vector<vec3>& dst, vector<int>& remap, const vec3* src, int vcount, float vertex_min_dist);
 
 
 #endif//_polyhedron_h_

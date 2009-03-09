@@ -3,6 +3,7 @@
 
 #include "math/vec3.h"
 #include "math/aabox.h"
+#include "math/plane.h"
 
 MLINLINE int line_quad_intersect(vec3& o_pos, vec3 i_s1, vec3 i_s2, vec3 i_q1, vec3 i_q2, vec3 i_q3, vec3 i_q4)
 {
@@ -433,5 +434,61 @@ MLINLINE void line_line_closest_points(const vec3& p1,const vec3& d1, const vec3
 		v1=p1+(q1-uaub*q2)*d*d1;
 		v2=p2+(uaub*q1-q2)*d*d2;
 	}
+}
+
+MLINLINE vec3 segment_plane_intersect(const plane_t& p, const vec3& v1, const vec3& v2)
+{
+	float d1=p.get_distance(v1);
+	float d2=p.get_distance(v2);
+
+	return v1+(d1/(d1-d2))*(v2-v1);
+}
+
+MLINLINE int split_polygon(const plane_t& p, float thickness, const vec3* f, int vcount, vec3* front, int& vcount_front, vec3* back, int& vcount_back)
+{
+	int side_a,side_b;
+	vcount_back=vcount_front=0;
+
+	vec3 prevv=f[vcount-1];
+	side_a=p.classify_point(prevv,thickness);
+
+	int on_count=0;
+
+	for (int n=0; n<vcount; ++n)
+	{
+		side_b=p.classify_point(f[n],thickness);
+
+		if (side_b==1) //aktualis elotte
+		{
+			if (side_a==-1)//elozo mogotte
+			{
+				vec3 i=segment_plane_intersect(p,prevv,f[n]);
+				front[vcount_front++]=i;
+				back[vcount_back++]=i;
+			}
+
+			front[vcount_front++]=f[n];
+		}
+		else if (side_b==-1)//aktualis mogotte
+		{
+			if (side_a==1)//elozo elotte
+			{
+				vec3 i=segment_plane_intersect(p,prevv,f[n]);
+				front[vcount_front++]=i;
+				back[vcount_back++]=i;
+			}
+			back[vcount_back++]=f[n];
+		}
+		else //aktualis rajta
+		{
+			++on_count;
+			front[vcount_front++]=f[n];
+			back[vcount_back++]=f[n];
+		}
+		prevv=f[n];
+		side_a=side_b;
+	}
+
+	return on_count==vcount;
 }
 #endif//_intersection_h_

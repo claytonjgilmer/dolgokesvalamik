@@ -22,6 +22,7 @@
 #include "physics/collision/shapeintersection/gjkintersection.h"
 #include "physics/collision/shapeintersection/deepintersection.h"
 #include "math/geometry/intersection.h"
+#include "math/geometry/bsp.h"
 #include "utils/timer.h"
 //#include <CAPROFAPI.h>
 
@@ -95,6 +96,8 @@ void get_object_vertices(node_t* obj, const mtx4x3& mtx, vector<vec3>& vertbuf)
 				vertbuf.push_back(mtx.transform(*(vec3*)v));
 				v+=m->m_vb->m_vertexsize;
 			}
+
+			m->m_vb->unlock();
 		}
 	}
 
@@ -103,6 +106,47 @@ void get_object_vertices(node_t* obj, const mtx4x3& mtx, vector<vec3>& vertbuf)
 		mtx4x3 cmtx; cmtx.multiply(child->get_localposition(),mtx);
 		get_object_vertices(child,cmtx,vertbuf);
 	}
+}
+
+bool get_object_geometry(node_t* obj,vector<vec3>& v, vector<int>& i)
+{
+	if (obj->get_metaobject()->isa(object3d::get_class_metaobject()->get_typeid()))
+	{
+		object3d* obj3d=(object3d*)obj;
+
+		for (unsigned n=0; n<obj3d->get_meshnum(); ++n)
+		{
+			mesh_t* m=obj3d->get_mesh(n);
+			char* vptr=(char*)m->m_vb->lock();
+
+			for (unsigned j=0; j<m->m_vb->m_vertexnum; ++j)
+			{
+				v.push_back((*(vec3*)vptr));
+				vptr+=m->m_vb->m_vertexsize;
+			}
+
+			m->m_vb->unlock();
+
+			char*iptr=(char*)m->m_ib->lock();
+			int isize=m->m_ib->m_indexsize;
+
+			for (int j=0; j<m->m_ib->m_indexcount; ++j,iptr+=isize)
+			{
+				if (isize==sizeof(short))
+					i.push_back(*(uint16*)iptr);
+				else
+					i.push_back(*(uint32*)iptr);
+			}
+
+			m->m_ib->unlock();
+		}
+		return true;
+	}
+
+	for (node_t* child=obj->get_child(); child; child=child->get_bro())
+		if (get_object_geometry(child,v,i)) return true;
+
+	return false;
 }
 
 //#define twobody
@@ -352,6 +396,13 @@ void init_app(HWND i_hwnd)
 	hull_to_convex_mesh(g_game->md2,g_game->ch.ch);
 
 	g_game->obj_trans.y=g_game->md.half_extent.y*2;
+
+	vector<vec3> varray;
+	vector<int> iarray;
+	if (get_object_geometry(g_game->obj[0],varray,iarray))
+	{
+		bsp_tree bsptree(&varray[0],varray.size(),&iarray[0],iarray.size());
+	}
 
 
 	g_game->inited=true;

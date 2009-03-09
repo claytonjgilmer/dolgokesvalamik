@@ -5,7 +5,7 @@
 
 	struct indexbuffer
 	{
-		indexbuffer(unsigned i_indexnum, int i_32bit=false);
+		indexbuffer(unsigned i_indexnum, int i_32bit=0);
 		~indexbuffer();
 		void* lock()
 		{
@@ -23,5 +23,6 @@
 
 		IDirect3DIndexBuffer9* m_hwbuffer;
 		const int m_indexsize;
+		const int m_indexcount;
 	};
 #endif//_indexbuffer_h_
