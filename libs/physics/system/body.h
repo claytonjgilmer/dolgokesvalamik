@@ -4,7 +4,6 @@
 #include "math/mtx4x3.h"
 #include "containers/intr_list.h"
 #include "physics/collision/system/constraint.h"
-//#include "physics/collision/system/contact.h"
 #include "physics\collision\shapes\shape.h"
 #include "threading\mutex.h"
 
@@ -13,13 +12,6 @@
 	struct shape_t;
 	struct shape_desc;
 
-/*
-	enum bodystate
-	{
-		BODYSTATE_DYNAMIC,
-		BODYSTATE_KINEMATIC
-	};
-*/
 	struct bodydesc
 	{
 		mtx4x3	pos;
@@ -29,8 +21,6 @@
 		f32	mass;
 		mtx3x3	inertia;
 
-//		bodystate	state;
-
 		bodydesc()
 		{
 			pos.identity();
@@ -38,7 +28,6 @@
 			rotvel.clear();
 			mass=1.0f;
 			inertia.identity();
-//			state=BODYSTATE_DYNAMIC;
 		}
 	};
 
@@ -67,11 +56,11 @@ struct contact_edge:intr_list_node_base<contact_edge>
 		~body_t();
 
 		uint16 array_index;
-		intr_list<contact_edge> contacts;
-		intr_list<constraint_edge> joints;
+		intr_list_simple<contact_edge> contacts;
+		intr_list_simple<constraint_edge> joints;
 
-        intr_list_simple<shape_t> shapes;
-        int group_index;
+		intr_list_simple<shape_t> shapes;
+		int group_index;
 
 		mutex contact_lock;
 	};

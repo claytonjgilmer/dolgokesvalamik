@@ -24,7 +24,7 @@
         {
             body_t* b=dynbody_array[n];
 
-            if (b->group_index==-1 && b->contacts.first()!=b->contacts.last())
+            if (b->group_index==-1 && b->contacts.first())
             {
                 contact_group* group=&group_array.back();
                 group->contact_count=0;
@@ -45,7 +45,7 @@
     {
         b->group_index=group_index;
         contact_edge* e;
-        for (e=b->contacts.first(); e!=b->contacts.last(); e=e->next)
+        for (e=b->contacts.first(); e; e=e->next)
         {
             contact_surface_t* c=(contact_surface_t*)e->elem;
             if (c->group_index==-1)

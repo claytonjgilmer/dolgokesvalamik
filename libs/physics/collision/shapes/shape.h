@@ -133,5 +133,22 @@
 			this->bounding.min=newcenter-newextent;
 			this->bounding.max=newcenter+newextent;
 		}
+
+		void get_extreme_point(vec3& p, const vec3& dir) const
+		{
+			p=	pos.t+	
+			extent.x*sign(dot(dir,pos.x))*pos.x+
+			extent.y*sign(dot(dir,pos.y))*pos.y+
+			extent.z*sign(dot(dir,pos.z))*pos.z;
+
+		}
+		void get_extreme_point(vec3& p, const mtx4x3& mtx, const vec3& dir) const
+		{
+			p=	mtx.t+	
+			extent.x*sign(dot(dir,mtx.x))*mtx.x+
+			extent.y*sign(dot(dir,mtx.y))*mtx.y+
+			extent.z*sign(dot(dir,mtx.z))*mtx.z;
+
+		}
 	};
 #endif//_shape_h_

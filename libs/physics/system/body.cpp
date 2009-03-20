@@ -8,14 +8,11 @@ body_t::body_t()
 }
 	body_t::~body_t()
 	{
-	    while(this->contacts.first()!=this->contacts.last())
+	    while(this->contacts.first())
             physicssystem::ptr->contact_manager.erase_contact(this->contacts.first()->elem);
 
         while (this->shapes.first())
             this->release_shape(this->shapes.first());
-//		while (this->shapes)
-	//		this->release_shape(this->shapes);
-
 	}
 
 	const mtx4x3& body_t::get_pos() const

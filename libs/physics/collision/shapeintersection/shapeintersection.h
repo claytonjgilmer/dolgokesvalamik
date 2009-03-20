@@ -291,7 +291,8 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 		ra = e1[0] * abs_R.axis(1)[1] + e1[1] * abs_R.axis(1)[0];
 		rb = e2[0] * abs_R.axis(2)[2] + e2[2] * abs_R.axis(0)[2];
 		dist=fabs(t[1] * R.axis(1)[0] - t[0] * R.axis(1)[1]) - (ra + rb);
-		if (dist>0) return 0;
+		if (dist>0)
+			return 0;
 		if (dist>penetration)
 		{
 			penetration=dist;
@@ -302,7 +303,8 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 		ra = e1[0] * abs_R.axis(2)[1] + e1[1] * abs_R.axis(2)[0];
 		rb = e2[0] * abs_R.axis(1)[2] + e2[1] * abs_R.axis(0)[2];
 		dist=fabs(t[1] * R.axis(2)[0] - t[0] * R.axis(2)[1]) - (ra + rb);
-		if (dist>0) return 0;
+		if (dist>0)
+			return 0;
 		if (dist>penetration)
 		{
 			penetration=dist;
@@ -313,12 +315,10 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 	if (collision_code<3)
 	{
 		o_normal=box1_mtx.axis(collision_code);
-		o_normal*=dot(o_normal,box2_mtx.t-box1_mtx.t);
 	}
 	else if (collision_code<6)
 	{
 		o_normal=box2_mtx.axis(collision_code-3);
-		o_normal*=dot(o_normal,box2_mtx.t-box1_mtx.t);
 
 	}
 	else
@@ -328,7 +328,18 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 
 		o_normal.cross(box1_mtx.axis(axis_1),box2_mtx.axis(axis_2));
 		o_normal*=dot(o_normal,box2_mtx.t-box1_mtx.t);
+		o_normal.normalize();
+		vec3 p1,p2;
+		box1->get_extreme_point(p1,o_normal,box1_mtx);
+		box2->get_extreme_point(p2,-o_normal,box2_mtx);
+		vec3 v1,v2;
+		line_line_closest_points(p1,box1_mtx.axis(axis_1),p2,box2_mtx.axis(axis_2),v1,v2);
+
 	}
+
+	o_normal*=dot(o_normal,box2_mtx.t-box1_mtx.t);
+
+	//no most meg kellene keresni az utkozesi pontokat
 
 	return 1;
 }

@@ -37,9 +37,9 @@ static int hash_check[hashtable_size];
 		blocklocker bl2(i_body2->contact_lock);
 //		contact_surface_t* ptr=this->contact_hash[index];
 		contact_edge* ptr;
-		for (ptr=i_body1->contacts.first(); ptr!=i_body1->contacts.last() && ptr->other!=i_body2; ptr=ptr->next);
+		for (ptr=i_body1->contacts.first(); ptr && ptr->other!=i_body2; ptr=ptr->next);
 
-		if (ptr!=i_body1->contacts.last())
+		if (ptr)
 			return ptr->elem;
 
 //		++hash_check[index];
