@@ -2,6 +2,7 @@
 #define _shapeintersection_h_
 
 #include "physics/collision/shapes/shape.h"
+#include "math/geometry/intersection.h"
 #include <float.h>
 
 MLINLINE int test_sphere_sphere_intersect(shape_t* i_sph1, const mtx4x3& i_body1_mtx,
@@ -330,8 +331,8 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 		o_normal*=dot(o_normal,box2_mtx.t-box1_mtx.t);
 		o_normal.normalize();
 		vec3 p1,p2;
-		box1->get_extreme_point(p1,o_normal,box1_mtx);
-		box2->get_extreme_point(p2,-o_normal,box2_mtx);
+		box1->get_extreme_point(p1,box1_mtx,o_normal);
+		box2->get_extreme_point(p2,box2_mtx,-o_normal);
 		vec3 v1,v2;
 		line_line_closest_points(p1,box1_mtx.axis(axis_1),p2,box2_mtx.axis(axis_2),v1,v2);
 
