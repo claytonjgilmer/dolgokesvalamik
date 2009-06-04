@@ -252,6 +252,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\physics\collision\shapeintersection\gjkintersection2.h"
+				>
+			</File>
+			<File
 				RelativePath=".\containers\hashgrid_2d.h"
 				>
 			</File>
@@ -352,11 +356,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\scripting\lualib\lua.h"
+				RelativePath=".\scripting\lua.h"
 				>
 			</File>
 			<File
-				RelativePath=".\scripting\lua.h"
+				RelativePath=".\scripting\lualib\lua.h"
 				>
 			</File>
 			<File
@@ -385,6 +389,10 @@
 			</File>
 			<File
 				RelativePath=".\utils\misc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\physics\collision\shapeintersection\mprintersection.h"
 				>
 			</File>
 			<File
@@ -672,6 +680,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\physics\collision\shapeintersection\gjkintersection2.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\physics\collision\broadphase\hgridbroadphase.cpp"
 				>
 			</File>
@@ -813,6 +825,10 @@
 			</File>
 			<File
 				RelativePath=".\utils\mmod-loader.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\physics\collision\shapeintersection\mprintersection.cpp"
 				>
 			</File>
 			<File

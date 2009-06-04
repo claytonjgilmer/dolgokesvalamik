@@ -332,4 +332,9 @@
 		y=i_src1.y+i_time*(i_src2.y-i_src1.y);
 		z=i_src1.z+i_time*(i_src2.z-i_src1.z);
 	}
+
+	MLINLINE void dvec3_to_vec3(vec3& dst, const dvec3& src)
+	{
+		dst.set(f32(src.x),f32(src.y),f32(src.z));
+	}
 #endif//_dvec3_h_

@@ -20,7 +20,9 @@
 #include "physics/collision/shapes/convexmeshdata.h"
 #include "physics/collision/shapeintersection/satintersection.h"
 #include "physics/collision/shapeintersection/gjkintersection.h"
+#include "physics/collision/shapeintersection/gjkintersection2.h"
 #include "physics/collision/shapeintersection/deepintersection.h"
+#include "physics/collision/shapeintersection/mprintersection.h"
 #include "math/geometry/intersection.h"
 #include "math/geometry/bsp.h"
 #include "utils/timer.h"
@@ -31,8 +33,8 @@ void draw_simplex(dvec3 s[], int num)
 	for (int n=0; n<num; ++n)
 		for (int m=n+1; m<num; ++m)
 		{
-			vec3 start; start.set((f32)s[n].x,(f32)s[n].y,(f32)s[n].z);
-			vec3 end; end.set((f32)s[m].x,(f32)s[m].y,(f32)s[m].z);
+			vec3 start; dvec3_to_vec3(start,s[n]);
+			vec3 end; dvec3_to_vec3(end,s[m]);
 			rendersystem::ptr->draw_line(start,color_r8g8b8a8(255,0,0,255),end,color_r8g8b8a8(255,0,0,255));
 		}
 }
@@ -49,9 +51,10 @@ const color_f color_white(1,1,1,1);
 color_f color_buf[]={color_red,color_green,color_yellow,color_blue,color_purple,color_cyan,color_black};
 
 char* obj_names[]={
-//						"model/steamtrain.MMOD",
+						"model/tie_fighter.MMOD",
+						"model/apache.MMOD",
 //						"model/sphere.MMOD",
-						"model/box.MMOD",
+//						"model/box.MMOD",
 //						"model/Atlanta.MMOD",
 //						"model/PT_Boat_Camo.MMOD",
 //						"model/predator_spyplane.MMOD",
@@ -170,7 +173,7 @@ struct game
 #ifdef twobody
 #define  BODY_NUM 2
 #else
-#define BODY_NUM 100
+#define BODY_NUM 1
 #endif
 #define ROOM_SIZE 20.0f
 #define BODY_SIZE .5f
@@ -246,6 +249,8 @@ void bind_light(node_t* node)
 }
 
 #define frame_count 1000
+unsigned timempr[frame_count];
+unsigned framempr=0;
 unsigned timedeep[frame_count];
 unsigned framedeep=0;
 unsigned time1[frame_count];
@@ -254,6 +259,7 @@ unsigned time2[frame_count];
 unsigned frame2=0;
 unsigned sumtime1=0;
 unsigned sumtime2=0;
+unsigned sumtimempr=0;
 unsigned sumtimedeep=0;
 
 void init_app(HWND i_hwnd)
@@ -781,12 +787,15 @@ void update_app()
 		//		draw_hull(&g_game->md,mtx1);
 		draw_hull(&g_game->md2,mtx2);
 
+#if 0
 		if (deep.result)
 		{
 			mtx4x3 mtx3=mtx2;
 			mtx3.t+=deep.normal;
 			draw_hull(&g_game->md2,mtx3);
 		}
+#endif
+
 		draw_simplex(gjk.simplex,gjk.simplex_size);
 		}
 		{
@@ -804,6 +813,20 @@ void update_app()
 				sumtime2/frame_count, gjk.result,gjk.out,gjk.dir.x, gjk.dir.y,gjk.dir.z,gjk.prevdir.x, gjk.prevdir.y,gjk.prevdir.z,gjk.simplex_size,vol,gjk.iteration);
 			rendersystem::ptr->draw_text(50,70,color_f(1,1,1,1),str);
 		}
+
+		{
+			t.reset();
+			mpr_intersection mpr(g_game->md,g_game->md2,mtx1,mtx2);
+			t.stop();
+			sumtime2-=time2[frame2];
+			time2[frame2]=t.get_tick();
+			sumtime2+=time2[frame2];
+			frame2=(frame2+1) % frame_count;
+			sprintf(str,"mprtime:%03d, result:%d",
+				sumtime2/frame_count, gjk.result,gjk.out,gjk.dir.x, gjk.dir.y,gjk.dir.z,gjk.prevdir.x, gjk.prevdir.y,gjk.prevdir.z,gjk.simplex_size,vol,gjk.iteration);
+			rendersystem::ptr->draw_text(50,70,color_f(1,1,1,1),str);
+		}
+
 
 	}
 

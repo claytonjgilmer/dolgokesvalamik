@@ -16,6 +16,7 @@ typedef __int64 int64;
 typedef int int32;
 typedef short int16;
 typedef char int8;
+typedef double f64;
 
 #ifdef _DEBUG
 MLINLINE void check_float(float value)

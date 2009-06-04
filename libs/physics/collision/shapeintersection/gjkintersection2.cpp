@@ -1,28 +1,21 @@
-#include "gjkintersection.h"
+#include "gjkintersection2.h"
 #include "physics/collision/shapes/convexmeshdata.h"
 #include "math/geometry/convexhull.h"
 
 #define  MAX_ITERATION_COUNT 20
 
-
-//////////////////////////////////////////////////////////////////////////
-//		EBBE NE IRJ!!!!!!!!!!!!!!!!!!!!
-//////////////////////////////////////////////////////////////////////////
-
-
-
-inline void get_extremal_vertex(convex_mesh_data_t* obj, const dvec3& dir, const mtx4x3& mtx, dvec3& support)
+void get_extremal_vertex(convex_hull_t* obj, const dvec3& dir, const mtx4x3& mtx, dvec3& support)
 {
 	vec3 localdir; localdir.set((f32)dir.x,(f32)dir.y,(f32)dir.z);
 	localdir=mtx.transformtransposed3x3(localdir);
 	vec3 localsupport;
-	get_extremal_vertex(obj,localdir,localsupport);
-//	get_extremal_vertex2(obj,localdir,localsupport);
+	obj->get_extremal_vertex(localdir,localsupport);
 	support=dvec3(mtx.transform(localsupport));
 }
 
 
-gjk_intersection::gjk_intersection(convex_mesh_data_t* i_obj1, convex_mesh_data_t* i_obj2,const mtx4x3& i_mtx1, const mtx4x3& i_mtx2, const dvec3& initdir):
+
+gjk_intersection2::gjk_intersection2(convex_hull_t* i_obj1, convex_hull_t* i_obj2,const mtx4x3& i_mtx1, const mtx4x3& i_mtx2, const dvec3& initdir):
 obj1(i_obj1),
 obj2(i_obj2),
 //mtx1(i_mtx1),
@@ -79,18 +72,20 @@ simplex_size(0)
 			return;
 		}
 
-		if (dir.squarelength()<.000001) //az origo rajta van a simplexen, vege
+		double l2=dir.squarelength();
+		if (l2<.000001) //az origo rajta van a simplexen, vege
 		{
 			result=true;
 			out=3;
 			return;
 		}
 
-		dir.normalize();
+		dir*=1.0/sqrt(l2);
+		//		dir.normalize();
 		double d=dot(simplex[0],dir);
 
-//		if (max_dist<d)
-			simplex_dist=d;
+		//		if (max_dist<d)
+		simplex_dist=d;
 	}
 
 	result=true;
@@ -98,7 +93,7 @@ simplex_size(0)
 }
 
 
-void gjk_intersection::get_min_subsimplex()
+void gjk_intersection2::get_min_subsimplex()
 {
 	switch (simplex_size)
 	{
@@ -155,7 +150,7 @@ void gjk_intersection::get_min_subsimplex()
 }
 
 
-bool gjk_intersection::origo_in_segmentvertex_region(int v1,int v2)
+bool gjk_intersection2::origo_in_segmentvertex_region(int v1,int v2)
 {
 	if (dot(simplex[v1],simplex[v2]-simplex[v1])>=0)
 	{
@@ -168,7 +163,7 @@ bool gjk_intersection::origo_in_segmentvertex_region(int v1,int v2)
 	}
 	return false;
 }
-bool gjk_intersection::origo_in_trianglevertex_region(int v1,int v2,int v3)
+bool gjk_intersection2::origo_in_trianglevertex_region(int v1,int v2,int v3)
 {
 	if (dot(simplex[v1],simplex[v2]-simplex[v1])>=0 && 
 		dot(simplex[v1],simplex[v3]-simplex[v1])>=0)
@@ -182,7 +177,7 @@ bool gjk_intersection::origo_in_trianglevertex_region(int v1,int v2,int v3)
 	}
 	return false;
 }
-bool gjk_intersection::origo_in_triangleedge_region(int v1,int v2,int v3)
+bool gjk_intersection2::origo_in_triangleedge_region(int v1,int v2,int v3)
 {
 	if (dot(simplex[v1],simplex[v2]-simplex[v1])<=0 &&
 		dot(simplex[v2],simplex[v1]-simplex[v2])<=0 &&
@@ -203,7 +198,7 @@ bool gjk_intersection::origo_in_triangleedge_region(int v1,int v2,int v3)
 	}
 	return false;
 }
-bool gjk_intersection::origo_in_tetrahedronvertex_region(int v1,int v2,int v3, int v4)
+bool gjk_intersection2::origo_in_tetrahedronvertex_region(int v1,int v2,int v3, int v4)
 {
 	if (dot(simplex[v1],simplex[v2]-simplex[v1])>=0 &&
 		dot(simplex[v1],simplex[v3]-simplex[v1])>=0 &&
@@ -218,7 +213,7 @@ bool gjk_intersection::origo_in_tetrahedronvertex_region(int v1,int v2,int v3, i
 	}
 	return false;
 }
-bool gjk_intersection::origo_in_tetrahedronedge_region(int v1,int v2,int v3, int v4)
+bool gjk_intersection2::origo_in_tetrahedronedge_region(int v1,int v2,int v3, int v4)
 {
 	const dvec3 n123=cross(simplex[v2]-simplex[v1],simplex[v3]-simplex[v1]);
 	const dvec3 n142=cross(simplex[v4]-simplex[v1],simplex[v2]-simplex[v1]);
@@ -242,7 +237,7 @@ bool gjk_intersection::origo_in_tetrahedronedge_region(int v1,int v2,int v3, int
 
 	return false;
 }
-bool gjk_intersection::origo_in_tetrahedronface_region(int v1,int v2,int v3, int v4)
+bool gjk_intersection2::origo_in_tetrahedronface_region(int v1,int v2,int v3, int v4)
 {
 	const dvec3 n123=cross(simplex[v2]-simplex[v1],simplex[v3]-simplex[v1]);
 	if (dot(simplex[v1],n123)*dot(simplex[v4]-simplex[v1],n123)<0)
@@ -275,7 +270,7 @@ bool gjk_intersection::origo_in_tetrahedronface_region(int v1,int v2,int v3, int
 	return true;
 }
 
-void gjk_intersection::calculate_contact_data()
+void gjk_intersection2::calculate_contact_data()
 {
 
 }
