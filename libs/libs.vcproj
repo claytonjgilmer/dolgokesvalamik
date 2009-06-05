@@ -224,6 +224,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\physics\collision\shapes\convexmeshshape.h"
+				>
+			</File>
+			<File
 				RelativePath=".\physics\collision\shapeintersection\deepintersection.h"
 				>
 			</File>

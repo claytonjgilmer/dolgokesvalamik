@@ -12,6 +12,7 @@
 		shape_type_invalid=-1,
 		shape_type_sphere,
 		shape_type_box,
+		shape_type_convex_mesh,
 		shape_type_num
 	};
 
@@ -150,5 +151,15 @@
 			extent.z*sign(dot(dir,mtx.z))*mtx.z;
 
 		}
+	};
+
+
+	//////////////////////////////////////////////////////////////////////////
+	//		convex mesh shape
+	//////////////////////////////////////////////////////////////////////////
+
+	struct convex_mesh_shape_t: shape_t
+	{
+
 	};
 #endif//_shape_h_

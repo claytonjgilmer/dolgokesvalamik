@@ -12,7 +12,7 @@ inline void get_extremal_vertex(convex_mesh_data_t* obj, const dvec3& dir, const
 }
 
 
-bool CollideAndFindPoint(convex_mesh_data_t* p1, const mtx4x3& m1, convex_mesh_data_t* p2, const mtx4x3& m2, vec3& returnNormal, vec3& point1, vec3& point2)
+bool mpr_intersection::test_intersection(convex_mesh_data_t* p1, const mtx4x3& m1, convex_mesh_data_t* p2, const mtx4x3& m2, vec3& returnNormal, vec3& point1, vec3& point2)
 {
 	int32 supportCount = 0;
 
@@ -47,7 +47,7 @@ bool CollideAndFindPoint(convex_mesh_data_t* p1, const mtx4x3& m1, convex_mesh_d
 		n.normalize();
 		dvec3_to_vec3(returnNormal,n);
 		dvec3_to_vec3(point1,v11);
-		dvec3_to_vec3(point1,v12);
+		dvec3_to_vec3(point2,v12);
 		return true;
 	}
 
@@ -122,17 +122,6 @@ bool CollideAndFindPoint(convex_mesh_data_t* p1, const mtx4x3& m1, convex_mesh_d
 		while (1)
 		{
 			phase2++;
-			if (phase2 > 1)
-			{
-				static bool doneIt = false;
-				if (!doneIt)
-				{
-					doneIt = true;
-					CollideAndFindPoint(p1, m1, p2, m2, returnNormal, point1, point2);
-					return false;
-				}
-			}
-
 			// Compute normal of the wedge face
 			n.cross((v2 - v1),(v3 - v1));
 			// Can this happen???  Can it be handled more cleanly?
@@ -148,38 +137,8 @@ bool CollideAndFindPoint(convex_mesh_data_t* p1, const mtx4x3& m1, convex_mesh_d
 			f64 d = dot(n, v1);
 
 			// If the origin is inside the wedge, we have a hit
-			if (d >= 0 && !hit)
+			if (d >= 0)// && !hit)
 			{
-
-				dvec3_to_vec3(returnNormal,n);
-
-				// Compute the barycentric coordinates of the origin
-
-				f64 b0 = dot(cross(v1 , v2), v3);
-				f64 b1 = dot(cross(v3 , v2), v0);
-				f64 b2 = dot(cross(v0 , v1), v3);
-				f64 b3 = dot(cross(v2 , v1), v0);
-
-				f64 sum = b0 + b1 + b2 + b3;
-
-				if (sum <= 0)
-				{
-					b0 = 0;
-					b1 = dot(cross(v2,v3),n);
-					b2 = dot(cross(v3,v1),n);
-					b3 = dot(cross(v1,v2),n);
-
-					sum = b1 + b2 + b3;
-				}
-
-				f64 inv = 1.0f / sum;
-
-				dvec3 p1 = (b0 * v01 + b1 * v11 + b2 * v21 + b3 * v31) * inv;
-				dvec3_to_vec3(point1,p1);
-
-				dvec3 p2 = (b0 * v02 + b1 * v12 + b2 * v22 + b3 * v32) * inv;
-				dvec3_to_vec3(point2, p2);
-
 				// HIT!!!
 				hit = true;
 			}
@@ -192,13 +151,76 @@ bool CollideAndFindPoint(convex_mesh_data_t* p1, const mtx4x3& m1, convex_mesh_d
 			dvec3 v4 = v42 - v41;
 
 			f64 delta = dot((v4 - v3), n);
-			f64 separation = -dot(v4, n);
+			f64 separation = dot(v4, n);
 
 			// If the boundary is thin enough or the origin is outside the support plane for the newly discovered vertex, then we can terminate
-			if ( delta <= kCollideEpsilon || separation >= 0 /*|| phase2 > 300*/ )
+			if ( delta <= kCollideEpsilon || separation <= 0)
 			{
 				if (hit)
+				{
 					dvec3_to_vec3(returnNormal,n);
+
+#if 0
+
+					// Compute the barycentric coordinates of the origin
+
+					f64 b0 = dot(cross(v1 , v2), v3);
+					f64 b1 = dot(cross(v3 , v2), v0);
+					f64 b2 = dot(cross(v0 , v1), v3);
+					f64 b3 = dot(cross(v2 , v1), v0);
+
+					f64 sum = b0 + b1 + b2 + b3;
+
+					if (sum <= 0)
+					{
+						b0 = 0;
+						b1 = dot(cross(v2,v3),n);
+						b2 = dot(cross(v3,v1),n);
+						b3 = dot(cross(v1,v2),n);
+
+						sum = b1 + b2 + b3;
+					}
+
+					f64 inv = 1.0f / sum;
+
+					dvec3 p1 = (b0 * v01 + b1 * v11 + b2 * v21 + b3 * v31) * inv;
+					dvec3_to_vec3(point1,p1);
+
+					dvec3 p2 = (b0 * v02 + b1 * v12 + b2 * v22 + b3 * v32) * inv;
+					dvec3_to_vec3(point2, p2);
+#else
+					dvec3 V=v2-v1, W=v3-v1, P=-v1;
+
+					double mul=(dot(V,V)*dot(W,W)-(sqr(dot(V,W))));
+
+					if (mul>-0.000001 && mul<0.000001) //ha deformalt a haromszog
+					{
+						dvec3 dir=v1-v2;
+						double time=dot(v1,dir)/dir.squarelength();
+						dvec3_to_vec3(point1,v11+time*(v21-v11));//m_Simplex1[0]+time*(m_Simplex1[1]-m_Simplex1[0]);
+						dvec3_to_vec3(point2,v12+time*(v22-v12));//m_ClosestPointShape2=m_Simplex2[0]+time*(m_Simplex2[1]-m_Simplex2[0]);
+					}
+					else
+					{
+
+						double a2=(dot(V,V)*dot(W,P)-dot(V,W)*dot(V,P))/mul;
+						assertion(a2>-0.01 && a2<1.01);
+
+						double a1=(dot(V,P)-a2*dot(V,W))/dot(V,V);
+						assertion(a1>-0.01 && a1<1.01);
+#if 0//def _DEBUG
+					if (a1<=-0.01 || a1>=1.01)
+					{
+						GetClosestPoints();
+					}
+#endif
+						assertion(a1>-10 && a1<10);
+
+						dvec3_to_vec3(point1,v11+a1*(v21-v11)+a2*(v31-v11)); //m_ClosestPointShape1=m_Simplex1[0]+a1*(m_Simplex1[1]-m_Simplex1[0])+a2*(m_Simplex1[2]-m_Simplex1[0]);
+						dvec3_to_vec3(point2,v12+a1*(v22-v12)+a2*(v32-v12));//m_ClosestPointShape2=m_Simplex2[0]+a1*(m_Simplex2[1]-m_Simplex2[0])+a2*(m_Simplex2[2]-m_Simplex2[0]);
+#endif
+					}
+				}
 
 				return hit;
 			}
@@ -253,5 +275,5 @@ bool CollideAndFindPoint(convex_mesh_data_t* p1, const mtx4x3& m1, convex_mesh_d
 
 mpr_intersection::mpr_intersection(convex_mesh_data_t* obj1, convex_mesh_data_t* obj2,const mtx4x3& mtx1, const mtx4x3& mtx2)
 {
-	result=CollideAndFindPoint(obj1,mtx1,obj2,mtx2,normal,point1,point2);
+	result=test_intersection(obj1,mtx1,obj2,mtx2,normal,point1,point2);
 }

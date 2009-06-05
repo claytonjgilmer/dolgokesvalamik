@@ -265,7 +265,7 @@ unsigned sumtimedeep=0;
 void init_app(HWND i_hwnd)
 {
 	for (int n=0; n<frame_count; ++n)
-		time1[n]=time2[n]=timedeep[n]=0;
+		time1[n]=time2[n]=timedeep[n]=timempr[n]=0;
 
 	g_game=new game;
 	filesystem::create();
@@ -403,13 +403,14 @@ void init_app(HWND i_hwnd)
 
 	g_game->obj_trans.y=g_game->md.half_extent.y*2;
 
+/*
 	vector<vec3> varray;
 	vector<int> iarray;
 	if (get_object_geometry(g_game->obj[0],varray,iarray))
 	{
 		bsp_tree bsptree(&varray[0],varray.size(),&iarray[0],iarray.size());
 	}
-
+*/
 
 	g_game->inited=true;
 }
@@ -713,7 +714,7 @@ void update_app()
 			deep_init_vec=to_vec3(0,0,0);
 		}
 
-
+#if 0
 		timer_t t;
 		t.reset();
 		deep_intersection deep(&g_game->ch.ch,&g_game->ch.ch,mtx1,mtx2,deep_init_vec,deep_init_v1,deep_init_v2,deep_init_state);
@@ -734,7 +735,7 @@ void update_app()
 
 		sprintf(str,"deeptime:%d iter:%d  init:%d",sumtimedeep/frame_count,deep.itnum,deep_init);
 		rendersystem::ptr->draw_text(50,130,color_f(1,1,1,1),str);
-
+#endif
 		t.reset();
 		vec3 pen;
 		vec3 center=g_game->ch.ch.center;
@@ -796,7 +797,7 @@ void update_app()
 		}
 #endif
 
-		draw_simplex(gjk.simplex,gjk.simplex_size);
+//		draw_simplex(gjk.simplex,gjk.simplex_size);
 		}
 		{
 			t.reset();
@@ -816,15 +817,21 @@ void update_app()
 
 		{
 			t.reset();
-			mpr_intersection mpr(g_game->md,g_game->md2,mtx1,mtx2);
+			mpr_intersection mpr(&g_game->md,&g_game->md2,mtx1,mtx2);
 			t.stop();
-			sumtime2-=time2[frame2];
-			time2[frame2]=t.get_tick();
-			sumtime2+=time2[frame2];
-			frame2=(frame2+1) % frame_count;
-			sprintf(str,"mprtime:%03d, result:%d",
-				sumtime2/frame_count, gjk.result,gjk.out,gjk.dir.x, gjk.dir.y,gjk.dir.z,gjk.prevdir.x, gjk.prevdir.y,gjk.prevdir.z,gjk.simplex_size,vol,gjk.iteration);
-			rendersystem::ptr->draw_text(50,70,color_f(1,1,1,1),str);
+			sumtimempr-=timempr[framempr];
+			timempr[framempr]=t.get_tick();
+			sumtimempr+=timempr[framempr];
+			framempr=(framempr+1) % frame_count;
+			sprintf(str,"mprtime:%03d, result:%d",sumtimempr/frame_count, mpr.result);
+			rendersystem::ptr->draw_text(50,190,color_f(1,1,1,1),str);
+
+			if (mpr.result)
+			{
+				rendersystem::ptr->draw_line(mpr.point1,color_r8g8b8a8(255,0,0,255),mpr.point2,color_r8g8b8a8(255,0,0,255));
+				sprintf(str,"point1: (%g %g %g),point2: (%g %g %g)",mpr.point1.x,mpr.point1.y,mpr.point1.z,mpr.point2.x,mpr.point2.y,mpr.point2.z);
+				rendersystem::ptr->draw_text(50,210,color_f(1,1,1,1),str);
+			}
 		}
 
 
