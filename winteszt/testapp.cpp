@@ -817,7 +817,7 @@ void update_app()
 
 		{
 			t.reset();
-			mpr_intersection mpr(&g_game->md,&g_game->md2,mtx1,mtx2);
+			mpr_intersection<convex_mesh_data_t,convex_mesh_data_t> mpr(&g_game->md,&g_game->md2,mtx1,mtx2);
 			t.stop();
 			sumtimempr-=timempr[framempr];
 			timempr[framempr]=t.get_tick();

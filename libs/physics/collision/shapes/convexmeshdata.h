@@ -4,8 +4,21 @@
 #include "containers/vector.h"
 #include "math/vec3.h"
 
+struct convex_mesh_data_t;
+MLINLINE void get_extremal_vertex(convex_mesh_data_t* obj, const vec3& dir, vec3& vert);
+
 struct convex_mesh_data_t
 {
+	vec3 get_center() const
+	{
+		return center;
+	}
+
+	void get_extreme_point(vec3& p, const vec3& dir)
+	{
+		get_extremal_vertex(this,dir,p);
+	}
+
 	vector<vec3> vert;
 	vector<uint16> vertex_vertex_adjindex;
 	vector<uint16> vertex_vertex_adjmap;

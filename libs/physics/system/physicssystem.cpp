@@ -2,6 +2,7 @@
 #include "threading/taskmanager.h"
 #include "utils/timer.h"
 #include "physics/solver/lcpsolver.h"
+#include "physics/collision/shapes/convexmeshshape.h"
 
 DEFINE_SINGLETON(physicssystem);
 
@@ -30,6 +31,11 @@ desc(*i_desc)
     this->intersect_fn[shape_type_sphere][shape_type_sphere]=&test_sphere_sphere_intersect;
 	this->intersect_fn[shape_type_box][shape_type_sphere]=&test_box_sphere_intersect;
 	this->intersect_fn[shape_type_sphere][shape_type_box]=&test_sphere_box_intersect;
+	this->intersect_fn[shape_type_convex_mesh][shape_type_convex_mesh]=&test_convex_convex_intersect<convex_mesh_shape_t,convex_mesh_shape_t>;
+	this->intersect_fn[shape_type_convex_mesh][shape_type_sphere]=&test_convex_convex_intersect<convex_mesh_shape_t,sphere_shape>;
+	this->intersect_fn[shape_type_sphere][shape_type_convex_mesh]=&test_convex_convex_intersect<sphere_shape,convex_mesh_shape_t>;
+	this->intersect_fn[shape_type_convex_mesh][shape_type_box]=&test_convex_convex_intersect<convex_mesh_shape_t,box_shape>;
+	this->intersect_fn[shape_type_box][shape_type_convex_mesh]=&test_convex_convex_intersect<box_shape,convex_mesh_shape_t>;
     this->parallel_boudingupdate=
 		parallel_broadphase=
 		parallel_nearphase=

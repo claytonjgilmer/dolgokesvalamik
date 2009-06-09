@@ -79,6 +79,16 @@
 
 	struct sphere_shape:public shape_t
 	{
+		vec3 get_center() const
+		{
+			return center;
+		}
+
+		void get_extreme_point(vec3& p, const vec3& dir)
+		{
+			p=center+dir*radius;
+		}
+
 		vec3 center;
 		f32 radius;
 
@@ -135,7 +145,7 @@
 			this->bounding.max=newcenter+newextent;
 		}
 
-		void get_extreme_point(vec3& p, const vec3& dir) const
+		void get_extreme_point(vec3& p, const vec3& dir)
 		{
 			p=	pos.t+	
 			extent.x*sign(dot(dir,pos.x))*pos.x+
@@ -151,15 +161,12 @@
 			extent.z*sign(dot(dir,mtx.z))*mtx.z;
 
 		}
+
+		vec3 get_center() const
+		{
+			return pos.t;
+		}
 	};
 
 
-	//////////////////////////////////////////////////////////////////////////
-	//		convex mesh shape
-	//////////////////////////////////////////////////////////////////////////
-
-	struct convex_mesh_shape_t: shape_t
-	{
-
-	};
 #endif//_shape_h_

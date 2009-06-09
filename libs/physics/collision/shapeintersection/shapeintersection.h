@@ -345,13 +345,32 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 	return 1;
 }
 
+#include "mprintersection.h"
+
+template<typename T1, typename T2>
 MLINLINE int test_convex_convex_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx,
-									shape_t* i_shape2, const mtx4x3& i_body2_mtx,
-									vec3 o_contact_array[][2],
-									vec3& o_normal,
-									uint32& o_contact_num)
+										  shape_t* i_shape2, const mtx4x3& i_body2_mtx,
+										  vec3 o_contact_array[][2],
+										  vec3& o_normal,
+										  uint32& o_contact_num)
 {
-	assertion(i_shape1->type==shape_type_convex_mesh && i_shape2->type==shape_type_convex_mesh);
+	mpr_intersection<T1,T2> mpr((T1*)i_shape1,(T2*)i_shape2,i_body1_mtx,i_body2_mtx);
+
+	if (mpr.result)
+	{
+		o_contact_num=1;
+		o_normal=mpr.normal;
+		o_contact_array[0][0]=i_body1_mtx.transformtransposed(mpr.point1);
+		o_contact_array[0][1]=i_body2_mtx.transformtransposed(mpr.point2);
+
+		return 1;
+	}
+	else
+	{
+		return false;
+	}
+
+//	assertion(i_shape1->type==shape_type_convex_mesh && i_shape2->type==shape_type_convex_mesh);
 
 
 }
