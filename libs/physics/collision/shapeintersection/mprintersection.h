@@ -192,7 +192,7 @@ MLINLINE bool mpr_intersection<T1,T2>::test_intersection(T1* p1, const mtx4x3& m
 			{
 				if (hit)
 				{
-					dvec3_to_vec3(returnNormal,n);
+					dvec3_to_vec3(returnNormal,-n);
 
 #if 0
 
@@ -238,10 +238,10 @@ MLINLINE bool mpr_intersection<T1,T2>::test_intersection(T1* p1, const mtx4x3& m
 					{
 
 						double a2=(dot(V,V)*dot(W,P)-dot(V,W)*dot(V,P))/mul;
-						assertion(a2>-0.01 && a2<1.01);
+//						assertion(a2>-0.01 && a2<1.01);
 
 						double a1=(dot(V,P)-a2*dot(V,W))/dot(V,V);
-						assertion(a1>-0.01 && a1<1.01);
+//						assertion(a1>-0.01 && a1<1.01);
 #if 0//def _DEBUG
 						if (a1<=-0.01 || a1>=1.01)
 						{

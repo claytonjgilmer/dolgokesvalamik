@@ -18,6 +18,7 @@
 #include "math/geometry/convexhull.h"
 #include "math/geometry/convexhullgeneration.h"
 #include "physics/collision/shapes/convexmeshdata.h"
+#include "physics/collision/shapes/convexmeshshape.h"
 #include "physics/collision/shapeintersection/satintersection.h"
 #include "physics/collision/shapeintersection/gjkintersection.h"
 #include "physics/collision/shapeintersection/gjkintersection2.h"
@@ -173,7 +174,7 @@ struct game
 #ifdef twobody
 #define  BODY_NUM 2
 #else
-#define BODY_NUM 1
+#define BODY_NUM 10
 #endif
 #define ROOM_SIZE 20.0f
 #define BODY_SIZE .5f
@@ -213,7 +214,7 @@ void change_screen_size(unsigned i_newwidth, unsigned i_newheight)
 
 
 RECT g_rect;
-unsigned g_time;
+//unsigned g_time;
 //HWND g_hwnd;
 
 #define V vec3
@@ -312,7 +313,9 @@ void init_app(HWND i_hwnd)
 	bind_light(g_game->sphere);
 
 	for (int n=0; n<BODY_NUM; ++n)
-		g_game->model[n]=(object3d*)g_game->sphere->clone();
+		g_game->model[n]=(object3d*)g_game->obj[0]->clone();
+//		g_game->model[n]=(object3d*)g_game->sphere->clone();
+
 
 #if 0
 	g_game->terrain=load_mmod("model/pearl_harbor.MMOD");
@@ -326,13 +329,27 @@ void init_app(HWND i_hwnd)
 	g_game->m_aspect=(f32)renderdesc.m_screenwidth/(f32)renderdesc.m_screenheight;
 
 	::GetWindowRect(i_hwnd,&g_rect);
-	g_time=timeGetTime();
+//	g_time=timeGetTime();
 //	g_hwnd=i_hwnd;
 
 //	mtx4x4 mtx; mtx.set_projectionmatrix(tan(degreetorad(45)),g_game->m_aspect,1,10000);
 
 
 	g_game->x=g_game->y=g_game->z=0;
+
+	g_game->hd.face_thickness=.00001;
+	g_game->hd.vertex_min_dist=-.1;
+	g_game->hd.triangle_output=false;
+
+
+	g_game->hd.vertex_array.clear();
+	get_object_vertices(g_game->obj[0],mtx4x3::identitymtx(),g_game->hd.vertex_array);
+	g_game->ch.do_all(g_game->hd);
+	hull_to_convex_mesh(g_game->md,g_game->ch.ch);
+	hull_to_convex_mesh(g_game->md2,g_game->ch.ch);
+
+	g_game->obj_trans.y=g_game->md.half_extent.y*2;
+
 
 
 
@@ -344,6 +361,7 @@ void init_app(HWND i_hwnd)
 	bsd.owner_flag=1;
 	bsd.collision_mask=1;
 	bsd.restitution=1;
+	bsd.friction=1;
 	g_world->add_shape(bsd);
 
 
@@ -357,9 +375,9 @@ void init_app(HWND i_hwnd)
 	for (unsigned n=0; n<BODY_NUM;++n)
 	{
 #ifndef twobody
-		f32 x=random(-ROOM_SIZE,ROOM_SIZE);
-		f32 y=0;//random(-ROOM_SIZE,ROOM_SIZE);
-		f32 z=random(-ROOM_SIZE,ROOM_SIZE);
+		f32 x=0;//random(-ROOM_SIZE,ROOM_SIZE);
+		f32 y=10*n;//random(-ROOM_SIZE,ROOM_SIZE);
+		f32 z=0;//random(-ROOM_SIZE,ROOM_SIZE);
 		bd.pos.t.set(x,y,z);
 /*
 		x=random(-3.0f,3.0f);
@@ -375,33 +393,37 @@ void init_app(HWND i_hwnd)
 #endif
 
 		g_game->phb[n]=physicssystem::ptr->create_body(bd);
+
 #if 0
-		box_shape_desc sd;
-		sd.pos.identity();
-		sd.extent.set(BODY_SIZE,BODY_SIZE,BODY_SIZE);
+		{
+#if 0
+			box_shape_desc sd;
+			sd.pos.identity();
+			sd.extent.set(BODY_SIZE,BODY_SIZE,BODY_SIZE);
 #else
-		sphere_shape_desc sd;
-		sd.center.clear();
-		sd.radius=1;//BODY_SIZE;
+			sphere_shape_desc sd;
+			sd.center.clear();
+			sd.radius=1;//BODY_SIZE;
 #endif
-		sd.owner_flag=1;
-		sd.collision_mask=1;
-		sd.restitution=1;
-		g_game->phb[n]->add_shape(sd);
+			sd.owner_flag=1;
+			sd.collision_mask=1;
+			sd.restitution=1;
+			g_game->phb[n]->add_shape(sd);
+		}
+#else
+		{
+			convex_mesh_shape_desc sd;
+			sd.collision_mask=1;
+			sd.owner_flag=1;
+			sd.restitution=.1;
+			sd.friction=1;
+			sd.mesh_data=&g_game->md;
+
+			g_game->phb[n]->add_shape(sd);
+		}
+#endif
 	}
 
-	g_game->hd.face_thickness=.00001;
-	g_game->hd.vertex_min_dist=-.1;
-	g_game->hd.triangle_output=false;
-
-
-	g_game->hd.vertex_array.clear();
-	get_object_vertices(g_game->obj[0],mtx4x3::identitymtx(),g_game->hd.vertex_array);
-	g_game->ch.do_all(g_game->hd);
-	hull_to_convex_mesh(g_game->md,g_game->ch.ch);
-	hull_to_convex_mesh(g_game->md2,g_game->ch.ch);
-
-	g_game->obj_trans.y=g_game->md.half_extent.y*2;
 
 /*
 	vector<vec3> varray;
@@ -517,17 +539,17 @@ void update_app()
 	timer_t update_time;
 	char str[1024];
 	g_game->t.stop();
-	f32 frame_time=g_game->t.get_seconds();
+	f32 frame_time=min(g_game->t.get_seconds(),0.05f);
 	g_game->t.reset();
 
 	sprintf(str,"FPS:%.1d",(int)(1/frame_time));
 	rendersystem::ptr->draw_text(800,10,color_f(1,1,0,1),str);
 	taskmanager::ptr->flush();
-	unsigned acttime=::timeGetTime();
-	unsigned deltatime=min(acttime-g_time,100u);
-	g_time=acttime;
-	sumtime+=deltatime;
-	f32 dt=(f32)deltatime/1000.0f;
+//	unsigned acttime=::timeGetTime();
+//	unsigned deltatime=min(acttime-g_time,100u);
+//	g_time=acttime;
+	sumtime+=(int)(frame_time*1000);
+	f32 dt=frame_time;
 
 	if (sumtime>33)
 	{

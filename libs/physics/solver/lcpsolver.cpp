@@ -288,8 +288,8 @@ void lcp_solver_t::solve_contacts()
 
 			accPtr[body2].v+=deltaLambda* bPtr[actconstraint].v2;
 			accPtr[body2].w+=deltaLambda* bPtr[actconstraint].w2;
-			assertion(accPtr[body1].w.squarelength()<0.001f);
-			assertion(accPtr[body2].w.squarelength()<0.001f);
+//			assertion(accPtr[body1].w.squarelength()<0.001f);
+//			assertion(accPtr[body2].w.squarelength()<0.001f);
 
 			newLambda=lcp_data_contact.right_side_poscorr[constraint_index]-
 				dot(jPtr[actconstraint].v1,accPtr[body1].p)-
@@ -310,11 +310,11 @@ void lcp_solver_t::solve_contacts()
 			accPtr[body1].p+=deltaLambda*bPtr[actconstraint].v1;
 			accPtr[body1].o+=deltaLambda*bPtr[actconstraint].w1;
 
-			assertion(accPtr[body1].o.squarelength()<0.001f);
+//			assertion(accPtr[body1].o.squarelength()<0.001f);
 
 			accPtr[body2].p+=deltaLambda*bPtr[actconstraint].v2;
 			accPtr[body2].o+=deltaLambda*bPtr[actconstraint].w2;
-			assertion(accPtr[body2].o.squarelength()<0.001f);
+//			assertion(accPtr[body2].o.squarelength()<0.001f);
 		}
 
 		constraint_index=constraint_index_save+4;
@@ -366,8 +366,8 @@ void lcp_solver_t::solve_frictions()
 			accPtr[body1].w+=deltaLambdaFriction*bPtr[actconstraint].w1;
 			accPtr[body2].v+=deltaLambdaFriction*bPtr[actconstraint].v2;
 			accPtr[body2].w+=deltaLambdaFriction*bPtr[actconstraint].w2;
-			assertion(accPtr[body1].w.squarelength()<0.001f);
-			assertion(accPtr[body2].w.squarelength()<0.001f);
+//			assertion(accPtr[body1].w.squarelength()<0.001f);
+//			assertion(accPtr[body2].w.squarelength()<0.001f);
 		}
 		constraint_index=constraint_index_save+4;
 	}

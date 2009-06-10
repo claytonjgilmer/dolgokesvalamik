@@ -23,7 +23,7 @@ MLINLINE void check_float(float value)
 {
 	int s, e;
 	unsigned long src;
-	long f; 
+	long f;
 	unsigned int *srcptr = (unsigned int *)&value;
 
 	src = *srcptr;
@@ -36,15 +36,15 @@ MLINLINE void check_float(float value)
 	{
 		assertion(0);
 	}
-	if (e == 255 && f != 0) 
+	if (e == 255 && f != 0)
 	{
 		assertion(0);
 	}
-	else if (e == 255 && f == 0 && s == 1) 
+	else if (e == 255 && f == 0 && s == 1)
 	{
 		assertion(0);
 	}
-	else if (e == 255 && f == 0 && s == 0) 
+	else if (e == 255 && f == 0 && s == 0)
 	{
 		assertion(0);
 	}

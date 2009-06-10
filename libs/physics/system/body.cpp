@@ -2,6 +2,7 @@
 #include "physicssystem.h"
 #include "utils/assert.h"
 #include "physics\collision\system\contact.h"
+#include "physics/collision/shapes/convexmeshshape.h"
 
 body_t::body_t()
 {
@@ -68,6 +69,11 @@ body_t::body_t()
 		case shape_type_box:
 			{
 				s=new box_shape((const box_shape_desc&)i_desc);
+				break;
+			}
+		case shape_type_convex_mesh:
+			{
+				s=new convex_mesh_shape_t((const convex_mesh_shape_desc&)i_desc);
 				break;
 			}
 		default:
