@@ -137,7 +137,7 @@ struct solver_pre_step_contacts
 					cross(nbody->rotvel[body1], relpos1);
 
 				f32 vel_normal = dot(dv, act_contact->normal);
-				f32 biasVelocityPositionCorrection=-pos_corr_rate*act_cp->penetration/solver->dt;
+				f32 biasVelocityPositionCorrection=-pos_corr_rate*max(act_cp->penetration-.02f,0.0f)/solver->dt;
 				f32 restitution=-min(vel_normal*act_contact->restitution+0.05f,0.0f);
 
 				lcp_data->right_side[constraint_index]=restitution-//(1+contactptr->m_Restitution)*

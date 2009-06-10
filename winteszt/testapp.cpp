@@ -174,7 +174,7 @@ struct game
 #ifdef twobody
 #define  BODY_NUM 2
 #else
-#define BODY_NUM 10
+#define BODY_NUM 100
 #endif
 #define ROOM_SIZE 20.0f
 #define BODY_SIZE .5f
@@ -195,7 +195,7 @@ struct game
 	{
 		obj_trans.set(0,5,0);
 		camz=camy=camx=0;
-		camt.set(0,0,-10);
+		camt.set(0,0,-100);
 		inited=false;
 		t.reset();
 	}
@@ -313,8 +313,8 @@ void init_app(HWND i_hwnd)
 	bind_light(g_game->sphere);
 
 	for (int n=0; n<BODY_NUM; ++n)
-		g_game->model[n]=(object3d*)g_game->obj[0]->clone();
-//		g_game->model[n]=(object3d*)g_game->sphere->clone();
+//		g_game->model[n]=(object3d*)g_game->obj[0]->clone();
+		g_game->model[n]=(object3d*)g_game->sphere->clone();
 
 
 #if 0
@@ -376,7 +376,7 @@ void init_app(HWND i_hwnd)
 	{
 #ifndef twobody
 		f32 x=0;//random(-ROOM_SIZE,ROOM_SIZE);
-		f32 y=10*n;//random(-ROOM_SIZE,ROOM_SIZE);
+		f32 y=3*n;//random(-ROOM_SIZE,ROOM_SIZE);
 		f32 z=0;//random(-ROOM_SIZE,ROOM_SIZE);
 		bd.pos.t.set(x,y,z);
 /*
@@ -393,8 +393,13 @@ void init_app(HWND i_hwnd)
 #endif
 
 		g_game->phb[n]=physicssystem::ptr->create_body(bd);
+#ifdef _DEBUG
+		char str[32];
+		sprintf(str,"SPHERE%d",n+1);
+		g_game->phb[n]->set_name(str);
+#endif
 
-#if 0
+#if 1
 		{
 #if 0
 			box_shape_desc sd;
@@ -407,7 +412,8 @@ void init_app(HWND i_hwnd)
 #endif
 			sd.owner_flag=1;
 			sd.collision_mask=1;
-			sd.restitution=1;
+			sd.restitution=0;
+			sd.friction=1;
 			g_game->phb[n]->add_shape(sd);
 		}
 #else

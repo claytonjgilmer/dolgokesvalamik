@@ -14,6 +14,7 @@ void near_phase();
 void create_contact_groups();
 void update_contacts();
 void solve_constraints(f32 dt);
+void draw_contacts();
 
 body_t* g_world=NULL;
 
@@ -21,6 +22,9 @@ body_t* g_world=NULL;
 void create_world_body(physicssystem* ptr)
 {
 	g_world=new (ptr->body_list.allocate_place()) body_t;
+#ifdef _DEBUG
+	g_world->set_name("WORLD");
+#endif
 	ptr->bodystate_array.add_world();
 }
 
@@ -110,6 +114,8 @@ void physicssystem::simulate(f32 i_dt)
 
     update_contacts();
     create_contact_groups();
+
+	draw_contacts();
 
 	t.reset();
     update_inertia();
@@ -397,4 +403,9 @@ void update_contacts()
 {
     physicssystem* ptr=physicssystem::ptr;
     ptr->contact_manager.update_contacts();
+}
+
+void draw_contacts()
+{
+	physicssystem::ptr->contact_manager.draw_contacts();
 }

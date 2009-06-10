@@ -63,6 +63,13 @@ struct contact_edge:intr_list_node_base<contact_edge>
 		int group_index;
 
 		mutex contact_lock;
+#ifdef _DEBUG
+		char name[32];
+		void set_name(const char* i_name)
+		{
+			strcpy(name,i_name);
+		}
+#endif
 	};
 
 	extern body_t* g_world;

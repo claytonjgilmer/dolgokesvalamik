@@ -76,3 +76,27 @@ static int hash_check[hashtable_size];
                 erase_contact(contact_surface);
 	    }
 	}
+
+#include "render/rendersystem.h"
+
+	void contactmanager::draw_contacts()
+	{
+		list_allocator<sizeof(contact_surface_t)>::iterator it,next_it;
+
+		for (it=this->contact_list.begin(); it!=this->contact_list.end(); it=next_it)
+		{
+			next_it=it;
+			++next_it;
+			contact_surface_t* contact_surface=(contact_surface_t*)*it;
+			contact_surface->update();
+
+			for (int n=0; n<contact_surface->contact_count; ++n)
+			{
+				contact_point_t* cp=contact_surface->contactarray+n;
+
+				rendersystem::ptr->draw_circle(cp->abs_pos[0],0.3f);
+			}
+			if (!contact_surface->contact_count)
+				erase_contact(contact_surface);
+		}
+	}

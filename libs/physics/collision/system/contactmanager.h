@@ -15,6 +15,7 @@
 
 
 		void update_contacts();
+		void draw_contacts();
 
 
 		list_allocator<sizeof(contact_surface_t)> contact_list;
