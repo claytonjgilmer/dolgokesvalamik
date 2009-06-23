@@ -8,7 +8,9 @@ DEFINE_SINGLETON(physicssystem);
 
 void kill_deads();
 void update_inertia();
-void update_bodies(f32 dt);
+void update_velocities(f32 dt);
+void update_positions(f32 dt);
+//void update_bodies(f32 dt);
 void broadphase();
 void near_phase();
 void create_contact_groups();
@@ -122,13 +124,16 @@ void physicssystem::simulate(f32 i_dt)
 	t.stop();
 	g_in+=t.get_tick();
 
+	update_velocities(i_dt);
+
 	t.reset();
 	solve_constraints(i_dt);
 	t.stop();
 	g_sol+=t.get_tick();
 
 	t.reset();
-    update_bodies(i_dt);
+	update_positions(i_dt);
+//    update_bodies(i_dt);
 	t.stop();
 	g_up+=t.get_tick();
 
@@ -254,9 +259,9 @@ void near_phase()
     }
 }
 
-struct update_process
+struct update_vel_process
 {
-    update_process(nbody_t* i_b,f32 i_dt,vec3 i_gravity):
+    update_vel_process(nbody_t* i_b,f32 i_dt,vec3 i_gravity):
 	b(i_b),
 	dt(i_dt),
 	gravity(i_gravity)
@@ -269,24 +274,11 @@ struct update_process
 		uint32 end=i_start+i_num;
 		for (uint32 n=i_start; n<end; ++n)
 		{
-			b->vel[n]+=dt*(b->invmass[n]*b->force[n]+gravity)+b->constraint_accel[n].v;
-			b->rotvel[n]+=dt*b->invinertia_abs[n].transform3x3(b->torque[n])+b->constraint_accel[n].w;
-
-			b->pos[n].t+=dt*(b->vel[n]+b->constraint_accel[n].p);
-
-			vec3 axis=b->rotvel[n]+b->constraint_accel[n].o;
-
-			f32 angle=axis.length();
-
-			if (angle>0.001f)
-			{
-//				vec3 axis2=;
-				b->pos[n].rotate(axis/angle,dt*angle);
-			}
+			b->vel[n]+=dt*(b->invmass[n]*b->force[n]+gravity);
+			b->rotvel[n]+=dt*b->invinertia_abs[n].transform3x3(b->torque[n]);
 
 			b->force[n].clear();
 			b->torque[n].clear();
-			b->constraint_accel[n].clear();
 		}
 	}
 
@@ -295,21 +287,66 @@ struct update_process
 	vec3 gravity;
 };
 
-void update_bodies(f32 i_dt)
+struct update_pos_process
+{
+	update_pos_process(nbody_t* i_b,f32 i_dt):
+b(i_b),
+dt(i_dt)
+{
+}
+
+void operator()(unsigned i_start,unsigned i_num) const
+{
+	++i_start;
+	uint32 end=i_start+i_num;
+	for (uint32 n=i_start; n<end; ++n)
+	{
+		b->vel[n]+=b->constraint_accel[n].v;
+		b->rotvel[n]+=b->constraint_accel[n].w;
+		b->pos[n].t+=dt*(b->vel[n]+b->constraint_accel[n].p);
+		vec3 axis=b->rotvel[n]+b->constraint_accel[n].o;
+		f32 angle=axis.length();
+
+		if (angle>0.001f)
+			b->pos[n].rotate(axis/angle,dt*angle);
+
+		b->constraint_accel[n].clear();
+	}
+}
+
+nbody_t* b;
+f32 dt;
+};
+
+void update_positions(f32 i_dt)
 {
     physicssystem* ptr=physicssystem::ptr;
     nbody_t* b=&ptr->bodystate_array;
     if (ptr->parallel_update)
     {
-        taskmanager::ptr->process_buffer(b->size-1,10,update_process(b,i_dt,ptr->desc.gravity));
+        taskmanager::ptr->process_buffer(b->size-1,10,update_pos_process(b,i_dt));
     }
     else
     {
-        update_process p(b,i_dt,ptr->desc.gravity);
+        update_pos_process p(b,i_dt);
         p(0,b->size-1);
     }
 }
 
+void update_velocities(f32 i_dt)
+{
+	physicssystem* ptr=physicssystem::ptr;
+	nbody_t* b=&ptr->bodystate_array;
+	if (ptr->parallel_update)
+	{
+		taskmanager::ptr->process_buffer(b->size-1,10,update_vel_process(b,i_dt,ptr->desc.gravity));
+	}
+	else
+	{
+		update_vel_process p(b,i_dt,ptr->desc.gravity);
+		p(0,b->size-1);
+	}
+}
 
 struct constraint_solver_t
 {

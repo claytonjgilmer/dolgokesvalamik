@@ -174,7 +174,7 @@ struct game
 #ifdef twobody
 #define  BODY_NUM 2
 #else
-#define BODY_NUM 100
+#define BODY_NUM 100 //komment
 #endif
 #define ROOM_SIZE 20.0f
 #define BODY_SIZE .5f
@@ -289,6 +289,9 @@ void init_app(HWND i_hwnd)
 	physicssystemdesc pd;
 	pd.gravity.set(0,-10,0);
 	pd.parallel_processing=0;
+	pd.solver_positioncorrection_rate=.00f;
+	pd.solver_lambda_relaxation=1.0f;
+	pd.solver_max_penetration=0.003f;
 	physicssystem::create(&pd);
 
 	rendersystemdesc renderdesc;

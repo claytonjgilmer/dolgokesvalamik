@@ -29,37 +29,38 @@ struct accel_t
 };
 
 
-	struct nbody_t
-	{
-		mtx4x3* pos;
-		vec3* vel;
-		vec3* rotvel;
+struct nbody_t
+{
+	mtx4x3* pos;
+	vec3* vel;
+	vec3* rotvel;
 
-		vec3* force;
-		vec3* torque;
-		accel_t* constraint_accel;
+	vec3* force;
+	vec3* torque;
+	accel_t* constraint_accel;
 
-		f32* invmass;
-		mtx3x3* invinertia_rel;
-		mtx3x3* invinertia_abs;
+	f32* invmass;
+	mtx3x3* invinertia_rel;
+	mtx3x3* invinertia_abs;
 
-		body_t** body;
+	body_t** body;
 
-		unsigned capacity;
-		unsigned size;
+	unsigned capacity;
+	unsigned size;
 
-		nbody_t();
-		~nbody_t();
+	nbody_t();
+	~nbody_t();
 
-		void add_world();
-		void add_body(const bodydesc i_desc[], body_t* i_body_array[], unsigned i_bodynum);
-		void release_body(body_t* i_body_array[], unsigned i_bodynum);
+	void add_world();
+	void add_body(const bodydesc i_desc[], body_t* i_body_array[], unsigned i_bodynum);
+	void release_body(body_t* i_body_array[], unsigned i_bodynum);
 
-		void predict(f32 i_dt);
+	void predict(f32 i_dt);
 
-		unsigned state_size[100];
-		unsigned state_size_sum;
-		unsigned state_num;
+	unsigned state_size[100];
+	unsigned state_size_sum;
+	unsigned state_num;
 
-	};
+};
+
 #endif//_nbody_h_

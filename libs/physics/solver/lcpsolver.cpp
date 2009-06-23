@@ -75,6 +75,8 @@ struct solver_pre_step_contacts
 		int constraint_index=4*start;
 		physicssystem* ptr=physicssystem::ptr;
 		f32 pos_corr_rate=ptr->solver_position_correction_rate;
+		f32 relax=ptr->desc.solver_lambda_relaxation;
+		f32 max_penetration=ptr->desc.solver_max_penetration;
 		lcp_data_t* lcp_data=&solver->lcp_data_contact;
 		lcp_data_t* lcp_data_friction=&solver->lcp_data_friction;
 
@@ -96,7 +98,7 @@ struct solver_pre_step_contacts
 			for (int k=0; k<act_contact->contact_count; ++k,++constraint_index)
 			{
 				contact_point_t* act_cp=act_contact->contactarray+k;
-				lcp_data->lambda[constraint_index]=act_cp->cached_lambda;
+				lcp_data->lambda[constraint_index]=relax*act_cp->cached_lambda;
 				lcp_data->lambda_poscorr[constraint_index]=0;
 
 				vec3 relpos1=act_cp->abs_pos[0]-nbody->pos[body1].t;
@@ -137,14 +139,14 @@ struct solver_pre_step_contacts
 					cross(nbody->rotvel[body1], relpos1);
 
 				f32 vel_normal = dot(dv, act_contact->normal);
-				f32 biasVelocityPositionCorrection=-pos_corr_rate*max(act_cp->penetration-.02f,0.0f)/solver->dt;
+				f32 biasVelocityPositionCorrection=-pos_corr_rate*min(act_cp->penetration+max_penetration,0.0f)/solver->dt;
 				f32 restitution=-min(vel_normal*act_contact->restitution+0.05f,0.0f);
 
-				lcp_data->right_side[constraint_index]=restitution-//(1+contactptr->m_Restitution)*
+				lcp_data->right_side[constraint_index]=restitution-
 					(dot(j->v1,nbody->vel[body1])+
 					dot(j->w1,nbody->rotvel[body1])+
 					dot(j->v2,nbody->vel[body2])+
-					dot(j->w2,nbody->rotvel[body2]));// /i_DeltaTime;
+					dot(j->w2,nbody->rotvel[body2]));
 
 				lcp_data->right_side_poscorr[constraint_index]=biasVelocityPositionCorrection;
 

@@ -22,6 +22,8 @@ extern unsigned g_bph,g_nph,g_in,g_up,g_frc,g_sol;
 		uint8 maxsubstepcount;
 		uint8 parallel_processing;
 		f32 solver_positioncorrection_rate;
+		f32 solver_lambda_relaxation;
+		f32 solver_max_penetration;
 
 		physicssystemdesc()
 		{
@@ -30,6 +32,8 @@ extern unsigned g_bph,g_nph,g_in,g_up,g_frc,g_sol;
 			maxsubstepcount=10;
 			parallel_processing=0;
 			solver_positioncorrection_rate=0.1f;
+			solver_lambda_relaxation=0.9f;
+			solver_max_penetration=.01f;
 		}
 	};
 
