@@ -12,7 +12,7 @@
 #include "physics/collision/shapeintersection/shapeintersection.h"
 #include "physics/collision/broadphase/hgridbroadphase.h"
 
-extern unsigned g_bph,g_nph,g_in,g_up,g_frc,g_sol;
+extern unsigned g_bph,g_nph,g_in,g_up,g_frc,g_sol,g_presol,g_solcon,g_solv_cont,g_solv_fric,g_cache_l;
 
 
 	struct physicssystemdesc

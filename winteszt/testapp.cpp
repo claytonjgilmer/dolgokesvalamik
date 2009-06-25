@@ -276,7 +276,7 @@ void init_app(HWND i_hwnd)
 	filesystem::ptr->register_path("texture","texture\\");
 
 	taskmanagerdesc tdesc;
-	tdesc.m_threadnum=0;
+	tdesc.m_threadnum=1;
 	taskmanager::create(&tdesc);
 
 	shadermanagerdesc shaderdesc("shader");
@@ -381,7 +381,7 @@ void init_app(HWND i_hwnd)
 	{
 #ifndef twobody
 		f32 x=0;//random(-ROOM_SIZE,ROOM_SIZE);
-		f32 y=3*n;//random(-ROOM_SIZE,ROOM_SIZE);
+		f32 y=3*(float)n;//random(-ROOM_SIZE,ROOM_SIZE);
 		f32 z=0;//random(-ROOM_SIZE,ROOM_SIZE);
 		bd.pos.t.set(x,y,z);
 /*
@@ -605,10 +605,21 @@ void update_app()
 		rendersystem::ptr->draw_text(10,460,color_f(1,1,1,1),str);
 		sprintf(str,"solver  :%d %d",physicssystem::ptr->parallel_solver,g_sol/g_frc);
 		rendersystem::ptr->draw_text(10,480,color_f(1,1,1,1),str);
-		sprintf(str,"update  :%d %d",physicssystem::ptr->parallel_update,g_up/g_frc);
-		rendersystem::ptr->draw_text(10,500,color_f(1,1,1,1),str);
-		sprintf(str,"constnum:%d",constraint_c);
-		rendersystem::ptr->draw_text(10,520,color_f(1,1,1,1),str);
+			sprintf(str,"presolv :%d %d",physicssystem::ptr->parallel_solver,g_presol);
+			rendersystem::ptr->draw_text(40,500,color_f(1,1,1,1),str);
+			sprintf(str,"s_constr:%d %d",physicssystem::ptr->parallel_solver,g_solcon);
+			rendersystem::ptr->draw_text(40,520,color_f(1,1,1,1),str);
+				sprintf(str,"solvcont:%d %d",physicssystem::ptr->parallel_solver,g_solv_cont);
+				rendersystem::ptr->draw_text(60,540,color_f(1,1,1,1),str);
+				sprintf(str,"solvfric:%d %d",physicssystem::ptr->parallel_solver,g_solv_fric);
+				rendersystem::ptr->draw_text(60,560,color_f(1,1,1,1),str);
+				sprintf(str,"valami  :%d %d",physicssystem::ptr->parallel_solver,g_cache_l);
+				rendersystem::ptr->draw_text(60,580,color_f(1,1,1,1),str);
+
+//		sprintf(str,"update  :%d %d",physicssystem::ptr->parallel_update,g_up/g_frc);
+//		rendersystem::ptr->draw_text(10,540,color_f(1,1,1,1),str);
+//		sprintf(str,"constnum:%d",constraint_c);
+//		rendersystem::ptr->draw_text(10,560,color_f(1,1,1,1),str);
 	}
 
 

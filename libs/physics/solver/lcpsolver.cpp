@@ -1,5 +1,6 @@
 #include "lcpsolver.h"
 #include "threading/taskmanager.h"
+#include "utils/timer.h"
 
 
 /*
@@ -29,6 +30,7 @@ void lcp_solver_t::allocate_buffer()
 //	ZeroMemory(&lcp_data_contact,sizeof(lcp_data_t));
 //	ZeroMemory(&lcp_data_friction,sizeof(lcp_data_t));
 
+#ifdef use_vector
 	lcp_data_contact.J.resize(4*contact_count);
 	lcp_data_contact.B.resize(4*contact_count);
 	lcp_data_contact.right_side.resize(4*contact_count);
@@ -45,23 +47,52 @@ void lcp_solver_t::allocate_buffer()
 	lcp_data_friction.diag.resize(4*contact_count);
 	lcp_data_friction.lambda.resize(4*contact_count);
 	lcp_data_friction.friction_coeff.resize(contact_count);
-#if 0
-	lcp_data_contact.J=new jacobi[4*contact_count];
-	lcp_data_contact.B=new jacobi[4*contact_count];
-	lcp_data_contact.right_side=new f32[4*contact_count];
-	lcp_data_contact.right_side_poscorr=new f32[4*contact_count];
-	lcp_data_contact.diag=new f32[4*contact_count];
-	lcp_data_contact.lambda=new f32[4*contact_count];
-	lcp_data_contact.lambda_poscorr=new f32[4*contact_count];
-	lcp_data_contact.constraintnum=new char[contact_count];
-	lcp_data_contact.body_index=new body_index_t[contact_count];
+#else
+	uint32 mem_to_alloc=sizeof(jacobi)*(4*contact_count+4*contact_count+4*contact_count+4*contact_count)+
+		sizeof(f32)*(4*contact_count+4*contact_count+4*contact_count+4*contact_count+4*contact_count+4*contact_count+4*contact_count+4*contact_count+contact_count)+
+		sizeof(uint32)*contact_count+
+		sizeof(body_index_t)*contact_count;
 
-	lcp_data_friction.J=new jacobi[4*contact_count];
-	lcp_data_friction.B=new jacobi[4*contact_count];
-	lcp_data_friction.right_side=new f32[4*contact_count];
-	lcp_data_friction.diag=new f32[4*contact_count];
-	lcp_data_friction.lambda=new f32[4*contact_count];
-	lcp_data_friction.friction_coeff=new f32[contact_count];
+	char* mem=(char*)malloc(mem_to_alloc);
+	lcp_data_contact.J=(jacobi*)mem; mem+=sizeof(jacobi)*4*contact_count;
+	lcp_data_contact.B=(jacobi*)mem; mem+=sizeof(jacobi)*4*contact_count;
+
+	lcp_data_contact.right_side=(f32*)mem; mem+=sizeof(f32)*4*contact_count;
+	lcp_data_contact.right_side_poscorr=(f32*)mem; mem+=sizeof(f32)*4*contact_count;
+	lcp_data_contact.diag=(f32*)mem; mem+=sizeof(f32)*4*contact_count;
+	lcp_data_contact.lambda=(f32*)mem; mem+=sizeof(f32)*4*contact_count;
+	lcp_data_contact.lambda_poscorr=(f32*)mem; mem+=sizeof(f32)*4*contact_count;
+
+	lcp_data_contact.constraintnum=(uint32*)mem; mem+=sizeof(uint32)*contact_count;
+	lcp_data_contact.body_index=(body_index_t*)mem; mem+=sizeof(body_index_t)*contact_count;
+
+	lcp_data_friction.J=(jacobi*)mem; mem+=sizeof(jacobi)*4*contact_count;
+	lcp_data_friction.B=(jacobi*)mem; mem+=sizeof(jacobi)*4*contact_count;
+
+	lcp_data_friction.right_side=(f32*)mem; mem+=sizeof(f32)*4*contact_count;
+	lcp_data_friction.diag=(f32*)mem; mem+=sizeof(f32)*4*contact_count;
+	lcp_data_friction.lambda=(f32*)mem; mem+=sizeof(f32)*4*contact_count;
+	lcp_data_friction.friction_coeff=(f32*)mem;
+//	lcp_data_contact.J=new jacobi[4*contact_count];
+//	lcp_data_contact.B=new jacobi[4*contact_count];
+
+//	lcp_data_contact.right_side=new f32[4*contact_count];
+//	lcp_data_contact.right_side_poscorr=new f32[4*contact_count];
+//	lcp_data_contact.diag=new f32[4*contact_count];
+//	lcp_data_contact.lambda=new f32[4*contact_count];
+//	lcp_data_contact.lambda_poscorr=new f32[4*contact_count];
+
+//	lcp_data_contact.constraintnum=new uint32[contact_count];
+//	lcp_data_contact.body_index=new body_index_t[contact_count];
+
+//	lcp_data_friction.J=new jacobi[4*contact_count];
+//	lcp_data_friction.B=new jacobi[4*contact_count];
+
+//	lcp_data_friction.right_side=new f32[4*contact_count];
+//	lcp_data_friction.diag=new f32[4*contact_count];
+//	lcp_data_friction.lambda=new f32[4*contact_count];
+
+//	lcp_data_friction.friction_coeff=new f32[contact_count];
 #endif
 }
 
@@ -99,8 +130,8 @@ struct solver_pre_step_contacts
 				lcp_data->lambda[constraint_index]=relax*act_cp->cached_lambda;
 				lcp_data->lambda_poscorr[constraint_index]=0;
 
-				vec3 relpos1=act_cp->abs_pos[0]-nbody->pos[body1].t;
-				vec3 relpos2=act_cp->abs_pos[1]-nbody->pos[body2].t;
+				vec3 relpos1=act_cp->abs_pos[0]-nbody->get_pos(body1).t;
+				vec3 relpos2=act_cp->abs_pos[1]-nbody->get_pos(body2).t;
 
 #ifdef _DEBUG
 				jacobi* j=&lcp_data->J[constraint_index];
@@ -117,34 +148,34 @@ struct solver_pre_step_contacts
 				j->v2=act_contact->normal;
 				j->w2.cross(relpos2,act_contact->normal);
 
-				b->v1=nbody->invmass[body1]*j->v1;
-				b->w1=nbody->invinertia_abs[body1].transform3x3(j->w1);
-				b->v2=nbody->invmass[body2]*j->v2;
-				b->w2=nbody->invinertia_abs[body2].transform3x3(j->w2);
+				b->v1=nbody->get_invmass(body1)*j->v1;
+				b->w1=nbody->get_invinertia_abs(body1).transform3x3(j->w1);
+				b->v2=nbody->get_invmass(body2)*j->v2;
+				b->w2=nbody->get_invinertia_abs(body2).transform3x3(j->w2);
 
 				const f32 lambda=solver->lcp_data_contact.lambda[constraint_index];
-				nbody->constraint_accel[body1].v+=lambda*b->v1;
-				nbody->constraint_accel[body1].w+=lambda*b->w1;
+				nbody->get_constraint_accel(body1).v+=lambda*b->v1;
+				nbody->get_constraint_accel(body1).w+=lambda*b->w1;
 
-				nbody->constraint_accel[body2].v+=lambda*b->v2;
-				nbody->constraint_accel[body2].w+=lambda*b->w2;
+				nbody->get_constraint_accel(body2).v+=lambda*b->v2;
+				nbody->get_constraint_accel(body2).w+=lambda*b->w2;
 
 
 
-				vec3 dv=	nbody->vel[body2]+
-					cross(nbody->rotvel[body2], relpos2) -
-					nbody->vel[body1]-
-					cross(nbody->rotvel[body1], relpos1);
+				vec3 dv=	nbody->get_vel(body2)+
+					cross(nbody->get_rotvel(body2), relpos2) -
+					nbody->get_vel(body1)-
+					cross(nbody->get_rotvel(body1), relpos1);
 
 				f32 vel_normal = dot(dv, act_contact->normal);
 				f32 biasVelocityPositionCorrection=-pos_corr_rate*min(act_cp->penetration+max_penetration,0.0f)/solver->dt;
 				f32 restitution=-min(vel_normal*act_contact->restitution+0.05f,0.0f);
 
 				lcp_data->right_side[constraint_index]=restitution-
-					(dot(j->v1,nbody->vel[body1])+
-					dot(j->w1,nbody->rotvel[body1])+
-					dot(j->v2,nbody->vel[body2])+
-					dot(j->w2,nbody->rotvel[body2]));
+					(dot(j->v1,nbody->get_vel(body1))+
+					dot(j->w1,nbody->get_rotvel(body1))+
+					dot(j->v2,nbody->get_vel(body2))+
+					dot(j->w2,nbody->get_rotvel(body2)));
 
 				lcp_data->right_side_poscorr[constraint_index]=biasVelocityPositionCorrection;
 
@@ -204,16 +235,16 @@ struct solver_pre_step_contacts
 				fj->v2=tangentDirection;
 				fj->w2.cross(relpos2,tangentDirection);
 
-				fb->v1=nbody->invmass[body1]*fj->v1;
-				nbody->invinertia_abs[body1].transform3x3(fb->w1,fj->w1);
-				fb->v2=nbody->invmass[body2]*fj->v2;
-				nbody->invinertia_abs[body2].transform3x3(fb->w2,fj->w2);
+				fb->v1=nbody->get_invmass(body1)*fj->v1;
+				nbody->get_invinertia_abs(body1).transform3x3(fb->w1,fj->w1);
+				fb->v2=nbody->get_invmass(body2)*fj->v2;
+				nbody->get_invinertia_abs(body2).transform3x3(fb->w2,fj->w2);
 
 				lcp_data_friction->right_side[constraint_index]=-
-					(dot(fj->v1,nbody->vel[body1])+
-					dot(fj->w1,nbody->rotvel[body1])+
-					dot(fj->v2,nbody->vel[body2])+
-					dot(fj->w2,nbody->rotvel[body2]));// /i_DeltaTime;
+					(dot(fj->v1,nbody->get_vel(body1))+
+					dot(fj->w1,nbody->get_rotvel(body1))+
+					dot(fj->v2,nbody->get_vel(body2))+
+					dot(fj->w2,nbody->get_rotvel(body2)));// /i_DeltaTime;
 
 
 
@@ -260,7 +291,6 @@ void lcp_solver_t::solve_contacts()
 {
     physicssystem* ptr=physicssystem::ptr;
 	int constraint_index=0;
-	accel_t* __restrict accPtr=ptr->bodystate_array.constraint_accel;
 #ifdef _DEBUG
 		const jacobi* __restrict jPtr=&lcp_data_contact.J[0];
 		const jacobi* __restrict bPtr=&lcp_data_contact.B[0];
@@ -273,6 +303,8 @@ void lcp_solver_t::solve_contacts()
 	{
 		const int body1=lcp_data_contact.body_index[actcontact].i[0];
 		const int body2=lcp_data_contact.body_index[actcontact].i[1];
+		accel_t& acc_body1=ptr->bodystate_array.get_constraint_accel(body1);
+		accel_t& acc_body2=ptr->bodystate_array.get_constraint_accel(body2);
 
 		const int numconstraint=lcp_data_contact.constraintnum[actcontact];
 
@@ -280,10 +312,10 @@ void lcp_solver_t::solve_contacts()
 		for (int actconstraint=0; actconstraint<numconstraint; ++actconstraint,++constraint_index,++jPtr,++bPtr)
 		{
 			f32 newLambda=lcp_data_contact.right_side[constraint_index]-
-				dot(jPtr->v1,accPtr[body1].v)-
-				dot(jPtr->w1,accPtr[body1].w)-
-				dot(jPtr->v2,accPtr[body2].v)-
-				dot(jPtr->w2,accPtr[body2].w);
+				dot(jPtr->v1,acc_body1.v)-
+				dot(jPtr->w1,acc_body1.w)-
+				dot(jPtr->v2,acc_body2.v)-
+				dot(jPtr->w2,acc_body2.w);
 
 			newLambda*= lcp_data_contact.diag[constraint_index];
 			newLambda+=lcp_data_contact.lambda[constraint_index];
@@ -294,17 +326,17 @@ void lcp_solver_t::solve_contacts()
 			f32 deltaLambda=newLambda-lcp_data_contact.lambda[constraint_index];
 			lcp_data_contact.lambda[constraint_index]=newLambda;
 
-			accPtr[body1].v+=deltaLambda* bPtr->v1;
-			accPtr[body1].w+=deltaLambda* bPtr->w1;
+			acc_body1.v+=deltaLambda* bPtr->v1;
+			acc_body1.w+=deltaLambda* bPtr->w1;
 
-			accPtr[body2].v+=deltaLambda* bPtr->v2;
-			accPtr[body2].w+=deltaLambda* bPtr->w2;
+			acc_body2.v+=deltaLambda* bPtr->v2;
+			acc_body2.w+=deltaLambda* bPtr->w2;
 
 			newLambda=lcp_data_contact.right_side_poscorr[constraint_index]-
-				dot(jPtr->v1,accPtr[body1].p)-
-				dot(jPtr->w1,accPtr[body1].o)-
-				dot(jPtr->v2,accPtr[body2].p)-
-				dot(jPtr->w2,accPtr[body2].o);
+				dot(jPtr->v1,acc_body1.p)-
+				dot(jPtr->w1,acc_body1.o)-
+				dot(jPtr->v2,acc_body2.p)-
+				dot(jPtr->w2,acc_body2.o);
 
 			newLambda*= lcp_data_contact.diag[constraint_index];
 			newLambda+=lcp_data_contact.lambda_poscorr[constraint_index];
@@ -316,11 +348,11 @@ void lcp_solver_t::solve_contacts()
 
 			lcp_data_contact.lambda_poscorr[constraint_index]=newLambda;
 
-			accPtr[body1].p+=deltaLambda*bPtr->v1;
-			accPtr[body1].o+=deltaLambda*bPtr->w1;
+			acc_body1.p+=deltaLambda*bPtr->v1;
+			acc_body1.o+=deltaLambda*bPtr->w1;
 
-			accPtr[body2].p+=deltaLambda*bPtr->v2;
-			accPtr[body2].o+=deltaLambda*bPtr->w2;
+			acc_body2.p+=deltaLambda*bPtr->v2;
+			acc_body2.o+=deltaLambda*bPtr->w2;
 		}
 	}
 }
@@ -328,7 +360,7 @@ void lcp_solver_t::solve_contacts()
 void lcp_solver_t::solve_frictions()
 {
 	physicssystem* ptr=physicssystem::ptr;
-	accel_t* __restrict accPtr=ptr->bodystate_array.constraint_accel;
+	nbody_t* b=&ptr->bodystate_array;
 	int constraint_index=0;
 #ifdef _DEBUG
 		const jacobi* __restrict jPtr=&lcp_data_friction.J[0];
@@ -342,17 +374,19 @@ void lcp_solver_t::solve_frictions()
 	{
 		const int body1=lcp_data_contact.body_index[actcontact].i[0];
 		const int body2=lcp_data_contact.body_index[actcontact].i[1];
+		accel_t& acc_body1=b->get_constraint_accel(body1);
+		accel_t& acc_body2=b->get_constraint_accel(body2);
 
 		const int numconstraint=lcp_data_contact.constraintnum[actcontact];
 
 		f32 coeff=lcp_data_friction.friction_coeff[actcontact];
-		for (int actconstraint=0; actconstraint<numconstraint; ++actconstraint,++jPtr,++bPtr)
+		for (int actconstraint=0; actconstraint<numconstraint; ++actconstraint,++constraint_index,++jPtr,++bPtr)
 		{
 			f32 newLambda=lcp_data_friction.right_side[constraint_index]-
-				dot(jPtr->v1,accPtr[body1].v)-
-				dot(jPtr->w1,accPtr[body1].w)-
-				dot(jPtr->v2,accPtr[body2].v)-
-				dot(jPtr->w2,accPtr[body2].w);
+				dot(jPtr->v1,acc_body1.v)-
+				dot(jPtr->w1,acc_body1.w)-
+				dot(jPtr->v2,acc_body2.v)-
+				dot(jPtr->w2,acc_body2.w);
 
 			newLambda*= lcp_data_friction.diag[constraint_index];
 			newLambda+=lcp_data_friction.lambda[constraint_index];
@@ -364,10 +398,10 @@ void lcp_solver_t::solve_frictions()
 
 			lcp_data_friction.lambda[constraint_index]=newLambda;
 
-			accPtr[body1].v+=deltaLambdaFriction*bPtr->v1;
-			accPtr[body1].w+=deltaLambdaFriction*bPtr->w1;
-			accPtr[body2].v+=deltaLambdaFriction*bPtr->v2;
-			accPtr[body2].w+=deltaLambdaFriction*bPtr->w2;
+			acc_body1.v+=deltaLambdaFriction*bPtr->v1;
+			acc_body1.w+=deltaLambdaFriction*bPtr->w1;
+			acc_body2.v+=deltaLambdaFriction*bPtr->v2;
+			acc_body2.w+=deltaLambdaFriction*bPtr->w2;
 		}
 	}
 
@@ -375,12 +409,22 @@ void lcp_solver_t::solve_frictions()
 
 void lcp_solver_t::solve_constraints()
 {
+	g_solv_cont=g_solv_fric=0;
+	timer_t t;
 	for (int it=0; it<10; ++it)
 	{
+		t.reset();
 		solve_contacts();
+		t.stop();
+		g_solv_cont+=t.get_tick();
+		t.reset();
 		solve_frictions();
+		t.stop();
+		g_solv_fric+=t.get_tick();
 	}
 }
+
+extern unsigned g_presol,g_solcon;
 
 void lcp_solver_t::process(contact_surface_t** i_contact_array, int i_contact_count, f32 i_dt)
 {
@@ -388,10 +432,22 @@ void lcp_solver_t::process(contact_surface_t** i_contact_array, int i_contact_co
 	contact_count=i_contact_count;
 	dt=i_dt;
 
+	timer_t t;
 
+	t.reset();
 	allocate_buffer();
+	t.stop();
+	g_cache_l=t.get_tick();
+
+
+	t.reset();
 	pre_step();
+	t.stop();
+	g_presol=t.get_tick();
+	t.reset();
 	solve_constraints();
+	t.stop();
+	g_solcon=t.get_tick();
 	cache_lambda();
 	clean();
 }
@@ -418,7 +474,8 @@ void lcp_solver_t::cache_lambda()
 
 void lcp_solver_t::clean()
 {
-#if 0
+#ifndef use_vector
+/*
 	delete [] lcp_data_contact.J;
 	delete [] lcp_data_contact.B;
 	delete [] lcp_data_contact.right_side;
@@ -435,5 +492,7 @@ void lcp_solver_t::clean()
 	delete [] lcp_data_friction.diag;
 	delete [] lcp_data_friction.lambda;
 	delete [] lcp_data_friction.friction_coeff;
+*/
+	free(lcp_data_contact.J);
 #endif
 }

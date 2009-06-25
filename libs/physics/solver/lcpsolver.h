@@ -18,8 +18,10 @@ struct body_index_t
 };
 
 
+//#define use_vector
 struct lcp_data_t
 {
+#ifdef use_vector
 	vector<jacobi> J;
 	vector<jacobi> B;
 	vector<body_index_t>	body_index;
@@ -30,8 +32,7 @@ struct lcp_data_t
 	vector<f32>  lambda_poscorr;
 	vector<f32>  friction_coeff;
 	vector<char> constraintnum;
-
-#if 0
+#else
 	jacobi* J;
 	jacobi* B;
 	body_index_t*	body_index;
@@ -41,7 +42,7 @@ struct lcp_data_t
 	f32*  lambda;
 	f32*  lambda_poscorr;
 	f32*  friction_coeff;
-	char* constraintnum;
+	uint32* constraintnum;
 #endif
 };
 

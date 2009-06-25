@@ -14,6 +14,8 @@ struct contact_group
     int joint_count;
 };
 
+struct nbody_t;
+
 struct contact_group_manager_t
 {
     vector<contact_surface_t*> contact_array;
@@ -21,7 +23,7 @@ struct contact_group_manager_t
 
 
 
-    void create_contact_groups(body_t* dynbody_array[], int dynbody_count,list_allocator<sizeof(contact_surface_t)>& contact_list);
+    void create_contact_groups(nbody_t& bodystate_array, list_allocator<sizeof(contact_surface_t)>& contact_list);
 };
 
 #endif//_contactgroupmanager_h_

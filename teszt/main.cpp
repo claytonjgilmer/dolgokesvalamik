@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <windows.h>
 #include <MMSystem.h>
+#include <algorithm>
 
 #include "math/sorting.h"
 #include "math/vec3.h"
@@ -26,7 +27,6 @@
 #include "render/renderobject3d.h"
 
 #include "containers/poolalloc.h"
-#include <algorithm>
 object3d* load_mmod(const char* i_filename);
 
 struct proc
@@ -294,8 +294,6 @@ unsigned get_radix_key(f32 f)
 }
 
 
-
-//#include <algorithm>
 
 void sorttest()
 {

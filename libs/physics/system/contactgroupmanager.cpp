@@ -1,10 +1,11 @@
 #include "contactgroupmanager.h"
+#include "nbody.h"
 
     void create_one_group(contact_group_manager_t* gm, body_t* b, int group_index);
-    void contact_group_manager_t::create_contact_groups(body_t* dynbody_array[], int dynbody_count,list_allocator<sizeof(contact_surface_t)>& contact_list)
+    void contact_group_manager_t::create_contact_groups(nbody_t& bodystate_array, list_allocator<sizeof(contact_surface_t)>& contact_list)
     {
-        for (int n=0; n<dynbody_count; ++n)
-            dynbody_array[n]->group_index=-1;
+        for (uint32 n=1; n<bodystate_array.get_size(); ++n)
+            bodystate_array.get_body(n)->group_index=-1;
 
 		if (!contact_list.size())
 			return;
@@ -20,9 +21,9 @@
         int act_contact_count=0;
         this->group_array.push_back(contact_group());
 
-        for (int n=0; n<dynbody_count; ++n)
+        for (uint32 n=1; n<bodystate_array.get_size(); ++n)
         {
-            body_t* b=dynbody_array[n];
+            body_t* b=bodystate_array.get_body(n);
 
             if (b->group_index==-1 && b->contacts.first())
             {

@@ -97,8 +97,8 @@ void contact_surface_t::add_contact(const vec3 relpos[][2], int contact_count,co
 void contact_surface_t::update()
 {
     physicssystem* ptr=physicssystem::ptr;
-    const mtx4x3&body1_pos=ptr->bodystate_array.pos[this->body[0]->array_index];
-    const mtx4x3&body2_pos=ptr->bodystate_array.pos[this->body[1]->array_index];
+    const mtx4x3&body1_pos=ptr->bodystate_array.get_pos(this->body[0]->array_index);
+    const mtx4x3&body2_pos=ptr->bodystate_array.get_pos(this->body[1]->array_index);
     for (int n=0; n<this->contact_count; ++n)
     {
 		this->updated=1;
