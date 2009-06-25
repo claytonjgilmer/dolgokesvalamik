@@ -66,50 +66,50 @@
 		};
 	}; //struct mtx3x3
 
-	inline mtx3x3::mtx3x3()
+	MLINLINE mtx3x3::mtx3x3()
 	{
 	}
 
-	inline mtx3x3::mtx3x3(const vec3& i_x, const vec3& i_y, const vec3& i_z)
+	MLINLINE mtx3x3::mtx3x3(const vec3& i_x, const vec3& i_y, const vec3& i_z)
 	{
 		x=i_x;
 		y=i_y;
 		z=i_z;
 	}
 
-	inline mtx3x3::operator f32* ()
+	MLINLINE mtx3x3::operator f32* ()
 	{
 		return &_11;
 	}
 
-	inline mtx3x3::operator const f32* () const
+	MLINLINE mtx3x3::operator const f32* () const
 	{
 		return &_11;
 	}
 
-	inline vec3& mtx3x3::axis(int i_index)
+	MLINLINE vec3& mtx3x3::axis(int i_index)
 	{
 		return *(((vec3*)&_11)+i_index);
 	}
 
-	inline const vec3& mtx3x3::axis(int i_index) const
+	MLINLINE const vec3& mtx3x3::axis(int i_index) const
 	{
 		return *(((vec3*)&_11)+i_index);
 	}
 
 
-	inline void mtx3x3::identity()
+	MLINLINE void mtx3x3::identity()
 	{
 		_11=_22=_33=1.0f;
 		_12=_13=_21=_23=_31=_32=0.0f;
 	}
 
-	inline void mtx3x3::clear()
+	MLINLINE void mtx3x3::clear()
 	{
 		_11=_22=_33=_12=_13=_21=_23=_31=_32=0.0f;
 	}
 
-	inline void mtx3x3::transform3x3(vec3& o_dst, const vec3& i_src) const
+	MLINLINE void mtx3x3::transform3x3(vec3& o_dst, const vec3& i_src) const
 	{
 		o_dst.x=i_src.x*this->_11+i_src.y*this->_21+i_src.z*this->_31;
 		o_dst.y=i_src.x*this->_12+i_src.y*this->_22+i_src.z*this->_32;
@@ -129,14 +129,14 @@
         return t;
 	}
 
-	inline void mtx3x3::transformtransposed3x3(vec3& o_dst, const vec3& i_src) const
+	MLINLINE void mtx3x3::transformtransposed3x3(vec3& o_dst, const vec3& i_src) const
 	{
 		o_dst.x=dot(i_src,this->x);
 		o_dst.y=dot(i_src,this->y);
 		o_dst.z=dot(i_src,this->z);
 	}
 
-	inline vec3 mtx3x3::transformtransposed3x3(const vec3& i_src) const
+	MLINLINE vec3 mtx3x3::transformtransposed3x3(const vec3& i_src) const
 	{
 	    vec3 t; t.set
 			(
@@ -148,7 +148,7 @@
         return t;
 	}
 
-	inline void mtx3x3::transpose3x3()
+	MLINLINE void mtx3x3::transpose3x3()
 	{
 		f32 tmp;
 		tmp=this->_12; this->_12=this->_21; this->_21=tmp;
@@ -172,7 +172,7 @@
 
 
 
-	inline void mtx3x3::invert3x3(const mtx3x3& i_src)
+	MLINLINE void mtx3x3::invert3x3(const mtx3x3& i_src)
 	{
 		f32 d11 = i_src._22*i_src._33 - i_src._23*i_src._32;
 		f32 d12 = i_src._23*i_src._31 - i_src._21*i_src._33;
@@ -193,7 +193,7 @@
 		_33 = id_11*i_src._22 - id_12*i_src._21;
 	}
 
-	inline void mtx3x3::abs(const mtx3x3& i_src)
+	MLINLINE void mtx3x3::abs(const mtx3x3& i_src)
 	{
 		this->x.abs(i_src.x);
 		this->y.abs(i_src.y);
@@ -232,14 +232,14 @@
 		_33=i_src1->_31*i_src2->_13+i_src1->_32*i_src2->_23+i_src1->_33*i_src2->_33;
 	}
 
-	inline void mtx3x3::multiplytransposed3x3(const mtx3x3& i_src1, const mtx3x3& i_src2transposed)
+	MLINLINE void mtx3x3::multiplytransposed3x3(const mtx3x3& i_src1, const mtx3x3& i_src2transposed)
 	{
 		i_src2transposed.transformtransposed3x3(this->x,i_src1.x);
 		i_src2transposed.transformtransposed3x3(this->y,i_src1.y);
 		i_src2transposed.transformtransposed3x3(this->z,i_src1.z);
 	}
 
-	inline void mtx3x3::from_euler(f32 i_xangle, f32 i_yangle, f32 i_zangle)
+	MLINLINE void mtx3x3::from_euler(f32 i_xangle, f32 i_yangle, f32 i_zangle)
 	{
 		f32 sx=(sin(i_xangle)), cx=(cos(i_xangle));
 		f32 sy=(sin(i_yangle)), cy=(cos(i_yangle));
@@ -250,7 +250,7 @@
 		_31 = cx*sy;			_32 = -sx;		_33 = cx*cy;
 	}
 
-	inline void mtx3x3::get_euler(f32& o_xangle, f32& o_yangle, f32& o_zangle) const
+	MLINLINE void mtx3x3::get_euler(f32& o_xangle, f32& o_yangle, f32& o_zangle) const
 	{
 		f32 a;
 		o_xangle = asin(this->z.y);

@@ -137,7 +137,7 @@
 
 
 
-#define REF_COUNT 64
+#define REF_COUNT 12
 		unsigned m_ref_buf[REF_COUNT];
 		HANDLE	m_ref_event[REF_COUNT];
 

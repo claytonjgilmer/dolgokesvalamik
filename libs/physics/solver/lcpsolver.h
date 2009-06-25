@@ -65,7 +65,9 @@ struct lcp_solver_t
 	lcp_data_t lcp_data_friction;
 	lcp_data_t lcp_data_joint;
 	contact_surface_t** contact_array;
+	uint16 contact_index[10000];
 	int contact_count;
+	int constraint_count;
 	f32 dt;
 
 	int body_count;

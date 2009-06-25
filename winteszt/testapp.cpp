@@ -29,6 +29,8 @@
 #include "utils/timer.h"
 //#include <CAPROFAPI.h>
 
+extern unsigned int constraint_c;
+
 void draw_simplex(dvec3 s[], int num)
 {
 	for (int n=0; n<num; ++n)
@@ -220,7 +222,7 @@ RECT g_rect;
 #define V vec3
 #define V2 vec2
 
-vec3 g_pos[8]={{-1,-1,-1},{1,-1,-1},{1,1,-1},{-1,1,-1},{-1,-1,1},{1,-1,1},{1,1,1},{-1,1,1}};
+vec3 g_pos[8]={vec3(-1,-1,-1),vec3(1,-1,-1),vec3(1,1,-1),vec3(-1,1,-1),vec3(-1,-1,1),vec3(1,-1,1),vec3(1,1,1),vec3(-1,1,1)};
 vec2 g_uv[]={V2(0,0),V2(1,0),V2(1,1),V2(0,1),V2(1,1),V2(0,1),V2(0,0),V2(1,0)};
 
 static int obj_index=0;
@@ -373,7 +375,7 @@ void init_app(HWND i_hwnd)
 	bd.mass=1;
 	bd.inertia.identity();
 
-	static vec3 posok[]={{0,0,0},{.5f,0.5f,0}};
+	static vec3 posok[]={vec3(0,0,0),vec3(.5f,0.5f,0)};
 
 	for (unsigned n=0; n<BODY_NUM;++n)
 	{
@@ -605,6 +607,8 @@ void update_app()
 		rendersystem::ptr->draw_text(10,480,color_f(1,1,1,1),str);
 		sprintf(str,"update  :%d %d",physicssystem::ptr->parallel_update,g_up/g_frc);
 		rendersystem::ptr->draw_text(10,500,color_f(1,1,1,1),str);
+		sprintf(str,"constnum:%d",constraint_c);
+		rendersystem::ptr->draw_text(10,520,color_f(1,1,1,1),str);
 	}
 
 

@@ -11,8 +11,8 @@
 #endif
 	struct vec3
 	{
-//		vec3(){}
-//		vec3(f32 i_xcoord, f32 i_ycoord, f32 i_zcoord){set(i_xcoord,i_ycoord,i_zcoord);}
+		vec3(){}
+		vec3(f32 i_xcoord, f32 i_ycoord, f32 i_zcoord): x(i_xcoord),y(i_ycoord),z(i_zcoord){}
 		f32&	operator[](int i_index);
 		const f32& operator[](int i_index) const;
 
@@ -42,7 +42,7 @@
 		vec3	operator-(const vec3& i_other) const;
 		void	operator+=(const vec3& i_other);
 		void	operator-=(const vec3& i_other);
-
+/*
 		void operator=(const vec3& v)
 		{
 			check_vec3(v);
@@ -50,7 +50,7 @@
 			y=v.y;
 			z=v.z;
 		}
-
+*/
 		vec3	operator*(f32 i_scalar) const;
 		vec3	operator/(f32 i_scalar) const;
 
@@ -108,14 +108,11 @@
 
 	MLINLINE vec3 cross(const vec3& i_src1, const vec3& i_src2)
 	{
-		vec3 c;
-		c.set(
+		return vec3(
 			i_src1.y*i_src2.z-i_src1.z*i_src2.y,
 			i_src1.z*i_src2.x-i_src1.x*i_src2.z,
 			i_src1.x*i_src2.y-i_src1.y*i_src2.x
 		);
-
-		return c;
 	}
 
 	MLINLINE vec3 vec3::cross(const vec3& i_other) const
@@ -172,16 +169,12 @@
 
 	MLINLINE vec3	vec3::operator+(const vec3& i_other) const
 	{
-		vec3 a;
-		a.set(x+i_other.x,y+i_other.y,z+i_other.z);
-		return a;
+		return vec3(x+i_other.x,y+i_other.y,z+i_other.z);
 	}
 
 	MLINLINE vec3	vec3::operator-(const vec3& i_other) const
 	{
-		vec3 d;
-		d.set(x-i_other.x,y-i_other.y,z-i_other.z);
-		return d;
+		return vec3(x-i_other.x,y-i_other.y,z-i_other.z);
 	}
 
 	MLINLINE void	vec3::operator+=(const vec3& i_other)
@@ -200,15 +193,12 @@
 
 	MLINLINE vec3	vec3::operator*(f32 i_scalar) const
 	{
-		vec3 m; m.set(x*i_scalar,y*i_scalar,z*i_scalar);
-		return m;
+		return vec3(x*i_scalar,y*i_scalar,z*i_scalar);
 	}
 
 	MLINLINE vec3	vec3::operator/(f32 i_scalar) const
 	{
-		vec3 d;
-		d.set(x/i_scalar,y/i_scalar,z/i_scalar);
-		return d;
+		return vec3(x/i_scalar,y/i_scalar,z/i_scalar);
 	}
 
 	MLINLINE vec3 operator*(f32 i_scalar, const vec3& i_vector)
@@ -232,7 +222,7 @@
 
 	MLINLINE vec3	vec3::operator-() const
 	{
-		vec3 n; n.set(-x,-y,-z); return n;
+		return vec3(-x,-y,-z);
 	}
 
 	MLINLINE void vec3::abs(const vec3& i_src)
