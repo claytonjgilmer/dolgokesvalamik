@@ -19,3 +19,14 @@ osszehasonlitas kulonbozo vertexszamokra //kocka, rendes model, stb
 mprintersection beillesztese az utkozorendszerbe
 teljes contactinfo-generalas mpr-hez: a legutolso support pointokhoz tartozo face-ek vizsgalataval(lehet,
 hogy ehhez a meshdata-t at kell irni convex hull-ra)
+
+
+json->object|array|object,json|array,json
+object-> {pairseq}
+pairseq-> pair | pair,pairseq
+pair-> string : value
+value -> string | number | true | false | nil | object | array
+array -> [valueseq]
+valueseq -> value | value,valueseq
+
+terminatorok: { } , string number [ ]
