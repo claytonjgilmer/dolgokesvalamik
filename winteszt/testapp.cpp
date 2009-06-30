@@ -197,7 +197,7 @@ struct game
 	{
 		obj_trans.set(0,5,0);
 		camz=camy=camx=0;
-		camt.set(0,0,-100);
+		camt.set(0,0,-30);
 		inited=false;
 		t.reset();
 	}
@@ -276,7 +276,7 @@ void init_app(HWND i_hwnd)
 	filesystem::ptr->register_path("texture","texture\\");
 
 	taskmanagerdesc tdesc;
-	tdesc.m_threadnum=1;
+	tdesc.m_threadnum=3;
 	taskmanager::create(&tdesc);
 
 	shadermanagerdesc shaderdesc("shader");
@@ -380,7 +380,7 @@ void init_app(HWND i_hwnd)
 	for (unsigned n=0; n<BODY_NUM;++n)
 	{
 #ifndef twobody
-		f32 x=0;//random(-ROOM_SIZE,ROOM_SIZE);
+		f32 x=sign((float)n)/10;//random(-ROOM_SIZE,ROOM_SIZE);
 		f32 y=3*(float)n;//random(-ROOM_SIZE,ROOM_SIZE);
 		f32 z=0;//random(-ROOM_SIZE,ROOM_SIZE);
 		bd.pos.t.set(x,y,z);
