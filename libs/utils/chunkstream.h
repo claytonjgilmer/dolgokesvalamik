@@ -21,7 +21,7 @@ struct MChunkStream;
 struct MChunkStream
 {
 //	MChunkStream(const string& filename);
-	MChunkStream(file& i_file);
+	MChunkStream(file_t& i_file);
 	~MChunkStream();
 
 	/// read the top chunk from the file
@@ -42,7 +42,7 @@ struct MChunkStream
 
 	vector<string> mStack;
 
-	file& m_file;
+	file_t& m_file;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -2,7 +2,7 @@
 #include "file/file.h"
 #include "file/filesystem.h"
 
-object3d* load_mmod(file& i_file);
+object3d* load_mmod(file_t& i_file);
 	DEFINE_SINGLETON(objectmanager);
 
 	objectmanager::objectmanager(const objectmanagerdesc* i_desc):
@@ -46,7 +46,7 @@ object3d* load_mmod(file& i_file);
 
 	object3d* objectmanager::load_mmod_file(const char* i_name)
 	{
-		file objfile;
+		file_t objfile;
 		filesystem::ptr->open_file(objfile,i_name,m_objectgroup.c_str(),"rb");
 
 		if (objfile.opened())

@@ -250,7 +250,7 @@ MChunk& MChunk::operator>> (string& s)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-MChunkStream::MChunkStream(file& i_file):
+MChunkStream::MChunkStream(file_t& i_file):
 m_file(i_file)
 {
 }

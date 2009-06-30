@@ -17,7 +17,7 @@
 		if (t)
 			return t;
 
-		file shaderfile;
+		file_t shaderfile;
 		filesystem::ptr->open_file(shaderfile,m_shadergroup.c_str(),i_shadername,"rb");
 
 		if (shaderfile.opened())
@@ -48,7 +48,7 @@
 
 			while (ptr)
 			{
-				file shaderfile;
+				file_t shaderfile;
 				filesystem::ptr->open_file(shaderfile,m_shadergroup.c_str(),ptr->get_name().c_str(),"rb");
 
 				if (shaderfile.opened())

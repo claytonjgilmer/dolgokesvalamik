@@ -29,7 +29,7 @@ struct accel_t
 };
 
 
-//#define SOA
+#define SOA
 
 
 #ifndef SOA

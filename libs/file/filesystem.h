@@ -13,7 +13,7 @@
 
 		void register_path(const char* i_group,const char* i_path);
 		void unregister_path(const char* i_group, const char* i_path);
-		void open_file(file& o_file, const char* i_group, const char* i_filename, const char* i_mode) const;
+		void open_file(file_t& o_file, const char* i_group, const char* i_filename, const char* i_mode) const;
 
 
 
@@ -79,7 +79,7 @@
 		}
 	}
 
-	MLINLINE void filesystem::open_file(file& o_file, const char* i_group, const char* i_filename, const char* i_mode) const
+	MLINLINE void filesystem::open_file(file_t& o_file, const char* i_group, const char* i_filename, const char* i_mode) const
 	{
 		groupstruct* group=m_pathmap.get_data(i_group);
 

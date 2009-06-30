@@ -153,7 +153,7 @@
 	//----------------------------------------------------------------------------
 	void lua::DoFile(const string &i_FileName)
 	{
-		file File;
+		file_t File;
 
 		File.open(i_FileName.c_str(), "rb");
 

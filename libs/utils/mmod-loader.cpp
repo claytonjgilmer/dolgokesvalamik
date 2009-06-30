@@ -1114,7 +1114,7 @@ static f32 LODErrToDist(f32 lodErr, f32 mulRad, f32 centerZ)
 
 
 
-object3d* load_mmod(file& i_file)
+object3d* load_mmod(file_t& i_file)
 {
 	gMeshLODInfoArray.clear();
 	gHItemArray.clear();
@@ -1208,7 +1208,7 @@ object3d* load_mmod(file& i_file)
 
 object3d* load_mmod(const char* i_filename)
 {
-	file f(i_filename,"rb");
+	file_t f(i_filename,"rb");
 
 	return load_mmod(f);
 }

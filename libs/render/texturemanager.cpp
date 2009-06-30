@@ -17,7 +17,7 @@
 		if (t)
 			return t;
 
-		file texturefile;
+		file_t texturefile;
 		filesystem::ptr->open_file(texturefile,m_texturegroup.c_str(),i_texturename,"rb");
 
 		if (!texturefile.opened())

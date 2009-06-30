@@ -6,11 +6,11 @@
 #include <stdio.h>
 #include <sys/stat.h>
 
-	struct file
+	struct file_t
 	{
-		file();
-		file(const char* i_name, const char* i_attributes);
-		~file();
+		file_t();
+		file_t(const char* i_name, const char* i_attributes);
+		~file_t();
 		void open(const char* i_name, const char* i_attributes);
 		void close();
 
@@ -25,7 +25,7 @@
 
 		int opened() const;
 
-		file(const file&);
+		file_t(const file&);
 		void operator=(const file&);
 		FILE* m_handle;
 		string m_name;
@@ -33,20 +33,20 @@
 	};
 
 
-	MLINLINE file::file()
+	MLINLINE file_t::file_t()
 	{
 		m_handle=NULL;
 		m_size=0;
 	}
 
-	MLINLINE file::file(const char* i_name,const char* i_attributes):
+	MLINLINE file_t::file_t(const char* i_name,const char* i_attributes):
 	m_handle(NULL)
 	{
 		open(i_name,i_attributes);
 	}
 //_CRTIMP int __cdecl __MINGW_NOTHROW	_fileno (FILE*);
 
-	MLINLINE void file::open(const char* i_name, const char* i_attributes)
+	MLINLINE void file_t::open(const char* i_name, const char* i_attributes)
 	{
 		if (m_handle)
 			close();
@@ -61,7 +61,7 @@
 		}
 	}
 
-	MLINLINE void file::close()
+	MLINLINE void file_t::close()
 	{
 		if (!m_handle)
 			return;
@@ -72,13 +72,13 @@
 		m_size=0;
 	}
 
-	MLINLINE file::~file()
+	MLINLINE file_t::~file_t()
 	{
 		if (m_handle)
 			fclose(m_handle);
 	}
 
-	MLINLINE int file::read_line(string& o_line) const
+	MLINLINE int file_t::read_line(string& o_line) const
 	{
 		char line[16384];
 
@@ -106,33 +106,33 @@
 		}
 	}
 
-	MLINLINE void file::write_line(const char* i_line) const
+	MLINLINE void file_t::write_line(const char* i_line) const
 	{
 		fputs(i_line,m_handle);
 		fputs("\n",m_handle);
 	}
 
-	MLINLINE unsigned file::read_bytes(char* o_bytes, unsigned i_numbytes) const
+	MLINLINE unsigned file_t::read_bytes(char* o_bytes, unsigned i_numbytes) const
 	{
 		return (unsigned)fread(o_bytes,1,i_numbytes,m_handle);
 	}
 
-	MLINLINE void file::write_bytes(const char* i_bytes, unsigned i_numbytes) const
+	MLINLINE void file_t::write_bytes(const char* i_bytes, unsigned i_numbytes) const
 	{
 		fwrite(i_bytes,1,i_numbytes,m_handle);
 	}
 
-	MLINLINE int file::opened() const
+	MLINLINE int file_t::opened() const
 	{
 		return m_handle!=NULL;
 	}
 
-	MLINLINE unsigned file::size() const
+	MLINLINE unsigned file_t::size() const
 	{
 		return m_size;
 	}
 
-	MLINLINE void file::seek_cur(int i_offset)
+	MLINLINE void file_t::seek_cur(int i_offset)
 	{
 		fseek(m_handle,i_offset,SEEK_CUR);
 	}
