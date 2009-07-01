@@ -5,8 +5,11 @@ enum token_type
 	tok_str,
 	tok_number,
 	tok_comma,
+	tok_colon,
 	tok_left_bracket,
 	tok_right_bracket,
+	tok_left_brace,
+	tok_right_brace,
 	tok_bool,
 	tok_nil,
 	tok_eof
@@ -19,7 +22,9 @@ struct json_parser_t
 	json_parser_t(const char* text);
 	void get_next_token();
 	void proc_json();
+	void proc_json2();
 	void proc_object();
+	void proc_object2();
 	void proc_array();
 	void proc_pairseq();
 	void proc_pair();
@@ -30,13 +35,17 @@ struct json_parser_t
 	void get_string();
 	void get_left_bracket();
 	void get_right_bracket();
+	void get_left_brace();
+	void get_right_brace();
 	void get_comma();
+	void get_colon();
 	void get_true_val();
 	void get_false_val();
 	void get_nil_val();
 	void get_eof();
 
-	void accept(token_type s);
+	bool accept(token_type s);
+	void expect(token_type s);
 
 	const char* text;
 	int text_size;
@@ -48,16 +57,27 @@ struct json_parser_t
 	double number_val;
 };
 
-void json_parser_t::accept(token_type s)
+bool json_parser_t::accept(token_type s)
 {
 	if (act_token==s)
 	{
 		get_next_token();
+		return 1;
 	}
 	else
 	{
-		assertion(0,"unexpected token");
+		return 0;
 	}
+}
+
+
+
+void json_parser_t::expect(token_type s)
+{
+	if (accept(s))
+		return;
+
+	assertion(0,"unexpected token");
 }
 
 json_parser_t::json_parser_t(const char* text):
@@ -76,7 +96,97 @@ text(text)
 
 void json_parser_t::proc_json()
 {
-	
+	switch (act_token)
+	{
+	case tok_eof:
+		return;
+	case tok_left_brace:
+		accept(tok_left_brace);
+		proc_object();
+		expect(tok_right_brace);
+		break;
+	case tok_left_bracket:
+		proc_array();
+	default:
+		assertion(0,"unexpected token");
+	}
+
+	proc_json2();
+}
+
+void json_parser_t::proc_json2()
+{
+	switch (act_token)
+	{
+	case tok_eof:
+		return;
+	case tok_comma:
+		accept(tok_comma);
+		proc_json();
+		return;
+	default:
+		assertion(0,"unexpected token");
+	}
+}
+
+void json_parser_t::proc_object()
+{
+	proc_pair();
+	proc_object2();
+}
+
+void json_parser_t::proc_object2()
+{
+	switch (act_token)
+	{
+	case tok_comma:
+		accept(tok_comma);
+		proc_object();
+		return;
+	case tok_right_brace:
+		return;
+	default:
+		assertion(0,"unexpected token");
+	}
+}
+
+void json_parser_t::proc_pair()
+{
+	expect(tok_str);
+	expect(tok_colon);
+	proc_value();
+}
+
+void json_parser_t::proc_value()
+{
+	switch (act_token)
+	{
+	case tok_str:
+		accept(tok_str);
+		break;
+	case tok_number:
+		accept(tok_number);
+		break;
+	case tok_bool:
+		accept(tok_bool);
+		break;
+	case tok_nil:
+		accept(tok_nil);
+		break;
+	case tok_left_brace:
+		accept(tok_left_brace);
+		proc_object();
+		expect(tok_right_brace);
+		break;
+	case tok_left_bracket:
+		accept(tok_left_bracket);
+		proc_array();
+		expect(tok_right_bracket);
+		break;
+
+	default:
+		assertion(0,"unexpected token");
+	}
 }
 
 
@@ -112,8 +222,14 @@ void json_parser_t::get_next_token()
 		get_left_bracket();
 	else if (text[act_index]==']')
 		get_right_bracket();
+	else if (text[act_index]=='{')
+		get_left_brace();
+	else if (text[act_index]=='}')
+		get_right_brace();
 	else if (text[act_index]==',')
 		get_comma();
+	else if (text[act_index]==':')
+		get_colon();
 	else if (text[act_index]=='t')
 		get_true_val();
 	else if (text[act_index]=='f')
@@ -168,6 +284,12 @@ void json_parser_t::get_comma()
 	++act_index;
 }
 
+void json_parser_t::get_colon()
+{
+	act_token=tok_colon;
+	++act_index;
+}
+
 void json_parser_t::get_left_bracket()
 {
 	act_token=tok_left_bracket;
@@ -177,6 +299,18 @@ void json_parser_t::get_left_bracket()
 void json_parser_t::get_right_bracket()
 {
 	act_token=tok_right_bracket;
+	++act_index;
+}
+
+void json_parser_t::get_left_brace()
+{
+	act_token=tok_left_brace;
+	++act_index;
+}
+
+void json_parser_t::get_right_brace()
+{
+	act_token=tok_right_brace;
 	++act_index;
 }
 

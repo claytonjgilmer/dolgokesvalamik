@@ -25,8 +25,8 @@
 
 		int opened() const;
 
-		file_t(const file&);
-		void operator=(const file&);
+		file_t(const file_t&);
+		void operator=(const file_t&);
 		FILE* m_handle;
 		string m_name;
 		unsigned m_size;

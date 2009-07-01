@@ -21,12 +21,12 @@ teljes contactinfo-generalas mpr-hez: a legutolso support pointokhoz tartozo fac
 hogy ehhez a meshdata-t at kell irni convex hull-ra)
 
 
-json->object|array|object,json|array,json
-object-> {pairseq}
-pairseq-> pair | pair,pairseq
+json->eps | {object}json2|[array]json2
+json2 -> eps | ,json
+object-> pair o2
+o2 -> eps | , object
 pair-> string : value
-value -> string | number | true | false | nil | object | array
-array -> [valueseq]
-valueseq -> value | value,valueseq
+value -> string | number | bool | nil | {object} | [array]
+array -> value | value,array
 
 terminatorok: { } , string number [ ]

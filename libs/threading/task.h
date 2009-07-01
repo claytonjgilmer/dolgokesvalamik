@@ -7,7 +7,7 @@
 	{
 		task_t();
 		virtual void run() =0;
-		int get_id() const;
+//		int get_id() const;
 
 		void* operator new(size_t i_size);
 
