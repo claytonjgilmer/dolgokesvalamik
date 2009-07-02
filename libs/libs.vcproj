@@ -278,6 +278,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\threading\interlocked.h"
+				>
+			</File>
+			<File
 				RelativePath=".\math\geometry\intersection.h"
 				>
 			</File>
@@ -342,6 +346,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\containers\lockfreequeue.h"
+				>
+			</File>
+			<File
 				RelativePath=".\scripting\lualib\lopcodes.h"
 				>
 			</File>
@@ -366,11 +374,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\scripting\lualib\lua.h"
+				RelativePath=".\scripting\lua.h"
 				>
 			</File>
 			<File
-				RelativePath=".\scripting\lua.h"
+				RelativePath=".\scripting\lualib\lua.h"
 				>
 			</File>
 			<File
@@ -507,6 +515,10 @@
 			</File>
 			<File
 				RelativePath=".\scene\sceneloader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\utils\scratchpad.h"
 				>
 			</File>
 			<File
@@ -919,6 +931,10 @@
 			</File>
 			<File
 				RelativePath=".\threading\taskmanager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\threading\taskmanager2.cpp"
 				>
 			</File>
 			<File

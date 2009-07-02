@@ -1,3 +1,4 @@
+#define _WIN32_WINNT 0x0502
 #include <conio.h>
 #include <stdio.h>
 #include <windows.h>
@@ -30,6 +31,7 @@
 
 #include "json/jsonparser.h"
 object3d* load_mmod(const char* i_filename);
+#include "containers/lockfreequeue.h"
 
 struct proc
 {
@@ -528,8 +530,35 @@ int szam_beker(const char* szoveg)
 
 #include "containers/staticset.h"
 
+struct queuenode
+{
+	int sz;
+	queuenode* next;
+
+	queuenode()
+	{
+		sz=random(0,100);
+	}
+};
+
 int _cdecl main()
 {
+	queuenode nodebuf[10];
+
+	lockfree_queue_t<queuenode> q;
+
+	for (int n=0; n<10; ++n)
+	{
+		printf("%d. node: %d\n",n,nodebuf[n].sz);
+		q.push(nodebuf+n);
+	}
+
+	queuenode* p;
+
+	int sss=0;
+	while (p=q.pop())
+		printf("%d. kifele: %d", sss++, p->sz);
+
 	char text[]="  {   \"elso\"  :  1 , \"masodik\" : 2.89 }  ";
 
 	json_map map;
