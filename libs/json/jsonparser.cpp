@@ -189,6 +189,11 @@ void json_parser_t::proc_value()
 	}
 }
 
+void json_parser_t::proc_array()
+{
+	assertion(0,"not yet implemented");
+}
+
 
 
 bool is_white_space(char c)
@@ -210,9 +215,6 @@ void json_parser_t::get_next_token()
 {
 	while (act_index<text_size && is_white_space(text[act_index]))
 		++act_index;
-
-	if (act_index==text_size)
-		return;
 
 	if (is_number_prefix(text[act_index]))
 		get_number();
@@ -239,7 +241,7 @@ void json_parser_t::get_next_token()
 	else if (text[act_index]==0)
 		get_eof();
 	else
-		assert(alj el anyadba);
+		assertion(0,"unexpected token");
 }
 
 void json_parser_t::get_number()
@@ -252,12 +254,17 @@ void json_parser_t::get_number()
 
 	tmp[i]=0;
 
-	int ret=sscanf(tmp,"%g",&number_val);
+	float fp;
+	int ret=sscanf(tmp,"%f",&fp);
+	number_val=fp;
 
 #ifdef NEED_ASSERT
-	char msg[128];
-	sprintf (msg,"%s nem szam",tmp);
-	assertion(ret,msg);
+	if (!ret)
+	{
+		char msg[128];
+		sprintf (msg,"%s nem szam",tmp);
+		assertion(ret,msg);
+	}
 #endif
 
 	act_token=tok_number;
@@ -362,6 +369,14 @@ void json_parser_t::get_eof()
 }
 
 
+
+
+
+
+void generate_json_map(json_map& map, const string& file)
+{
+	json_parser_t j(file.c_str());
+}
 
 
 #if 0

@@ -27,6 +27,8 @@
 #include "render/renderobject3d.h"
 
 #include "containers/poolalloc.h"
+
+#include "json/jsonparser.h"
 object3d* load_mmod(const char* i_filename);
 
 struct proc
@@ -528,6 +530,13 @@ int szam_beker(const char* szoveg)
 
 int _cdecl main()
 {
+	char text[]="  {   \"elso\"  :  1 , \"masodik\" : 2.89 }  ";
+
+	json_map map;
+
+	generate_json_map(map,string(text));
+
+
 #define bufsize 16
 #define setcount 4
 	static_set<int,bufsize,setcount> set;

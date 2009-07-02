@@ -578,6 +578,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\threading\taskmanager2.h"
+				>
+			</File>
+			<File
 				RelativePath=".\render\texture.h"
 				>
 			</File>
