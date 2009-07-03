@@ -557,7 +557,7 @@ int _cdecl main()
 
 	int sss=0;
 	while (p=q.pop())
-		printf("%d. kifele: %d", sss++, p->sz);
+		printf("%d. kifele: %d\n", sss++, p->sz);
 
 	char text[]="  {   \"elso\"  :  1 , \"masodik\" : 2.89 }  ";
 

@@ -1,6 +1,7 @@
 #ifndef _lockfreequeue_h_
 #define _lockfreequeue_h_
 
+#include <intrin.h>
 #include "threading/interlocked.h"
 
 template<typename basetype>
@@ -25,15 +26,17 @@ struct lockfree_queue_t
 
 	void push(basetype* node)
 	{
-		count_t tailtmp;
+		volatile count_t tailtmp;
 		node->next=0;
 
 		for (;;)
 		{
-			InterlockedExchange64((LONGLONG*)&tailtmp,*(LONGLONG*)&tail);
+			_InterlockedExchange64((LONGLONG*)&tailtmp,*(LONGLONG*)&tail);
 //			tc_interlockedExchange(&tailtmp, *(__int64*)&tail);
 
-			if (InterlockedCompareExchange((long*)tailtmp.node->next,(LONG)node,0))
+			long ret=InterlockedCompareExchange((long*)&tailtmp.node->next,(LONG)node,0);
+
+			if (ret==0)
 //			if (tc_interlockedCompareExchange(tailtmp.node->next,(int)node,0))
 				break;
 
@@ -78,7 +81,7 @@ struct lockfree_queue_t
 			else
 			{
 				count_t tmp={next,ohead.count+1};
-				if (InterlockedCompareExchange64((LONGLONG*)&head,*(LONGLONG*)&tmp,*(LONGLONG*)&ohead))
+				if (InterlockedCompareExchange64((LONGLONG*)&head,*(LONGLONG*)&tmp,*(LONGLONG*)&ohead)==*(LONGLONG*)&ohead)
 //				if( tc_interlockedCompareExchange( &head , (int)next , ohead.count+1 , (int)ohead.node, ohead.count ) )
 					return next;
 			}
