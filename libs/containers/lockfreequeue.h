@@ -31,24 +31,24 @@ struct lockfree_queue_t
 
 		for (;;)
 		{
-			_InterlockedExchange64((LONGLONG*)&tailtmp,*(LONGLONG*)&tail);
+			interlocked_exchange_64((LONGLONG*)&tailtmp,*(LONGLONG*)&tail);
 //			tc_interlockedExchange(&tailtmp, *(__int64*)&tail);
 
-			long ret=InterlockedCompareExchange((long*)&tailtmp.node->next,(LONG)node,0);
+			long ret=interlocked_compare_exchange_32((long*)&tailtmp.node->next,(LONG)node,0);
 
-			if (ret==0)
+			if (ret)
 //			if (tc_interlockedCompareExchange(tailtmp.node->next,(int)node,0))
 				break;
 
 			count_t nexttmp={tailtmp.node->next,tailtmp.count+1};
-			InterlockedCompareExchange64((LONGLONG*)&tail,*(LONGLONG*)&nexttmp,*(LONGLONG*)&tailtmp);
+			interlocked_compare_exchange_64((LONGLONG*)&tail,*(LONGLONG*)&nexttmp,*(LONGLONG*)&tailtmp);
 //			tc_interlockedCompareExchange(&tail,(int)tailtmp->node->next,tailtmp.count+1,(int)tailtmp.node,tailtmp.count);
-			tc_spinloop();
+			spin_loop();
 
 		}
 
 		count_t tmp={node,tailtmp.count+1};
-		InterlockedCompareExchange64((LONGLONG*)&tail,*(LONGLONG*)&tmp,*(LONGLONG*)&tailtmp);
+		interlocked_compare_exchange_64((LONGLONG*)&tail,*(LONGLONG*)&tmp,*(LONGLONG*)&tailtmp);
 //		tc_interlockedCompareExchange( &tail, (int)node, tailtmp.count+1 , (int)tailtmp.node, tailtmp.count );
 	}
 
@@ -59,8 +59,8 @@ struct lockfree_queue_t
 
 		while( 1 )
 		{
-			InterlockedExchange64((LONGLONG*)&ohead,*(LONGLONG*)&head);
-			InterlockedExchange64((LONGLONG*)&otail,*(LONGLONG*)&tail);
+			interlocked_exchange_64((LONGLONG*)&ohead,*(LONGLONG*)&head);
+			interlocked_exchange_64((LONGLONG*)&otail,*(LONGLONG*)&tail);
 //			tc_interlockedExchange( &ohead , *(__int64*)&head );
 //			tc_interlockedExchange( &otail , *(__int64*)&tail );
 			//
@@ -75,18 +75,18 @@ struct lockfree_queue_t
 
 				// or is just tail falling behind...
 				count_t tmp={next,otail.count+1};
-				InterlockedCompareExchange64((LONGLONG*)&tail,*(LONGLONG*)&tmp,*(LONGLONG*)&otail);
+				interlocked_compare_exchange_64((LONGLONG*)&tail,*(LONGLONG*)&tmp,*(LONGLONG*)&otail);
 //				tc_interlockedCompareExchange( &tail, (int)next , otail.count+1 , (int)otail.node, otail.count );
 			}
 			else
 			{
 				count_t tmp={next,ohead.count+1};
-				if (InterlockedCompareExchange64((LONGLONG*)&head,*(LONGLONG*)&tmp,*(LONGLONG*)&ohead)==*(LONGLONG*)&ohead)
+				if (interlocked_compare_exchange_64((LONGLONG*)&head,*(LONGLONG*)&tmp,*(LONGLONG*)&ohead))
 //				if( tc_interlockedCompareExchange( &head , (int)next , ohead.count+1 , (int)ohead.node, ohead.count ) )
 					return next;
 			}
 
-			tc_spinloop();
+			spin_loop();
 		}
 	}
 

@@ -11,13 +11,14 @@ struct task2_t
 {
 	task2_t()
 	{
-		next_task=0;
+//		nextsk=0;
 	}
 
 	virtual void run() =0;
 	void* operator new(size_t i_size);
 
-	task2_t* next_task;
+	void* ref_index;
+	task2_t* next;
 };
 
 
@@ -29,6 +30,7 @@ struct taskmanager2_t
 
 	void spawn_tasks(task2_t* task_array[], int task_count);
 	void flush();
+	void exit();
 
 	static taskmanager2_t* ptr;
 
@@ -41,9 +43,11 @@ struct taskmanager2_t
 		return task_buf.alloc(size);
 	}
 
-	int exit;
+	int exit_event;
+	long incomplete_task_count;
 
 
+	lockfree_queue_t<task2_t> pending_queue;
 	vector<thread> thread_array;
 
 	scratch_pad_t<task_pool_size> task_buf;
@@ -54,7 +58,4 @@ MLINLINE void* task2_t::operator new(size_t size)
 	return taskmanager2_t::ptr->alloc_task(size);
 }
 
-MLINLINE void taskmanager2_t::spawn_tasks(task2_t *task_array[], int task_count)
-{
-}
 #endif//_taskmanager2_h_

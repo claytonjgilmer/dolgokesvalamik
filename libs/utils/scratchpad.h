@@ -12,7 +12,7 @@ struct scratch_pad_t
 	}
 	char* alloc(uint32 size)
 	{
-		return buf+InterlockedExchangeAdd(&ptr,size);
+		return buf+_InterlockedExchangeAdd(&ptr,size);
 	}
 
 	void flush()

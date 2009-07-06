@@ -527,6 +527,82 @@ int szam_beker(const char* szoveg)
 	return atoi(szamstr);
 }
 
+#include "threading/taskmanager2.h"
+
+struct vmitask:task2_t
+{
+	float* ptr;
+	int num;
+	void run()
+	{
+		const int nn=num;
+		for (int n=0; n<nn; ++n)
+		{
+			*(ptr+n)=sqrt(*(ptr+n));
+		}
+	}
+};
+
+#define THNUM 3
+#define TASKNUM 10
+#define BUFS 100000
+
+volatile int g_bufs=BUFS;
+
+void ujthreadtest()
+{
+	taskmanager2_t* tm=new taskmanager2_t(THNUM);
+	vmitask* taskok[TASKNUM];
+	float* fbuf=new float[g_bufs];
+	float* fbuf2=new float[g_bufs];
+
+	for (int n=0; n<g_bufs; ++n)
+	{
+		fbuf[n]=4;
+		fbuf2[n]=4;
+	}
+
+	timer_t t;
+	t.reset();
+	for (int n=0; n<g_bufs; ++n)
+	{
+		fbuf2[n]=sqrt(fbuf2[n]);
+	}
+	t.stop();
+	printf_s("single: %d\n",t.get_tick());
+	for (int n=0; n<g_bufs; ++n)
+	{
+		assertion(fbuf2[n]==2);
+	}
+
+	t.reset();
+
+	float *ptr=fbuf;
+	int num=g_bufs/TASKNUM;
+
+	for (int n=0; n<TASKNUM; ++n)
+	{
+		taskok[n]=new vmitask();
+		taskok[n]->ptr=ptr;
+		taskok[n]->num=num;
+		ptr+=num;
+	}
+
+	tm->spawn_tasks((task2_t**)taskok,TASKNUM);
+
+	t.stop();
+	printf_s("multi: %d\n",t.get_tick());
+	
+	for (int n=0; n<BUFS; ++n)
+	{
+		assertion(fbuf[n]==2);
+	}
+
+	delete [] fbuf;
+	delete [] fbuf2;
+	delete tm;
+}
+
 
 #include "containers/staticset.h"
 
@@ -543,6 +619,8 @@ struct queuenode
 
 int _cdecl main()
 {
+	ujthreadtest();
+	return 0;
 	queuenode nodebuf[10];
 
 	lockfree_queue_t<queuenode> q;

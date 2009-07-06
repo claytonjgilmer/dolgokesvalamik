@@ -4,7 +4,7 @@
 
 	DEFINE_SINGLETON(taskmanager);
 
-	unsigned WINAPI poolrun(void* i_param)
+	static unsigned WINAPI poolrun(void* i_param)
 	{
 		taskmanager* tm=(taskmanager*)i_param;
 		tm->run();
