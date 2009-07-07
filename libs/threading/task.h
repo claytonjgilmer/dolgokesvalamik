@@ -1,6 +1,8 @@
 #ifndef _task_h_
 #define _task_h_
 
+/*
+
 #include "containers/string.h"
 
 	struct task_t
@@ -19,4 +21,5 @@
 		virtual ~task_t(){}
 #endif
 	};
+*/
 #endif//_task_h_

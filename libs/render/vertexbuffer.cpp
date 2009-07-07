@@ -1,5 +1,6 @@
 #include "vertexbuffer.h"
 #include "rendersystem.h"
+#include "containers/fixedvector.h"
 
 
 	D3DVERTEXELEMENT9 g_decl[vertexelement_num+1]=

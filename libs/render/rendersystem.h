@@ -8,7 +8,7 @@
 
 #include "containers/listallocator.h"
 #include "renderqueue.h"
-#include "threading/taskmanager.h"
+#include "threading/taskmanager2.h"
 
 #include "vertexbuffer.h"
 #include "indexbuffer.h"

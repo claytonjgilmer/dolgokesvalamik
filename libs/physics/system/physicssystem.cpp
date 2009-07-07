@@ -1,8 +1,10 @@
 #include "physicssystem.h"
-#include "threading/taskmanager.h"
+#include "threading/taskmanager2.h"
 #include "utils/timer.h"
 #include "physics/solver/lcpsolver.h"
 #include "physics/collision/shapes/convexmeshshape.h"
+
+#define taskmanager taskmanager2_t
 
 DEFINE_SINGLETON(physicssystem);
 
@@ -185,7 +187,7 @@ void broadphase()
 
     if (ptr->parallel_boudingupdate)
     {
-        taskmanager::ptr->process_buffer(nb.get_size()-1,10,update_bounding());
+        taskmanager2_t::ptr->process_buffer(nb.get_size()-1,10,update_bounding());
     }
     else
     {

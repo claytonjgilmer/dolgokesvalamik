@@ -1,6 +1,8 @@
 #ifndef _lockfreequeue_h_
 #define _lockfreequeue_h_
 
+#define _WIN32_WINNT 0x0502
+#include <windows.h>
 #include <intrin.h>
 #include "threading/interlocked.h"
 
@@ -106,13 +108,13 @@ struct lockfree_array_queue_t
 		interlocked_exchange_32(&tail_index_tmp,tail_index);
 		if (interlocked_compare_exchange_32((long*)&used[tail_index_tmp & (capacity-1)],0,1) == 1)
 		{
-			basetype* ret=ptr_buf[tail_index_tmp & (capacity-1)];
 			interlocked_add_32((long*)&tail_index,1);
+			basetype* ret=ptr_buf[tail_index_tmp & (capacity-1)];
 			return ret;
 		}
 		else
 		{
-			return 0;
+			return NULL;
 		}
 
 	}
@@ -130,7 +132,7 @@ struct lockfree_array_queue_t
 				interlocked_exchange_32((long*)&used[head_index_tmp & (capacity-1)],1);
 				return;
 			}
-			spin_loop();
+//			spin_loop();
 		}
 	}
 

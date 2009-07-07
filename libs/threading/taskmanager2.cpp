@@ -1,6 +1,7 @@
 #include "taskmanager2.h"
 
-taskmanager2_t* taskmanager2_t::ptr=NULL;
+DEFINE_SINGLETON(taskmanager2_t);
+//taskmanager2_t* taskmanager2_t::ptr=NULL;
 
 static unsigned WINAPI poolrun(void* i_param)
 {
@@ -17,15 +18,15 @@ void taskmanager2_t::exit()
 		spin_loop();
 }
 
-taskmanager2_t::taskmanager2_t(int thread_num)
+taskmanager2_t::taskmanager2_t(const taskmanagerdesc* desc)
 {
-	if (!ptr)
-		ptr=this;
+//	if (!ptr)
+//		ptr=this;
 
 	exit_event=0;
 	incomplete_task_count=0;
-	thread_array.resize(thread_num);
-	for (int n=0; n<thread_num; ++n)
+	thread_array.resize(desc->m_threadnum);
+	for (uint32 n=0; n<desc->m_threadnum; ++n)
 	{
 		thread_array[n].start(&poolrun,this);
 		char str[256]; sprintf(str,"working thread #%d",n+1);

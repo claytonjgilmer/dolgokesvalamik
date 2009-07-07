@@ -94,7 +94,7 @@
 		return m_device;
 	}
 
-	struct rendertask:task_t
+	struct rendertask:task2_t
 	{
 		void run()
 		{
@@ -105,7 +105,8 @@
 
 	void rendersystem::render()
 	{
-		taskmanager::ptr->spawn_task(new rendertask);
+		rendertask* t=new rendertask;
+		taskmanager2_t::ptr->spawn_tasks((task2_t**)&t,1);
 
 	}
 

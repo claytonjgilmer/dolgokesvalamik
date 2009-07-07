@@ -33,8 +33,9 @@ static int hash_check[hashtable_size];
     {
 //		uint32 index=get_hashindex(i_body1,i_body2);
 
-		blocklocker bl1(i_body1->contact_lock);
-		blocklocker bl2(i_body2->contact_lock);
+		blocklocker bl(this->cm);
+//		blocklocker bl1(i_body1->contact_lock);
+//		blocklocker bl2(i_body2->contact_lock);
 //		contact_surface_t* ptr=this->contact_hash[index];
 		contact_edge* ptr;
 		for (ptr=i_body1->contacts.first(); ptr && ptr->other!=i_body2; ptr=ptr->next);

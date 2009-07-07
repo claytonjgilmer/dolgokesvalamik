@@ -1,3 +1,4 @@
+/*
 #include "task.h"
 #include "taskmanager.h"
 
@@ -14,3 +15,4 @@
 	{
 		return taskmanager::ptr->get_allocator().allocate();
 	}
+*/

@@ -16,6 +16,8 @@
 /*                taskmanager                                           */
 /************************************************************************/
 
+/*
+
 	struct taskmanagerdesc
 	{
 	public:
@@ -157,4 +159,5 @@
 		task_t* get_task();
 		void post_process(task_t* i_task);
 	};
+*/
 #endif//_taskmanager_h_

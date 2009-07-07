@@ -1,10 +1,14 @@
 #ifndef _interlocked_h_
 #define _interlocked_h_
 
+#if 1
+#define spin_loop() __asm { pause }
+#else
 MLINLINE void spin_loop()
 {
 	__asm { pause };
 }
+#endif
 
 MLINLINE long interlocked_add_32(long* desc, const long add)
 {

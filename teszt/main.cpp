@@ -1,3 +1,4 @@
+ 
 #define _WIN32_WINNT 0x0502
 #include <conio.h>
 #include <stdio.h>
@@ -15,7 +16,7 @@
 
 
 #include "threading/thread.h"
-#include "threading/taskmanager.h"
+#include "threading/taskmanager2.h"
 
 #include "containers/string.h"
 #include "containers/stringmap.h"
@@ -32,102 +33,8 @@
 #include "json/jsonparser.h"
 object3d* load_mmod(const char* i_filename);
 #include "containers/lockfreequeue.h"
+#define taskmanager taskmanager2_t
 
-struct proc
-{
-	void operator()(int* i_buf, unsigned i_num) const
-	{
-		for (unsigned n=0; n<i_num; ++n)
-		{
-			int sum=10;
-
-			for (int m=0; m<100; ++m)
-				sum+=m;
-
-			i_buf[n]+=sum;
-		}
-	}
-};
-
-struct proc2
-{
-	unsigned m_bufsize;
-	proc2(unsigned i_bufsize):m_bufsize(i_bufsize){}
-	void operator()(int* i_buf, unsigned i_num) const
-	{
-		for (unsigned n=0; n<i_num; ++n)
-		{
-			taskmanager::ptr->process_buffer(i_buf+n*m_bufsize,m_bufsize,10,proc());
-		}
-	}
-};
-
-struct proc_task:task_t
-{
-	int* m_buf;
-	unsigned m_size;
-
-	proc_task(int* i_buf, unsigned i_size):
-	m_buf(i_buf),
-	m_size(i_size)
-	{
-	}
-
-	void run()
-	{
-		proc p;
-		p(m_buf,m_size);
-	}
-};
-
-void tasktest()
-{
-	taskmanagerdesc tdesc; tdesc.m_threadnum=1;
-	taskmanager::create(&tdesc);
-	physicssystemdesc pd;
-
-	physicssystem::create(&pd);
-
-#define buf_size 15000
-#define buf2_size 100
-
-	int* buf=(int*)malloc(buf_size*buf2_size*sizeof(int));
-
-	memset(buf,0,buf_size*buf2_size*sizeof(int));
-
-	for (int n=0; n<buf2_size; ++n)
-	{
-		proc p;
-		p(buf+n*buf_size,buf_size);
-	}
-
-	timer_t t;
-
-	t.reset();
-	for (int n=0; n<buf2_size; ++n)
-	{
-		proc p;
-		p(buf+n*buf_size,buf_size);
-	}
-	t.stop();
-	unsigned tick2=t.get_tick();
-
-
-	t.reset();
-	taskmanager::ptr->process_buffer(buf,buf2_size,1,proc2(buf_size));
-	t.stop();
-	unsigned tick=t.get_tick();
-
-
-
-
-//	printf(" parallel:%d\n   serial:%d\nparallel2:%d\n",tick,tick2,tick15);
-	printf(" parallel:%d\n   serial:%d\n",tick,tick2);
-
-	free(buf);
-	physicssystem::release();
-	taskmanager::release();
-}
 
 struct in
 {
@@ -543,15 +450,17 @@ struct vmitask:task2_t
 	}
 };
 
-#define THNUM 9
-#define TASKNUM 500
+#define THNUM 1
+#define TASKNUM (THNUM+1)
 #define BUFS 100000
 
 volatile int g_bufs=BUFS;
 
 void ujthreadtest()
 {
-	taskmanager2_t* tm=new taskmanager2_t(THNUM);
+	taskmanagerdesc td;
+	td.m_threadnum=THNUM;
+	taskmanager2_t::create(&td);
 	vmitask* taskok[TASKNUM];
 	float* fbuf=new float[g_bufs];
 	float* fbuf2=new float[g_bufs];
@@ -581,6 +490,7 @@ void ujthreadtest()
 	int num=g_bufs/TASKNUM;
 
 	vmitask* taskbuf=new vmitask[TASKNUM];
+	int sum=0;
 
 	for (int n=0; n<TASKNUM; ++n)
 	{
@@ -588,9 +498,11 @@ void ujthreadtest()
 		taskok[n]->ptr=ptr;
 		taskok[n]->num=num;
 		ptr+=num;
+		sum+=num;
 	}
+	taskok[TASKNUM-1]->num+=g_bufs-sum;
 
-	tm->spawn_tasks((task2_t**)taskok,TASKNUM);
+	taskmanager::ptr->spawn_tasks((task2_t**)taskok,TASKNUM);
 
 	t.stop();
 	printf_s("multi: %d\n",t.get_tick());
@@ -602,7 +514,8 @@ void ujthreadtest()
 
 	delete [] fbuf;
 	delete [] fbuf2;
-	delete tm;
+	taskmanager::release();
+//	delete tm;
 }
 
 

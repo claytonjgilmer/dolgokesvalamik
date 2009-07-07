@@ -4,7 +4,7 @@
 
 #include "render/rendersystem.h"
 #include "file/filesystem.h"
-#include "threading/taskmanager.h"
+#include "threading/taskmanager2.h"
 #include "render/shadermanager.h"
 #include "render/texturemanager.h"
 #include "render/submesh.h"
@@ -28,6 +28,7 @@
 #include "math/geometry/bsp.h"
 #include "utils/timer.h"
 //#include <CAPROFAPI.h>
+#define taskmanager taskmanager2_t
 
 extern unsigned int constraint_c;
 
@@ -276,7 +277,7 @@ void init_app(HWND i_hwnd)
 	filesystem::ptr->register_path("texture","texture\\");
 
 	taskmanagerdesc tdesc;
-	tdesc.m_threadnum=3;
+	tdesc.m_threadnum=1;
 	taskmanager::create(&tdesc);
 
 	shadermanagerdesc shaderdesc("shader");
