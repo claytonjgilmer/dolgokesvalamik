@@ -32,24 +32,24 @@ struct lockfree_queue_t
 		for (;;)
 		{
 			interlocked_exchange_64((LONGLONG*)&tailtmp,*(LONGLONG*)&tail);
-//			tc_interlockedExchange(&tailtmp, *(__int64*)&tail);
 
+#if 0
 			long ret=interlocked_compare_exchange_32((long*)&tailtmp.node->next,(LONG)node,0);
 
 			if (ret)
-//			if (tc_interlockedCompareExchange(tailtmp.node->next,(int)node,0))
 				break;
-
+#else
+			if (!interlocked_compare_exchange_32((long*)&tailtmp.node->next,(LONG)node,0))
+				break;
+#endif
 			count_t nexttmp={tailtmp.node->next,tailtmp.count+1};
 			interlocked_compare_exchange_64((LONGLONG*)&tail,*(LONGLONG*)&nexttmp,*(LONGLONG*)&tailtmp);
-//			tc_interlockedCompareExchange(&tail,(int)tailtmp->node->next,tailtmp.count+1,(int)tailtmp.node,tailtmp.count);
 			spin_loop();
 
 		}
 
 		count_t tmp={node,tailtmp.count+1};
 		interlocked_compare_exchange_64((LONGLONG*)&tail,*(LONGLONG*)&tmp,*(LONGLONG*)&tailtmp);
-//		tc_interlockedCompareExchange( &tail, (int)node, tailtmp.count+1 , (int)tailtmp.node, tailtmp.count );
 	}
 
 	basetype* pop()
@@ -61,28 +61,20 @@ struct lockfree_queue_t
 		{
 			interlocked_exchange_64((LONGLONG*)&ohead,*(LONGLONG*)&head);
 			interlocked_exchange_64((LONGLONG*)&otail,*(LONGLONG*)&tail);
-//			tc_interlockedExchange( &ohead , *(__int64*)&head );
-//			tc_interlockedExchange( &otail , *(__int64*)&tail );
-			//
 			basetype *next=ohead.node->next;
 
-			// is queue empty
 			if( ohead.node==otail.node)
 			{
-				// is it really empty
 				if( !next )
 					return 0;
 
-				// or is just tail falling behind...
 				count_t tmp={next,otail.count+1};
 				interlocked_compare_exchange_64((LONGLONG*)&tail,*(LONGLONG*)&tmp,*(LONGLONG*)&otail);
-//				tc_interlockedCompareExchange( &tail, (int)next , otail.count+1 , (int)otail.node, otail.count );
 			}
 			else
 			{
 				count_t tmp={next,ohead.count+1};
 				if (interlocked_compare_exchange_64((LONGLONG*)&head,*(LONGLONG*)&tmp,*(LONGLONG*)&ohead))
-//				if( tc_interlockedCompareExchange( &head , (int)next , ohead.count+1 , (int)ohead.node, ohead.count ) )
 					return next;
 			}
 
@@ -94,4 +86,55 @@ struct lockfree_queue_t
 	char null_node[sizeof(basetype)];
 
 };
+
+template<typename basetype,uint32 capacity>
+struct lockfree_array_queue_t
+{
+	basetype* ptr_buf[capacity];
+	uint32 used[capacity];
+	uint32 tail_index,head_index;
+
+	lockfree_array_queue_t()
+	{
+		tail_index=head_index=0;
+		memset(used,0,capacity*sizeof(uint32));
+	}
+
+	basetype* pop()
+	{
+		long tail_index_tmp;
+		interlocked_exchange_32(&tail_index_tmp,tail_index);
+		if (interlocked_compare_exchange_32((long*)&used[tail_index_tmp & (capacity-1)],0,1) == 1)
+		{
+			basetype* ret=ptr_buf[tail_index_tmp & (capacity-1)];
+			interlocked_add_32((long*)&tail_index,1);
+			return ret;
+		}
+		else
+		{
+			return 0;
+		}
+
+	}
+
+	void push(basetype* item)
+	{
+		while (1)
+		{
+			long head_index_tmp;
+			interlocked_exchange_32(&head_index_tmp,head_index);
+			if (interlocked_compare_exchange_32((long*)&used[head_index_tmp & (capacity-1)],2,0) == 0)
+			{
+				interlocked_add_32((long*)&head_index,1);
+				ptr_buf[head_index_tmp & (capacity-1)]=item;
+				interlocked_exchange_32((long*)&used[head_index_tmp & (capacity-1)],1);
+				return;
+			}
+			spin_loop();
+		}
+	}
+
+};
+
+
 #endif//_lockfreequeue_h_

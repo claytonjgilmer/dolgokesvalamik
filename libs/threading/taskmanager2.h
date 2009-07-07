@@ -16,6 +16,7 @@ struct task2_t
 
 	virtual void run() =0;
 	void* operator new(size_t i_size);
+	void* operator new[](size_t i_size);
 
 	void* ref_index;
 	task2_t* next;
@@ -47,7 +48,8 @@ struct taskmanager2_t
 	long incomplete_task_count;
 
 
-	lockfree_queue_t<task2_t> pending_queue;
+//	lockfree_queue_t<task2_t> pending_queue;
+	lockfree_array_queue_t<task2_t,512> pending_queue;
 	vector<thread> thread_array;
 
 	scratch_pad_t<task_pool_size> task_buf;
@@ -58,4 +60,8 @@ MLINLINE void* task2_t::operator new(size_t size)
 	return taskmanager2_t::ptr->alloc_task(size);
 }
 
+MLINLINE void* task2_t::operator new[](size_t size)
+{
+	return taskmanager2_t::ptr->alloc_task(size);
+}
 #endif//_taskmanager2_h_

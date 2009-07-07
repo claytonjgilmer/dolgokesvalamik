@@ -543,8 +543,8 @@ struct vmitask:task2_t
 	}
 };
 
-#define THNUM 3
-#define TASKNUM 10
+#define THNUM 9
+#define TASKNUM 500
 #define BUFS 100000
 
 volatile int g_bufs=BUFS;
@@ -580,9 +580,11 @@ void ujthreadtest()
 	float *ptr=fbuf;
 	int num=g_bufs/TASKNUM;
 
+	vmitask* taskbuf=new vmitask[TASKNUM];
+
 	for (int n=0; n<TASKNUM; ++n)
 	{
-		taskok[n]=new vmitask();
+		taskok[n]=taskbuf+n;
 		taskok[n]->ptr=ptr;
 		taskok[n]->num=num;
 		ptr+=num;

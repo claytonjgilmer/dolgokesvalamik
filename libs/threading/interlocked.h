@@ -6,10 +6,41 @@ MLINLINE void spin_loop()
 	__asm { pause };
 }
 
+MLINLINE long interlocked_add_32(long* desc, const long add)
+{
+	return _InterlockedExchangeAdd(desc,add);
+}
+
 MLINLINE void interlocked_exchange_32(void* dest, const long exchange)
 {
 	_InterlockedExchange((long*)dest,exchange);
 }
+
+#if 1
+//return: az eredeti ertek
+MLINLINE long interlocked_compare_exchange_32(long* dest, const long exchange, const long compare)
+{
+	return _InterlockedCompareExchange(dest,exchange,compare);
+}
+#else
+//return: 1, ha sikerult, 0, ha nem
+MLINLINE int interlocked_compare_exchange_32(void *dest,int exchange,int compare)
+{
+	char _ret;
+	//
+	__asm
+	{
+		mov      edx, [dest]
+		mov      eax, [compare]
+		mov      ecx, [exchange]
+		lock cmpxchg [edx], ecx
+		setz    al
+		mov     byte ptr [_ret], al
+	}
+	//
+	return _ret;
+}
+#endif
 
 MLINLINE void interlocked_exchange_64(void *dest, const __int64 exchange)
 {
@@ -27,24 +58,6 @@ start:
 		lock cmpxchg8b [edi]
 		jnz      retry
 	};
-}
-
-//return: 1, ha sikerult, 0, ha nem
-MLINLINE int interlocked_compare_exchange_32(void *dest,int exchange,int compare)
-{
-	char _ret;
-	//
-	__asm
-	{
-		mov      edx, [dest]
-		mov      eax, [compare]
-		mov      ecx, [exchange]
-		lock cmpxchg [edx], ecx
-		setz    al
-		mov     byte ptr [_ret], al
-	}
-	//
-	return _ret;
 }
 
 //return: 1 ha sikerult, 0, ha nem
