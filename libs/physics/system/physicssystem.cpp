@@ -1,6 +1,6 @@
 #include "physicssystem.h"
 #include "threading/taskmanager2.h"
-#include "utils/timer.h"
+#include "utils/performancemeter.h"
 #include "physics/solver/lcpsolver.h"
 #include "physics/collision/shapes/convexmeshshape.h"
 
@@ -87,59 +87,41 @@ void physicssystem::release_bodies(body_t* i_body_array[], unsigned i_bodynum)
         this->killed.push_back(i_body_array[n]);
 }
 
-unsigned g_bph=0,g_nph=0,g_in=0,g_up=0,g_frc=0,g_sol=0,g_presol=0,g_solcon=0,g_solv_cont=0,g_solv_fric=0,g_cache_l=0;
+//unsigned g_bph=0,g_nph=0,g_in=0,g_up=0,g_frc=0,g_sol=0,g_presol=0,g_solcon=0,g_solv_cont=0,g_solv_fric=0,g_cache_l=0;
 
 void physicssystem::simulate(f32 i_dt)
 {
-	if (g_frc==1000)
-	{
-		g_frc=0;
-		g_bph=0;
-		g_nph=0;
-		g_in=0;
-		g_up=0;
-		g_sol=0;
-	}
-
-	timer_t t;
 	++this->frame_count;
     kill_deads();
 
+	{
+		perf_meter(perf_broadphase);
+		broadphase();
+	}
 
-	t.reset();
-    broadphase();
-	t.stop();
-	g_bph+=t.get_tick();
-
-	t.reset();
-    near_phase();
-	t.stop();
-	g_nph+=t.get_tick();
+	{
+		perf_meter(perf_nearphase);
+	    near_phase();
+	}
 
     update_contacts();
     create_contact_groups();
 
 	draw_contacts();
 
-	t.reset();
-    update_inertia();
-	t.stop();
-	g_in+=t.get_tick();
+	{
+		perf_meter(perf_inertia);
+		update_inertia();
+	}
 
 	update_velocities(i_dt);
 
-	t.reset();
 	solve_constraints(i_dt);
-	t.stop();
-	g_sol+=t.get_tick();
 
-	t.reset();
-	update_positions(i_dt);
-//    update_bodies(i_dt);
-	t.stop();
-	g_up+=t.get_tick();
-
-	++g_frc;
+	{
+		perf_meter(perf_updateposition);
+		update_positions(i_dt);
+	}
 }
 
 
@@ -200,6 +182,8 @@ void broadphase()
 
 struct near_struct
 {
+	contact_surface_t** surface_array;
+	near_struct(contact_surface_t* surface_array[]): surface_array(surface_array){}
     void operator()(unsigned i_start,unsigned i_num) const
     {
         physicssystem* const ptr=physicssystem::ptr;
@@ -231,7 +215,7 @@ struct near_struct
 
                     if (intersect)
                     {
-                        contact_surface_t* c=ptr->contact_manager.get_contact(shape1->body,shape2->body);
+                        contact_surface_t* c=surface_array[n];// ptr->contact_manager.get_contact(shape1->body,shape2->body);
 
 						c->friction=shape1->friction*shape2->friction;
 						c->restitution=shape1->restitution*shape2->restitution;
@@ -245,18 +229,33 @@ struct near_struct
     }
 };
 
+void collect_contact_surfaces(contact_surface_t* surface_array[])
+{
+	physicssystem* ptr=physicssystem::ptr;
+	const broadphasepair* array=ptr->broad_phase.pair_array;
+	for (int n=0; n<ptr->broad_phase.pair_num; ++n)
+	{
+		shape_t* shape1=(shape_t*)array[n].object[0]->userdata;
+		shape_t* shape2=(shape_t*)array[n].object[1]->userdata;
+		surface_array[n]=ptr->contact_manager.get_contact(shape1->body,shape2->body);
+	}
+}
+
 void near_phase()
 {
     physicssystem* ptr=physicssystem::ptr;
 
+	contact_surface_t* surface_array[65536];
+	collect_contact_surfaces(surface_array);
+
     if (ptr->parallel_nearphase)
     {
 		if (ptr->broad_phase.pair_num)
-			taskmanager::ptr->process_buffer(ptr->broad_phase.pair_num,10,near_struct());
+			taskmanager::ptr->process_buffer(ptr->broad_phase.pair_num,10,near_struct(surface_array));
     }
     else
     {
-        near_struct ns;
+        near_struct ns(surface_array);
         ns(0,ptr->broad_phase.pair_num);
     }
 }
@@ -371,6 +370,7 @@ struct constraint_solver_t
 
 void solve_constraints(f32 dt)
 {
+	perf_meter(perf_solve);
 	physicssystem* ptr=physicssystem::ptr;
 
 	if (ptr->contact_group_manager.group_array.size()==0)

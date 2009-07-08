@@ -102,7 +102,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="3"
+				Optimization="2"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="false"
 				FavorSizeOrSpeed="1"
@@ -443,6 +443,10 @@
 			</File>
 			<File
 				RelativePath=".\render\objectmanager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\utils\performancemeter.h"
 				>
 			</File>
 			<File
@@ -879,6 +883,10 @@
 			</File>
 			<File
 				RelativePath=".\render\objectmanager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\utils\performancemeter.cpp"
 				>
 			</File>
 			<File

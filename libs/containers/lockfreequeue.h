@@ -119,6 +119,7 @@ struct lockfree_array_queue_t
 
 	}
 
+#if 0
 	void push(basetype* item)
 	{
 		while (1)
@@ -135,6 +136,14 @@ struct lockfree_array_queue_t
 //			spin_loop();
 		}
 	}
+#else
+	void push(basetype* item)
+	{
+		long act_head=interlocked_add_32((long*)&head_index,1);
+		this->ptr_buf[act_head & (capacity-1)]=item;
+		interlocked_exchange_32((long*)&used[act_head & (capacity-1)],1);
+	}
+#endif
 
 };
 

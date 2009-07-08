@@ -1,6 +1,7 @@
 #include "lcpsolver.h"
 #include "threading/taskmanager2.h"
 #include "utils/timer.h"
+#include "utils/performancemeter.h"
 #define taskmanager taskmanager2_t
 
 
@@ -410,18 +411,16 @@ void lcp_solver_t::solve_frictions()
 
 void lcp_solver_t::solve_constraints()
 {
-	g_solv_cont=g_solv_fric=0;
-	timer_t t;
 	for (int it=0; it<10; ++it)
 	{
-		t.reset();
-		solve_contacts();
-		t.stop();
-		g_solv_cont+=t.get_tick();
-		t.reset();
-		solve_frictions();
-		t.stop();
-		g_solv_fric+=t.get_tick();
+		{
+			perf_meter(perf_solve_contact);
+			solve_contacts();
+		}
+		{
+			perf_meter(perf_solve_friction);
+			solve_frictions();
+		}
 	}
 }
 
@@ -433,22 +432,16 @@ void lcp_solver_t::process(contact_surface_t** i_contact_array, int i_contact_co
 	contact_count=i_contact_count;
 	dt=i_dt;
 
-	timer_t t;
-
-	t.reset();
 	allocate_buffer();
-	t.stop();
-	g_cache_l=t.get_tick();
 
-
-	t.reset();
-	pre_step();
-	t.stop();
-	g_presol=t.get_tick();
-	t.reset();
-	solve_constraints();
-	t.stop();
-	g_solcon=t.get_tick();
+	{
+		perf_meter(perf_solverprestep);
+		pre_step();
+	}
+	{
+		perf_meter(perf_solveconstraints);
+		solve_constraints();
+	}
 	cache_lambda();
 	clean();
 }
