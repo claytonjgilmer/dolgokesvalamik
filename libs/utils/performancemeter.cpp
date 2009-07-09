@@ -15,6 +15,7 @@ perf_meter_t::perf_meter_t(const char* i_name,perf_enum_t i_id)
 
 perf_meter_t::~perf_meter_t()
 {
+	m_timer.stop();
 	unsigned ticktoadd=m_timer.get_tick();
 	m_elem->add_time(ticktoadd);
 	m_elem->inc_call_num();
@@ -46,7 +47,6 @@ void perf_elem_t::add_time(unsigned i_time)
 void perf_elem_t::inc_call_num()
 {
 	++m_sumcallnum;
-
 }
 
 
@@ -60,11 +60,8 @@ perf_elem_t* perf_elem_t::create_child(const char* i_name, perf_enum_t i_id)
 
 void perf_elem_t::erase()
 {
-	perf_elem_array::iterator it;
-	for (it=m_children.begin(); it!=m_children.end(); ++it)
-	{
+	for (perf_elem_array::iterator it=m_children.begin(); it!=m_children.end(); ++it)
 		(*it)->erase();
-	}
 
 	delete this;
 }
@@ -101,8 +98,6 @@ void perf_elem_t::draw_performance(draw_func* i_fn, int& i_x, int& i_y)
 //////////////////////////////////////////////////////////////////////////
 //  perf_analizer_t
 //////////////////////////////////////////////////////////////////////////
-
-//	perf_analizer_t* gpperf_analizer_t=null;
 
 perf_analizer_t::perf_analizer_t():
 m_root(new perf_elem_t("root",perf_root))
@@ -146,10 +141,8 @@ void perf_analizer_t::flush()
 	++m_framecount;
 }
 
-void perf_analizer_t::draw_performance(draw_func* i_fn)
+void perf_analizer_t::draw_performance(draw_func* i_fn, int x, int y)
 {
-	int x=20,y=20;
-
 	m_root->draw_performance(i_fn,x,y);
 }
 #else
@@ -157,7 +150,7 @@ void perf_analizer_t::flush()
 {
 }
 
-void perf_analizer_t::draw_performance(draw_func* i_fn)
+void perf_analizer_t::draw_performance(draw_func* i_fn, int x, int y)
 {
 }
 #endif

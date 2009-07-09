@@ -414,11 +414,11 @@ void lcp_solver_t::solve_constraints()
 	for (int it=0; it<10; ++it)
 	{
 		{
-			perf_meter(perf_solve_contact);
+//			perf_meter(perf_solve_contact);
 			solve_contacts();
 		}
 		{
-			perf_meter(perf_solve_friction);
+//			perf_meter(perf_solve_friction);
 			solve_frictions();
 		}
 	}
@@ -435,11 +435,11 @@ void lcp_solver_t::process(contact_surface_t** i_contact_array, int i_contact_co
 	allocate_buffer();
 
 	{
-		perf_meter(perf_solverprestep);
+//		perf_meter(perf_solverprestep);
 		pre_step();
 	}
 	{
-		perf_meter(perf_solveconstraints);
+//		perf_meter(perf_solveconstraints);
 		solve_constraints();
 	}
 	cache_lambda();

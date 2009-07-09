@@ -17,6 +17,19 @@ enum json_value_type
 struct json_object_t;
 struct json_array_t;
 
+/*
+json->eps | {object}json2|[array]json2
+json2 -> eps | ,json
+object-> pair o2
+o2 -> eps | , object
+pair-> string : value
+value -> string | number | bool | nil | {object} | [array]
+array -> value | value,array
+array -> value a2
+a2 -> eps | , array
+
+terminatorok: { } , string number [ ]*/
+
 struct json_value_t
 {
 	bool is_num() const;
@@ -84,7 +97,7 @@ struct json_item_t
 	};
 };
 
-typedef vector<json_item_t*> json_map;
+typedef vector<json_item_t> json_map;
 
 
 

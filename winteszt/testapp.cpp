@@ -27,6 +27,7 @@
 #include "math/geometry/intersection.h"
 #include "math/geometry/bsp.h"
 #include "utils/timer.h"
+#include "utils/performancemeter.h"
 //#include <CAPROFAPI.h>
 #define taskmanager taskmanager2_t
 
@@ -272,6 +273,7 @@ void init_app(HWND i_hwnd)
 		time1[n]=time2[n]=timedeep[n]=timempr[n]=0;
 
 	g_game=new game;
+	perf_analizer_t::create();
 	filesystem::create();
 	filesystem::ptr->register_path("shader","shader\\");
 	filesystem::ptr->register_path("texture","texture\\");
@@ -520,6 +522,12 @@ double sajsin(double y)
 #undef P
 }
 
+void draw_string(int x,int y, const char* i_str)
+{
+	rendersystem::ptr->draw_text(x,y,color_f(1,1,1,1),i_str);
+}
+
+
 void update_app()
 {
 /*
@@ -546,6 +554,7 @@ void update_app()
 	PRINT("sin(pi)=%f,sin(pi/2)=%f,sin(pi/4)=%f,sin(0)=%f\n",sin(Pi),sin(Pi/2),sin(Pi/4),sin(0.0));
 */
 
+	perf_analizer_t::ptr->flush();
 
 
 	timer_t update_time;
@@ -596,6 +605,8 @@ void update_app()
 			physicssystem::ptr->parallel_solver=1-physicssystem::ptr->parallel_solver;
 		if (inputsystem::ptr->KeyPressed(KEYCODE_6))
 			physicssystem::ptr->parallel_update=1-physicssystem::ptr->parallel_update;
+
+/*
 		sprintf(str,"bounding:%d",physicssystem::ptr->parallel_boudingupdate);
 		rendersystem::ptr->draw_text(10,400,color_f(1,1,1,1),str);
 		sprintf(str,"broadphs:%d %d",physicssystem::ptr->parallel_broadphase,g_bph/g_frc);
@@ -616,7 +627,7 @@ void update_app()
 				rendersystem::ptr->draw_text(60,560,color_f(1,1,1,1),str);
 				sprintf(str,"valami  :%d %d",physicssystem::ptr->parallel_solver,g_cache_l);
 				rendersystem::ptr->draw_text(60,580,color_f(1,1,1,1),str);
-
+*/
 //		sprintf(str,"update  :%d %d",physicssystem::ptr->parallel_update,g_up/g_frc);
 //		rendersystem::ptr->draw_text(10,540,color_f(1,1,1,1),str);
 //		sprintf(str,"constnum:%d",constraint_c);
@@ -978,6 +989,7 @@ void update_app()
 
 	sprintf(str,"UPT:%d",update_tick);
 	rendersystem::ptr->draw_text(400,10,color_f(1,1,0,1),str);
+	perf_analizer_t::ptr->draw_performance(&draw_string,20,340);
 
 }
 

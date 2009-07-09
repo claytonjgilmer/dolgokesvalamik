@@ -91,6 +91,7 @@ void physicssystem::release_bodies(body_t* i_body_array[], unsigned i_bodynum)
 
 void physicssystem::simulate(f32 i_dt)
 {
+	perf_meter(perf_simulate);
 	++this->frame_count;
     kill_deads();
 

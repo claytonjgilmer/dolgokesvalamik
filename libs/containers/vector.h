@@ -130,28 +130,28 @@
 	template<typename basetype>
 	MLINLINE typename vector<basetype>::iterator vector<basetype>::begin()
 	{
-		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
+//		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
 		return m_buf;
 	}
 
 	template<typename basetype>
 	MLINLINE typename vector<basetype>::const_iterator vector<basetype>::begin() const
 	{
-		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
+//		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
 		return m_buf;
 	}
 
 	template<typename basetype>
 	MLINLINE typename vector<basetype>::iterator vector<basetype>::end()
 	{
-		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
+//		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
 		return m_buf+m_size;
 	}
 
 	template<typename basetype>
 	MLINLINE typename vector<basetype>::const_iterator vector<basetype>::end() const
 	{
-		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
+//		assertion(m_buf!=NULL,"vector<basetype>::m_buf nem lehet null");
 		return m_buf+m_size;
 	}
 

@@ -19,13 +19,14 @@ enum token_type
 
 struct json_parser_t
 {
-	json_parser_t(const char* text);
+	json_parser_t(json_map* map,const char* text);
 	void get_next_token();
 	void proc_json();
 	void proc_json2();
 	void proc_object();
 	void proc_object2();
 	void proc_array();
+	void proc_array2();
 	void proc_pairseq();
 	void proc_pair();
 	void proc_valueseq();
@@ -48,6 +49,7 @@ struct json_parser_t
 	void expect(token_type s);
 
 	const char* text;
+	json_map* map;
 	int text_size;
 	int act_index;
 
@@ -80,7 +82,8 @@ void json_parser_t::expect(token_type s)
 	assertion(0,"unexpected token");
 }
 
-json_parser_t::json_parser_t(const char* text):
+json_parser_t::json_parser_t(json_map* map,const char* text):
+map(map),
 text(text)
 {
 	text_size=strlen(text);
@@ -131,6 +134,7 @@ void json_parser_t::proc_json2()
 
 void json_parser_t::proc_object()
 {
+	map->push_back(json_item_t(new json_object_t));
 	proc_pair();
 	proc_object2();
 }
@@ -152,6 +156,13 @@ void json_parser_t::proc_object2()
 
 void json_parser_t::proc_pair()
 {
+	json_item_t& last_item(map->back());
+	assertion(last_item->is_object());
+	last_item.obj->pair_list.push_back(json_pair_t());
+	json_pair_t& new_pair=last_item.obj->pair_list.back();
+	if (act_token==tok_str)
+		new_pair.key=str_val;
+
 	expect(tok_str);
 	expect(tok_colon);
 	proc_value();
@@ -191,8 +202,26 @@ void json_parser_t::proc_value()
 
 void json_parser_t::proc_array()
 {
-	assertion(0,"not yet implemented");
+	map->push_back(json_item_t(new json_array_t));
+	proc_value();
+	proc_array2();
 }
+
+void json_parser_t::proc_array2()
+{
+	switch (act_token)
+	{
+	case tok_comma:
+		accept(tok_comma);
+		proc_array();
+		return;
+	case tok_right_bracket:
+		return;
+	default:
+		assertion(0,"unexpected token");
+	}
+}
+
 
 
 

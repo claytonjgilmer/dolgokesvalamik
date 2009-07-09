@@ -108,7 +108,7 @@ struct perf_analizer_t
 	~perf_analizer_t();
 
 	void flush();
-	void draw_performance(draw_func* i_fn);
+	void draw_performance(draw_func* i_fn, int x, int y);
 
 	perf_elem_t* get_elem(const char* i_name, perf_enum_t i_id);
 	void set_act_elem(perf_elem_t* i_elem);
