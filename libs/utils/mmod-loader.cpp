@@ -487,6 +487,8 @@ fixedvector<mesh_t*,8> MeshLODInfo::generate_mesh()
 	for (unsigned streamindex=0; streamindex<m_Streams.size(); ++streamindex)
 	{
 		mesh_t* m=new mesh_t("mesh");
+		m->bounding.min=this->m_box_min;
+		m->bounding.max=this->m_box_max;
 		res.push_back(m);
 
 		if (m_32bit)

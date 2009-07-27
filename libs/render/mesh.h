@@ -8,6 +8,7 @@
 #include "containers/vector.h"
 #include "utils/resource.h"
 #include "utils/auto_ptr.h"
+#include "math/aabox.h"
 
 	struct mesh_t:resource
 	{
