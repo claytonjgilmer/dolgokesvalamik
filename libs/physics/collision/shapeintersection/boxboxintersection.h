@@ -86,6 +86,7 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 
 	if (!parallel_edge_pair)
 	{
+		penetration+=.001f;
 		// Test axis L = A0 x B0
 		ra = e1[1] * abs_R.axis(0)[2] + e1[2] * abs_R.axis(0)[1];
 		rb = e2[1] * abs_R.axis(2)[0] + e2[2] * abs_R.axis(1)[0];
@@ -194,7 +195,7 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 		int axis_2=(axis_code-6) % 3;
 
 		o_normal.cross(box_mtx[0].axis(axis_1),box_mtx[1].axis(axis_2));
-		o_normal*=dot(o_normal,box_mtx[1].t-box_mtx[0].t);
+		o_normal*=sign(dot(o_normal,box_mtx[1].t-box_mtx[0].t));
 		o_normal.normalize();
 		vec3 p1,p2;
 		box[0]->get_extreme_point(p1,box_mtx[0],o_normal);

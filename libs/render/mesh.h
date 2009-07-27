@@ -21,6 +21,8 @@
 
 		vector<submesh> m_submeshbuf;
 
+		aabb_t bounding;
+
 
 		~mesh_t();
 	};

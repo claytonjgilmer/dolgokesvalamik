@@ -4,6 +4,8 @@
 #include "physics/solver/lcpsolver.h"
 #include "physics/collision/shapes/convexmeshshape.h"
 
+#include "render/rendersystem.h"
+
 
 DEFINE_SINGLETON(physicssystem);
 
@@ -156,6 +158,7 @@ struct update_bounding
             for (s=nb.get_body(n)->shapes.first(); s; s=s->next)
             {
 				s->collider->bounding_world=transform(nb.get_pos(n),s->bounding);
+				rendersystem::ptr->draw_box(mtx4x3::identitymtx(),s->collider->bounding_world.min,s->collider->bounding_world.max);
             }
         }
     }

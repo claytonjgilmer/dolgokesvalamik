@@ -126,6 +126,34 @@
 			}
 		}
 
+		inline void draw_box(const mtx4x3& frame, const vec3& minpos, const vec3& maxpos,const color_r8g8b8a8& color=color_r8g8b8a8(255,255,255,255))
+		{
+			vec3 corner[8];
+
+			static int x[]={-1,1,1,-1,-1,1,1,-1};
+
+			vec3 center=frame.transform(.5f*(maxpos+minpos));
+			vec3 halfextent=.5f*(maxpos-minpos);
+
+			for (int n=0; n<8;++n)
+			{
+				corner[n]=center+
+					(x[n])*halfextent.x*frame.x+
+					(2*((n&2)>>1)-1)*halfextent.y*frame.y+
+					(2*((n&4)>>2)-1)*halfextent.z*frame.z;
+			}
+
+			int prev=3;
+			for (int n=0; n<4;++n)
+			{
+				draw_line(corner[n],corner[prev],color);
+				draw_line(corner[n+4],corner[prev+4],color);
+				draw_line(corner[n],corner[n+4],color);
+				prev=n;
+			}
+
+		}
+
 		vector<line_struct> lines;
 		LPDIRECT3DVERTEXBUFFER9 line_buffer;
 
