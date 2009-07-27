@@ -278,7 +278,7 @@ void init_app(HWND i_hwnd)
 	filesystem::ptr->register_path("shader","shader\\");
 	filesystem::ptr->register_path("texture","texture\\");
 
-	taskmanagerdesc tdesc;
+	taskmanagerdesc_t tdesc;
 	tdesc.m_threadnum=1;
 	taskmanager::create(&tdesc);
 
@@ -370,7 +370,7 @@ void init_app(HWND i_hwnd)
 	bsd.collision_mask=1;
 	bsd.restitution=1;
 	bsd.friction=1;
-	g_world->add_shape(bsd);
+	physicssystem::ptr->world->add_shape(bsd);
 
 
 
@@ -920,43 +920,6 @@ void update_app()
 	{
 		const mtx4x3& pos=g_game->phb[n]->get_pos();
 
-#if 0
-		vec3 vel=g_game->phb[n]->get_vel();
-
-		if (pos.t.x<-ROOM_SIZE)
-		{
-			pos.t.x=-ROOM_SIZE;
-			vel.x=fabsf(vel.x);
-		}
-		if (pos.t.y<-ROOM_SIZE)
-		{
-			pos.t.y=-ROOM_SIZE;
-			vel.y=fabsf(vel.y);
-		}
-		if (pos.t.z<-ROOM_SIZE)
-		{
-			pos.t.z=-ROOM_SIZE;
-			vel.z=fabsf(vel.z);
-		}
-
-		if (pos.t.x>ROOM_SIZE)
-		{
-			pos.t.x=ROOM_SIZE;
-			vel.x=-fabsf(vel.x);
-		}
-		if (pos.t.y>ROOM_SIZE)
-		{
-			pos.t.y=ROOM_SIZE;
-			vel.y=-fabsf(vel.y);
-		}
-		if (pos.t.z>ROOM_SIZE)
-		{
-			pos.t.z=ROOM_SIZE;
-			vel.z=-fabsf(vel.z);
-		}
-		g_game->phb[n]->set_vel(vel);
-		g_game->phb[n]->set_pos(pos);
-#endif
 
 		g_game->model[n]->set_worldposition(pos);
 

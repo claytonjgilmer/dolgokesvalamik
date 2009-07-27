@@ -23,7 +23,7 @@ BIND_PROPERTY(node_t,m_localpos,"localpos",mtx4x3);
 		m_parent=NULL;
 		m_child=NULL;
 		m_bro=NULL;
-		m_flags|=nodeflag_valid_worldpos;
+		m_flags&=~nodeflag_valid_worldpos;
 	}
 
 	node_t::~node_t()

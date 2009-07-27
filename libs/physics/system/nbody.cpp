@@ -1,4 +1,5 @@
 #include "nbody.h"
+#include "physicssystem.h"
 
 #ifdef SOA
 #ifndef offsetof
@@ -67,12 +68,12 @@ void realloc(nbody_t* nb, unsigned i_newcapacity)
 		free(firstaddress);
 	}
 
-	void nbody_t::add_world()
+	void nbody_t::add_world(body_t* w)
 	{
 		if (size+1>capacity)
 			realloc(this,nextpoweroftwo(size));
 
-		g_world->array_index=0;
+		w->array_index=0;
 		pos[0].identity();
 		vel[0].clear();
 		rotvel[0].clear();
@@ -81,7 +82,7 @@ void realloc(nbody_t* nb, unsigned i_newcapacity)
 		invinertia_abs[0].clear();
 		force[0].clear();
 		torque[0].clear();
-		body[0]=g_world;
+		body[0]=w;
 		constraint_accel[0].clear();
 
 		++size;
@@ -145,7 +146,7 @@ void nbody_t::add_world()
 	assertion(!body_data.size());
 	body_data.push_back(body_data_t());
 
-	g_world->array_index=0;
+	physicssystem::ptr->world->array_index=0;
 	this->
 	body_data[0].pos.identity();
 	body_data[0].vel.clear();
@@ -155,7 +156,7 @@ void nbody_t::add_world()
 	body_data[0].invinertia_abs.clear();
 	body_data[0].force.clear();
 	body_data[0].torque.clear();
-	body_data[0].body=g_world;
+	body_data[0].body=physicssystem::ptr->world;
 	body_data[0].constraint_accel.clear();
 }
 

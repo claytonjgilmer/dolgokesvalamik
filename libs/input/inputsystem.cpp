@@ -18,7 +18,7 @@
 	LPDIRECTINPUTDEVICE8	g_lpMouseDevice=NULL;
 
 	//joystick enumeralas
-	BOOL CALLBACK EnumJoysticksCallback( const DIDEVICEINSTANCE* pdidInstance,void* pContext )
+	BOOL CALLBACK enum_joysticks_callback( const DIDEVICEINSTANCE* pdidInstance,void* pContext )
 	{
 		HRESULT hr;
 
@@ -94,7 +94,7 @@
 
 		m_JoystickNum=0;
 
-		Init(*i_params);
+		init(*i_params);
 	}
 
 	//inputsystem destruktor
@@ -126,7 +126,7 @@
 
 
 	//keyboard inicialilzalasa
-	void inputsystem::InitKeyboard(HWND i_Hwnd)
+	void inputsystem::init_keyboard(HWND i_Hwnd)
 	{
 		//keyboard
 		g_lpDI->CreateDevice(GUID_SysKeyboard, &g_lpKeyboardDevice, NULL);
@@ -141,7 +141,7 @@
 	}
 
 	//eger inicializalasa
-	void inputsystem::InitMouse(HWND i_Hwnd)
+	void inputsystem::init_mouse(HWND i_Hwnd)
 	{
 		//mouse
 		g_lpDI->CreateDevice(GUID_SysMouse, &g_lpMouseDevice, NULL);
@@ -149,7 +149,7 @@
 		if (g_lpMouseDevice)
 		{
 			g_lpMouseDevice->SetDataFormat(&c_dfDIMouse2);
-			g_lpMouseDevice->SetCooperativeLevel(i_Hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
+			g_lpMouseDevice->SetCooperativeLevel(i_Hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 
 
 #ifdef BUFFERED_MOUSE
@@ -178,11 +178,11 @@
 
 
 	//joystickok inicializalasa
-	void inputsystem::InitJoys(HWND i_Hwnd)
+	void inputsystem::init_joys(HWND i_Hwnd)
 	{
 		//Joysticks
 		if ( !FAILED( g_lpDI->EnumDevices(	DI8DEVCLASS_GAMECTRL, 
-			EnumJoysticksCallback,
+			enum_joysticks_callback,
 			this,
 			DIEDFL_ATTACHEDONLY ) ) )
 		{
@@ -202,23 +202,23 @@
 
 
 	//inputsystem inicializalasa
-	void inputsystem::Init(const inputinitparams& i_Params)
+	void inputsystem::init(const inputinitparams& i_Params)
 	{
 		DirectInput8Create(GetModuleHandle(NULL), DIRECTINPUT_VERSION, 
 			IID_IDirectInput8, (void**)&g_lpDI, NULL);
 
 
-		InitKeyboard(i_Params.m_Window);
-		InitMouse(i_Params.m_Window);
-		InitJoys(i_Params.m_Window);
+		init_keyboard(i_Params.m_Window);
+		init_mouse(i_Params.m_Window);
+		init_joys(i_Params.m_Window);
 
 		m_Inited=true;
 	}
 
-	void inputsystem::Clear()
+	void inputsystem::clear()
 	{
-		UpdateKeyboard();
-		UpdateMouse();
+		update_keyboard();
+		update_mouse();
 		ZeroMemory(&m_PrevMouseState,sizeof(m_MouseState));
 		ZeroMemory(&m_MouseState,sizeof(m_MouseState));
 		ZeroMemory(&m_KeyboardState,sizeof(m_KeyboardState));
@@ -229,7 +229,7 @@
 
 
 	//billentyuzet lekerdezese
-	void inputsystem::UpdateKeyboard()
+	void inputsystem::update_keyboard()
 	{
 		//keyboard
 		if (g_lpKeyboardDevice)
@@ -264,7 +264,7 @@
 
 	//eger lekerdezese
 	unsigned maxelemnum=0;
-	void inputsystem::UpdateMouse()
+	void inputsystem::update_mouse()
 	{
 		//mouse
 		if (g_lpMouseDevice)
@@ -354,7 +354,7 @@
 	}
 
 	//joyok lekerdezese
-	void inputsystem::UpdateJoys()
+	void inputsystem::update_joys()
 	{
 		for (unsigned n=0; n<m_JoystickNum; ++n)
 		{
@@ -383,11 +383,11 @@
 		}
 	}
 
-	void inputsystem::Update(bool eger_is)
+	void inputsystem::update(bool eger_is)
 	{
-		UpdateKeyboard();
+		update_keyboard();
 
 		if (eger_is)
-		UpdateMouse();
+		update_mouse();
 //		UpdateJoys();
 	}

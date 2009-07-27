@@ -59,7 +59,7 @@ struct nbody_t
 	nbody_t();
 	~nbody_t();
 
-	void add_world();
+	void add_world(body_t*);
 	void add_body(const bodydesc i_desc[], body_t* i_body_array[], unsigned i_bodynum);
 	void release_body(body_t* i_body_array[], unsigned i_bodynum);
 

@@ -106,7 +106,10 @@ struct intr_list_simple
 		if (node->prev)
 			node->prev->next=node->next;
 		else
+		{
+			assertion(node == first_elem);
 			first_elem=node->next;
+		}
 
 		if (node->next)
 			node->next->prev=node->prev;

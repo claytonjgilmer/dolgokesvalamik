@@ -1,10 +1,9 @@
 #include "physicssystem.h"
-#include "threading/taskmanager2.h"
+#include "threading/taskmanager.h"
 #include "utils/performancemeter.h"
 #include "physics/solver/lcpsolver.h"
 #include "physics/collision/shapes/convexmeshshape.h"
 
-#define taskmanager taskmanager2_t
 
 DEFINE_SINGLETON(physicssystem);
 
@@ -20,16 +19,11 @@ void update_contacts();
 void solve_constraints(f32 dt);
 void draw_contacts();
 
-body_t* g_world=NULL;
+//body_t* g_world=NULL;
 
 
 void create_world_body(physicssystem* ptr)
 {
-	g_world=new (ptr->body_list.allocate_place()) body_t;
-#ifdef _DEBUG
-	g_world->set_name("WORLD");
-#endif
-	ptr->bodystate_array.add_world();
 }
 
 physicssystem::physicssystem(const physicssystemdesc* i_desc):
@@ -37,6 +31,7 @@ desc(*i_desc)
 {
     ZeroMemory(this->intersect_fn,sizeof(this->intersect_fn));
     this->intersect_fn[shape_type_sphere][shape_type_sphere]=&test_sphere_sphere_intersect;
+	this->intersect_fn[shape_type_box][shape_type_box]=&test_box_box_intersect;
 	this->intersect_fn[shape_type_box][shape_type_sphere]=&test_box_sphere_intersect;
 	this->intersect_fn[shape_type_sphere][shape_type_box]=&test_sphere_box_intersect;
 	this->intersect_fn[shape_type_convex_mesh][shape_type_convex_mesh]=&test_convex_convex_intersect<convex_mesh_shape_t,convex_mesh_shape_t>;
@@ -55,7 +50,11 @@ desc(*i_desc)
 	this->frame_count=0;
 	this->solver_position_correction_rate=i_desc->solver_positioncorrection_rate;
 
-	create_world_body(this);
+	world=new (body_list.allocate_place()) body_t;
+#ifdef _DEBUG
+	world->set_name("WORLD");
+#endif
+	bodystate_array.add_world(world);
 }
 
 body_t* physicssystem::create_body(const bodydesc& i_desc)
@@ -170,7 +169,7 @@ void broadphase()
 
     if (ptr->parallel_boudingupdate)
     {
-        taskmanager2_t::ptr->process_buffer(nb.get_size()-1,10,update_bounding());
+        taskmanager_t::ptr->process_buffer(nb.get_size()-1,10,update_bounding());
     }
     else
     {
@@ -252,7 +251,7 @@ void near_phase()
     if (ptr->parallel_nearphase)
     {
 		if (ptr->broad_phase.pair_num)
-			taskmanager::ptr->process_buffer(ptr->broad_phase.pair_num,10,near_struct(surface_array));
+			taskmanager_t::ptr->process_buffer(ptr->broad_phase.pair_num,10,near_struct(surface_array));
     }
     else
     {
@@ -326,7 +325,7 @@ void update_positions(f32 i_dt)
     nbody_t* b=&ptr->bodystate_array;
     if (ptr->parallel_update)
     {
-        taskmanager::ptr->process_buffer(b->get_size()-1,10,update_pos_process(b,i_dt));
+        taskmanager_t::ptr->process_buffer(b->get_size()-1,10,update_pos_process(b,i_dt));
     }
     else
     {
@@ -341,7 +340,7 @@ void update_velocities(f32 i_dt)
 	nbody_t* b=&ptr->bodystate_array;
 	if (ptr->parallel_update)
 	{
-		taskmanager::ptr->process_buffer(b->get_size()-1,10,update_vel_process(b,i_dt,ptr->desc.gravity));
+		taskmanager_t::ptr->process_buffer(b->get_size()-1,10,update_vel_process(b,i_dt,ptr->desc.gravity));
 	}
 	else
 	{
@@ -381,7 +380,7 @@ void solve_constraints(f32 dt)
 		return;
 	if (ptr->parallel_solver)
 	{
-		taskmanager::ptr->process_buffer(ptr->contact_group_manager.group_array.size()-1,1,constraint_solver_t(dt));
+		taskmanager_t::ptr->process_buffer(ptr->contact_group_manager.group_array.size()-1,1,constraint_solver_t(dt));
 	}
 	else
 	{
@@ -420,7 +419,7 @@ void update_inertia()
 
     if (ptr->parallel_inertia)
     {
-        taskmanager::ptr->process_buffer(b->get_size()-1,10,inertia_process(b));
+        taskmanager_t::ptr->process_buffer(b->get_size()-1,10,inertia_process(b));
     }
     else
     {

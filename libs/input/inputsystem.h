@@ -18,9 +18,9 @@
 
 		inputsystem(const inputinitparams* i_params);
 		~inputsystem();
-		void Init(const inputinitparams& i_Params);
-		void Update(bool eger_is);
-		void Clear();
+		void init(const inputinitparams& i_Params);
+		void update(bool eger_is);
+		void clear();
 
 		int KeyDown(int i_Key)
 		{
@@ -160,13 +160,13 @@
 
 		int m_Inited;
 
-		void			InitKeyboard(HWND i_Hwnd);
-		void			InitMouse(HWND i_Hwnd);
-		void			InitJoys(HWND i_Hwnd);
+		void			init_keyboard(HWND i_Hwnd);
+		void			init_mouse(HWND i_Hwnd);
+		void			init_joys(HWND i_Hwnd);
 
-		void			UpdateKeyboard();
-		void			UpdateMouse();
-		void			UpdateJoys();
+		void			update_keyboard();
+		void			update_mouse();
+		void			update_joys();
 	};
 
 #define KEYCODE_ESCAPE          0x01

@@ -2,123 +2,69 @@
 #include "nodefactory.h"
 #include "node.h"
 #include "containers/stringmap.h"
+#include "file/file.h"
 
-    struct mapelem
-    {
-        const string& get_name() const
-        {
-            return m_name;
-        }
-        vector<node_t*> m_child;
-        string m_name;
-
-        mapelem(const char* i_name):
-        m_name(i_name)
-        {
-        }
-
-        mapelem* Next;
-    };
-
-	node_t* load_node(node_t* i_parent,lua::Variable& i_nodetable)
+node_t* load_node(json_object_t* obj)
+{
+	metaobject* mo=NULL;
+	for (unsigned n=0; n<obj->pair_list.size(); ++n)
 	{
-		int exclude=i_nodetable.GetVariable("Exclude").GetBool(false);
-
-		if (exclude)
-			return NULL;
-
-		string TypeName=i_nodetable.GetVariable("Type").GetString("");
-
-		node_t* NewNode=(node_t*)metaobject_manager::create_object(TypeName.c_str());
-
-		if (NewNode)
-			NewNode->get_metaobject()->load_property(NewNode,i_nodetable);
-		else
-			return NULL;
-
-		NewNode->on_load();
-
-		if (i_parent)
-			i_parent->add_child(NewNode);
-
-		lua::Variable childtable=i_nodetable.GetVariable("Child");
-		if (childtable.IsTable())
+		if (_stricmp(obj->pair_list[n].key,"type") == 0)
 		{
-			lua::Variable K,V;
-			for (childtable.Begin(K,V); !childtable.End(K); childtable.Next(K,V))
-			{
-				load_node(NewNode,V);
-			}
+			assertion(obj->pair_list[n].val.is_str());
+			mo=metaobject_manager::get_metaobject(obj->pair_list[n].val.get_str());
+			break;
 		}
-
-		return NewNode;
 	}
+	assertion(mo!=NULL);
 
+	node_t* node=(node_t*)mo->create();
+	mo->load_properties(node,obj);
+	node->on_load();
 
-	node_t* load_scene(const char* i_scenename)
+	for (unsigned n=0; n<obj->pair_list.size(); ++n)
 	{
-		stringmap<mapelem,1024> map;
-		vector<node_t*> nodebuf;
-		vector<node_t*> root;
-
-		lua Lua;
-		Lua.InitState((lua::eLuaLib)(lua::LL_BASE | lua::LL_MATH));
-
-		Lua.DoFile(i_scenename);
-
-		lua::Variable scenetable=Lua.GetGlobalTable().GetVariable("Scene");
-
-		assert(scenetable.IsTable());
-
-		lua::Variable K,V;
-
-		for (scenetable.Begin(K,V); !scenetable.End(K); scenetable.Next(K,V))
+		if (_stricmp(obj->pair_list[n].key,"child") == 0)
 		{
-			node_t* n =load_node(NULL,V);
+			assertion( obj->pair_list[n].val.is_array());
+			json_array_t* child_array=obj->pair_list[n].val.arr;
 
-			if (!n)
-				continue;
-
-			lua::Variable parentvar=V.GetVariable("Parent");
-
-			if (parentvar.IsString())
+			for (unsigned m=0; m<child_array->value_list.size(); ++m)
 			{
-				string parentname=parentvar.GetString();
-				mapelem* pm=map.get_data(parentname.c_str());
-
-				if (!pm)
-				{
-					pm=new mapelem(parentname.c_str());
-					map.add_data(pm);
-				}
-
-				pm->m_child.push_back(n);
+				assertion(child_array->value_list[m].is_object());
+				node_t* child_node=load_node(child_array->value_list[m].obj);
+				node->add_child(child_node);
 			}
-			else
-			{
-				root.push_back(n);
-			}
-
-			nodebuf.push_back(n);
+			break;
 		}
+	}
+	return node;
+//	mo->load_property()
+}
 
-		assertion(root.size()==1);
+node_t* load_scene(const char* i_scenename)
+{
+	file_t file(i_scenename,"rt");
 
-		mapelem** ptr=map.get_buffer();
+	if (file.opened())
+	{
+		unsigned filesize=file.size();
+		char* buf=new char[filesize+1];
+		file.read_bytes(buf,filesize);
+		buf[filesize]=0;
+		file.close();
 
-		for (unsigned n=0; n<1024; ++n)
-		{
-			mapelem* mapptr=ptr[n];
+		json_map_t* map=generate_json_map(buf);
 
-			while (mapptr)
-			{
-				mapptr->get_name();
-				mapptr=mapptr->Next;
-			}
+		assertion(map->item_array.size()==1 && map->item_array[0].is_object());
 
-		}
+		node_t* root_node=load_node(map->item_array[0].obj);
 
-		assert(0);
+		delete map;
+		return root_node;
+	}
+	else
+	{
 		return NULL;
 	}
-
+}

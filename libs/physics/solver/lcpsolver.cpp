@@ -1,8 +1,7 @@
 #include "lcpsolver.h"
-#include "threading/taskmanager2.h"
+#include "threading/taskmanager.h"
 #include "utils/timer.h"
 #include "utils/performancemeter.h"
-#define taskmanager taskmanager2_t
 
 
 /*
@@ -279,7 +278,7 @@ void lcp_solver_t::pre_step_contacts_and_frictions()
 
 	if (ptr->parallel_pre_step)
 	{
-		taskmanager::ptr->process_buffer(contact_count,10,solver_pre_step_contacts(this));
+		taskmanager_t::ptr->process_buffer(contact_count,10,solver_pre_step_contacts(this));
 	}
 	else
 	{

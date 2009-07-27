@@ -8,6 +8,10 @@
 
 	struct texturemanagerdesc
 	{
+		texturemanagerdesc():
+		m_texturegroup("texture")
+		{
+		}
 		texturemanagerdesc(const char* i_texturegroup):
 		m_texturegroup(i_texturegroup)
 		{

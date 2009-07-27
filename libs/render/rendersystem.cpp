@@ -68,6 +68,8 @@
 		this->white_texture=texturemanager::ptr->get_texture("white.bmp");
 		this->m_view_matrix.identity();
 		this->m_viewprojection_matrix.identity();
+
+		aspect=(f32)i_desc->m_screenwidth/(f32)i_desc->m_screenheight;
 	}
 
 	rendersystem::~rendersystem()
@@ -94,7 +96,7 @@
 		return m_device;
 	}
 
-	struct rendertask:task2_t
+	struct rendertask:task_t
 	{
 		void run()
 		{
@@ -105,8 +107,11 @@
 
 	void rendersystem::render()
 	{
+		m_projection_matrix.set_projectionmatrix(tan_half_fov, aspect,near_z,far_z);
+		m_viewprojection_matrix.multiply(m_view_matrix,m_projection_matrix);
+
 		rendertask* t=new rendertask;
-		taskmanager2_t::ptr->spawn_tasks((task2_t**)&t,1);
+		taskmanager_t::ptr->spawn_tasks((task_t**)&t,1);
 
 	}
 
@@ -282,4 +287,24 @@
 		m_view_matrix=i_viewmatrix;
 		m_projection_matrix.set_projectionmatrix(tan(i_fov/2), i_aspect,i_nearz,i_farz);
 		m_viewprojection_matrix.multiply(i_viewmatrix,m_projection_matrix);
+	}
+
+	void rendersystem::set_fov(float fov)
+	{
+		tan_half_fov=tan(fov/2);
+	}
+
+	void rendersystem::set_aspect(float aspect)
+	{
+		this->aspect=aspect;
+	}
+
+	void rendersystem::set_near_z(float near_z)
+	{
+		this->near_z=near_z;
+	}
+
+	void rendersystem::set_far_z(float far_z)
+	{
+		this->far_z=far_z;
 	}

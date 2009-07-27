@@ -1,8 +1,7 @@
 #include "hgridbroadphase.h"
 #include "math/geometry/intersection.h"
-#include "threading/taskmanager2.h"
+#include "threading/taskmanager.h"
 #include "physics/system/physicssystem.h"
-#define taskmanager taskmanager2_t
 
 #define h1  2376512323u
 #define h2  3625334849u
@@ -261,7 +260,7 @@ void hgridbroadphase::update()
             move_object(this, obj_array[n]);
         }
 
-        taskmanager::ptr->process_buffer(obj_count,10,hgrid_update_process(this,obj_array));
+        taskmanager_t::ptr->process_buffer(obj_count,10,hgrid_update_process(this,obj_array));
     }
 }
 

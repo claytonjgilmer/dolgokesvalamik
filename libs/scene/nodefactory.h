@@ -1,12 +1,14 @@
 #ifndef _nodefactory_h_
 #define _nodefactory_h_
 
+#include <stddef.h>
+
 #include "containers/vector.h"
 #include "containers/string.h"
 #include "utils/assert.h"
 #include "math/mtx4x3.h"
 #include "scripting/lua.h"
-#include <stddef.h>
+#include "json/jsonparser.h"
 
 
 
@@ -19,7 +21,8 @@
 		prop_float,
 		prop_vec3,
 		prop_mtx4x3,
-		prop_string
+		prop_string,
+		prop_angle
 	};
 
 	struct property_descriptor
@@ -77,6 +80,75 @@
 			assertion(m_type==prop_string);
 
 			return (string&)(*((char*)(i_object)+m_offset));
+		}
+
+		float get_angle(rootobject* i_object) const
+		{
+			assertion(m_type==prop_angle);
+
+			return radtodegree((f32&)(*((char*)(i_object)+m_offset)));
+		}
+
+		void load_value(rootobject* i_object, json_object_t* obj)
+		{
+			json_value_t* val=obj->get_value(m_name);
+
+			if (val)
+			{
+				switch (m_type)
+				{
+				case prop_int:
+					assertion(val->is_num());
+					(int&)*((char*)i_object+m_offset)=(int)val->get_num();
+					break;
+				case prop_float:
+					assertion(val->is_num());
+					(float&)*((char*)i_object+m_offset)=(float)val->get_num();
+					break;
+				case prop_vec3:
+					{
+						assertion(val->is_array() && val->arr->value_list.size()==3);
+						const json_array_t* arr=val->get_array();
+						const vector<json_value_t>& vec=arr->value_list;
+						((vec3&)*((char*)i_object+m_offset)).set((float)vec[0].get_num(),(float)vec[1].get_num(),(float)vec[2].get_num());
+						break;
+					}
+				case prop_mtx4x3:
+					{
+						assertion(val->is_object() && val->obj->pair_list.size()==3);
+						vec3 m[3];
+						vector<json_pair_t>& p=val->obj->pair_list;
+
+						for (unsigned n=0; n<3; ++n)
+						{
+							json_value_t* val=&p[n].val;
+							assertion(val->is_array() && val->arr->value_list.size()==3);
+							const json_array_t* arr=val->get_array();
+							const vector<json_value_t>& vec=arr->value_list;
+							m[n].set((float)vec[0].get_num(),(float)vec[1].get_num(),(float)vec[2].get_num());
+						}
+
+						mtx4x3 mtx;
+						mtx.t=m[0];
+						mtx.set_euler(degreetorad(m[1].x),degreetorad(m[1].y),degreetorad(m[1].z));
+						mtx.x*=m[2].x;
+						mtx.y*=m[2].y;
+						mtx.z*=m[2].z;
+						((mtx4x3&)*((char*)i_object+m_offset))=mtx;
+						break;
+					}
+				case prop_string:
+					assertion(val->is_str());
+					((string&)*((char*)i_object+m_offset))=val->get_str();
+					break;
+				case prop_angle:
+					assertion(val->is_num());
+					(float&)*((char*)i_object+m_offset)=degreetorad((float)val->get_num());
+					break;
+				default:
+					assertion(0);
+				}
+			}
 		}
 
 		void load_value(rootobject* i_object, lua::Variable& i_table)
@@ -166,6 +238,15 @@
 				m_parent->load_property(i_object,i_table);
 		}
 
+		void load_properties(rootobject* i_object, json_object_t* prop_obj)
+		{
+			for (unsigned n=0; n<m_proparray.size(); ++n)
+				m_proparray[n].load_value(i_object,prop_obj);
+
+			if (m_parent)
+				m_parent->load_properties(i_object,prop_obj);
+		}
+
 		static string to_string(rootobject* i_object, proptype i_type,void* i_data)
 		{
 			switch (i_type)
@@ -195,6 +276,8 @@
 
 				return str;
 			}
+			default:
+				assertion(0);
 			}
 
 			return "";
@@ -263,6 +346,8 @@
 		static void add_metaobject(metaobject* i_creator)
 		{
 			i_creator->m_next=m_metaobjectlist;
+			if (m_metaobjectlist)
+				m_metaobjectlist->m_prev=i_creator;
 			i_creator->m_prev=0;
 			m_metaobjectlist=i_creator;
 		}
@@ -292,6 +377,8 @@
 				{
 					return ptr;
 				}
+
+				ptr=ptr->m_next;
 			}
 
 			assertion(0);
@@ -310,8 +397,8 @@ public:
 		T::get_class_metaobject()->add_property(i_name,i_type,i_offset);
 	}
 };
-#define VAR_NAME(_neve_,_hol_,_hol2_) _neve_##_hol_##_hol2_
-#define BIND_PROPERTY(_object_,_variable_,_name_,_type_) prop_binder<_object_> VAR_NAME(g_##_object_, __FILE__,__LINE__)(_name_,prop_##_type_,(unsigned)offsetof(_object_,_variable_))
+//#define VAR_NAME(_neve_,_hol_,_hol2_) _neve_##_hol_##_hol2_
+#define BIND_PROPERTY(_object_,_variable_,_name_,_type_) prop_binder<_object_> g_##_object_##_variable_(_name_,prop_##_type_,(unsigned)offsetof(_object_,_variable_))
 
 
 #endif//_nodefactory_h_

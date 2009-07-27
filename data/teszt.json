@@ -1,0 +1,63 @@
+{
+	"type" : "node_t",
+	"Localpos" :
+	{
+		"Position" : [0.000,0.000,0.000],
+		"Rotation" : [0.000,0.000,0.000],
+		"Scale"    : [1.000,1.000,1.000]
+	},
+	
+	"child" :
+	[
+		{
+			"type" : "camera_node_t",
+			"Localpos" :
+			{
+				"Position" : [0.000,0.000,0.000],
+				"Rotation" : [0.000,0.000,0.000],
+				"Scale"    : [1.000,1.000,1.000]
+			},
+			"fov" : 50,
+			"near_z" : 0.2,
+			"far_z" : 2000
+			
+		},
+		{
+			"type" : "spherestack",
+			"Localpos" :
+			{
+				"Position" : [0.000,10.000,20.000],
+				"Rotation" : [0.000,0.000,0.000],
+				"Scale"    : [1.000,1.000,1.000]
+			},
+			"sphere_num" : 1,
+			"sphere_radius" : 0.5,
+			"sphere_dist" : 2
+			
+		},
+		{
+			"type" : "object3d",
+			"Localpos" :
+			{
+				"Position" : [0.000,0.000,20.000],
+				"Rotation" : [0.000,0.000,0.000],
+				"Scale"    : [1.000,1.000,1.000]
+			},
+			"modelname" : "box.mmod"
+			
+		},
+		{
+			"type" : "boxstack",
+			"Localpos" :
+			{
+				"Position" : [10.000,0.000,20.000],
+				"Rotation" : [0.000,0.000,0.000],
+				"Scale"    : [1.000,1.000,1.000]
+			},
+			"box_num" : 10,
+			"box_extent" : [0.5,0.5,0.5],
+			"box_dist" : 2
+			
+		}
+	]
+}	

@@ -7,6 +7,7 @@
 
 	struct objectmanagerdesc
 	{
+		objectmanagerdesc():m_objectgroup("model"){}
 		objectmanagerdesc(const char* i_group):m_objectgroup(i_group){}
 		string m_objectgroup;
 	};
@@ -15,7 +16,7 @@
 		DECLARE_SINGLETON_DESC(objectmanager,objectmanagerdesc);
 	public:
 		objectmanager(const objectmanagerdesc* i_desc);
-		~objectmanager();
+//		~objectmanager();
 
 		object3d* get_object(const char* i_name);
 

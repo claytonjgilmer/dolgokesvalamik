@@ -37,12 +37,12 @@
 	{
 		object3d* ptr=this;
 
-		while (ptr)
+//		while (ptr)
 		{
 			for (unsigned n=0; n<ptr->m_mesh.size(); ++n)
 				rendersystem::ptr->add_renderable(ptr->m_mesh[n].get(),&param_array,ptr->get_worldposition());
 
-			ptr=(object3d*)ptr->get_next();
+//			ptr=(object3d*)ptr->get_next(this);
 		}
 	}
 

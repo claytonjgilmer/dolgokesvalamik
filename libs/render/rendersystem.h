@@ -8,7 +8,7 @@
 
 #include "containers/listallocator.h"
 #include "renderqueue.h"
-#include "threading/taskmanager2.h"
+#include "threading/taskmanager.h"
 
 #include "vertexbuffer.h"
 #include "indexbuffer.h"
@@ -164,12 +164,21 @@
 
 
 		LPDIRECT3DDEVICE9 device() const;
-	private:
+
 		LPDIRECT3DDEVICE9 m_device;
 		LPDIRECT3D9 m_sys;
 		vector<renderqueue> m_queue;
 		HWND m_window;
 		color_r8g8b8a8 clear_color;
+		void set_aspect(float aspect);
+		void set_fov(float fov);
+		void set_far_z(float far_z);
+		void set_near_z(float near_z);
+
+		float tan_half_fov;
+		float far_z;
+		float near_z;
+		float aspect;
 
 		member(mtx4x4,viewprojection_matrix);
 		member(mtx4x4,view_matrix);

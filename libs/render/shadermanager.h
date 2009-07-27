@@ -10,6 +10,10 @@
 	{
 		string m_shadergroup;
 
+		shadermanagerdesc():
+		m_shadergroup("shader")
+		{
+		}
 		shadermanagerdesc(const char* i_shadergroup):
 		m_shadergroup(i_shadergroup)
 		{

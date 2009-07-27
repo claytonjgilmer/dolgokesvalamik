@@ -52,6 +52,8 @@
 		//eztet kell hivni
 		void simulate(f32 i_dt);
 
+		body_t* world;
+
 
 
 

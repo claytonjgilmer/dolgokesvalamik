@@ -1,5 +1,25 @@
 #include "jsonparser.h"
 
+
+void json_value_t::free()
+{
+	switch (val_type)
+	{
+	case type_str:
+		delete str;
+		break;
+	case type_obj:
+		obj->free();
+		delete obj;
+		break;
+	case type_arr:
+		arr->free();
+		delete arr;
+		break;
+	}
+}
+
+
 enum token_type
 {
 	tok_str,
@@ -19,18 +39,20 @@ enum token_type
 
 struct json_parser_t
 {
-	json_parser_t(json_map* map,const char* text);
+	json_parser_t(const char* text);
+
+
+
+
+	json_map_t* proc_json();
+	json_object_t* proc_object();
+	json_array_t* proc_array();
+	json_pair_t proc_pair();
+	json_value_t proc_value();
+
+
+
 	void get_next_token();
-	void proc_json();
-	void proc_json2();
-	void proc_object();
-	void proc_object2();
-	void proc_array();
-	void proc_array2();
-	void proc_pairseq();
-	void proc_pair();
-	void proc_valueseq();
-	void proc_value();
 
 	void get_number();
 	void get_string();
@@ -49,13 +71,13 @@ struct json_parser_t
 	void expect(token_type s);
 
 	const char* text;
-	json_map* map;
+	json_map_t* map;
 	int text_size;
 	int act_index;
 
 	token_type act_token;
 	bool bool_val;
-	string str_val;
+	char* str_val;
 	double number_val;
 };
 
@@ -82,8 +104,7 @@ void json_parser_t::expect(token_type s)
 	assertion(0,"unexpected token");
 }
 
-json_parser_t::json_parser_t(json_map* map,const char* text):
-map(map),
+json_parser_t::json_parser_t(const char* text):
 text(text)
 {
 	text_size=strlen(text);
@@ -91,136 +112,133 @@ text(text)
 
 	get_next_token();
 
-	if (act_token!=tok_eof)
+	map=proc_json();
+}
+
+json_map_t* json_parser_t::proc_json()
+{
+	json_map_t* map=new json_map_t;
+
+	while (act_token!=tok_eof)
 	{
-		proc_json();
+		switch (act_token)
+		{
+		case tok_left_brace:
+			{
+			accept(tok_left_brace);
+			json_object_t* obj=proc_object();
+			map->item_array.push_back(json_item_t(obj));
+			expect(tok_right_brace);
+			break;
+			}
+		case tok_left_bracket:
+			{
+			accept(tok_left_bracket);
+			json_array_t* arr=proc_array();
+			map->item_array.push_back(json_item_t(arr));
+			expect(tok_right_bracket);
+			break;
+			}
+		default:
+			assertion(0,"unexpected token");
+		}
+
+		if (act_token!=tok_eof)
+			expect(tok_comma);
 	}
+
+	return map;
 }
 
-void json_parser_t::proc_json()
+json_object_t* json_parser_t::proc_object()
 {
-	switch (act_token)
+	json_object_t* obj=new json_object_t;
+
+	while (1)
 	{
-	case tok_eof:
-		return;
-	case tok_left_brace:
-		accept(tok_left_brace);
-		proc_object();
-		expect(tok_right_brace);
-		break;
-	case tok_left_bracket:
-		proc_array();
-	default:
-		assertion(0,"unexpected token");
+		json_pair_t pair=proc_pair();
+		obj->pair_list.push_back(pair);
+
+		if (act_token==tok_comma)
+			accept(tok_comma);
+		else
+			break;
 	}
 
-	proc_json2();
+	return obj;
 }
 
-void json_parser_t::proc_json2()
+json_pair_t json_parser_t::proc_pair()
 {
-	switch (act_token)
-	{
-	case tok_eof:
-		return;
-	case tok_comma:
-		accept(tok_comma);
-		proc_json();
-		return;
-	default:
-		assertion(0,"unexpected token");
-	}
-}
+	json_pair_t pair;
 
-void json_parser_t::proc_object()
-{
-	map->push_back(json_item_t(new json_object_t));
-	proc_pair();
-	proc_object2();
-}
-
-void json_parser_t::proc_object2()
-{
-	switch (act_token)
-	{
-	case tok_comma:
-		accept(tok_comma);
-		proc_object();
-		return;
-	case tok_right_brace:
-		return;
-	default:
-		assertion(0,"unexpected token");
-	}
-}
-
-void json_parser_t::proc_pair()
-{
-	json_item_t& last_item(map->back());
-	assertion(last_item->is_object());
-	last_item.obj->pair_list.push_back(json_pair_t());
-	json_pair_t& new_pair=last_item.obj->pair_list.back();
 	if (act_token==tok_str)
-		new_pair.key=str_val;
+		pair.key=str_val;
 
 	expect(tok_str);
 	expect(tok_colon);
-	proc_value();
+	pair.val=proc_value();
+
+	return pair;
 }
 
-void json_parser_t::proc_value()
+json_value_t json_parser_t::proc_value()
 {
+	json_value_t val;
 	switch (act_token)
 	{
 	case tok_str:
+		val.set_str(str_val);
 		accept(tok_str);
 		break;
 	case tok_number:
+		val.set_num(number_val);
 		accept(tok_number);
 		break;
 	case tok_bool:
+		val.set_bool(bool_val);
 		accept(tok_bool);
 		break;
 	case tok_nil:
+		val.set_nil();
 		accept(tok_nil);
 		break;
 	case tok_left_brace:
 		accept(tok_left_brace);
-		proc_object();
+		val.set_object(proc_object());
 		expect(tok_right_brace);
 		break;
 	case tok_left_bracket:
 		accept(tok_left_bracket);
-		proc_array();
+		val.set_array(proc_array());
 		expect(tok_right_bracket);
 		break;
 
 	default:
 		assertion(0,"unexpected token");
 	}
+
+	return val;
 }
 
-void json_parser_t::proc_array()
+json_array_t* json_parser_t::proc_array()
 {
-	map->push_back(json_item_t(new json_array_t));
-	proc_value();
-	proc_array2();
-}
+	json_array_t* arr=new json_array_t;
 
-void json_parser_t::proc_array2()
-{
-	switch (act_token)
+	while (1)
 	{
-	case tok_comma:
-		accept(tok_comma);
-		proc_array();
-		return;
-	case tok_right_bracket:
-		return;
-	default:
-		assertion(0,"unexpected token");
+		json_value_t val=proc_value();
+		arr->value_list.push_back(val);
+
+		if (act_token==tok_comma)
+			accept(tok_comma);
+		else
+			break;
 	}
+
+	return arr;
 }
+
 
 
 
@@ -310,7 +328,7 @@ void json_parser_t::get_string()
 	tmp[i]=0;
 	++act_index;
 
-	str_val=tmp;
+	str_val=new char[i+1]; strcpy(str_val,tmp);
 	act_token=tok_str;
 }
 
@@ -402,9 +420,10 @@ void json_parser_t::get_eof()
 
 
 
-void generate_json_map(json_map& map, const string& file)
+json_map_t* generate_json_map(const char* file)
 {
-	json_parser_t j(file.c_str());
+	json_parser_t j(file);
+	return j.map;
 }
 
 

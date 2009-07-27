@@ -1,8 +1,4 @@
 (x, dae) object loader-object manager
-scenemanagement- hgrid
-lights, shadows
-particle-system
-
 
 http://meshula.net/wordpress/?p=172
 http://www.gamasutra.com/view/feature/3683/a_templated_c_attribute_library_.php
@@ -10,23 +6,18 @@ http://www.gamasutra.com/view/feature/3683/a_templated_c_attribute_library_.php
 pyro particle editor
 
 
-gyors sat teszt
-es gyors gjk implementacio, a regi atmasolasa
-
-osszehasonlitas kulonbozo vertexszamokra //kocka, rendes model, stb
 
 
-mprintersection beillesztese az utkozorendszerbe
+
+
+
+
+
+
 teljes contactinfo-generalas mpr-hez: a legutolso support pointokhoz tartozo face-ek vizsgalataval(lehet,
 hogy ehhez a meshdata-t at kell irni convex hull-ra)
 
 
-json->eps | {object}json2|[array]json2
-json2 -> eps | ,json
-object-> pair o2
-o2 -> eps | , object
-pair-> string : value
-value -> string | number | bool | nil | {object} | [array]
-array -> value | value,array
-
-terminatorok: { } , string number [ ]
+box-box contactmeghatarozas
+aabb-broadphase
+collada exporter-loader

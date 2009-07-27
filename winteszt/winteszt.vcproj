@@ -190,6 +190,22 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\boxstack.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\game.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\runtime.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\spherestack.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -210,10 +226,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\testapp.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\winteszt.cpp"
 				>
 			</File>
@@ -224,7 +236,19 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\boxstack.h"
+				>
+			</File>
+			<File
+				RelativePath=".\game.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\spherestack.h"
 				>
 			</File>
 			<File

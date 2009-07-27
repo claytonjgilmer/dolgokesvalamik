@@ -42,6 +42,11 @@
 
 		virtual node_t* clone();
 
+		virtual void init(){}
+		virtual void exit(){}
+		virtual void execute(){}
+		virtual void render(){}
+
 
 //	protected:
 		node_t* m_parent;

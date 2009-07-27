@@ -72,7 +72,6 @@ struct contact_edge:intr_list_node_base<contact_edge>
 #endif
 	};
 
-	extern body_t* g_world;
 #endif
 
 /*
