@@ -12,6 +12,8 @@ boxstack::boxstack()
 	box_num=10;
 	box_extent.set(1,1,1);
 	box_dist=2;
+
+	scale.set(1,1,1);
 }
 
 static vec3 light_dir(.5f,.5f,-.5f);
@@ -89,6 +91,12 @@ void boxstack::init()
 
 	box_model=load_mmod("model/box.mmod");
 	bind_light(box_model);
+	mesh_t* mesh=box_model->get_mesh(0);
+
+	if (mesh)
+	{
+		scale=mesh->bounding.max-mesh->bounding.min;
+	}
 
 }
 
@@ -111,9 +119,9 @@ void boxstack::render()
 	for (int n=0; n<box_num;++n)
 	{
 		mtx4x3 pos=box_array[n]->get_pos();
-		pos.x*=box_extent.x;
-		pos.y*=box_extent.y;
-		pos.z*=box_extent.z;
+		pos.x*=2*box_extent.x/scale.x;
+		pos.y*=2*box_extent.y/scale.y;
+		pos.z*=2*box_extent.z/scale.z;
 
 		box_model->set_worldposition(pos);
 

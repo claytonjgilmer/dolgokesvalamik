@@ -20,5 +20,6 @@ struct boxstack: node_t
 
 	vector<body_t*> box_array;
 	object3d* box_model;
+	vec3 scale;
 };
 #endif//_boxstack_h_
