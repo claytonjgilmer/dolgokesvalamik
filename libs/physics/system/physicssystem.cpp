@@ -225,6 +225,7 @@ struct near_struct
                         c->normal=normal;
                         vec3 normal_body1; body1_mtx.transformtransposed3x3(normal_body1,normal);
 						c->add_contact(contact,contact_count,normal_body1);
+						strlen("");
                     }
                 }
             }

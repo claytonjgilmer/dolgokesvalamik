@@ -31,7 +31,7 @@
 		}
 
 		T* m_ptr;
-	private:
+
 		void operator=(const auto_ptr* i_other)
 		{
 		}

@@ -27,7 +27,6 @@
 		texture* get_texture(const char* i_texturename);
 		void erase_texture(texture*);
 
-	private:
 		string m_texturegroup;
 		stringmap<texture> m_map;
 	};

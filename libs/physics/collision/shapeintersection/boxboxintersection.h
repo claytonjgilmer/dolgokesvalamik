@@ -3,7 +3,7 @@
 
 #include "math/vec2.h"
 
-#define BOX_EPSILON .0001f
+#define BOX_EPSILON .001f
 #define BOX_CUTOFF (1.0f-BOX_EPSILON)
 MLINLINE void rectangle_convex_polygon_clipping(vec3 out[], int& out_count, vec3 in[], int in_count, int in_x, int in_y, vec2 rect_extent);
 MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx,
@@ -205,6 +205,8 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 		o_contact_num=1;
 		o_contact_array[0][0]=box_mtx[0].transformtransposed(v2);
 		o_contact_array[0][1]=box_mtx[1].transformtransposed(v1);
+		assertion(o_contact_array[0][0].x<200 && o_contact_array[0][0].y<200 && o_contact_array[0][0].z<200);
+		assertion(o_contact_array[0][1].x<200 && o_contact_array[0][1].y<200 && o_contact_array[0][1].z<200);
 		return 1;
 	}
 
@@ -296,6 +298,8 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 		m1.transform(abs_contact,out[n]);
 		body_mtx[other_index]->transformtransposed(o_contact_array[o_contact_num][other_index],abs_contact);
 		body_mtx[this_index]->transformtransposed(o_contact_array[o_contact_num][this_index],abs_contact+pen*norm_rel);
+		assertion(o_contact_array[o_contact_num][0].x<200 && o_contact_array[o_contact_num][0].y<200 && o_contact_array[o_contact_num][0].z<200);
+		assertion(o_contact_array[o_contact_num][1].x<200 && o_contact_array[o_contact_num][1].y<200 && o_contact_array[o_contact_num][1].z<200);
 		++o_contact_num;
 	}
 

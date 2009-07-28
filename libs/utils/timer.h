@@ -10,7 +10,7 @@
 		unsigned get_tick() const;
 		f32 get_seconds() const;
 
-	private:
+
 
 		long long start_tick;
 		long long stop_tick;

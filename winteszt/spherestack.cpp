@@ -45,7 +45,7 @@ void spherestack::init()
 	box_shape_desc bsd;
 	bsd.pos.identity();
 	bsd.pos.t.set(0,-7,0);
-	bsd.extent.set(1000,5,1000);
+	bsd.extent.set(100,5,100);
 	bsd.owner_flag=1;
 	bsd.collision_mask=1;
 	bsd.restitution=1;

@@ -79,7 +79,6 @@ struct nbody_t
 	uint32 get_size() const;
 
 
-//private:
 #ifdef SOA
 	mtx4x3* pos;
 	vec3* vel;

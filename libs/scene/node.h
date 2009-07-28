@@ -8,12 +8,11 @@
 #include "prop/property.h"
 
 	const unsigned nodeflag_valid_worldpos=(1<<0);
-	const unsigned nodeflag_dont_save=(1<<0);
+	const unsigned nodeflag_dont_save=(1<<1);
 
-	struct node_t:public rootobject
+	struct node_t : rootobject
 	{
 		DECLARE_OBJECT(node_t);
-	public:
 		node_t();
 		node_t(const char* i_name);
 		virtual ~node_t();
@@ -47,13 +46,10 @@
 		virtual void execute(){}
 		virtual void render(){}
 
-
-//	protected:
 		node_t* m_parent;
 		node_t* m_child;
 		node_t* m_bro;
 
-//		string m_name;
 		mtx4x3 m_localpos;
 		mtx4x3 m_worldpos;
 

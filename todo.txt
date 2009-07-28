@@ -21,3 +21,7 @@ hogy ehhez a meshdata-t at kell irni convex hull-ra)
 box-box contactmeghatarozas
 aabb-broadphase
 collada exporter-loader
+
+
+befejezni:
+shape_node-ok (nincs statikus body! ilyenkor shape-eket kell adni a worldhoz)

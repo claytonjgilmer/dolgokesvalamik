@@ -11,7 +11,7 @@
 		if (!i_condition)
 		{
 		    #ifdef _MSC_VER
-			__asm int 3;
+				__asm int 3;
 			#else
 			__asm (  "int $3");
 			#endif

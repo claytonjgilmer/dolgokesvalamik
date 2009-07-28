@@ -7,7 +7,6 @@
 	template <typename REF>
 	struct ref_ptr
 	{
-	public:
 		ref_ptr();
 		ref_ptr(const ref_ptr& i_other);
 		ref_ptr(REF* i_object);
@@ -41,7 +40,7 @@
 		}
 
 		~ref_ptr();
-	//private:
+
 		REF* m_ptr;
 	};
 

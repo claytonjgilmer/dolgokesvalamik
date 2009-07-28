@@ -8,7 +8,6 @@
 
 	struct rootobject
 	{
-	public:
 		rootobject(){}
 		rootobject(const char* i_name):m_name(i_name){}
 		virtual int get_typeid() const;
@@ -29,7 +28,7 @@
 	static metaobject* get_class_metaobject();
 
 #define  DEFINE_OBJECT(_object_,_parent_)\
-	struct _object_##_metaobject:public metaobject\
+	struct _object_##_metaobject : metaobject\
 	{\
 	_object_##_metaobject():metaobject(#_object_,_parent_::get_class_metaobject()){}\
 	rootobject* create() const{return new _object_;}\

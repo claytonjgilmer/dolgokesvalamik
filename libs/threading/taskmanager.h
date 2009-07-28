@@ -22,7 +22,6 @@ struct task_t
 
 struct taskmanagerdesc_t
 {
-public:
 	unsigned m_threadnum;
 	taskmanagerdesc_t(): m_threadnum(1){}
 };

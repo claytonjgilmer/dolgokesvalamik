@@ -27,7 +27,6 @@
 
 	struct property_descriptor
 	{
-	public:
 		property_descriptor(const char* i_name,proptype i_type,unsigned i_offset):m_name(i_name),m_offset(i_offset),m_type(i_type)
 		{
 		}
@@ -169,7 +168,6 @@
 
 		string to_string(rootobject* i_obj);
 
-	private:
 		const char* m_name;
 		proptype m_type;
 //		const char* m_type;
@@ -180,7 +178,6 @@
 
 	struct metaobject
 	{
-	public:
 		metaobject(const char* i_typename, metaobject* i_parent);
 
 		virtual rootobject* create() const=0;
@@ -290,7 +287,6 @@
 
 		struct property_iterator
 		{
-		public:
 			metaobject* m_ptr;
 			unsigned m_index;
 
@@ -323,7 +319,6 @@
 			return property_iterator(0,0);
 		}
 
-	protected:
 		const char* m_typename;
 		int m_typeid;
 		metaobject* m_parent;
@@ -391,7 +386,6 @@
 
 template<typename T> struct prop_binder
 {
-public:
 	prop_binder(const char* i_name, proptype i_type, unsigned i_offset)
 	{
 		T::get_class_metaobject()->add_property(i_name,i_type,i_offset);

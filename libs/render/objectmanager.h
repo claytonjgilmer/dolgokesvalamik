@@ -14,14 +14,13 @@
 	struct objectmanager
 	{
 		DECLARE_SINGLETON_DESC(objectmanager,objectmanagerdesc);
-	public:
+
 		objectmanager(const objectmanagerdesc* i_desc);
 //		~objectmanager();
 
 		object3d* get_object(const char* i_name);
 
 
-	private:
 		string m_objectgroup;
 		stringmap<object3d> m_map;
 

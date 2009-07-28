@@ -27,7 +27,6 @@
 		void erase_shader(shader*);
 		void reload_shaders();
 
-	private:
 		string m_shadergroup;
 		stringmap<shader> m_map;
 	};

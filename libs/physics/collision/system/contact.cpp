@@ -27,6 +27,8 @@ void contact_surface_t::add_contact(const vec3 relpos[][2], int contact_count,co
 	int contact_count_tmp=this->contact_count;
 	for (int n=0; n<contact_count; ++n)
 	{
+		assertion(relpos[n][0].x<200 && relpos[n][0].y<200 && relpos[n][0].z<200);
+		assertion(relpos[n][1].x<200 && relpos[n][1].y<200 && relpos[n][1].z<200);
 		int contact_index=get_contact_index(this,relpos[n]);
 
 		if (contact_index<this->contact_count)
@@ -105,7 +107,8 @@ void contact_surface_t::update()
 		contact_point_t* act_contact=contactarray+n;
         body1_pos.transform(act_contact->abs_pos[0],act_contact->rel_pos[0]);
         body2_pos.transform(act_contact->abs_pos[1],act_contact->rel_pos[1]);
-		assertion(act_contact->abs_pos[0].x<1000);
+		assertion(act_contact->abs_pos[0].x<200 && act_contact->abs_pos[0].y<200 && act_contact->abs_pos[0].z<200);
+		assertion(act_contact->abs_pos[1].x<200 && act_contact->abs_pos[1].y<200 && act_contact->abs_pos[1].z<200);
         vec3 dir=act_contact->abs_pos[1]-act_contact->abs_pos[0];
 
         act_contact->penetration=dot(this->normal,dir);

@@ -54,6 +54,11 @@
 
 		body_t* world;
 
+		void set_gravity(const vec3& gravity)
+		{
+			desc.gravity=gravity;
+		}
+
 
 
 

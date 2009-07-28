@@ -8,10 +8,10 @@
 #include "containers/fixedvector.h"
 #include "shaderparam.h"
 
-	struct object3d:public node_t
+	struct object3d : node_t
 	{
 		DECLARE_OBJECT(object3d);
-//	public:
+
 		object3d();
 		object3d(const char* i_name);
 		~object3d();

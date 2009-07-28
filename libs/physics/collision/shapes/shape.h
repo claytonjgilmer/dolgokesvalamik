@@ -25,7 +25,7 @@
 	struct broadphaseobject;
 	struct body_t;
 
-	struct shape_t:public intr_list_node_base<shape_t>
+	struct shape_t:intr_list_node_base<shape_t>
 	{
 		aabb_t bounding;
 		body_t* body;
@@ -66,7 +66,7 @@
 	//////////////////////////////////////////////////////////////////////////
 	//		sphere shape
 	//////////////////////////////////////////////////////////////////////////
-	struct sphere_shape_desc:public shape_desc
+	struct sphere_shape_desc:shape_desc
 	{
 		vec3 center;
 		f32 radius;
@@ -77,7 +77,7 @@
 		}
 	};
 
-	struct sphere_shape:public shape_t
+	struct sphere_shape:shape_t
 	{
 		vec3 get_center() const
 		{
@@ -107,7 +107,7 @@
 	//////////////////////////////////////////////////////////////////////////
 	//		box shape
 	//////////////////////////////////////////////////////////////////////////
-	struct box_shape_desc:public shape_desc
+	struct box_shape_desc:shape_desc
 	{
 		mtx4x3 pos;
 		vec3 extent;
@@ -118,7 +118,7 @@
 		}
 	};
 
-	struct box_shape:public shape_t
+	struct box_shape:shape_t
 	{
 		mtx4x3 pos;
 		vec3 extent;

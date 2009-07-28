@@ -202,6 +202,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\physicsscenenode.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\physicsshapenode.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\runtime.cpp"
 				>
 			</File>
@@ -249,6 +257,14 @@
 			</File>
 			<File
 				RelativePath=".\mlforsaken.h"
+				>
+			</File>
+			<File
+				RelativePath=".\physicsscenenode.h"
+				>
+			</File>
+			<File
+				RelativePath=".\physicsshapenode.h"
 				>
 			</File>
 			<File
