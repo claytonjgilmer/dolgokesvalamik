@@ -92,6 +92,7 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 		rb = e2[1] * abs_R.axis(2)[0] + e2[2] * abs_R.axis(1)[0];
 		dist=fabs(t[2] * R.axis(0)[1] - t[1] * R.axis(0)[2]) -(ra + rb);
 		if (dist>0) return 0;
+		dist/=sqrt(sqr(R.axis(0)[1])+sqr(R.axis(0)[2]));
 		if (dist>penetration)
 		{
 			penetration=dist;
@@ -103,6 +104,7 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 		rb = e2[0] * abs_R.axis(2)[0] + e2[2] * abs_R.axis(0)[0];
 		dist=fabs(t[2] * R.axis(1)[1] - t[1] * R.axis(1)[2]) -( ra + rb);
 		if (dist>0) return 0;
+		dist/=sqrt(sqr(R.axis(1)[1])+sqr(R.axis(1)[2]));
 		if (dist>penetration)
 		{
 			penetration=dist;
@@ -114,6 +116,7 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 		rb = e2[0] * abs_R.axis(1)[0] + e2[1] * abs_R.axis(0)[0];
 		dist=fabs(t[2] * R.axis(2)[1] - t[1] * R.axis(2)[2]) - (ra + rb);
 		if (dist>0) return 0;
+		dist/=sqrt(sqr(R.axis(2)[1])+sqr(R.axis(2)[2]));
 		if (dist>penetration)
 		{
 			penetration=dist;
@@ -125,6 +128,7 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 		rb = e2[1] * abs_R.axis(2)[1] + e2[2] * abs_R.axis(1)[1];
 		dist=fabs(t[0] * R.axis(0)[2] - t[2] * R.axis(0)[0]) -( ra + rb);
 		if (dist>0) return 0;
+		dist/=sqrt(sqr(R.axis(0)[2])+sqr(R.axis(0)[0]));
 		if (dist>penetration)
 		{
 			penetration=dist;
@@ -136,6 +140,7 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 		rb = e2[0] * abs_R.axis(2)[1] + e2[2] * abs_R.axis(0)[1];
 		dist=fabs(t[0] * R.axis(1)[2] - t[2] * R.axis(1)[0]) - (ra + rb);
 		if (dist>0) return 0;
+		dist/=sqrt(sqr(R.axis(1)[2])+sqr(R.axis(1)[0]));
 		if (dist>penetration)
 		{
 			penetration=dist;
@@ -147,6 +152,7 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 		rb = e2[0] * abs_R.axis(1)[1] + e2[1] * abs_R.axis(0)[1];
 		dist=fabs(t[0] * R.axis(2)[2] - t[2] * R.axis(2)[0]) - (ra + rb);
 		if (dist>0) return 0;
+		dist/=sqrt(sqr(R.axis(2)[2])+sqr(R.axis(2)[0]));
 		if (dist>penetration)
 		{
 			penetration=dist;
@@ -158,6 +164,7 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 		rb = e2[1] * abs_R.axis(2)[2] + e2[2] * abs_R.axis(1)[2];
 		dist=fabs(t[1] * R.axis(0)[0] - t[0] * R.axis(0)[1]) -(ra + rb);
 		if (dist>0) return 0;
+		dist/=sqrt(sqr(R.axis(0)[0])+sqr(R.axis(0)[1]));
 		if (dist>penetration)
 		{
 			penetration=dist;
@@ -170,6 +177,7 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 		dist=fabs(t[1] * R.axis(1)[0] - t[0] * R.axis(1)[1]) - (ra + rb);
 		if (dist>0)
 			return 0;
+		dist/=sqrt(sqr(R.axis(1)[0])+sqr(R.axis(1)[1]));
 		if (dist>penetration)
 		{
 			penetration=dist;
@@ -182,6 +190,7 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 		dist=fabs(t[1] * R.axis(2)[0] - t[0] * R.axis(2)[1]) - (ra + rb);
 		if (dist>0)
 			return 0;
+		dist/=sqrt(sqr(R.axis(2)[0])+sqr(R.axis(2)[1]));
 		if (dist>penetration)
 		{
 			penetration=dist;

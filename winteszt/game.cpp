@@ -90,7 +90,24 @@ void game_t::execute()
 		ptr=ptr->get_next();
 	}
 
+	static bool simpause=false;
+	static bool simstep=false;
+
+	if (inputsystem::ptr->KeyPressed(KEYCODE_P) && !simstep)
+		simpause=!simpause;
+	if (inputsystem::ptr->KeyPressed(KEYCODE_P) && simstep)
+		simpause=false;
+	if (inputsystem::ptr->KeyPressed(KEYCODE_O))
+	{
+		simstep=!simstep;
+		simpause=false;
+	}
+
+	if (!simpause)
 	physicssystem::ptr->simulate(min(frame_time,.033f));
+
+	if (simstep)
+		simpause=true;
 
 	ptr=scene_node;
 	while (ptr)

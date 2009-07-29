@@ -86,7 +86,7 @@ void box_shape_node::init()
 		physicssystem::ptr->world->add_shape(bd);
 	}
 
-	mesh=generate_box("ground_02.dds",extent,1);
+	mesh=generate_box("ground_02.dds",extent,200);
 	bind_light(mesh);
 }
 

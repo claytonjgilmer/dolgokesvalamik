@@ -132,9 +132,9 @@ mesh_t* generate_box(const char* texture_name, const vec3& extent, float uv_per_
 
 		//hatul
 		-1,-1,1,
-		1,-1,1,
-		1,1,1,
 		-1,1,1,
+		1,1,1,
+		1,-1,1,
 
 		//jobb
 		1,-1,-1,
