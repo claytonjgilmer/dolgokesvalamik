@@ -1,7 +1,6 @@
 #ifndef _vector_h_
 #define _vector_h_
 
-#include <new>
 #include "utils/misc.h"
 #include "utils/assert.h"
 

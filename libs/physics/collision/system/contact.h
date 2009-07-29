@@ -4,9 +4,10 @@
 #include "constraint.h"
 #include "math/vec3.h"
 #include "physics/system/body.h"
+#include "containers/c_array.h"
 
 #define MAX_CONTACTNUM_PER_BODYPAIR 4
-#define CONTACTBUFFER_SIZE 8
+#define CONTACTBUFFER_SIZE 12
 
 struct contact_point_t
 {
@@ -25,7 +26,7 @@ struct contact_surface_t
 {
     body_t* body[2];
     contact_edge edge[2];
-    contact_point_t contactarray[CONTACTBUFFER_SIZE];
+    c_array<contact_point_t,MAX_CONTACTNUM_PER_BODYPAIR> contactarray;
     vec3 normal;
 
     int group_index;
@@ -38,7 +39,7 @@ struct contact_surface_t
     contact_surface_t(body_t* i_body1, body_t* i_body2);
     ~contact_surface_t();
 
-    void add_contact(const vec3 relpos[][2], int contact_count, const vec3& normal_body1);
+    void add_contact(const vec3 relpos[][2], int new_contact_count, const vec3& normal_body1);
     void update();
 };
 

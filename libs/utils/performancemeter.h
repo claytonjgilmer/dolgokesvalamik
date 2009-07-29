@@ -1,11 +1,12 @@
 #ifndef _performancemeter_h_
 #define _performancemeter_h_
 
-#include <string>
-#include <memory>
+//#include <string>
+//#include <memory>
 #include "timer.h"
 #include "containers/vector.h"
 #include "utils/singleton.h"
+#include "containers/string.h"
 
 typedef void(draw_func)(int i_X, int i_Y, const char* i_Str);
 #define measure_performance
@@ -93,7 +94,7 @@ struct perf_elem_t
 	typedef vector<perf_elem_t*> perf_elem_array;
 	perf_elem_array m_children;
 
-	const std::string m_name;
+	const string m_name;
 	const perf_enum_t m_id;
 	unsigned m_acttime;
 	unsigned m_sumtime;

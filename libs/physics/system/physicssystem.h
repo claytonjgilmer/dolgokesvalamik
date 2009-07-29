@@ -25,6 +25,8 @@
 		f32 solver_lambda_relaxation;
 		f32 solver_max_penetration;
 
+		bool debug_draw;
+
 		physicssystemdesc()
 		{
 			gravity.set(0,-10,0);
@@ -34,6 +36,7 @@
 			solver_positioncorrection_rate=0.1f;
 			solver_lambda_relaxation=0.9f;
 			solver_max_penetration=.01f;
+			debug_draw=false;
 		}
 	};
 
@@ -57,6 +60,11 @@
 		void set_gravity(const vec3& gravity)
 		{
 			desc.gravity=gravity;
+		}
+
+		void set_debug_draw(bool on)
+		{
+			desc.debug_draw=on;
 		}
 
 

@@ -18,10 +18,14 @@ teljes contactinfo-generalas mpr-hez: a legutolso support pointokhoz tartozo fac
 hogy ehhez a meshdata-t at kell irni convex hull-ra)
 
 
-box-box contactmeghatarozas
+box-box contactmeghatarozas kesz.
 aabb-broadphase
 collada exporter-loader
 
 
 befejezni:
-shape_node-ok (nincs statikus body! ilyenkor shape-eket kell adni a worldhoz)
+shape_node-ok (nincs statikus body! ilyenkor shape-eket kell adni a worldhoz) kesz.
+
+bugfix: add_contact tulirt!
+
+megcsinalni: contact_surface csak 4 contactpontnak taroljon helyet

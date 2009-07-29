@@ -112,8 +112,8 @@
 
 		inline void draw_circle(const vec3& center, f32 radius, int section_count=10,const color_r8g8b8a8& i_color=color_r8g8b8a8(255,255,255,255))
 		{
-			vec3 x=m_view_matrix.column(0);
-			vec3 y=m_view_matrix.column(1);
+			vec3 x=view_matrix.column(0);
+			vec3 y=view_matrix.column(1);
 
 			vec3 start=center+radius*x;
 
@@ -208,8 +208,8 @@
 		float near_z;
 		float aspect;
 
-		member(mtx4x4,viewprojection_matrix);
-		member(mtx4x4,view_matrix);
-		member(mtx4x4,projection_matrix);
+		mtx4x4 viewprojection_matrix;
+		mtx4x4 view_matrix;
+		mtx4x4 projection_matrix;
 	};
 #endif//_rendersystem_h_

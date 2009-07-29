@@ -93,7 +93,7 @@ static int hash_check[hashtable_size];
 
 			for (int n=0; n<contact_surface->contact_count; ++n)
 			{
-				contact_point_t* cp=contact_surface->contactarray+n;
+				contact_point_t* cp=&contact_surface->contactarray[n];
 
 				rendersystem::ptr->draw_circle(cp->abs_pos[0],0.3f);
 			}

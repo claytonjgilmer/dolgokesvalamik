@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <windows.h>
 #include <MMSystem.h>
-#include <algorithm>
+//#include <algorithm>
 
 #include "math/vec3.h"
 #include "math/math.h"

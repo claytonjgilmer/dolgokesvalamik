@@ -194,6 +194,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\containers\c_array.h"
+				>
+			</File>
+			<File
 				RelativePath=".\render\cameranode.h"
 				>
 			</File>
@@ -386,11 +390,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\scripting\lualib\lua.h"
+				RelativePath=".\scripting\lua.h"
 				>
 			</File>
 			<File
-				RelativePath=".\scripting\lua.h"
+				RelativePath=".\scripting\lualib\lua.h"
 				>
 			</File>
 			<File

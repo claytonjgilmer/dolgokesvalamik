@@ -271,7 +271,8 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 	int other_axis_1=nextnumbermodulo3(best_dir);
 	int other_axis_2=nextnumbermodulo3(other_axis_1);
 
-	vec3 main_axis=m2.axis(best_dir)*sign(dot(m2.axis(best_dir),m1.t-m2.t));
+	float d=dot(m1.axis(axis_code),m2.axis(best_dir))*dot(m1.axis(axis_code),m1.t-m2.t);
+	vec3 main_axis=m2.axis(best_dir)*sign(d);
 	vec3 quad[4];
 	vec3 x=box[other_index]->extent[other_axis_1]*m2.axis(other_axis_1);
 	vec3 y=box[other_index]->extent[other_axis_2]*m2.axis(other_axis_2);

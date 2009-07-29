@@ -18,13 +18,13 @@ void camera_node_t::init()
 	rendersystem::ptr->set_near_z(near_z);
 	rendersystem::ptr->set_far_z(far_z);
 	mtx4x3 invcammtx; invcammtx.linearinvert(this->get_worldposition());
-	rendersystem::ptr->set_view_matrix((mtx4x4)invcammtx);
+	rendersystem::ptr->view_matrix=((mtx4x4)invcammtx);
 }
 
 void camera_node_t::execute()
 {
 	mtx4x3 invcammtx; invcammtx.linearinvert(this->get_worldposition());
-	rendersystem::ptr->set_view_matrix((mtx4x4)invcammtx);
+	rendersystem::ptr->view_matrix=((mtx4x4)invcammtx);
 }
 
 //camera_node_t* g_cameranode(new camera_node_t);

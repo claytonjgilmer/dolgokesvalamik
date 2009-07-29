@@ -69,6 +69,8 @@ void box_shape_node::init()
 	bd.extent=extent;
 	bd.owner_flag=1;
 	bd.collision_mask=1;
+	bd.friction=friction;
+	bd.restitution=restitution;
 	
 	if (mass>0)
 	{
@@ -86,7 +88,7 @@ void box_shape_node::init()
 		physicssystem::ptr->world->add_shape(bd);
 	}
 
-	mesh=generate_box("ground_02.dds",extent,200);
+	mesh=generate_box("Simaszurke.dds",extent,2);
 	bind_light(mesh);
 }
 

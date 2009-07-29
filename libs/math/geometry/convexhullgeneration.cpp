@@ -1,4 +1,4 @@
-#include <algorithm>
+//#include <algorithm>
 #include "convexhullgeneration.h"
 #include "math\sorting.h"
 #include "math/aabox.h"

@@ -66,8 +66,8 @@
 		this->m_device->SetRenderState(D3DRS_CULLMODE,D3DCULL_CCW);
 
 		this->white_texture=texturemanager::ptr->get_texture("white.bmp");
-		this->m_view_matrix.identity();
-		this->m_viewprojection_matrix.identity();
+		this->view_matrix.identity();
+		this->viewprojection_matrix.identity();
 
 		aspect=(f32)i_desc->m_screenwidth/(f32)i_desc->m_screenheight;
 	}
@@ -107,8 +107,8 @@
 
 	void rendersystem::render()
 	{
-		m_projection_matrix.set_projectionmatrix(tan_half_fov, aspect,near_z,far_z);
-		m_viewprojection_matrix.multiply(m_view_matrix,m_projection_matrix);
+		projection_matrix.set_projectionmatrix(tan_half_fov, aspect,near_z,far_z);
+		viewprojection_matrix.multiply(view_matrix,projection_matrix);
 
 		rendertask* t=new rendertask;
 		taskmanager_t::ptr->spawn_tasks((task_t**)&t,1);
@@ -134,7 +134,7 @@
 				m_device->SetVertexDeclaration(m->m_vb->m_decl);
 				m_device->SetIndices(m->m_ib->m_hwbuffer);
 				mtx4x4 objmtx=(mtx4x4)buf[meshindex].m_mtx;
-				mtx4x4 faszommtx; faszommtx.multiply(objmtx,m_viewprojection_matrix);
+				mtx4x4 faszommtx; faszommtx.multiply(objmtx,viewprojection_matrix);
 
 				faszommtx.transpose();
 				objmtx.transpose();
@@ -217,8 +217,8 @@
 			D3DXMATRIX worldMatrix;
 			D3DXMatrixIdentity( &worldMatrix );
 			m_device->SetTransform(D3DTS_WORLD,&worldMatrix);
-			m_device->SetTransform(D3DTS_PROJECTION,(D3DMATRIX*)&m_projection_matrix);
-			m_device->SetTransform(D3DTS_VIEW,(D3DMATRIX*)&m_view_matrix);
+			m_device->SetTransform(D3DTS_PROJECTION,(D3DMATRIX*)&projection_matrix);
+			m_device->SetTransform(D3DTS_VIEW,(D3DMATRIX*)&view_matrix);
 			//			m_device->LightEnable( 0, FALSE );
 
 			m_device->SetVertexShader(NULL);
@@ -284,9 +284,9 @@
 
 	void rendersystem::set_projection_params(f32 i_fov, f32 i_aspect, f32 i_nearz, f32 i_farz, const mtx4x4& i_viewmatrix)
 	{
-		m_view_matrix=i_viewmatrix;
-		m_projection_matrix.set_projectionmatrix(tan(i_fov/2), i_aspect,i_nearz,i_farz);
-		m_viewprojection_matrix.multiply(i_viewmatrix,m_projection_matrix);
+		view_matrix=i_viewmatrix;
+		projection_matrix.set_projectionmatrix(tan(i_fov/2), i_aspect,i_nearz,i_farz);
+		viewprojection_matrix.multiply(i_viewmatrix,projection_matrix);
 	}
 
 	void rendersystem::set_fov(float fov)

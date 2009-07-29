@@ -48,7 +48,7 @@
         contact_edge* e;
         for (e=b->contacts.first(); e; e=e->next)
         {
-            contact_surface_t* c=(contact_surface_t*)e->elem;
+            contact_surface_t* c=e->elem;
             if (c->group_index==-1)
             {
                 contact_group* group=&gm->group_array[group_index];

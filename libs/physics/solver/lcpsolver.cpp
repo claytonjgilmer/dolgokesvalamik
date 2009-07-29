@@ -127,12 +127,12 @@ struct solver_pre_step_contacts
 			nbody_t* nbody=&physicssystem::ptr->bodystate_array;
 			for (int k=0; k<act_contact->contact_count; ++k,++constraint_index)
 			{
-				contact_point_t* act_cp=act_contact->contactarray+k;
-				lcp_data->lambda[constraint_index]=relax*act_cp->cached_lambda;
+				contact_point_t& act_cp=act_contact->contactarray[k];
+				lcp_data->lambda[constraint_index]=relax*act_cp.cached_lambda;
 				lcp_data->lambda_poscorr[constraint_index]=0;
 
-				vec3 relpos1=act_cp->abs_pos[0]-nbody->get_pos(body1).t;
-				vec3 relpos2=act_cp->abs_pos[1]-nbody->get_pos(body2).t;
+				vec3 relpos1=act_cp.abs_pos[0]-nbody->get_pos(body1).t;
+				vec3 relpos2=act_cp.abs_pos[1]-nbody->get_pos(body2).t;
 
 #ifdef _DEBUG
 				jacobi* j=&lcp_data->J[constraint_index];
@@ -169,7 +169,7 @@ struct solver_pre_step_contacts
 					cross(nbody->get_rotvel(body1), relpos1);
 
 				f32 vel_normal = dot(dv, act_contact->normal);
-				f32 biasVelocityPositionCorrection=-pos_corr_rate*min(act_cp->penetration+max_penetration,0.0f)/solver->dt;
+				f32 biasVelocityPositionCorrection=-pos_corr_rate*min(act_cp.penetration+max_penetration,0.0f)/solver->dt;
 				f32 restitution=-min(vel_normal*act_contact->restitution+0.05f,0.0f);
 
 				lcp_data->right_side[constraint_index]=restitution-
@@ -459,8 +459,8 @@ void lcp_solver_t::cache_lambda()
 		
 		for (int m=0;m<act_contact->contact_count; ++m,++constraint_index)
 		{
-			contact_point_t* cp=act_contact->contactarray+m;
-			cp->cached_lambda=lcp_data_contact.lambda[constraint_index];
+			contact_point_t& cp=act_contact->contactarray[m];
+			cp.cached_lambda=lcp_data_contact.lambda[constraint_index];
 		}
 	}
 }

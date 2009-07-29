@@ -1,6 +1,7 @@
 #include "physicssystem.h"
 #include "threading/taskmanager.h"
 #include "utils/performancemeter.h"
+//#error faszom
 #include "physics/solver/lcpsolver.h"
 #include "physics/collision/shapes/convexmeshshape.h"
 
@@ -109,7 +110,8 @@ void physicssystem::simulate(f32 i_dt)
     update_contacts();
     create_contact_groups();
 
-	draw_contacts();
+	if (desc.debug_draw)
+		draw_contacts();
 
 	{
 		perf_meter(perf_inertia);
@@ -158,7 +160,8 @@ struct update_bounding
             for (s=nb.get_body(n)->shapes.first(); s; s=s->next)
             {
 				s->collider->bounding_world=transform(nb.get_pos(n),s->bounding);
-				rendersystem::ptr->draw_box(mtx4x3::identitymtx(),s->collider->bounding_world.min,s->collider->bounding_world.max);
+				if (physicssystem::ptr->desc.debug_draw)
+					rendersystem::ptr->draw_box(mtx4x3::identitymtx(),s->collider->bounding_world.min,s->collider->bounding_world.max);
             }
         }
     }
