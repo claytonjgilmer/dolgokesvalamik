@@ -262,7 +262,7 @@ void boxstack::init()
 
 	for (int n=0; n<box_num;++n)
 	{
-		vec3 t(0,box_dist*(float)n,0);
+		vec3 t(box_dist*(float)n*mtx.y);
 		bd.pos.t=tr+t;
 
 		box_array[n]=physicssystem::ptr->create_body(bd);

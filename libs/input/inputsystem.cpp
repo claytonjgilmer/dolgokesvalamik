@@ -149,7 +149,7 @@
 		if (g_lpMouseDevice)
 		{
 			g_lpMouseDevice->SetDataFormat(&c_dfDIMouse2);
-			g_lpMouseDevice->SetCooperativeLevel(i_Hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+			g_lpMouseDevice->SetCooperativeLevel(i_Hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
 
 
 #ifdef BUFFERED_MOUSE
