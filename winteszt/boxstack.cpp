@@ -9,6 +9,7 @@ DEFINE_OBJECT(boxstack,node_t);
 BIND_PROPERTY(boxstack,box_num,"box_num",int);
 BIND_PROPERTY(boxstack,box_extent,"box_extent",vec3);
 BIND_PROPERTY(boxstack,box_dist,"box_dist",float);
+BIND_PROPERTY(boxstack,size_mul,"size_mul",float);
 
 mesh_t* generate_box(const char* texture_name, const vec3& extent, float uv_per_meter)
 {
@@ -235,6 +236,7 @@ boxstack::boxstack()
 	box_num=10;
 	box_extent.set(1,1,1);
 	box_dist=2;
+	size_mul=1;
 }
 
 static vec3 light_dir(.5f,.5f,-.5f);
@@ -259,6 +261,8 @@ void boxstack::init()
 	bd.pos=mtx;
 	vec3 tr=mtx.t;
 
+	vec3 extent=box_extent;
+
 
 	for (int n=0; n<box_num;++n)
 	{
@@ -275,7 +279,9 @@ void boxstack::init()
 		box_shape_desc sd;
 //		sd.center.clear();
 		sd.pos.identity();
-		sd.extent=box_extent;
+		sd.extent=extent;
+		extent.x*=size_mul;
+		extent.z*=size_mul;
 		sd.owner_flag=1;
 		sd.collision_mask=1;
 		sd.restitution=0;
@@ -284,7 +290,7 @@ void boxstack::init()
 
 	}
 
-	box_mesh=generate_box("ground_02.dds",box_extent,1);
+	box_mesh=generate_box("ground_02.dds",vec3(1,1,1),1);
 	bind_light(box_mesh);
 }
 
@@ -304,8 +310,15 @@ void boxstack::execute()
 
 void boxstack::render()
 {
+	vec3 extent=box_extent;
 	for (int n=0; n<box_num;++n)
 	{
-		rendersystem::ptr->add_renderable(box_mesh,NULL,box_array[n]->get_pos());
+		mtx4x3 m=box_array[n]->get_pos();
+		m.x*=extent.x;
+		m.y*=extent.y;
+		m.z*=extent.z;
+		extent.x*=size_mul;
+		extent.z*=size_mul;
+		rendersystem::ptr->add_renderable(box_mesh,NULL,m);
 	}
 }

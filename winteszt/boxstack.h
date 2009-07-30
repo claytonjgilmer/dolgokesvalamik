@@ -17,6 +17,7 @@ struct boxstack: node_t
 	int box_num;
 	vec3 box_extent;
 	float box_dist;
+	float size_mul;
 
 	vector<body_t*> box_array;
 //	object3d* box_model;

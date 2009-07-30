@@ -26,6 +26,12 @@ void mlforsaken::execute()
 	if (inputsystem::ptr->KeyDown(KEYCODE_D))
 		spx=lin_vel;
 
+	if (inputsystem::ptr->MouseButtonDown(0))
+	{
+		spx*=5;
+		spz*=5;
+	}
+
 	float ry=dt*inputsystem::ptr->GetMouseX()*rot_vel;
 	float rx=dt*inputsystem::ptr->GetMouseY()*rot_vel;
 

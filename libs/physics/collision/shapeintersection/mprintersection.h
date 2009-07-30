@@ -75,7 +75,7 @@ MLINLINE bool mpr_intersection<T1,T2>::test_intersection(T1* p1, const mtx4x3& m
 	n.cross(v1,v0);
 	if (n.squarelength()<0.0000001)
 	{
-		n = v1 - v0;
+		n = v0;
 		n.normalize();
 		dvec3_to_vec3(returnNormal,n);
 		dvec3_to_vec3(point1,v11);

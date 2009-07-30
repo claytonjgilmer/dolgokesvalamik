@@ -15,8 +15,8 @@
 			"type" : "camera_node_t",
 			"Localpos" :
 			{
-				"Position" : [0.000,0.000,0.000],
-				"Rotation" : [0.000,40.000,0.000],
+				"Position" : [0.000,0.000,-10.000],
+				"Rotation" : [-20.000,0.000,0.000],
 				"Scale"    : [1.000,1.000,1.000]
 			},
 			"fov" : 50,
@@ -46,17 +46,73 @@
 			"restitution" : 0,
 			"extent" : [100,5,100]
 		},
+		
+		{
+			"type" : "convex_mesh_shape_node",
+			"Localpos" :
+			{
+				"Position" : [0.000,1.5000,5.000],
+				"Rotation" : [0.000,0.000,0.000],
+				"Scale"    : [1.000,1.000,1.000]
+			},
+			"mass" : 1,
+			"friction" : 1,
+			"restitution" : 0,
+			"object_name" : "cone.mmod"
+		},
+		
+		{
+			"type" : "convex_mesh_shape_node",
+			"Localpos" :
+			{
+				"Position" : [0.000,5.5000,5.000],
+				"Rotation" : [0.000,0.000,0.000],
+				"Scale"    : [1.000,1.000,1.000]
+			},
+			"mass" : 1,
+			"friction" : 1,
+			"restitution" : 0,
+			"object_name" : "gear.MMOD"
+		},
+		
+		{
+			"type" : "convex_mesh_shape_node",
+			"Localpos" :
+			{
+				"Position" : [0.000,9.5000,5.000],
+				"Rotation" : [0.000,0.000,0.000],
+				"Scale"    : [1.000,1.000,1.000]
+			},
+			"mass" : 10,
+			"friction" : 1,
+			"restitution" : 0,
+			"object_name" : "us_jeep.MMOD"
+		},
+		
+		{
+			"type" : "box_tower",
+			"Localpos" :
+			{
+				"Position" : [-20.000,0.000,5.000],
+				"Rotation" : [0.000,0.000,0.000],
+				"Scale"    : [1.000,1.000,1.000]
+			},
+			"tower_height" : 50,
+			"brick_extent" : [1.5,0.5,1.5],
+			"tower_radius" : 10.00
+		},
 		{
 			"type" : "boxstack",
 			"Localpos" :
 			{
-				"Position" : [10.000,0.000,5.000],
+				"Position" : [0.000,15.000,5.000],
 				"Rotation" : [0.000,0.000,0.000],
 				"Scale"    : [1.000,1.000,1.000]
 			},
-			"box_num" : 50,
-			"box_extent" : [0.5,0.5,0.5],
-			"box_dist" : 1.05
+			"box_num" : 5,
+			"box_extent" : [1.5,0.5,1.5],
+			"box_dist" : 1.00,
+			"size_mul" : 1.0
 			
 		}
 	]
