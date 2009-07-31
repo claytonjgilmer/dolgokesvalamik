@@ -212,8 +212,8 @@ MLINLINE int test_box_box_intersect(shape_t* i_shape1, const mtx4x3& i_body1_mtx
 		vec3 v1,v2;
 		line_line_closest_points(p1,box_mtx[0].axis(axis_1),p2,box_mtx[1].axis(axis_2),v1,v2);
 		o_contact_num=1;
-		o_contact_array[0][0]=box_mtx[0].transformtransposed(v2);
-		o_contact_array[0][1]=box_mtx[1].transformtransposed(v1);
+		o_contact_array[0][0]=box_mtx[0].transformtransposed(v1);
+		o_contact_array[0][1]=box_mtx[1].transformtransposed(v2);
 		assertion(o_contact_array[0][0].x<200 && o_contact_array[0][0].y<200 && o_contact_array[0][0].z<200);
 		assertion(o_contact_array[0][1].x<200 && o_contact_array[0][1].y<200 && o_contact_array[0][1].z<200);
 		return 1;

@@ -73,14 +73,14 @@ void game_t::execute()
 	static float sum_time=0;
 	sum_time+=frame_time;
 
-	if (sum_time<.033f)
+	if (sum_time<.01f)
 	{
 		inputsystem::ptr->update(false);
 	}
 	else
 	{
 		inputsystem::ptr->update(true);
-		sum_time-=.033f;
+		sum_time-=.01f;
 	}
 	node_t* ptr=scene_node;
 

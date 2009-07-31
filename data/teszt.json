@@ -15,7 +15,7 @@
 			"type" : "camera_node_t",
 			"Localpos" :
 			{
-				"Position" : [0.000,0.000,-10.000],
+				"Position" : [0.000,50.000,-10.000],
 				"Rotation" : [-20.000,0.000,0.000],
 				"Scale"    : [1.000,1.000,1.000]
 			},
@@ -86,19 +86,19 @@
 			"mass" : 10,
 			"friction" : 1,
 			"restitution" : 0,
-			"object_name" : "us_jeep.MMOD"
+			"object_name" : "toroid.MMOD"
 		},
 		
 		{
 			"type" : "box_tower",
 			"Localpos" :
 			{
-				"Position" : [-20.000,0.000,5.000],
-				"Rotation" : [0.000,0.000,0.000],
+				"Position" : [0.000,10.500,35.000],
+				"Rotation" : [10.000,0.000,0.000],
 				"Scale"    : [1.000,1.000,1.000]
 			},
-			"tower_height" : 50,
-			"brick_extent" : [1.5,0.5,1.5],
+			"tower_height" : 15,
+			"brick_extent" : [1.5,1.5,1.5],
 			"tower_radius" : 10.00
 		},
 		{
