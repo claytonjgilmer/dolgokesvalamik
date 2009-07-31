@@ -16,6 +16,9 @@ node_t* load_node(json_object_t* obj)
 			break;
 		}
 	}
+
+	if (!mo)
+		return NULL;
 	assertion(mo!=NULL);
 
 	node_t* node=(node_t*)mo->create();
@@ -33,6 +36,9 @@ node_t* load_node(json_object_t* obj)
 			{
 				assertion(child_array->value_list[m].is_object());
 				node_t* child_node=load_node(child_array->value_list[m].obj);
+
+				if (!child_node)
+					continue;
 				node->add_child(child_node);
 			}
 			break;

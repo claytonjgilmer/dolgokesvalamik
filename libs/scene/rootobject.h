@@ -9,7 +9,7 @@
 	struct rootobject
 	{
 		rootobject(){}
-		rootobject(const char* i_name):m_name(i_name){}
+		rootobject(const char* i_name):name(i_name){}
 		virtual int get_typeid() const;
 		virtual metaobject* get_metaobject() const;
 		static metaobject* get_class_metaobject();
@@ -17,7 +17,7 @@
 		const string& get_name() const;
 		void set_name(const char* i_name);
 
-		string m_name;
+		string name;
 	};
 
 #define DECLARE_OBJECT(_object_) \

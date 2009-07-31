@@ -2,7 +2,6 @@
 #define _cameranode_h_
 
 #include "scene/node.h"
-#include "rendersystem.h"
 
 struct camera_node_t:node_t
 {

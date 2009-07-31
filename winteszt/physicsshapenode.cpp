@@ -21,9 +21,9 @@ static void bind_light(mesh_t* mesh)
 
 
 DEFINE_OBJECT(physics_shape_node,node_t);
-BIND_PROPERTY(physics_shape_node,mass,"mass",float);
-BIND_PROPERTY(physics_shape_node,friction,"friction",float);
-BIND_PROPERTY(physics_shape_node,restitution,"restitution",float);
+BIND_PROPERTY(physics_shape_node,mass,float);
+BIND_PROPERTY(physics_shape_node,friction,float);
+BIND_PROPERTY(physics_shape_node,restitution,float);
 
 physics_shape_node::physics_shape_node()
 {
@@ -73,7 +73,7 @@ void physics_shape_node::exit()
 }
 
 DEFINE_OBJECT(box_shape_node,physics_shape_node);
-BIND_PROPERTY(box_shape_node,extent,"extent",vec3);
+BIND_PROPERTY(box_shape_node,extent,vec3);
 
 
 box_shape_node::box_shape_node()
@@ -122,7 +122,7 @@ void box_shape_node::render()
 
 
 DEFINE_OBJECT(convex_mesh_shape_node,physics_shape_node);
-BIND_PROPERTY(convex_mesh_shape_node,object_name,"object_name",string);
+BIND_PROPERTY(convex_mesh_shape_node,object_name,string);
 
 convex_mesh_shape_node::convex_mesh_shape_node()
 {
@@ -169,7 +169,7 @@ void convex_mesh_shape_node::on_load()
 	hd.vertex_min_dist=-.1;
 	hd.triangle_output=false;
 	hd.vertex_array.clear();
-	get_object_vertices(object,mass > 0 ? mtx4x3::identitymtx() : this->m_localpos,hd.vertex_array);
+	get_object_vertices(object,mass > 0 ? mtx4x3::identitymtx() : this->local_pos,hd.vertex_array);
 	convex_hull_generator ch;
 
 	ch.do_all(hd);

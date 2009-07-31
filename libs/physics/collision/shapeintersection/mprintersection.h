@@ -167,11 +167,9 @@ MLINLINE bool mpr_intersection<T1,T2>::test_intersection(T1* p1, const mtx4x3& m
 
 			n.normalize();
 
-			// Compute distance from origin to wedge face
 			f64 d = dot(n, v1);
 
-			// If the origin is inside the wedge, we have a hit
-			if (d >= 0)// && !hit)
+			if (d >= 0)
 			{
 				// HIT!!!
 				hit = true;
@@ -194,35 +192,6 @@ MLINLINE bool mpr_intersection<T1,T2>::test_intersection(T1* p1, const mtx4x3& m
 				{
 					dvec3_to_vec3(returnNormal,-n);
 
-#if 0
-
-					// Compute the barycentric coordinates of the origin
-
-					f64 b0 = dot(cross(v1 , v2), v3);
-					f64 b1 = dot(cross(v3 , v2), v0);
-					f64 b2 = dot(cross(v0 , v1), v3);
-					f64 b3 = dot(cross(v2 , v1), v0);
-
-					f64 sum = b0 + b1 + b2 + b3;
-
-					if (sum <= 0)
-					{
-						b0 = 0;
-						b1 = dot(cross(v2,v3),n);
-						b2 = dot(cross(v3,v1),n);
-						b3 = dot(cross(v1,v2),n);
-
-						sum = b1 + b2 + b3;
-					}
-
-					f64 inv = 1.0f / sum;
-
-					dvec3 p1 = (b0 * v01 + b1 * v11 + b2 * v21 + b3 * v31) * inv;
-					dvec3_to_vec3(point1,p1);
-
-					dvec3 p2 = (b0 * v02 + b1 * v12 + b2 * v22 + b3 * v32) * inv;
-					dvec3_to_vec3(point2, p2);
-#else
 					dvec3 V=v2-v1, W=v3-v1, P=-v1;
 
 					double mul=(dot(V,V)*dot(W,W)-(sqr(dot(V,W))));
@@ -231,8 +200,8 @@ MLINLINE bool mpr_intersection<T1,T2>::test_intersection(T1* p1, const mtx4x3& m
 					{
 						dvec3 dir=v1-v2;
 						double time=dot(v1,dir)/dir.squarelength();
-						dvec3_to_vec3(point1,v11+time*(v21-v11));//m_Simplex1[0]+time*(m_Simplex1[1]-m_Simplex1[0]);
-						dvec3_to_vec3(point2,v12+time*(v22-v12));//m_ClosestPointShape2=m_Simplex2[0]+time*(m_Simplex2[1]-m_Simplex2[0]);
+						dvec3_to_vec3(point1,v11+time*(v21-v11));
+						dvec3_to_vec3(point2,v12+time*(v22-v12));
 					}
 					else
 					{
@@ -242,17 +211,10 @@ MLINLINE bool mpr_intersection<T1,T2>::test_intersection(T1* p1, const mtx4x3& m
 
 						double a1=(dot(V,P)-a2*dot(V,W))/dot(V,V);
 //						assertion(a1>-0.01 && a1<1.01);
-#if 0//def _DEBUG
-						if (a1<=-0.01 || a1>=1.01)
-						{
-							GetClosestPoints();
-						}
-#endif
 						assertion(a1>-10 && a1<10);
 
-						dvec3_to_vec3(point1,v11+a1*(v21-v11)+a2*(v31-v11)); //m_ClosestPointShape1=m_Simplex1[0]+a1*(m_Simplex1[1]-m_Simplex1[0])+a2*(m_Simplex1[2]-m_Simplex1[0]);
-						dvec3_to_vec3(point2,v12+a1*(v22-v12)+a2*(v32-v12));//m_ClosestPointShape2=m_Simplex2[0]+a1*(m_Simplex2[1]-m_Simplex2[0])+a2*(m_Simplex2[2]-m_Simplex2[0]);
-#endif
+						dvec3_to_vec3(point1,v11+a1*(v21-v11)+a2*(v31-v11));
+						dvec3_to_vec3(point2,v12+a1*(v22-v12)+a2*(v32-v12));
 					}
 				}
 

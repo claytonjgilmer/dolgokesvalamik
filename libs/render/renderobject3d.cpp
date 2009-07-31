@@ -4,7 +4,7 @@
 //#include "scene/nodefactory.h"
 
 	DEFINE_OBJECT(object3d,node_t);
-	BIND_PROPERTY(object3d,m_modelname,"modelname",string);
+	BIND_PROPERTY(object3d,model_name,string);
 
 	object3d::object3d():
 	color(1,1,1,1)
@@ -48,9 +48,9 @@
 
 	void object3d::on_load()
 	{
-		if (m_modelname!="")
+		if (model_name!="")
 		{
-			object3d* obj=objectmanager::ptr->get_object(m_modelname.c_str());
+			object3d* obj=objectmanager::ptr->get_object(model_name.c_str());
 			if (obj)
 				add_child(obj);
 		}

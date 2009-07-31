@@ -392,7 +392,8 @@ template<typename T> struct prop_binder
 	}
 };
 //#define VAR_NAME(_neve_,_hol_,_hol2_) _neve_##_hol_##_hol2_
-#define BIND_PROPERTY(_object_,_variable_,_name_,_type_) prop_binder<_object_> g_##_object_##_variable_(_name_,prop_##_type_,(unsigned)offsetof(_object_,_variable_))
+#define BIND_PROPERTY_NAME(_object_,_variable_,_name_,_type_) prop_binder<_object_> g_##_object_##_variable_(_name_,prop_##_type_,(unsigned)offsetof(_object_,_variable_))
+#define BIND_PROPERTY(_object_,_variable_,_type_) prop_binder<_object_> g_##_object_##_variable_(#_variable_,prop_##_type_,(unsigned)offsetof(_object_,_variable_))
 
 
 #endif//_nodefactory_h_

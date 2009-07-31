@@ -1,6 +1,6 @@
 {
 	"type" : "physics_scene_node",
-	"Localpos" :
+	"local_pos" :
 	{
 		"Position" : [0.000,0.000,0.000],
 		"Rotation" : [0.000,0.000,0.000],
@@ -13,9 +13,9 @@
 	[
 		{
 			"type" : "camera_node_t",
-			"Localpos" :
+			"local_pos" :
 			{
-				"Position" : [0.000,50.000,-10.000],
+				"Position" : [0.000,5.000,-10.000],
 				"Rotation" : [-20.000,0.000,0.000],
 				"Scale"    : [1.000,1.000,1.000]
 			},
@@ -35,7 +35,7 @@
 		},
 		{
 			"type" : "box_shape_node",
-			"Localpos" :
+			"local_pos" :
 			{
 				"Position" : [0.000,-5.500,0.000],
 				"Rotation" : [0.000,0.000,0.000],
@@ -49,7 +49,7 @@
 		
 		{
 			"type" : "convex_mesh_shape_node",
-			"Localpos" :
+			"local_pos" :
 			{
 				"Position" : [0.000,1.5000,5.000],
 				"Rotation" : [0.000,0.000,0.000],
@@ -63,7 +63,7 @@
 		
 		{
 			"type" : "convex_mesh_shape_node",
-			"Localpos" :
+			"local_pos" :
 			{
 				"Position" : [0.000,5.5000,5.000],
 				"Rotation" : [0.000,0.000,0.000],
@@ -77,21 +77,21 @@
 		
 		{
 			"type" : "convex_mesh_shape_node",
-			"Localpos" :
+			"local_pos" :
 			{
 				"Position" : [0.000,9.5000,5.000],
 				"Rotation" : [0.000,0.000,0.000],
 				"Scale"    : [1.000,1.000,1.000]
 			},
-			"mass" : 10,
+			"mass" : 3,
 			"friction" : 1,
 			"restitution" : 0,
 			"object_name" : "toroid.MMOD"
 		},
 		
 		{
-			"type" : "box_tower",
-			"Localpos" :
+			"//type" : "box_tower",
+			"local_pos" :
 			{
 				"Position" : [0.000,10.500,35.000],
 				"Rotation" : [10.000,0.000,0.000],
@@ -102,8 +102,8 @@
 			"tower_radius" : 10.00
 		},
 		{
-			"type" : "boxstack",
-			"Localpos" :
+			"//type" : "boxstack",
+			"local_pos" :
 			{
 				"Position" : [0.000,15.000,5.000],
 				"Rotation" : [0.000,0.000,0.000],

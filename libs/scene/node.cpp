@@ -2,11 +2,11 @@
 #include "containers/vector.h"
 
 DEFINE_OBJECT(node_t,rootobject);
-BIND_PROPERTY(node_t,m_localpos,"localpos",mtx4x3);
+BIND_PROPERTY(node_t,local_pos,mtx4x3);
 
 	node_t::node_t(const char* i_name):
 	rootobject(i_name),
-	m_localpos(mtx4x3::identitymtx()),
+	local_pos(mtx4x3::identitymtx()),
 	m_worldpos(mtx4x3::identitymtx())
 	{
 		m_parent=NULL;
@@ -17,7 +17,7 @@ BIND_PROPERTY(node_t,m_localpos,"localpos",mtx4x3);
 
 
 	node_t::node_t():
-	m_localpos(mtx4x3::identitymtx()),
+	local_pos(mtx4x3::identitymtx()),
 	m_worldpos(mtx4x3::identitymtx())
 	{
 		m_parent=NULL;
@@ -121,7 +121,7 @@ BIND_PROPERTY(node_t,m_localpos,"localpos",mtx4x3);
 
 	void node_t::set_localposition(const mtx4x3& i_mtx)
 	{
-		m_localpos=i_mtx;
+		local_pos=i_mtx;
 
 		//ennek a node-nak es a childnode-oknak ilyenkor invalidalodik a worldmatrixa
 		m_flags&=~nodeflag_valid_worldpos;
@@ -137,7 +137,7 @@ BIND_PROPERTY(node_t,m_localpos,"localpos",mtx4x3);
 	const mtx4x3& node_t::get_localposition() const
 	{
 		//localpos mindig valid;
-		return m_localpos;
+		return local_pos;
 	}
 
 	void node_t::set_worldposition(const mtx4x3& i_mtx)
@@ -150,7 +150,7 @@ BIND_PROPERTY(node_t,m_localpos,"localpos",mtx4x3);
 		else
 			parentinvworld.identity();
 
-		m_localpos.multiply(m_worldpos,parentinvworld);
+		local_pos.multiply(m_worldpos,parentinvworld);
 
 		m_flags|=nodeflag_valid_worldpos;
 
@@ -178,7 +178,7 @@ BIND_PROPERTY(node_t,m_localpos,"localpos",mtx4x3);
 
 		for (int n=bufsize-1; n>=0; --n)
 		{
-			buf[n]->m_worldpos.multiply(buf[n]->m_localpos,buf[n]->m_parent->m_worldpos);
+			buf[n]->m_worldpos.multiply(buf[n]->local_pos,buf[n]->m_parent->m_worldpos);
 			buf[n]->m_flags|=nodeflag_valid_worldpos;
 		}
 
@@ -199,7 +199,7 @@ BIND_PROPERTY(node_t,m_localpos,"localpos",mtx4x3);
 	{
 		for (node_t* ptr=this; ptr; ptr=ptr->get_next())
 		{
-			if (ptr->m_name==i_name)
+			if (ptr->name==i_name)
 				return ptr;
 		}
 

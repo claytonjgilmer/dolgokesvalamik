@@ -10,7 +10,7 @@
 	};
 
 	rootobject_metaobject g_rootobject_metaobject;
-	BIND_PROPERTY(rootobject,m_name,"name",string);
+	BIND_PROPERTY(rootobject,name,string);
 
 
 
@@ -36,10 +36,10 @@
 
 	const string& rootobject::get_name() const
 	{
-		return m_name;
+		return name;
 	}
 
 	void rootobject::set_name(const char* i_name)
 	{
-		m_name=i_name;
+		name=i_name;
 	}

@@ -6,10 +6,10 @@
 #include "render/rendersystem.h"
 
 DEFINE_OBJECT(boxstack,node_t);
-BIND_PROPERTY(boxstack,box_num,"box_num",int);
-BIND_PROPERTY(boxstack,box_extent,"box_extent",vec3);
-BIND_PROPERTY(boxstack,box_dist,"box_dist",float);
-BIND_PROPERTY(boxstack,size_mul,"size_mul",float);
+BIND_PROPERTY(boxstack,box_num,int);
+BIND_PROPERTY(boxstack,box_extent,vec3);
+BIND_PROPERTY(boxstack,box_dist,float);
+BIND_PROPERTY(boxstack,size_mul,float);
 
 mesh_t* generate_box(const char* texture_name, const vec3& extent, float uv_per_meter)
 {

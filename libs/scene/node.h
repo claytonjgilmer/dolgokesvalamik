@@ -50,7 +50,7 @@
 		node_t* m_child;
 		node_t* m_bro;
 
-		mtx4x3 m_localpos;
+		mtx4x3 local_pos;
 		mtx4x3 m_worldpos;
 
 		unsigned m_flags;

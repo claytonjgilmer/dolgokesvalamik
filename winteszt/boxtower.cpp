@@ -6,12 +6,12 @@
 #include "render/rendersystem.h"
 
 DEFINE_OBJECT(box_tower,node_t);
-BIND_PROPERTY(box_tower,brick_extent,"brick_extent",vec3);
-BIND_PROPERTY(box_tower,tower_height,"tower_height",int);
-BIND_PROPERTY(box_tower,tower_radius,"tower_radius",float);
-BIND_PROPERTY(box_tower,friction,"friction",float);
-BIND_PROPERTY(box_tower,restitution,"restitution",float);
-BIND_PROPERTY(box_tower,mass,"mass",float);
+BIND_PROPERTY(box_tower,brick_extent,vec3);
+BIND_PROPERTY(box_tower,tower_height,int);
+BIND_PROPERTY(box_tower,tower_radius,float);
+BIND_PROPERTY(box_tower,friction,float);
+BIND_PROPERTY(box_tower,restitution,float);
+BIND_PROPERTY(box_tower,mass,float);
 
 box_tower::box_tower()
 {
@@ -66,7 +66,7 @@ void box_tower::init()
 
 			mtx4x3 absBrickMatrix;
 
-			bd.pos.multiply(brick_mtx,m_localpos);
+			bd.pos.multiply(brick_mtx,local_pos);
 
 			body_array[actBrick]=physicssystem::ptr->create_body(bd);
 			body_array[actBrick]->add_shape(sd);

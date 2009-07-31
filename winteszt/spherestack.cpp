@@ -3,9 +3,9 @@
 #include "spherestack.h"
 
 DEFINE_OBJECT(spherestack,node_t);
-BIND_PROPERTY(spherestack,sphere_num,"sphere_num",int);
-BIND_PROPERTY(spherestack,sphere_radius,"sphere_radius",float);
-BIND_PROPERTY(spherestack,sphere_dist,"sphere_dist",float);
+BIND_PROPERTY(spherestack,sphere_num,int);
+BIND_PROPERTY(spherestack,sphere_radius,float);
+BIND_PROPERTY(spherestack,sphere_dist,float);
 
 spherestack::spherestack()
 {

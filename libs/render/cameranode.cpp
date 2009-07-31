@@ -1,9 +1,10 @@
 #include "cameranode.h"
+#include "render/rendersystem.h"
 
 DEFINE_OBJECT(camera_node_t,node_t);
-BIND_PROPERTY(camera_node_t,fov,"fov",angle);
-BIND_PROPERTY(camera_node_t,near_z,"near_z",float);
-BIND_PROPERTY(camera_node_t,far_z,"far_z",float);
+BIND_PROPERTY(camera_node_t,fov,angle);
+BIND_PROPERTY(camera_node_t,near_z,float);
+BIND_PROPERTY(camera_node_t,far_z,float);
 
 camera_node_t::camera_node_t()
 {

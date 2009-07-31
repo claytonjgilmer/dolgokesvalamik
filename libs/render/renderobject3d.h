@@ -27,7 +27,7 @@
 		object3d* Next;
 
 		//properties
-		string m_modelname;
+		string model_name;
 		fixedvector<ref_ptr<mesh_t>,8> m_mesh;
 		color_f color;
 		shader_param_array_t param_array;
