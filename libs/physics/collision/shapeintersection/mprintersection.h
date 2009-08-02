@@ -207,11 +207,31 @@ MLINLINE bool mpr_intersection<T1,T2>::test_intersection(T1* p1, const mtx4x3& m
 					{
 
 						double a2=(dot(V,V)*dot(W,P)-dot(V,W)*dot(V,P))/mul;
-//						assertion(a2>-0.01 && a2<1.01);
-
 						double a1=(dot(V,P)-a2*dot(V,W))/dot(V,V);
-//						assertion(a1>-0.01 && a1<1.01);
-						assertion(a1>-10 && a1<10);
+
+#ifdef _DEBUG
+						if (!((a2>-0.01 && a2<1.01)) || !((a1>-0.01 && a1<1.01)))
+						{
+							float x1,y1,z1;
+							float x2,y2,z2;
+
+							m1.get_euler(x1,y1,z1);
+							m2.get_euler(x2,y2,z2);
+
+							x1=radtodegree(x1);
+							y1=radtodegree(y1);
+							z1=radtodegree(z1);
+							x2=radtodegree(x2);
+							y2=radtodegree(y2);
+							z2=radtodegree(z2);
+
+							PRINT("matrix1: t:%f %f %f r:%f %f %f\n",m1.t.x,m1.t.y,m1.t.z,x1,y1,z1);
+							PRINT("matrix2: t:%f %f %f r:%f %f %f\n",m2.t.x,m2.t.y,m2.t.z,x2,y2,z2);
+						}
+#endif
+						assertion(a1>-0.01 && a1<1.01);
+						assertion(a2>-0.01 && a2<1.01);
+//						assertion(a1>-10 && a1<10);
 
 						dvec3_to_vec3(point1,v11+a1*(v21-v11)+a2*(v31-v11));
 						dvec3_to_vec3(point2,v12+a1*(v22-v12)+a2*(v32-v12));
