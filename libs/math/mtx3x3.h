@@ -275,4 +275,10 @@
 		check_vec3(m.z);
 	}
 #endif
+
+	MLINLINE vec3 solve_3x3(const mtx3x3& A, const vec3& b) //solve equation Ax=b (azaz inkabb (xT)A=bT)
+	{
+		mtx3x3 Ainv; Ainv.invert3x3(A);
+		return Ainv.transform3x3(b);
+	}
 #endif//_mtx3x3_h_

@@ -76,10 +76,10 @@
 		},
 		
 		{
-			"type" : "convex_mesh_shape_node",
+			"//type" : "convex_mesh_shape_node",
 			"local_pos" :
 			{
-				"Position" : [0.000,9.5000,5.000],
+				"Position" : [0.000,3.5000,2.000],
 				"Rotation" : [45.000,0.000,45.000],
 				"Scale"    : [1.000,1.000,1.000]
 			},
@@ -116,16 +116,16 @@
 			
 		},
 		{
-			"//type" : "mesh_tower",
+			"type" : "mesh_tower",
 			"local_pos" :
 			{
 				"Position" : [0.000,10.500,35.000],
 				"Rotation" : [10.000,0.000,0.000],
 				"Scale"    : [1.000,1.000,1.000]
 			},
-			"tower_height" : 5,
-			"object_name" : "cone.mmod",
-			"tower_radius" : 5.00
+			"tower_height" : 2,
+			"object_name" : "cylinder.MMOD",
+			"tower_radius" : 2.00
 		}
 	]
 }	

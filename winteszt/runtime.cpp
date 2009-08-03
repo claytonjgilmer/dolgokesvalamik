@@ -14,6 +14,7 @@ void init_app(HWND hwnd)
 
 	gd.inputdesc.m_Window=hwnd;
 
+	gd.physicsdesc.debug_draw=true;
 	gd.physicsdesc.gravity.set(0,-.010f,0);
 	gd.physicsdesc.maxsubstepcount=10;
 	gd.physicsdesc.parallel_processing=0;

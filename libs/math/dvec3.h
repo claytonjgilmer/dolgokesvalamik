@@ -337,4 +337,8 @@
 	{
 		dst.set(f32(src.x),f32(src.y),f32(src.z));
 	}
+	MLINLINE vec3 dvec3_to_vec3(const dvec3& src)
+	{
+		return vec3(f32(src.x),f32(src.y),f32(src.z));
+	}
 #endif//_dvec3_h_

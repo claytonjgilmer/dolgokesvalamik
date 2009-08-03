@@ -58,6 +58,8 @@ void mesh_tower::init()
 	convex_mesh_shape_desc sd;
 	sd.mesh_data=&md;
 	sd.owner_flag=sd.collision_mask=1;
+	sd.friction=friction;
+	sd.restitution=restitution;
 
 	bodydesc bd;
 	bd.mass=mass;

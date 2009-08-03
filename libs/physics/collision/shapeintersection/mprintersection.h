@@ -157,19 +157,19 @@ MLINLINE bool mpr_intersection<T1,T2>::test_intersection(T1* p1, const mtx4x3& m
 		{
 			phase2++;
 			// Compute normal of the wedge face
-			n.cross((v2 - v1),(v3 - v1));
+			n.cross((v1 - v2),(v3 - v1));
 			// Can this happen???  Can it be handled more cleanly?
 			if (n.squarelength()<0.0000001)
 			{
 				assertion(0);
-				return true;
+				return false;
 			}
 
 			n.normalize();
 
 			f64 d = dot(n, v1);
 
-			if (d >= 0)
+			if (d <= 0)
 			{
 				// HIT!!!
 				hit = true;
@@ -178,22 +178,41 @@ MLINLINE bool mpr_intersection<T1,T2>::test_intersection(T1* p1, const mtx4x3& m
 			// Find the support point in the direction of the wedge face
 			supportCount++;
 			dvec3 v41,v42;
-			get_extremal_vertex(p1,-n,m1,v41);
-			get_extremal_vertex(p2,n,m2,v42);
+			get_extremal_vertex(p1,n,m1,v41);
+			get_extremal_vertex(p2,-n,m2,v42);
 			dvec3 v4 = v42 - v41;
 
-			f64 delta = dot((v4 - v3), n);
+			f64 delta = dot((v3 - v4), n);
 			f64 separation = dot(v4, n);
 
 			// If the boundary is thin enough or the origin is outside the support plane for the newly discovered vertex, then we can terminate
-			if ( delta <= kCollideEpsilon || separation <= 0)
+			if ( delta <= kCollideEpsilon || separation >= 0)
 			{
 				if (hit)
 				{
-					dvec3_to_vec3(returnNormal,-n);
+					dvec3_to_vec3(returnNormal,n);
+
+					vec3 d1(dvec3_to_vec3(v0-v1));
+					vec3 d2(dvec3_to_vec3(v0-v2));
+					vec3 d3(dvec3_to_vec3(v0-v3));
+					vec3 d4(dvec3_to_vec3(v0));
+
+					vec3 t=solve_3x3(mtx3x3(d1,d2,d3),d4);
+
+					dvec3 common_point=-(t[0]*(v01-v11)+t[1]*(v01-v21)+t[2]*(v01-v31)-v01);
+
+					point1=dvec3_to_vec3(common_point+dot(n,v41-common_point)*n);
+					point2=dvec3_to_vec3(common_point+dot(n,v42-common_point)*n);
+
+					return true;
+					dvec3 pp2=t[0]*(v02-v12)+t[1]*(v02-v22)+t[2]*(v02-v32)-v02;
+					//p1-nek es p2-nek egyenlonek kell lennie!
+
+
+
+
 
 					dvec3 V=v2-v1, W=v3-v1, P=-v1;
-
 					double mul=(dot(V,V)*dot(W,W)-(sqr(dot(V,W))));
 
 					if (mul>-0.000001 && mul<0.000001) //ha deformalt a haromszog
